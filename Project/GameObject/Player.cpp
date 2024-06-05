@@ -50,12 +50,12 @@ void Player::Update() {
 		}
 	}
 
-	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	/*if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		model_->StartAnim("SneakWalk");
 	}
 	else {
 		model_->StartAnim("Walk");
-	}
+	}*/
 
 	// ImGui
 	model_->ImGuiParameter("Player");

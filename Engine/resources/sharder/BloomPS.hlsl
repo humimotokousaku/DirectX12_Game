@@ -14,6 +14,7 @@ ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<BloomData> gBloomData : register(b1);
 
 Texture2D<float32_t4> gTexture : register(t0);
+//Texture2D<float32_t4> gT : register(t1);
 SamplerState gSampler : register(s0);
 
 const static float kScale = 10.0f;

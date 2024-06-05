@@ -49,13 +49,14 @@ public:
 
 	// モデルのセット
 	void SetModel(const std::string& directoryPath, const std::string& filePath) { 
-		model_ = ModelManager::GetInstance()->FindModel(directoryPath, filePath);
+		model_ = ModelManager::GetInstance()->SetModel(directoryPath, filePath);
 		// アニメーション
 		animation_.push_back(model_->animation_);
 		// スケルトン
 		skeleton_ = model_->skeleton_;
 		// スキンクラスタ
-		skinCluster_ = model_->skinCluster_;
+		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+		skinCluster_.push_back(skinCluster);
 	}
 	void SetModel(Model* model) {
 		model_ = model;
@@ -64,7 +65,8 @@ public:
 		// スケルトン
 		skeleton_ = model_->skeleton_;
 		// スキンクラスタ
-		skinCluster_ = model_->skinCluster_;
+		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+		skinCluster_.push_back(skinCluster);
 	}
 
 	// アニメーション追加
@@ -72,10 +74,16 @@ public:
 		// アニメーション
 		model_ = ModelManager::GetInstance()->FindModel(directoryPath, filePath);
 		animation_.push_back(model_->animation_);
+		// 新しくリソースを作成
+		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+		skinCluster_.push_back(skinCluster);
 	}
 	void AddAnimation(Model* model) {
 		// アニメーション
 		animation_.push_back(model->animation_);
+		// 新しくリソースを作成
+		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+		skinCluster_.push_back(skinCluster);
 	}
 	
 	// アニメーションの名前を設定
@@ -100,13 +108,15 @@ public:
 	WorldTransform worldTransform;
 	Camera* camera_;
 	Model* model_;
+	ModelData modelData_;
 private:
 	// アニメーション
 	std::vector<Motion> animation_;
 	float animationTime_ = 0.0f;
 	bool isPreAnimActive_;
+	// スキンクラスタ
+	std::vector<SkinCluster> skinCluster_;
 	// スケルトン
 	Skeleton skeleton_;
-	// スキンクラスタ
-	SkinCluster skinCluster_;
+	Vector4 color_ = { 1,1,1,1 };
 };

@@ -74,6 +74,63 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	};
 }
 
+void Model::Initialize() {
+	// エンジン機能のインスタンスを入れる
+	dxCommon_ = DirectXCommon::GetInstance();
+	texManager_ = TextureManager::GetInstance();
+
+	//// モデルの読み込み
+	//modelData_ = LoadModelFile(filename);
+	//// アニメーションデータを読み込む
+	//animation_ = LoadAnimationFile(filename);
+	//// スケルトンデータを作成
+	//skeleton_ = CreateSkeleton(modelData_.rootNode);
+	//// スキンクラスタを作成
+	//skinCluster_ = CreateSkinCluster(skeleton_, modelData_);
+
+	// モデルファイルと同じ階層にテクスチャがない場合、デフォルトのテクスチャが入るようにする
+	texHandle_ = 1;
+	// テクスチャ読み込み 
+	texManager_->LoadTexture(modelData_.material.textureFilePath);
+	texHandle_ = texManager_->GetSrvIndex(modelData_.material.textureFilePath);
+
+	// 頂点データのリソース作成
+	CreateVertexResource();
+	CreateVertexBufferView();
+	// 書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+
+	// インデックスのリソース作成
+	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * modelData_.indices.size();
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+	// 書き込むためのアドレスを取得
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
+	std::memcpy(mappedIndex_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+
+	// マテリアルデータのリソース作成
+	CreateMaterialResource();
+
+	// カメラ
+	// 1つ分のサイズを用意する
+	cameraPosResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector3)).Get();
+	// 書き込むためのアドレスを取得
+	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
+
+	// Lightingするか
+	materialData_->enableLighting = false;
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// uvTransform行列の初期化
+	materialData_->uvTransform = MakeIdentity4x4();
+	uvTransform_ = {
+		{1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f},
+		{0.0f,0.0f,0.0f}
+	};
+}
+
 void Model::Initialize(const std::string& filename) {
 	// エンジン機能のインスタンスを入れる
 	dxCommon_ = DirectXCommon::GetInstance();

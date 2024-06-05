@@ -47,6 +47,11 @@ void BloomPSO::CreateRootSignature() {
 	rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters_[4].Descriptor.ShaderRegister = 1;
+	// // texture
+	//rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//rootParameters_[5].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
+	//rootParameters_[5].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
 #pragma endregion
 
 	// rootParameterの設定を入れる

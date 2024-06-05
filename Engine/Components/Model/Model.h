@@ -16,6 +16,7 @@ public:
 	~Model();
 
 	void Initialize(const std::string& directoryPath, const std::string& filename);
+	void Initialize();
 	void Initialize(const std::string& filename);
 
 	void Draw(const ViewProjection& viewProjection, uint32_t textureHandle);
