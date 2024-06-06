@@ -5,7 +5,7 @@
 #include "SpotLight.h"
 #include "TextureManager.h"
 #include "PipelineManager.h"
-#include  "ModelManager.h"
+#include "ModelManager.h"
 #include <cassert>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

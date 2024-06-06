@@ -2,6 +2,12 @@
 #include "IPostEffect.h"
 
 class Gauss : public IPostEffect {
+private:// 構造体
+	struct GaussData {
+		bool isActive;
+		float strength;
+	};
+
 public:
 	/// <summary>
 	/// コンストラクタ
@@ -34,5 +40,6 @@ public:
 	void PostDrawScene()override;
 
 private:
-
+	GaussData* gaussData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> gaussResource_;
 };

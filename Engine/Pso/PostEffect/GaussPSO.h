@@ -40,6 +40,8 @@ public:
 		dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());
 		// 形状を設定
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// GaussData
+		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, resource.Get()->GetGPUVirtualAddress());
 	}
 
 private:// プライベートな変数

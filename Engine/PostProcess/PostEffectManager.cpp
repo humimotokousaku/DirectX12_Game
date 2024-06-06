@@ -17,9 +17,9 @@ void PostEffectManager::Initialize() {
 	radialBlur->Initialize();
 	postEffect_.push_back(radialBlur);
 	// Gauss
-	//Gauss* gauss = new Gauss();
-	//gauss->Initialize();
-	//postEffect_.push_back(gauss);
+	Gauss* gauss = new Gauss();
+	gauss->Initialize();
+	postEffect_.push_back(gauss);
 	// Dissolve
 	//Dissolve* dissolve = new Dissolve();
 	//dissolve->Initialize();

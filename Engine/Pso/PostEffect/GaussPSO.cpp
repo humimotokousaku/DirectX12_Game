@@ -25,7 +25,7 @@ void GaussPSO::CreateRootSignature() {
 #pragma endregion
 
 #pragma region rootParameter
-	rootParameters_.resize(4);
+	rootParameters_.resize(5);
 	// material
 	rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -43,6 +43,10 @@ void GaussPSO::CreateRootSignature() {
 	rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters_[3].Descriptor.ShaderRegister = 1;
+	// GaussData
+	rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters_[4].Descriptor.ShaderRegister = 1;
 #pragma endregion
 
 	// rootParameterの設定を入れる

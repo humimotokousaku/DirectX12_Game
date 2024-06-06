@@ -23,8 +23,7 @@ class TextureManager
 private:
 	// テクスチャ1枚分のデータ
 	struct TextureData {
-		//std::string filePath;
-		DirectX::TexMetadata metdata;
+		DirectX::TexMetadata metadata;
 		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
 		Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource;
 		uint32_t srvIndex;
@@ -55,13 +54,8 @@ public:
 	void LoadTexture(const std::string& directoryPath, const std::string& fileName);
 
 	/// Getter
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(uint32_t textureIndex);
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& directoryPath, const std::string& fileName);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-
-
 
 	/// <summary>
 	/// SRVインデックスの取得

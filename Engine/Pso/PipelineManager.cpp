@@ -45,8 +45,8 @@ void PipelineManager::Initialize() {
 	RadialBlurPSO* radialBlur = new RadialBlurPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "RadialBlur.PS.hlsl");
 	postEffect_.push_back(radialBlur);
 	// Gauss
-	//GaussPSO* gauss = new GaussPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "GaussianFilter.PS.hlsl");
-	//postEffect_.push_back(gauss);
+	GaussPSO* gauss = new GaussPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "GaussianFilter.PS.hlsl");
+	postEffect_.push_back(gauss);
 	// Dissolve
 	//DissolvePSO* dissolve = new DissolvePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "Dissolve.PS.hlsl");
 	//postEffect_.push_back(dissolve);

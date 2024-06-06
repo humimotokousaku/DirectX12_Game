@@ -57,6 +57,7 @@ private:
 	uint32_t monsterBallTexture_;
 	uint32_t particleTexture_;
 	uint32_t blockTexture_;
+	uint32_t ddsTexture_;
 
 	int textureNum_;
 	Input* input_;

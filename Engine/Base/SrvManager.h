@@ -1,5 +1,6 @@
 #pragma once
 #include "DirectXCommon.h"
+#include "DirectXTex.h"
 
 class SrvManager
 {
@@ -23,7 +24,7 @@ public:
 	/// SRV作成関数
 
 	// テクスチャ用
-	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels);
+	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels, DirectX::TexMetadata metdata);
 	// Structured Buffer用
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
 	// ポストエフェクト用

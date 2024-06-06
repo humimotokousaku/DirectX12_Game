@@ -19,11 +19,13 @@ void TitleScene::Initialize() {
 	TextureManager::GetInstance()->LoadTexture("", "monsterBall.png");
 	TextureManager::GetInstance()->LoadTexture("", "circle.png");
 	TextureManager::GetInstance()->LoadTexture("", "block.png");
+	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
 	// srvの番号取得
 	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "uvChecker.png");
 	monsterBallTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "monsterBall.png");
 	particleTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "circle.png");
 	blockTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "block.png");
+	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds");
 
 	/// モデル読み込み
 	/// 骨とアニメーションあり 
@@ -156,7 +158,7 @@ void TitleScene::Draw() {
 	}
 
 	player_->Draw(uvcheckerTexture_);
-	particle_->Draw(particleTexture_);
+	particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {
