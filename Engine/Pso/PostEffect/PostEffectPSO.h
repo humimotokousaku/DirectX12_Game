@@ -21,18 +21,6 @@ enum PostEffectType {
 	COUNT
 };
 
-// 構造体
-// ブラー
-struct BlurData {
-	uint32_t isActive;  // 使用するか
-	float strength;  // ブラーの強さ
-};
-// 高輝度
-struct HighIntensityData {
-	uint32_t isActive;	 // 使用するか
-	float threshold;  // 閾値
-};
-
 /// <summary>
 /// ポストエフェクトのPSO
 /// </summary>
@@ -64,8 +52,6 @@ public:
 	///** Getter **///
 
 	///** Setter **///
-	
-	//void SetRootParameter
 
 	/// <summary>
 	/// 描画前に積むコマンド

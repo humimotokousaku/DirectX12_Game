@@ -27,8 +27,6 @@ void Player::Initialize(Camera* camera) {
 	model_->StartAnim("Walk");
 	model_->worldTransform.transform.translate = { 0,-2,-15 };
 	model_->worldTransform.transform.rotate = { 0,std::numbers::inv_pi * 5.0f,0 };
-
-	//model_->animation_.isActive = true;
 	gameSpeed_ = 1.0f;
 }
 
@@ -50,12 +48,12 @@ void Player::Update() {
 		}
 	}
 
-	/*if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
+	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		model_->StartAnim("SneakWalk");
 	}
 	else {
 		model_->StartAnim("Walk");
-	}*/
+	}
 
 	// ImGui
 	model_->ImGuiParameter("Player");

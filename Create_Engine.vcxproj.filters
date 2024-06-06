@@ -363,6 +363,12 @@
     <ClCompile Include="engine\Utility\GameTime.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostProcess\Dissolve.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostProcess\Gauss.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -590,6 +596,12 @@
     <ClInclude Include="engine\Utility\GameTime.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostProcess\Dissolve.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostProcess\Gauss.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -652,5 +664,6 @@
     <FxCompile Include="engine\resources\sharder\RadialBlur.PS.hlsl" />
     <FxCompile Include="engine\resources\sharder\Dissolve.PS.hlsl" />
     <FxCompile Include="engine\resources\sharder\Outline.PS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\LuminanceBasedOutline.PS.hlsl" />
   </ItemGroup>
 </Project>

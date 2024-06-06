@@ -9,11 +9,11 @@ DissolvePSO::DissolvePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIn
 }
 
 void DissolvePSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
-	// 基底クラスの初期化
-	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 	// dissolveテクスチャを読み込む
 	TextureManager::GetInstance()->LoadTexture("", "noise.png");
-	dissolveTextureHandle_ = TextureManager::GetInstance()->GetSrvIndex("noise.png");
+	dissolveTextureHandle_ = TextureManager::GetInstance()->GetSrvIndex("noise.png");	
+	// 基底クラスの初期化
+	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 	// PSO作成
 	CreatePSO();
 }
@@ -23,17 +23,17 @@ void DissolvePSO::CreateRootSignature() {
 	descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	descriptorRange_.resize(2);
+	descriptorRange_.resize(1);
 	// レンダリング画像
 	descriptorRange_[0].BaseShaderRegister = 0;
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	// dissolve画像
-	descriptorRange_[1].BaseShaderRegister = 1;
-	descriptorRange_[1].NumDescriptors = 1;
-	descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
+	descriptorRange[0].BaseShaderRegister = 1;
+	descriptorRange[0].NumDescriptors = 1;
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
@@ -58,8 +58,8 @@ void DissolvePSO::CreateRootSignature() {
 	// dissolve用のtexture
 	rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters_[4].DescriptorTable.pDescriptorRanges = &descriptorRange_[1];
-	rootParameters_[4].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
+	rootParameters_[4].DescriptorTable.pDescriptorRanges = descriptorRange;
+	rootParameters_[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 #pragma endregion
 
 	// rootParameterの設定を入れる

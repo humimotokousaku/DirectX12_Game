@@ -13,6 +13,7 @@
 #include "GaussPSO.h"
 #include "SmoothingPSO.h"
 #include "RadialBlurPSO.h"
+#include "GaussPSO.h"
 #include "BloomPSO.h"
 #include "PostEffectPSO.h"
 

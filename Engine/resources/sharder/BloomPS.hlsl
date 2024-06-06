@@ -8,13 +8,14 @@ struct Material {
 struct BloomData {
     int32_t isActive;
     float strength;
+    float threshold;
 };
 
 ConstantBuffer<Material> gMaterial : register(b0);
 ConstantBuffer<BloomData> gBloomData : register(b1);
 
 Texture2D<float32_t4> gTexture : register(t0);
-//Texture2D<float32_t4> gT : register(t1);
+Texture2D<float32_t4> gT : register(t1);
 SamplerState gSampler : register(s0);
 
 const static float kScale = 10.0f;
@@ -38,7 +39,7 @@ float4 GaussianBlur(float2 uv)
 			float2 offset = texelSize * float2(i, j) * blurAmount;
 			float4 sampleColor = gTexture.Sample(gSampler, uv + offset);
 			float brightness = dot(sampleColor.rgb, float3(0.299, 0.587, 0.114));
-			float b = step(0.3f, brightness);
+            float b = step(gBloomData.threshold, brightness);
 			blurredColor += (sampleColor * b);
 		}
 	}

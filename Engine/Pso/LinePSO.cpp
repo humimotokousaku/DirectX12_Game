@@ -98,10 +98,10 @@ void LinePSO::CreatePSO() {
 	blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 
 	// ブレンドモードの設定
-	// ノーマル
+	// 加算
 	blendDesc_.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 	blendDesc_.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 #pragma endregion
 
 #pragma region rasterizer

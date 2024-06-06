@@ -232,14 +232,6 @@ void Particles::ImGuiAdjustParameter()
 	}
 }
 
-std::list<Particle> Particles::ShapePlacement(const Emitter& emitter) {
-	std::list<Particle> particles;
-	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(Vector3{ placementModel_->GetModelData().vertices[count].position.x,placementModel_->GetModelData().vertices[count].position.y,placementModel_->GetModelData().vertices[count].position.z }));
-	}
-	return particles;
-}
-
 Vector3 Particles::KelvinToRGB(int kelvin) {
 	Vector3 color{};
 

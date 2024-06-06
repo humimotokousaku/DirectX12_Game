@@ -62,6 +62,7 @@ void TitleScene::Initialize() {
 	human_[0]->SetAnimName("Walk");
 	human_[0]->SetCamera(camera_.get());
 
+	human_[0]->model_->materialData_->color = { 1,1,1,0.8f };
 	human_[0]->worldTransform.transform.translate = { 2,0,5 };
 	//human_[1] = std::make_unique<Object3D>();
 	//human_[1]->Initialize();
@@ -99,10 +100,12 @@ void TitleScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize(camera_.get());
 
-	//// パーティクル
-	//particle_ = std::make_unique<Particles>();
-	//particle_->Initialize();
-	//particle_->SetCamera(camera_.get());
+	// パーティクル
+	particle_ = std::make_unique<Particles>();
+	particle_->Initialize();
+	particle_->SetCamera(camera_.get());
+	particle_->SetEmitterCount(20);
+	particle_->SetEmitterFrequency(0.1f);
 
 	//// 音の読み込み
 	//bgm_[0] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
@@ -121,7 +124,7 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
-	//particle_->Update();
+	particle_->Update();
 	player_->Update();
 #pragma region パーティクル以外の処理
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
@@ -153,7 +156,7 @@ void TitleScene::Draw() {
 	}
 
 	player_->Draw(uvcheckerTexture_);
-	//particle_->Draw(uvcheckerTexture_);
+	particle_->Draw(particleTexture_);
 }
 
 void TitleScene::Finalize() {

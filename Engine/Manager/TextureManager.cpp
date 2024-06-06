@@ -123,14 +123,6 @@ uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& directoryP
 	return 0;
 }
 
-//D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& directoryPath, const std::string& fileName) {
-//	// 範囲外指定をチェック
-//	assert(textureDatas_.size() + kSRVIndexTop < DirectXCommon::kMaxSRVCount);
-//	
-//	TextureData& textureData = textureDatas_[filePath];
-//	return textureData.srvHandleGPU;
-//}
-
 uint32_t TextureManager::GetSrvIndex(const std::string& filePath) {
 	TextureData& textureData = textureDatas_[filePath];
 	// 何も書いてないならデフォルトテクスチャの番号を返す

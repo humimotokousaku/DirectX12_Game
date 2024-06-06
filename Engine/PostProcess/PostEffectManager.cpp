@@ -16,16 +16,18 @@ void PostEffectManager::Initialize() {
 	RadialBlur* radialBlur = new RadialBlur();
 	radialBlur->Initialize();
 	postEffect_.push_back(radialBlur);
+	// Gauss
+	//Gauss* gauss = new Gauss();
+	//gauss->Initialize();
+	//postEffect_.push_back(gauss);
+	// Dissolve
+	//Dissolve* dissolve = new Dissolve();
+	//dissolve->Initialize();
+	//postEffect_.push_back(dissolve);
 	// Bloom
 	Bloom* bloom = new Bloom();
 	bloom->Initialize();
 	postEffect_.push_back(bloom);
-#pragma region シェーダ内のパラメータを調整するための準備
-	//// ブラーの情報を書き込む
-	//bloomResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(BloomData)).Get();
-	//// 書き込むためのアドレスを取得
-	//bloomResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&bloomData_));
-#pragma endregion
 }
 
 void PostEffectManager::PreDraw() {

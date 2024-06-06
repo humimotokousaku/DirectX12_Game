@@ -17,10 +17,11 @@ struct PixelShaderOutput {
 };
 
 PixelShaderOutput main(VertexShaderOutput input) {
-	float32_t4 mask = gMaskTexture.Sample(gSampler, input.texcoord);
-	//if (mask <= 0.5f) {
-	//	discard;
-	//}
+    float32_t4 mask = gMaskTexture.Sample(gSampler, input.texcoord);
+    //if (mask.x <= 0.5f)
+    //{
+    //    discard;
+    //}
 
 	PixelShaderOutput output;
 	output.color = gTexture.Sample(gSampler,input.texcoord);

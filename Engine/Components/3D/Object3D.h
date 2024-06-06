@@ -104,6 +104,8 @@ public:
 		}
 	}
 
+
+
 public:
 	WorldTransform worldTransform;
 	Camera* camera_;

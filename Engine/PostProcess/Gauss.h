@@ -1,27 +1,12 @@
 #pragma once
-#include "Sprite.h"
-#include "DirectXCommon.h"
-#include "Camera.h"
-#include "PostEffectPSO.h"
 #include "IPostEffect.h"
-#include <Windows.h>
 
-class Bloom : public IPostEffect {
-private:// 構造体
-	struct BloomData {
-		bool isActive;	// 使用するか
-		float strength;	// ぼかしの強さ
-		float threshold; // ぼかすの閾値
-	};
+class Gauss : public IPostEffect {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Bloom();
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Bloom()override = default;
+	Gauss();
 
 	/// <summary>
 	/// 初期化
@@ -48,7 +33,6 @@ public:
 	/// </summary>
 	void PostDrawScene()override;
 
-private:// プライベートなメンバ変数
-	BloomData* bloomData_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> bloomResource_;
+private:
+
 };

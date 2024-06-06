@@ -83,7 +83,7 @@ void IPostEffect::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> r
 
 	// material
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
-	//// texture
+	// texture
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(1, texBuff_.srvIndex);
 	// worldTransform
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, worldTransform_.constBuff_->GetGPUVirtualAddress());

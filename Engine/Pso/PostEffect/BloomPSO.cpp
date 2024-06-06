@@ -1,6 +1,8 @@
 #include "BloomPSO.h"
 
 BloomPSO::BloomPSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
+	TextureManager::GetInstance()->LoadTexture("", "uvChecker.png");
+	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "uvChecker.png");
 	// 初期化
 	Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }
@@ -22,10 +24,15 @@ void BloomPSO::CreateRootSignature() {
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
+	descriptorRange[0].BaseShaderRegister = 1;
+	descriptorRange[0].NumDescriptors = 1;
+	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
-	rootParameters_.resize(5);
+	rootParameters_.resize(6);
 	// material
 	rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -47,11 +54,11 @@ void BloomPSO::CreateRootSignature() {
 	rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters_[4].Descriptor.ShaderRegister = 1;
-	// // texture
-	//rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	//rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	//rootParameters_[5].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
-	//rootParameters_[5].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
+	// texture
+	rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters_[5].DescriptorTable.pDescriptorRanges = descriptorRange;
+	rootParameters_[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 #pragma endregion
 
 	// rootParameterの設定を入れる

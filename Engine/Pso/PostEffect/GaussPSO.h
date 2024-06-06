@@ -30,8 +30,6 @@ public:
 
 	///** Setter **///
 
-	//void SetRootParameter
-
 	/// <summary>
 	/// 描画前に積むコマンド
 	/// </summary>

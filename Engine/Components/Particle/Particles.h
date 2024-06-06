@@ -84,19 +84,7 @@ public:
 	/// パーティクルが発生する頻度
 	/// </summary>
 	/// <param name="frequency">秒</param>
-	void SetEmitterFrequency(float frequency) { emitter_.frequencyTime = frequency; }
-
-	void SetShapePlacement(bool isActive, Model* model) {
-		isActive_ = isActive;
-		placementModel_ = model;
-		assert(placementModel_);
-		// パーティクルの発生数をモデルの頂点数に設定
-		emitter_.count = uint32_t(placementModel_->GetModelData().vertices.size());
-		// パーティクルを生成
-		particles_.splice(particles_.end(), ShapePlacement(emitter_));
-	}
-
-	std::list<Particle> ShapePlacement(const Emitter& emitter);
+	void SetEmitterFrequency(float frequency) { emitter_.frequency = frequency; }
 
 	// ImGuiでパラメータをまとめたもの
 	void ImGuiAdjustParameter();
@@ -134,10 +122,6 @@ private:// 定数
 private:
 	// パーティクル
 	std::list<Particle> particles_;
-	// 頂点位置をもらうモデル
-	Model* placementModel_;
-	// パーティクルをモデルの頂点に配置するかどうか
-	bool isActive_;
 
 	// エミッタ
 	Emitter emitter_;
