@@ -1,63 +1,51 @@
 #pragma once
-#include "DirectXCommon.h"
-#include "MathStructs.h"
-#include "ModelStructs.h"
-#include "ViewProjection.h"
-#include "WorldTransform.h"
-#include <wrl.h>
+#include "IPrimitive.h"
 
-class Cube
-{
+class Cube : public IPrimitive {
 public:
 	/// 
 	/// Default Method
 	/// 
+	
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Cube();
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~Cube()override;
 
-	~Cube();
-	// 初期化
-	void Initialize();
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Initialize()override;
 
-	// 描画
-	void Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection);
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="textureHandle">テクスチャの番号</param>
+	void Draw(uint32_t textureHandle)override;
 
-	// Getter
-	const Microsoft::WRL::ComPtr<ID3D12Resource> GetMaterialResource() { return materialResource_.Get(); }
-
-	// Setter
-	void SetTextureSrvHandleGPU(D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU) { textureSrvHandleGPU_ = textureSrvHandleGPU; }
-
-	// Resource生成
-	const Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
-
-	// VertexResourceの生成
-	void CreateVertexResource();
-
-	// VertexBufferViewの生成
-	void CreateVertexBufferView();
-
-	// MaterialResourceの生成
-	void CreateMaterialResource();
-
-	// TransformationMatrix用のResourceを生成
-	void CreateWvpResource();
-
-	/// 
-	/// User Method
-	/// 
-	void ApplyGlobalVariables();
-
-	void ImGuiAdjustParameter();
-
-public:
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
-	VertexData* vertexData_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-	Material* materialData_;
-	Transform transform_;
-	Transform uvTransform_;
-	Matrix4x4 uvTransformMatrix_;
+	/// <summary>
+	/// カメラの設定
+	/// </summary>
+	/// <param name="camera">カメラのアドレス</param>
+	void SetCamera(Camera* camera) { IPrimitive::SetCamera(camera); }
+	/// <summary>
+	/// 座標を設定
+	/// </summary>
+	/// <param name="pos">座標</param>
+	void SetPosition(Vector3 pos) { worldTransform_.transform.translate = pos; }
+	/// <summary>
+	/// スケールの設定
+	/// </summary>
+	/// <param name="scale">スケール</param>
+	void SetScale(Vector3 scale) { worldTransform_.transform.scale = scale; }
+	/// <summary>
+	/// 回転角を設定
+	/// </summary>
+	/// <param name="rotate">回転角</param>
+	void SetRotate(Vector3 rotate) { worldTransform_.transform.rotate = rotate; }
 };
 

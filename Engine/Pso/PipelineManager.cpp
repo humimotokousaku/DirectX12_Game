@@ -28,6 +28,10 @@ void PipelineManager::Initialize() {
 	skinningPSO_ = SkinningPSO::GetInstance();
 	skinningPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "SkinningObject3d.VS.hlsl", "Object3d.PS.hlsl");
 	skinningPSO_->CreatePSO();
+	// skyboxを使用しているオブジェクトに使用する
+	skyboxPSO_ = SkyboxPSO::GetInstance();
+	skyboxPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Skybox.VS.hlsl", "Skybox.PS.hlsl");
+	skyboxPSO_->CreatePSO();
 	// 3Dの線に使用するPSO
 	linePSO_ = LinePSO::GetInstance();
 	linePSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_,"LineVS.hlsl", "LinePS.hlsl");

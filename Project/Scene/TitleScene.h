@@ -10,6 +10,8 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Object3D.h"
+#include "Cube.h"
+#include "IPrimitive.h"
 #include "Animation.h"
 #include "GameObject/Player.h"
 #include "GameObject/Enemy.h"
@@ -51,6 +53,8 @@ private:
 	//std::array<std::unique_ptr<Enemy> , 2u> enemy_;
 	// パーティクル
 	std::unique_ptr<Particles> particle_;
+
+	std::unique_ptr<Cube> cube_;
 
 	// テクスチャ
 	uint32_t uvcheckerTexture_;

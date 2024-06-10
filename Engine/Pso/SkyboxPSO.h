@@ -1,12 +1,16 @@
 #pragma once
 #include "IPSO.h"
 
-class SkinningPSO : public IPSO {
-public:// メンバ関数
+class SkyboxPSO : public IPSO {
+public:
+	///
+	/// Default Method
+	///
+
 	/// <summary>
 	/// シングルトン
 	/// </summary>
-	static SkinningPSO* GetInstance();
+	static SkyboxPSO* GetInstance();
 
 	/// <summary>
 	/// 初期化
@@ -25,7 +29,6 @@ public:// メンバ関数
 
 	///** Getter **///
 
-
 	///** Setter **///
 
 	/// <summary>
@@ -40,7 +43,6 @@ public:// メンバ関数
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 
-private:// プライベートなメンバ変数
+private:// プライベートな変数
 
 };
-

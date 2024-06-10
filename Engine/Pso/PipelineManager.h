@@ -6,6 +6,7 @@
 
 #include "Object3dPSO.h"
 #include "SkinningPSO.h"
+#include "SkyboxPSO.h"
 #include "LinePSO.h"
 #include "ParticlePSO.h"
 
@@ -70,6 +71,7 @@ public:
 	void SetPostEffectPSO(int index, Microsoft::WRL::ComPtr<ID3D12Resource> resource) { postEffect_[index]->SetCommand(resource); }
 	void SetObject3dPSO() { object3dPSO_->SetCommand(); }
 	void SetSkinningPSO() { skinningPSO_->SetCommand(); }
+	void SetSkyboxPSO() { skyboxPSO_->SetCommand(); }
 	void SetLinePSO() { linePSO_->SetCommand(); }
 	void SetParticlePSO() { particlePSO_->SetCommand(); }
 
@@ -91,6 +93,7 @@ private:
 	// PSO
 	Object3dPSO* object3dPSO_;
 	SkinningPSO* skinningPSO_;
+	SkyboxPSO* skyboxPSO_;
 	LinePSO* linePSO_;
 	ParticlePSO* particlePSO_;
 	// ポストエフェクトで使用するPSO

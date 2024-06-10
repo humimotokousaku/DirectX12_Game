@@ -146,7 +146,6 @@ void Sprite::Draw() {
 
 	/// DescriptorTableの設定
 	// texture
-	//DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex_));
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureIndex_);
 	// material
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());

@@ -12,7 +12,7 @@ void TitleScene::Initialize() {
 	// カメラの初期化
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate(Vector3{ 0,0,-20 });
+	camera_->SetTranslate(Vector3{ 0,0,0 });
 
 	// テクスチャの読み込み
 	TextureManager::GetInstance()->LoadTexture("", "uvChecker.png");
@@ -123,6 +123,11 @@ void TitleScene::Initialize() {
 	//for (Object3D* object : levelObjects_) {
 	//	object->SetCamera(camera_.get());
 	//}
+
+	cube_ = std::make_unique<Cube>();
+	cube_->SetCamera(camera_.get());
+	cube_->SetScale(Vector3{ 10,10,10 });
+	cube_->SetPosition(Vector3{ 0,0,10 });
 }
 
 void TitleScene::Update() {
@@ -145,8 +150,8 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
-	axis_->Draw(uvcheckerTexture_);
-	human_[0]->Draw();
+	//axis_->Draw(uvcheckerTexture_);
+	//human_[0]->Draw();
 	//for (int i = 0; i < 2; i++) {
 	//	plane_[i]->Draw(uvcheckerTexture_);
 	//	box_[i]->Draw(uvcheckerTexture_);
@@ -158,7 +163,9 @@ void TitleScene::Draw() {
 	}
 
 	player_->Draw(uvcheckerTexture_);
-	particle_->Draw(uvcheckerTexture_);
+	cube_->Draw(ddsTexture_);
+
+	//particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {

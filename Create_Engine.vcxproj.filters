@@ -372,6 +372,9 @@
     <ClCompile Include="Engine\Components\3D\Primitive\IPrimitive.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Pso\SkyboxPSO.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -608,6 +611,9 @@
     <ClInclude Include="Engine\Components\3D\Primitive\IPrimitive.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Pso\SkyboxPSO.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -627,6 +633,7 @@
     <None Include="Engine\resources\sharder\PostEffectTest.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
+    <None Include="Engine\resources\sharder\Skybox.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="engine\resources\sharder\Object3d.PS.hlsl">
@@ -671,5 +678,7 @@
     <FxCompile Include="engine\resources\sharder\Dissolve.PS.hlsl" />
     <FxCompile Include="engine\resources\sharder\Outline.PS.hlsl" />
     <FxCompile Include="Engine\resources\sharder\LuminanceBasedOutline.PS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\Skybox.VS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\Skybox.PS.hlsl" />
   </ItemGroup>
 </Project>

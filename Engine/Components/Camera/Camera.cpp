@@ -40,16 +40,16 @@ void Camera::Update() {
 
 	// 回転
 	if (Input::GetInstance()->PressKey(DIK_W)) {
-		transform_.rotate.x += -0.001f;
+		transform_.rotate.x += -0.01f;
 	}
 	if (Input::GetInstance()->PressKey(DIK_S)) {
-		transform_.rotate.x += 0.001f;
+		transform_.rotate.x += 0.01f;
 	}
 	if (Input::GetInstance()->PressKey(DIK_A)) {
-		transform_.rotate.y += -0.001f;
+		transform_.rotate.y += -0.01f;
 	}
 	if (Input::GetInstance()->PressKey(DIK_D)) {
-		transform_.rotate.y += 0.001f;
+		transform_.rotate.y += 0.01f;
 	}
 }
 
