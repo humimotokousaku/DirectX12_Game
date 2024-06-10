@@ -30,6 +30,10 @@ public:
 	/// <summary>
 	void Draw(uint32_t textureHandle);
 
+	/// Setter
+	// モデルを追加
+	void AddModel(Object3D* model) { models_.push_back(model); }
+
 	///
 	/// 純粋仮想関数
 	/// 
@@ -42,6 +46,8 @@ public:
 	void OnCollision(Collider* collider)override;
 
 public:
-	std::unique_ptr<Object3D> model_;
+	// 自機
+	std::unique_ptr<Object3D> object3d_;
+	std::vector<Object3D*> models_;
 	float gameSpeed_;
 };

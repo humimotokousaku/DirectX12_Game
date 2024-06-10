@@ -31,26 +31,27 @@ public:
 	/// Getter
 	// モデルデータ
 	ModelData GetModelData() { return modelData_; }
+
 	// アニメーションの行列
 	Matrix4x4 GetAnimationMatrix() { return animationLocalMatrix_; }
 
 	/// Setter
+	// ライティングの設定
 	void SetIsLighting(bool isActive) { materialData_->enableLighting = isActive; }
+	// 鏡面反射の輝度の設定
+	void SetShininess(float shininess) { materialData_->shininess = shininess; }
+
+	// 色の設定
+	void SetColor(Vector4 RGBA) { materialData_->color = RGBA; }
 
 private:
-	// スケルトンの線描画をするための初期化
-	void SkeletonLineInit();
-	// jointを描画するための初期化
-	void JointSphereInit();
-
-	//Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
-
 	void CreateVertexResource();
 
 	void CreateVertexBufferView();
 
 	void CreateMaterialResource();
 
+	// ファイルの読み込み
 	ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
 	ModelData LoadModelFile(const std::string& filename);
 
@@ -94,14 +95,7 @@ private:
 	// モデルデータ
 	ModelData modelData_;
 
-	//float animationTime_ = 0.0f;
-	// スケルトン描画用の線
-	std::vector<Line*> skeletonLine_;
-	// joint描画用の球
-	std::vector<Sphere*> jointSphere_;
-	
-
-	// カメラの座標
+	// カメラの座標(PSに転送用)
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraPosResource_;
 	Vector3 cameraPosData_;
 };

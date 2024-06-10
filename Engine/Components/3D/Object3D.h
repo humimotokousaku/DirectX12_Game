@@ -4,13 +4,8 @@
 #include "Camera.h"
 #include "ModelManager.h"
 
-class Object3D
-{
+class Object3D {
 public:
-	///
-	/// Default Method
-	/// 
-	
 	// コンストラクタ
 	Object3D() = default;
 	// デストラクタ
@@ -21,6 +16,7 @@ public:
 	/// </summary>
 	void Initialize();
 
+	/// 更新処理
 	//void Update();
 
 	/// <summary>
@@ -35,15 +31,18 @@ public:
 	void Draw();
 
 	///
-	/// Default Method
+	/// User Method
 	/// 
 
+	// ImGuiを表示
 	void ImGuiParameter(const char* name);
 
-	/// Getter
+#pragma region Getter
+	// モデル
+	Model* GetModel() { return model_; }
+#pragma endregion
 
-
-	/// Setter
+#pragma region Setter
 	// カメラ
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
@@ -69,18 +68,28 @@ public:
 		skinCluster_.push_back(skinCluster);
 	}
 
+#pragma region アニメーション
 	// アニメーション追加
-	void AddAnimation(const std::string& directoryPath, const std::string& filePath){ 
-		// アニメーション
+	void AddAnimation(const std::string& directoryPath, const std::string& filePath, const char* animName = "\0") {
+		// モデルをセット
 		model_ = ModelManager::GetInstance()->FindModel(directoryPath, filePath);
-		animation_.push_back(model_->animation_);
+		// アニメーションデータを代入
+		Motion animation = model_->animation_;
+		// アニメーションの名前を代入
+		animation.name = animName;
+		animation_.push_back(animation);
+
 		// 新しくリソースを作成
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
 		skinCluster_.push_back(skinCluster);
 	}
-	void AddAnimation(Model* model) {
-		// アニメーション
-		animation_.push_back(model->animation_);
+	void AddAnimation(Model* model, const char* animName = "\0") {
+		// アニメーションデータを代入
+		Motion animation = model_->animation_;
+		// アニメーションの名前を代入
+		animation.name = animName;
+		animation_.push_back(animation);
+
 		// 新しくリソースを作成
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
 		skinCluster_.push_back(skinCluster);
@@ -103,22 +112,36 @@ public:
 			}
 		}
 	}
+	// 全てのアニメーションを停止
+	void EndAnim() {
+		for (int i = 0; i < animation_.size(); i++) {
+			animation_[i].isActive = false;
+		}
+	}
+#pragma endregion
 
+	// ライティングの設定
+	void SetIsLighting(bool isActive) { model_->SetIsLighting(isActive); }
+	// 鏡面反射の輝度の設定
+	void SetShininess(float shininess) { model_->SetShininess(shininess); }
 
+	// 色の設定
+	void SetColor(Vector4 RGBA) { model_->SetColor(RGBA); }
+#pragma endregion
 
-public:
+public:// パブリックな変数
 	WorldTransform worldTransform;
+
+private:// プライベートな変数
+	// カメラ
 	Camera* camera_;
+	// モデル
 	Model* model_;
-	ModelData modelData_;
-private:
 	// アニメーション
 	std::vector<Motion> animation_;
 	float animationTime_ = 0.0f;
-	bool isPreAnimActive_;
 	// スキンクラスタ
 	std::vector<SkinCluster> skinCluster_;
 	// スケルトン
 	Skeleton skeleton_;
-	Vector4 color_ = { 1,1,1,1 };
 };

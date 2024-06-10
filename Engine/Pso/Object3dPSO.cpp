@@ -7,6 +7,8 @@ Object3dPSO* Object3dPSO::GetInstance() {
 }
 
 void Object3dPSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
+	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
+	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds");
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }
@@ -16,16 +18,22 @@ void Object3dPSO::CreateRootSignature() {
 	descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	descriptorRange_.resize(1);
+	descriptorRange_.resize(2);
 	descriptorRange_[0].BaseShaderRegister = 0;
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	// CubeMap用
+	//D3D12_DESCRIPTOR_RANGE descriptorRange[1];
+	descriptorRange_[1].BaseShaderRegister = 1;
+	descriptorRange_[1].NumDescriptors = 1;
+	descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
-	rootParameters_.resize(8);
-#pragma region VSShaderに送るデータ
+	rootParameters_.resize(9);
+#pragma region VSに送るデータ
 	// worldTransform
 	rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -36,7 +44,7 @@ void Object3dPSO::CreateRootSignature() {
 	rootParameters_[4].Descriptor.ShaderRegister = 1;
 #pragma endregion
 
-#pragma region PSShaderに送るデータ
+#pragma region PSに送るデータ
 	// material
 	rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -44,8 +52,8 @@ void Object3dPSO::CreateRootSignature() {
 	// texture
 	rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters_[2].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
-	rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
+	rootParameters_[2].DescriptorTable.pDescriptorRanges = &descriptorRange_[0];
+	rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size() / 2);
 	// 平行光源
 	rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -62,14 +70,17 @@ void Object3dPSO::CreateRootSignature() {
 	rootParameters_[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters_[7].Descriptor.ShaderRegister = 4;
+	// 環境マップ用のCubeTexture
+	rootParameters_[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters_[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters_[8].DescriptorTable.pDescriptorRanges = &descriptorRange_[1];
+	rootParameters_[8].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size() / 2);
 #pragma endregion
 
 #pragma endregion
-
 	// rootParameterの設定を入れる
 	descriptionRootSignature_.pParameters = rootParameters_.data();
 	descriptionRootSignature_.NumParameters = static_cast<UINT>(rootParameters_.size());
-
 #pragma region sampler
 	staticSamplers_.resize(1);
 	staticSamplers_[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;

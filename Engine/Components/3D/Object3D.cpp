@@ -11,7 +11,6 @@ void Object3D::Initialize() {
 }
 
 void Object3D::Draw(uint32_t textureNum) {
-	model_->materialData_->color = color_;
 	// カメラ
 	if (camera_) {
 		camera_->Update();
@@ -20,11 +19,28 @@ void Object3D::Draw(uint32_t textureNum) {
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
 
-	// 現在使用しているアニメーション
+	// 現在使用しているアニメーションを検出
 	for (int i = 0; i < animation_.size(); i++) {
+		// 使用しているアニメーションをモデルデータに代入
 		if (animation_[i].isActive) {
 			model_->animation_ = animation_[i];
 			model_->skinCluster_ = skinCluster_[i];
+		}
+
+		int j = 0;
+		// 全てのアニメーションが終了しているかを確認
+		while (j < animation_.size()) {
+			// 一つでも作動しているのならループを抜ける
+			if (animation_[j].isActive) {
+				break;
+			}
+			else {
+				j++;
+				// 全てのアニメーションが停止しているなら止める
+				if (j > animation_.size() - 1) {
+					model_->animation_.isActive = false;
+				}
+			}
 		}
 	}
 
@@ -76,7 +92,6 @@ void Object3D::Draw(uint32_t textureNum) {
 }
 
 void Object3D::Draw() {
-	model_->materialData_->color = color_;
 	// カメラ
 	if (camera_) {
 		camera_->Update();
@@ -85,11 +100,28 @@ void Object3D::Draw() {
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
 
-	// アニメーション
+	// 現在使用しているアニメーションを検出
 	for (int i = 0; i < animation_.size(); i++) {
+		// 使用しているアニメーションをモデルデータに代入
 		if (animation_[i].isActive) {
 			model_->animation_ = animation_[i];
 			model_->skinCluster_ = skinCluster_[i];
+		}
+
+		int j = 0;
+		// 全てのアニメーションが終了しているかを確認
+		while (j < animation_.size()) {
+			// 一つでも作動しているのならループを抜ける
+			if (animation_[j].isActive) {
+				break;
+			}
+			else {
+				j++;
+				// 全てのアニメーションが停止しているなら止める
+				if (j > animation_.size() - 1) {
+					model_->animation_.isActive = false;
+				}
+			}
 		}
 	}
 
@@ -151,7 +183,6 @@ void Object3D::ImGuiParameter(const char* name) {
 				ImGui::DragFloat3("translation", &worldTransform.transform.translate.x, 0.01f, -100, 100);
 				ImGui::DragFloat3("scale", &worldTransform.transform.scale.x, 0.01f, -100, 100);
 				ImGui::DragFloat3("rotate", &worldTransform.transform.rotate.x, 0.01f, -6.28f, 6.28f);
-				ImGui::ColorPicker4("color", &color_.x);
 				ImGui::DragFloat("playBackSpeed", &animation_[i].playBackSpeed, 0.01f, -10.0f, 10.0f);
 				ImGui::Checkbox("isAnimation", &animation_[i].isActive);
 				ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.10);
@@ -165,7 +196,6 @@ void Object3D::ImGuiParameter(const char* name) {
 				ImGui::DragFloat3("translation", &worldTransform.transform.translate.x, 0.01f, -100, 100);
 				ImGui::DragFloat3("scale", &worldTransform.transform.scale.x, 0.01f, -100, 100);
 				ImGui::DragFloat3("rotate", &worldTransform.transform.rotate.x, 0.01f, -6.28f, 6.28f);
-				ImGui::ColorPicker4("color", &color_.x);
 				ImGui::DragFloat("playBackSpeed", &animation_[i].playBackSpeed, 0.01f, -10.0f, 10.0f);
 				ImGui::Checkbox("isAnimation", &animation_[i].isActive);
 				ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.10);
@@ -173,7 +203,7 @@ void Object3D::ImGuiParameter(const char* name) {
 			}
 		}
 	}
-	
+
 	ImGui::DragFloat("animTime", &animationTime_, 0, -100, 100);
 	ImGui::End();
 }

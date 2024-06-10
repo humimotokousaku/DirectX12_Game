@@ -43,6 +43,7 @@ ConstantBuffer<SpotLight> gSpotLight : register(b4);
 ConstantBuffer<Camera> gCamera : register(b2);
 
 Texture2D<float32_t4> gTexture : register(t0);
+TextureCube<float32_t4> gEnvironmentTexture : register(t1);
 SamplerState gSampler : register(s0);
 struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
@@ -52,12 +53,17 @@ PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-
 	// textureのα値が0.0以下の時にPixelを棄却
 	if (textureColor.a <= 0.0) {
 		discard;
 	}
-
+			
+	// 環境マップ
+    float32_t3 cameraToPosition = normalize(input.worldPosition - gCamera.worldPosition);
+    float32_t3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+    float32_t4 enviromentColor = gEnvironmentTexture.Sample(gSampler, reflectedVector);
+		
+	// ライティングをする場合
 	if (gMaterial.enableLighting != 0) {
 		/// 入射光
 		// 点光源
@@ -79,15 +85,15 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * gPointLight.intensity * factor;
 		// 鏡面反射
 		float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
-
+		
 		// 拡散反射 + 鏡面反射
-		output.color.rgb = diffusePointLight + specularPointLight;
+		output.color.rgb = diffusePointLight + specularPointLight + enviromentColor.rgb;
 		// アルファ値
 		output.color.a = gMaterial.color.a * textureColor.a;
 	}
 	else {
-		output.color = gMaterial.color * textureColor;
-	}
+        output.color = gMaterial.color * textureColor + enviromentColor;
+    }
 
 	return output;
 }

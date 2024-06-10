@@ -37,10 +37,10 @@ public:
 
 private:
 	static ModelManager* instance;
-	//ModelManager() = default;
-	//~ModelManager() = default;
-	//ModelManager(const ModelManager& obj) = default;
-	//ModelManager& operator = (const ModelManager& obj) = default;
+	ModelManager() = default;
+	~ModelManager() = default;
+	ModelManager(const ModelManager& obj) = default;
+	ModelManager& operator = (const ModelManager& obj) = default;
 
 public:
 	// モデルデータ

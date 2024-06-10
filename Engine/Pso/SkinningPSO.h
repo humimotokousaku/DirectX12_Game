@@ -38,9 +38,11 @@ public:// メンバ関数
 		dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());
 		// 形状を設定
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		// 環境マップ用のテクスチャ
+		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(8, ddsTexture_);
 	}
 
 private:// プライベートなメンバ変数
-
+	uint32_t ddsTexture_;
 };
 

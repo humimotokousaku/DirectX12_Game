@@ -7,6 +7,8 @@ SkinningPSO* SkinningPSO::GetInstance() {
 }
 
 void SkinningPSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
+	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
+	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds");
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }
@@ -16,15 +18,20 @@ void SkinningPSO::CreateRootSignature() {
 	descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	descriptorRange_.resize(1);
+	descriptorRange_.resize(2);
 	descriptorRange_[0].BaseShaderRegister = 0;
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	descriptorRange_[1].BaseShaderRegister = 1;
+	descriptorRange_[1].NumDescriptors = 1;
+	descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
-	rootParameters_.resize(9);
+	rootParameters_.resize(10);
 #pragma region VSShaderに送るデータ
 	// worldTransform
 	rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -35,11 +42,11 @@ void SkinningPSO::CreateRootSignature() {
 	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters_[4].Descriptor.ShaderRegister = 1;
 	// matrixPalette
-	rootParameters_[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParameters_[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters_[8].Descriptor.ShaderRegister = 0;
-	rootParameters_[8].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
-	rootParameters_[8].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
+	rootParameters_[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters_[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParameters_[9].Descriptor.ShaderRegister = 0;
+	rootParameters_[9].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
+	rootParameters_[9].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
 #pragma endregion
 
 #pragma region PSShaderに送るデータ
@@ -50,8 +57,8 @@ void SkinningPSO::CreateRootSignature() {
 	// texture
 	rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	rootParameters_[2].DescriptorTable.pDescriptorRanges = descriptorRange_.data();
-	rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size());
+	rootParameters_[2].DescriptorTable.pDescriptorRanges = &descriptorRange_[0];
+	rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size() / 2);
 	// 平行光源
 	rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -68,6 +75,11 @@ void SkinningPSO::CreateRootSignature() {
 	rootParameters_[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters_[7].Descriptor.ShaderRegister = 4;
+	// 環境マップ用のCubeTexture
+	rootParameters_[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters_[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters_[8].DescriptorTable.pDescriptorRanges = &descriptorRange_[1];
+	rootParameters_[8].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(descriptorRange_.size() / 2);
 #pragma endregion
 
 #pragma endregion

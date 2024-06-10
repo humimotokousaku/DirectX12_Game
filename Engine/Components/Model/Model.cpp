@@ -12,9 +12,7 @@
 #include <assimp/postprocess.h>
 
 Model::~Model() {
-	for (int i = 0; i < skeletonLine_.size(); i++) {
-		delete skeletonLine_[i];
-	}
+
 }
 
 void Model::Initialize(const std::string& directoryPath, const std::string& filename) {
@@ -78,15 +76,6 @@ void Model::Initialize() {
 	// エンジン機能のインスタンスを入れる
 	dxCommon_ = DirectXCommon::GetInstance();
 	texManager_ = TextureManager::GetInstance();
-
-	//// モデルの読み込み
-	//modelData_ = LoadModelFile(filename);
-	//// アニメーションデータを読み込む
-	//animation_ = LoadAnimationFile(filename);
-	//// スケルトンデータを作成
-	//skeleton_ = CreateSkeleton(modelData_.rootNode);
-	//// スキンクラスタを作成
-	//skinCluster_ = CreateSkinCluster(skeleton_, modelData_);
 
 	// モデルファイルと同じ階層にテクスチャがない場合、デフォルトのテクスチャが入るようにする
 	texHandle_ = 1;
@@ -177,7 +166,7 @@ void Model::Initialize(const std::string& filename) {
 	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
 
 	// Lightingするか
-	materialData_->enableLighting = false;
+	materialData_->enableLighting = true;
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();
@@ -196,7 +185,7 @@ void Model::Draw(const ViewProjection& viewProjection, uint32_t textureHandle) {
 		};
 		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs); // VBVを設定
 		// MatrixPalette
-		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(8, skinCluster_.srvIndex);
+		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(9, skinCluster_.srvIndex);
 	}
 	else {
 		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
@@ -231,7 +220,7 @@ void Model::Draw(const ViewProjection& viewProjection) {
 		};
 		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs); // VBVを設定
 		// MatrixPalette
-		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(8, skinCluster_.srvIndex);
+		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(9, skinCluster_.srvIndex);
 	}
 	else {
 		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
@@ -261,47 +250,6 @@ void Model::AdjustParameter() {
 	ImGui::Begin("Model");
 	//ImGui::DragFloat3("translation", worldtrans)
 	ImGui::End();
-}
-
-void Model::SkeletonLineInit() {
-	// メモリーを確保
-	skeletonLine_.resize(skeleton_.joints.size());
-
-	// 初期化
-	for (int i = 0; i < skeletonLine_.size(); i++) {
-		skeletonLine_[i] = new Line();
-		skeletonLine_[i]->Initialize();
-	}
-
-	// jointの座標を代入
-	for (int i = 0; i < skeletonLine_.size(); i++) {
-		// 親子関係のあるノードを検索
-		if (skeleton_.joints[i].children.size() != 0) {
-			for (int j = 0; j < skeleton_.joints[i].children.size(); j++) {
-				int index = skeleton_.joints[i].children[j];
-				skeletonLine_[index]->startPos_ = skeleton_.joints[index].transform.translate;
-			}
-		}
-		//skeletonLine_[i]->startPos_ = skeleton_.joints[i].transform.translate;
-		//skeletonLine_[i]->endPos_ = skeleton_.joints[i + 1].transform.translate;
-	}
-}
-
-void Model::JointSphereInit() {
-	// メモリーを確保
-	jointSphere_.resize(skeleton_.joints.size());
-
-	// 初期化
-	for (int i = 0; i < jointSphere_.size(); i++) {
-		jointSphere_[i] = new Sphere();
-		jointSphere_[i]->Initialize();
-	}
-
-	for (int i = 0; i < jointSphere_.size(); i++) {
-		jointSphere_[i]->worldTransform.transform.translate = skeleton_.joints[i].transform.translate;
-		//jointSphere_[i]->worldTransform.transform.rotate = skeleton_.joints[i].transform.rotate;
-		jointSphere_[i]->worldTransform.transform.scale = Multiply(0.1f, skeleton_.joints[i].transform.scale);
-	}
 }
 
 #pragma region プライベートな関数
