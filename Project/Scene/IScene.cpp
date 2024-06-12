@@ -5,9 +5,9 @@
 int IScene::sceneNum;
 
 IScene::~IScene() {
-	for (int i = 0; i < levelObjects_.size(); i++) {
-		//delete levelObjects_[i];
-	}
+	/*for (Object3D* object : levelObjects_) {
+		delete object;
+	}*/
 }
 
 void IScene::LoadJSONFile(const std::string fileName) {
@@ -41,7 +41,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 	assert(name.compare("scene") == 0);
 
 	// レベルデータ格納用インスタンス生成
-	LevelData* levelData = new LevelData();
+	std::unique_ptr<LevelData> levelData = std::make_unique<LevelData>();
 
 	// "objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"]) {
@@ -90,7 +90,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		}
 		model->Initialize("level/" + objectData.fileName);
 		// モデルを指定して3Dオブジェクト生成
-		Object3D* newObject = new Object3D();
+		std::unique_ptr<Object3D> newObject = std::make_unique<Object3D>();
 		newObject->Initialize();
 		newObject->SetModel(model);
 		// 座標
@@ -100,7 +100,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		// 座標
 		newObject->worldTransform.transform.scale = objectData.scale;
 
-		objects.push_back(newObject);
+		objects.push_back(newObject.get());
 
 		// モデルをmapコンテナに格納
 		ModelManager::GetInstance()->models_.insert(std::make_pair("engine/resources/level" + fileName, std::move(model)));

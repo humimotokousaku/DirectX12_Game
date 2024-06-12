@@ -20,14 +20,14 @@ void RadialBlur::Initialize() {
 #pragma endregion
 
 	radialBlurData_->isActive = false;
-	radialBlurData_->blurWidth = 0.2f;
+	radialBlurData_->blurWidth = 0.005f;
 	radialBlurData_->center = { 0.5f, 0.5f };
 }
 
 void RadialBlur::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
 #ifdef _DEBUG
 	ImGui::Begin("RadialBlur");
-	ImGui::DragFloat("blurWidth", &radialBlurData_->blurWidth, 0.01f, 0, 100);
+	ImGui::DragFloat("blurWidth", &radialBlurData_->blurWidth, 0.001f, 0, 100);
 	ImGui::DragFloat2("center", &radialBlurData_->center.x, 0.01f, 0, 100);
 	ImGui::Checkbox("isActive", &radialBlurData_->isActive);
 	ImGui::End();

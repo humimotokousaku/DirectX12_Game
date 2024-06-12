@@ -37,28 +37,21 @@ public:
 	/// 描画処理
 	/// </summary>
 	virtual void Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr);
-
 	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	virtual void PreDrawScene();
-
 	/// <summary>
 	/// 描画後の処理
 	/// </summary>
 	virtual void PostDrawScene();
 
-	/// <summary>
-	/// スプライトの初期化(現状のSpriteクラスだとテクスチャの読み込みをしなくてはいけないので新たに作る)
-	/// </summary>
-	void SpriteInitialize(RenderingTextureData texData);
+#pragma region Getter
+	// レンダーテクスチャの取得
+	uint32_t GetRenderTexture() { return texBuff_.srvIndex; }
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-#pragma region Getter
-
 #pragma endregion
 
 #pragma region Setter
@@ -66,6 +59,11 @@ public:
 #pragma endregion
 
 protected:
+	/// <summary>
+	/// スプライトの初期化(現状のSpriteクラスだとテクスチャの読み込みをしなくてはいけないので新たに作る)
+	/// </summary>
+	void SpriteInitialize(RenderingTextureData texData);
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
 
 	void CreateVertexResource();

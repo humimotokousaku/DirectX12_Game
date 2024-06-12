@@ -40,7 +40,7 @@ public:
     }
 
     /// <summary>
-    /// ゲーム速度を設定(1がデフォルト)
+    /// ゲーム速度を設定(1がデフォルト)使用すると少しずつ重くなるのでまだ使えない
     /// </summary>
     /// <param name="gameSpeed">時間の速さ</param>
     void SetDeltaTimeMultiply(float gameSpeed) { coefficient = gameSpeed * 60.0f; };

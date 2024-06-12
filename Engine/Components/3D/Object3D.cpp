@@ -4,6 +4,8 @@
 
 Object3D::~Object3D() {
 	worldTransform.constBuff_.ReleaseAndGetAddressOf();
+	skinCluster_.clear();
+	animation_.clear();
 }
 
 void Object3D::Initialize() {
@@ -13,36 +15,36 @@ void Object3D::Initialize() {
 void Object3D::Draw(uint32_t textureNum) {
 	// カメラ
 	if (camera_) {
-		camera_->Update();
+		//camera_->Update();
 	}
 
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
 
-	// 現在使用しているアニメーションを検出
-	for (int i = 0; i < animation_.size(); i++) {
-		// 使用しているアニメーションをモデルデータに代入
-		if (animation_[i].isActive) {
-			model_->animation_ = animation_[i];
-			model_->skinCluster_ = skinCluster_[i];
-		}
+	//// 現在使用しているアニメーションを検出
+	//for (int i = 0; i < animation_.size(); i++) {
+	//	// 使用しているアニメーションをモデルデータに代入
+	//	if (animation_[i].isActive) {
+	//		model_->animation_ = animation_[i];
+	//		model_->skinCluster_ = skinCluster_[i];
+	//	}
 
-		int j = 0;
-		// 全てのアニメーションが終了しているかを確認
-		while (j < animation_.size()) {
-			// 一つでも作動しているのならループを抜ける
-			if (animation_[j].isActive) {
-				break;
-			}
-			else {
-				j++;
-				// 全てのアニメーションが停止しているなら止める
-				if (j > animation_.size() - 1) {
-					model_->animation_.isActive = false;
-				}
-			}
-		}
-	}
+	//	int j = 0;
+	//	// 全てのアニメーションが終了しているかを確認
+	//	while (j < animation_.size()) {
+	//		// 一つでも作動しているのならループを抜ける
+	//		if (animation_[j].isActive) {
+	//			break;
+	//		}
+	//		else {
+	//			j++;
+	//			// 全てのアニメーションが停止しているなら止める
+	//			if (j > animation_.size() - 1) {
+	//				model_->animation_.isActive = false;
+	//			}
+	//		}
+	//	}
+	//}
 
 	/// コマンドを積む
 
@@ -94,36 +96,36 @@ void Object3D::Draw(uint32_t textureNum) {
 void Object3D::Draw() {
 	// カメラ
 	if (camera_) {
-		camera_->Update();
+		//camera_->Update();
 	}
 
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
 
-	// 現在使用しているアニメーションを検出
-	for (int i = 0; i < animation_.size(); i++) {
-		// 使用しているアニメーションをモデルデータに代入
-		if (animation_[i].isActive) {
-			model_->animation_ = animation_[i];
-			model_->skinCluster_ = skinCluster_[i];
-		}
+	//// 現在使用しているアニメーションを検出
+	//for (int i = 0; i < animation_.size(); i++) {
+	//	// 使用しているアニメーションをモデルデータに代入
+	//	if (animation_[i].isActive) {
+	//		model_->animation_ = animation_[i];
+	//		model_->skinCluster_ = skinCluster_[i];
+	//	}
 
-		int j = 0;
-		// 全てのアニメーションが終了しているかを確認
-		while (j < animation_.size()) {
-			// 一つでも作動しているのならループを抜ける
-			if (animation_[j].isActive) {
-				break;
-			}
-			else {
-				j++;
-				// 全てのアニメーションが停止しているなら止める
-				if (j > animation_.size() - 1) {
-					model_->animation_.isActive = false;
-				}
-			}
-		}
-	}
+	//	int j = 0;
+	//	// 全てのアニメーションが終了しているかを確認
+	//	while (j < animation_.size()) {
+	//		// 一つでも作動しているのならループを抜ける
+	//		if (animation_[j].isActive) {
+	//			break;
+	//		}
+	//		else {
+	//			j++;
+	//			// 全てのアニメーションが停止しているなら止める
+	//			if (j > animation_.size() - 1) {
+	//				model_->animation_.isActive = false;
+	//			}
+	//		}
+	//	}
+	//}
 
 	/// コマンドを積む
 
@@ -170,6 +172,33 @@ void Object3D::Draw() {
 
 	// 見た目を描画
 	model_->Draw(camera_->GetViewProjection());
+}
+
+void Object3D::CurrentAnimUpdate() {
+	// 現在使用しているアニメーションを検出
+	for (int i = 0; i < animation_.size(); i++) {
+		// 使用しているアニメーションをモデルデータに代入
+		if (animation_[i].isActive) {
+			model_->animation_ = animation_[i];
+			model_->skinCluster_ = skinCluster_[i];
+		}
+
+		int j = 0;
+		// 全てのアニメーションが終了しているかを確認
+		while (j < animation_.size()) {
+			// 一つでも作動しているのならループを抜ける
+			if (animation_[j].isActive) {
+				break;
+			}
+			else {
+				j++;
+				// 全てのアニメーションが停止しているなら止める
+				if (j > animation_.size() - 1) {
+					model_->animation_.isActive = false;
+				}
+			}
+		}
+	}
 }
 
 void Object3D::ImGuiParameter(const char* name) {

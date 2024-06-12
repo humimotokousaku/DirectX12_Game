@@ -25,7 +25,7 @@ void Player::Initialize(Camera* camera) {
 	object3d_->SetAnimName("Walk");
 	object3d_->SetCamera(camera);
 	// しゃがみ歩きアニメーション追加
-	object3d_->AddAnimation("Human", "sneakWalk.gltf");
+	object3d_->AddAnimation("Human", "sneakWalk.gltf", "SneakWalk");
 	object3d_->StartAnim("Walk");
 
 	object3d_->worldTransform.transform.translate = { 0,-2,5 };
@@ -34,15 +34,15 @@ void Player::Initialize(Camera* camera) {
 }
 
 void Player::Update() {
-
-	GameTimer::GetInstance()->SetDeltaTimeMultiply(gameSpeed_);
+	// 使用すると重くなるから使うな
+	//GameTimer::GetInstance()->SetDeltaTimeMultiply(gameSpeed_);
 	XINPUT_STATE joyState;
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		// デッドゾーンの設定
 		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbLX);
 		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbLY);
 		object3d_->worldTransform.transform.translate.x += (float)leftThumbX / SHRT_MAX * 0.02f * GameTimer::GetInstance()->GetDeltaTime();
-		object3d_->worldTransform.transform.translate.z += (float)leftThumbY / SHRT_MAX * 0.02f * GameTimer::GetInstance()->GetDeltaTime();
+		//object3d_->worldTransform.transform.translate.z += (float)leftThumbY / SHRT_MAX * 0.02f * GameTimer::GetInstance()->GetDeltaTime();
 		if (leftThumbX > 0.0f) {
 			object3d_->worldTransform.transform.rotate.y = std::numbers::inv_pi * 5.0f;
 		}

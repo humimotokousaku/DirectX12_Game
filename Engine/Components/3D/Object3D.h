@@ -30,6 +30,11 @@ public:
 	/// </summary>
 	void Draw();
 
+	/// <summary>
+	/// 今使用しているアニメーションの検出と更新
+	/// </summary>
+	void CurrentAnimUpdate();
+
 	///
 	/// User Method
 	/// 
@@ -106,6 +111,9 @@ public:
 		for (int i = 0; i < animation_.size(); i++) {
 			if (animation_[i].name == animName) {
 				animation_[i].isActive = true;
+				//model_->animation_.isActive = animation_[i].isActive;
+				model_->animation_ = animation_[i];
+				model_->skinCluster_ = skinCluster_[i];
 			}
 			else {
 				animation_[i].isActive = false;
@@ -116,8 +124,21 @@ public:
 	void EndAnim() {
 		for (int i = 0; i < animation_.size(); i++) {
 			animation_[i].isActive = false;
+			model_->animation_.isActive = false;
 		}
 	}
+
+	// アニメーションのループ設定
+	void SetIsAnimLoop(bool isActive) { model_->animation_.isLoop = isActive; }
+
+	/// <summary>
+	/// アニメーションの再生速度
+	/// 2:二倍速
+	/// -:逆再生
+	/// </summary>
+	/// <param name="speed">再生倍率</param>
+	void SetAnimSpeed(float speed) { model_->animation_.playBackSpeed = speed; }
+
 #pragma endregion
 
 	// ライティングの設定

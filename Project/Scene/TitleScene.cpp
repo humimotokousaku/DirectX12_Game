@@ -70,6 +70,7 @@ void TitleScene::Initialize() {
 	human_[0]->SetCamera(camera_.get());
 	human_[0]->SetColor({ 1,1,1,1 });
 	human_[0]->worldTransform.transform.translate = { 2,0,5 };
+	human_[0]->SetIsLighting(true);
 	//human_[0]->StartAnim("Walk");
 	// sneakWalk
 	human_[1] = std::make_unique<Object3D>();
@@ -81,15 +82,6 @@ void TitleScene::Initialize() {
 	human_[1]->StartAnim("SneakWalk");
 	// walkアニメーションにsneakWalkを追加
 	human_[0]->AddAnimation(human_[1]->GetModel());
-#pragma endregion
-
-	// 自機
-	player_ = std::make_unique<Player>();
-	for (int i = 0; i < 2; i++) {
-		//player_->AddModel(human_[i].get());
-	}
-	player_->Initialize(camera_.get());
-
 
 	// 
 	box_[0] = std::make_unique<Object3D>();
@@ -112,6 +104,18 @@ void TitleScene::Initialize() {
 	axis_->SetModel("", "axis.obj");
 	axis_->SetCamera(camera_.get());
 	axis_->worldTransform.transform.translate = { -2,0,5 };
+	axis_->SetIsLighting(true);
+#pragma endregion
+
+	// 自機
+	player_ = std::make_unique<Player>();
+	for (int i = 0; i < 2; i++) {
+		//player_->AddModel(human_[i].get());
+	}
+	player_->Initialize(camera_.get());
+
+
+
 	// Skybox
 	cube_ = std::make_unique<Cube>();
 	cube_->SetCamera(camera_.get());
@@ -129,15 +133,16 @@ void TitleScene::Initialize() {
 	//}
 
 	// Blender
-	//LoadJSONFile("sample_map.json");
-	//for (Object3D* object : levelObjects_) {
-	//	object->SetCamera(camera_.get());
-	//}
+	/*LoadJSONFile("sample_map.json");
+	for (Object3D* object : levelObjects_) {
+		object->SetCamera(camera_.get());
+	}*/
 }
 
 void TitleScene::Update() {
+	camera_->Update();
 	particle_->Update();
-	//player_->Update();
+	player_->Update();
 #pragma region パーティクル以外の処理
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		sceneNum = GAME_SCENE;
@@ -158,11 +163,11 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
-	axis_->Draw(uvcheckerTexture_);
-	human_[0]->Draw(monsterBallTexture_);
+	axis_->Draw(particleTexture_);
+	//human_[0]->Draw(monsterBallTexture_);
 	for (int i = 0; i < 2; i++) {
-		//plane_[i]->Draw(uvcheckerTexture_);
-		//box_[i]->Draw(uvcheckerTexture_);
+		plane_[i]->Draw(uvcheckerTexture_);
+		box_[i]->Draw(uvcheckerTexture_);
 		//human_[i]->Draw(uvcheckerTexture_);
 	}
 
@@ -173,7 +178,7 @@ void TitleScene::Draw() {
 	player_->Draw(particleTexture_);
 	cube_->Draw(ddsTexture_);
 
-	//particle_->Draw(uvcheckerTexture_);
+	particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {
