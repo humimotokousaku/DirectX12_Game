@@ -10,33 +10,44 @@ void GameScene::Initialize() {
 
 	// 使用するモデルの読み込み
 	ModelManager::GetInstance()->LoadModel("", "block.obj");
+
+	// 自機
+	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	// 3Dレティクル
+	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	// 自機の弾
+	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	// 通常敵のモデル
+	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	// 通常敵の弾
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 
-
 	// 敵の出現情報を読み込む
-	//LoadEnemyPopData();
+	LoadEnemyPopData();
 
 	// カメラの生成
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-
 	// カメラレールの生成
 	railCamera_ = std::make_unique<RailCamera>();
-	// カメラレールの初期化
 	railCamera_->Initialize();
+
+	// 衝突マネージャーの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
+	//collisionManager_->SetColliderList(player_.get());
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 自機モデル
 	player_->AddModel(models_[0]);
 	// 3Dレティクルモデル
-	player_->AddModel(models_[0]);
+	player_->AddModel(models_[1]);
 	// 弾モデル
-	player_->AddModel(models_[0]);
-	// カメラのアドレスを設定
+	player_->AddModel(models_[2]);
+	// 必要なクラスのアドレスをセットする
 	player_->SetCamera(railCamera_->GetCamera());
-	// ゲームシーンのアドレスを設定
 	player_->SetGameScene(this);
+	player_->SetCollisionManager(collisionManager_.get());
 	player_->Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -64,12 +75,9 @@ void GameScene::Initialize() {
 	targetT_ = 1.0f / segmentCount;
 	isMoveCamera_ = false;
 
-	// 衝突マネージャーの生成
-	collisionManager_ = std::make_unique<CollisionManager>();
-
 	// Skybox
 	cube_ = std::make_unique<Cube>();
-	cube_->SetCamera(camera_.get());
+	cube_->SetCamera(railCamera_->GetCamera());
 	cube_->SetScale(Vector3{ 100,100,100 });
 	cube_->SetPosition(Vector3{ 0,0,10 });
 }
@@ -80,31 +88,31 @@ void GameScene::Update() {
 	}
 
 	// 敵の出現するタイミングと座標
-	//UpdateEnemyPopCommands();
+	UpdateEnemyPopCommands();
 	// 敵の削除
-	//enemy_.remove_if([](Enemy* enemy) {
-	//	if (enemy->IsDead()) {
-	//		delete enemy;
-	//		return true;
-	//	}
-	//	return false;
-	//});
-	//// enemyの更新
-	//for (Enemy* enemy : enemy_) {
-	//	enemy->Update();
-	//}
-	//// 弾の更新
-	//for (EnemyBullet* bullet : enemyBullets_) {
-	//	bullet->Update();
-	//}
-	//// 終了した弾を削除
-	//enemyBullets_.remove_if([](EnemyBullet* bullet) {
-	//	if (bullet->isDead()) {
-	//		delete bullet;
-	//		return true;
-	//	}
-	//	return false;
-	//	});
+	enemy_.remove_if([](Enemy* enemy) {
+		if (enemy->IsDead()) {
+			delete enemy;
+			return true;
+		}
+		return false;
+	});
+	// enemyの更新
+	for (Enemy* enemy : enemy_) {
+		enemy->Update();
+	}
+	// 弾の更新
+	for (EnemyBullet* bullet : enemyBullets_) {
+  		bullet->Update();
+	}
+	// 終了した弾を削除
+	enemyBullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->isDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
 
 	// 自キャラの更新
 	player_->Update();
@@ -156,7 +164,7 @@ void GameScene::Update() {
 	// 当たり判定を必要とするObjectをまとめてセットする
 	//collisionManager_->SetGameObject(player_, enemy_, enemyBullets_, playerBullets_);
 	// 衝突マネージャー(当たり判定)
-	//collisionManager_->CheckAllCollisions();
+	collisionManager_->CheckAllCollisions();
 
 
 #ifdef USE_IMGUI
@@ -169,22 +177,49 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
+	// 自機
 	player_->Draw();
+	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		bullet->Draw();
 	}
 
+	// 通常敵
+	for (Enemy* enemy : enemy_) {
+		enemy->Draw();
+	}
+	// 通常敵の弾
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Draw();
+	}
+
 	// skybox
-	//cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds"));
+	cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds"));
 }
 
 void GameScene::Finalize() {
+	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
 	}
+	// 通常敵
+	for (Enemy* enemy : enemy_) {
+		delete enemy;
+	}
+	// 通常敵の弾
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
+
+	// リストのクリア
+	// 自機の弾
 	playerBullets_.clear();
-	//player_.release();
-	//delete model_;
+	// 通常敵
+	enemy_.clear();
+	// 通常敵の弾
+	enemyBullets_.clear();
+	// 全コライダー
+	collisionManager_->ClearColliderList();
 }
 
 void GameScene::UpdatePlayerPosition(float t) {
@@ -200,20 +235,20 @@ void GameScene::SpawnEnemy(Vector3 pos) {
 	Enemy* enemy = new Enemy();
 
 	// 敵モデルを追加
-	//enemy->AddModel(model_);
-
-	//// 弾のモデルを追加
-	//enemy->AddModel(model_);
+	enemy->AddModel(models_[3]);
+	// 弾のモデルを追加
+	enemy->AddModel(models_[4]);
 
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_.get());
-	enemy->SetCamera(camera_.get());
+	enemy->SetCamera(railCamera_->GetCamera());
+	enemy->SetCollisionManager(collisionManager_.get());
 	enemy->SetGameScene(this);
 
 	// 初期化
-	enemy->Initialize();
+	enemy->Initialize(pos);
 	// 座標を指定
-	enemy->SetPosition(pos);
+	//enemy->SetPosition(pos);
 
 	// リストに登録
 	enemy_.push_back(enemy);

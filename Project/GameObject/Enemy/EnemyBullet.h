@@ -1,5 +1,6 @@
 #pragma once
 #include "Collider.h"
+#include "CollisionManager.h"
 #include "Model.h"
 #include "Player.h"
 #include "WorldTransform.h"
@@ -9,6 +10,9 @@ public:// パブリックなメンバ関数
 	///
 	/// Default Method
 	/// 
+
+	EnemyBullet() = default;
+	~EnemyBullet();
 
 	/// <summary>
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
@@ -26,7 +30,7 @@ public:// パブリックなメンバ関数
 	/// 描画
 	/// </summary>
 	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Draw(const ViewProjection& viewProjection);
+	void Draw();
 
 	///
 	/// User Method
@@ -55,6 +59,8 @@ public:// パブリックなメンバ関数
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
+	// 衝突マネージャのアドレスを設定
+	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
 	///
 	/// 純粋仮想関数
@@ -75,6 +81,8 @@ private: // プライベートなメンバ変数
 	Player* player_ = nullptr;
 	// カメラのアドレス
 	Camera* camera_;
+	// 衝突マネージャー
+	CollisionManager* collisionManager_ = nullptr;
 
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 5;

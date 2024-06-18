@@ -3,6 +3,10 @@
 #include "Matrix4x4.h"
 #include <cassert>
 
+PlayerBullet::~PlayerBullet() {
+	collisionManager_->ClearColliderList(this);
+}
+
 void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
 	// モデルの生成
 	object3d_ = std::make_unique<Object3D>();
@@ -10,10 +14,11 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->SetModel(model);
 	object3d_->SetCamera(camera_);
 
-	// 衝突属性を設定
+	// colliderの設定
+	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributePlayer);
-	// 衝突対象を自分の属性以外に設定
 	SetCollisionMask(~kCollisionAttributePlayer);
+	collisionManager_->SetColliderList(this);
 
 	// ワールド変換の初期化
 	object3d_->worldTransform.Initialize();

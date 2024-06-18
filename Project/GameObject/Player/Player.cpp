@@ -10,21 +10,19 @@
 Player::Player() {}
 Player::~Player() {
 	models_.clear();
+	//collisionManager_->ClearColliderList(this);
 }
 
 void Player::Initialize() {
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
-	// colliderの設定
-	SetCollisionPrimitive(kCollisionOBB);
-
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.translate = { 0,-2,5 };
+	object3d_->worldTransform.translate = { 0,-2,50 };
 
 	// 3Dレティクルモデル作成
 	object3dReticle_ = std::make_unique<Object3D>();
@@ -32,6 +30,12 @@ void Player::Initialize() {
 	object3dReticle_->SetModel(models_[1]);
 	object3dReticle_->SetCamera(camera_);
 	gameSpeed_ = 1.0f;
+
+	// colliderの設定
+	SetCollisionPrimitive(kCollisionOBB);
+	SetCollisionAttribute(kCollisionAttributePlayer);
+	SetCollisionMask(~kCollisionAttributePlayer);
+	collisionManager_->SetColliderList(this);
 }
 
 void Player::Update() {
@@ -154,6 +158,7 @@ void Player::Attack() {
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
 		newBullet->SetCamera(camera_);
+		newBullet->SetCollisionManager(collisionManager_);
 		newBullet->Initialize(models_[2], worldPos, velocity);
 
 		// 弾を登録

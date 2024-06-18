@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3D.h"
 #include "Collider.h"
+#include "CollisionManager.h"
 #include "Camera.h"
 #include "Sprite.h"
 #include "Object3D.h"
@@ -76,6 +77,8 @@ public:// パブリックなメンバ関数
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// ゲームシーンのアドレスを設定
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	// 衝突マネージャのアドレスを設定
+	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
 	/// <summary>
 	/// 親となるワールドトランスフォームを設定
@@ -116,6 +119,8 @@ private:// プライベートなメンバ変数
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameScene* gameScene_;
+	// 衝突マネージャのアドレス
+	CollisionManager* collisionManager_;
 
 	bool isDead_ = true;
 

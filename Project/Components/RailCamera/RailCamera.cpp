@@ -6,9 +6,9 @@
 void RailCamera::Initialize() {
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->worldTransform_.translate.x = 5;
-	camera_->worldTransform_.translate.y = 5;
-	camera_->worldTransform_.translate.z = -30;
+	//camera_->worldTransform_.translate.x = 5;
+	//camera_->worldTransform_.translate.y = 5;
+	//camera_->worldTransform_.translate.z = -30;
 }
 
 void RailCamera::Update(Vector3 target) {

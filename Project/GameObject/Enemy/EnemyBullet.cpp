@@ -6,6 +6,10 @@
 #include "Matrix4x4.h"
 #include <cassert>
 
+EnemyBullet::~EnemyBullet() {
+	collisionManager_->ClearColliderList(this);
+}
+
 void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
 	// NULLポインタチェック
 	assert(model);
@@ -15,13 +19,16 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(model);
+	object3d_->worldTransform.translate = pos;
+
 	// 形状を設定
 	SettingScale();
 
-	// 衝突属性を設定
+	// colliderの設定
+	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributeEnemy);
-	// 衝突対象を自分の属性以外に設定
 	SetCollisionMask(~kCollisionAttributeEnemy);
+	collisionManager_->SetColliderList(this);
 
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
@@ -58,7 +65,7 @@ void EnemyBullet::Update() {
 	}
 }
 
-void EnemyBullet::Draw(const ViewProjection& viewProjection) {
+void EnemyBullet::Draw() {
 	// モデルの描画
 	object3d_->Draw();
 }

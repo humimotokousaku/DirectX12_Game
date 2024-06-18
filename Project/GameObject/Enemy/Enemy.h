@@ -4,6 +4,7 @@
 #include "Object3D.h"
 #include "IEnemyState.h"
 #include "EnemyBullet.h"
+#include "CollisionManager.h"
 #include <vector>
 
 class Player;
@@ -17,7 +18,7 @@ public:
 	/// <summary>
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
 	/// <summary>
-	void Initialize();
+	void Initialize(Vector3 pos);
 
 	/// <summary>
 	/// 更新
@@ -27,7 +28,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// <summary>
-	void Draw(uint32_t textureHandle);
+	void Draw();
 
 	/// <summary>
 	/// stateの変更
@@ -74,6 +75,8 @@ public:
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// ゲームシーンのアドレスを設定
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	// 衝突マネージャのアドレスを設定
+	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	
 	// 死亡フラグを設定
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
@@ -106,6 +109,8 @@ private:
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameScene* gameScene_ = nullptr;
+	// 衝突マネージャー
+	CollisionManager* collisionManager_ = nullptr;
 
 	// 状態遷移
 	IEnemyState* state_;

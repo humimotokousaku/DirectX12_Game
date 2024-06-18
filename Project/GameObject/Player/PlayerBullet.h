@@ -2,12 +2,17 @@
 #include "Object3D.h"
 #include "WorldTransform.h"
 #include "Collider.h"
+#include "CollisionManager.h"
 
 /// <summary>
 /// 自キャラの弾
 /// </summary>
 class PlayerBullet : public Collider{
 public: // メンバ関数
+
+	PlayerBullet() = default;
+	~PlayerBullet();
+
 	/// <summary>
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
 	/// </summary>
@@ -42,6 +47,8 @@ public: // メンバ関数
 
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
+	// 衝突マネージャのアドレスを設定
+	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
 	///
 	/// 純粋仮想関数
@@ -61,6 +68,8 @@ private: // メンバ変数
 
 	// カメラのアドレス
 	Camera* camera_;
+	// 衝突マネージャー
+	CollisionManager* collisionManager_ = nullptr;
 
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 5;
