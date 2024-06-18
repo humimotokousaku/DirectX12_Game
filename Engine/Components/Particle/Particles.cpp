@@ -183,7 +183,7 @@ Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& t
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
 
 	Particle particle;
-	particle.transform.scale = { 0.5f,0.5f,0.5f };
+	particle.transform.scale = { 0.1f,0.1f,0.1f };
 	particle.transform.rotate = { 0,0,0 };
 
 	Vector3 randomTranslate;
@@ -216,21 +216,21 @@ std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& ra
 	}
 	return particles;
 }
-
-void Particles::ImGuiAdjustParameter()
-{
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
-	if (ImGui::TreeNode("Particles")) {
-		if (ImGui::Button("Add Particle")) {
-			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-		}
-		ImGui::Text("Emitter.frquencyTime:%f", emitter_.frequencyTime);
-		ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
-		ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
-		ImGui::TreePop();
-	}
-}
+//
+//void Particles::ImGuiAdjustParameter()
+//{
+//	std::random_device seedGenerator;
+//	std::mt19937 randomEngine(seedGenerator());
+//	if (ImGui::TreeNode("Particles")) {
+//		if (ImGui::Button("Add Particle")) {
+//			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+//		}
+//		ImGui::Text("Emitter.frquencyTime:%f", emitter_.frequencyTime);
+//		ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
+//		ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
+//		ImGui::TreePop();
+//	}
+//}
 
 Vector3 Particles::KelvinToRGB(int kelvin) {
 	Vector3 color{};

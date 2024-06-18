@@ -1,10 +1,5 @@
 #pragma once
-#include "Sprite.h"
-#include "DirectXCommon.h"
-#include "Camera.h"
-#include "PostEffectPSO.h"
 #include "IPostEffect.h"
-#include <Windows.h>
 
 class PostEffect : public IPostEffect {
 public:

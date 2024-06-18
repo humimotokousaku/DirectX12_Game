@@ -20,11 +20,14 @@ struct ViewProjection{
 
 #pragma region ビュー行列の設定
 	// トランスフォーム
-	Transform transform = {
+	/*Transform transform = {
 		{1,1,1},
 		{0,0,0},
 		{0,0,-10}
-	};
+	};*/
+	Vector3 translate = { 0,0,10 };
+	Vector3 rotate;
+	Vector3 scale = { 1,1,1 };
 #pragma endregion
 
 #pragma region 射影行列の設定

@@ -7,21 +7,6 @@
 #include <dxcapi.h>
 
 /// <summary>
-/// 使用できるポストエフェクトの種類
-/// </summary>
-enum PostEffectType {
-	NORMAL,
-	RADIALBLUR,
-	//SMOOTHING,
-	GAUSSIAN,
-	/*HIGHINTENSITY,
-	BLUR,*/
-	//DISSOLVE,
-	BLOOM,
-	COUNT
-};
-
-/// <summary>
 /// ポストエフェクトのPSO
 /// </summary>
 class PostEffectPSO : public IPSO

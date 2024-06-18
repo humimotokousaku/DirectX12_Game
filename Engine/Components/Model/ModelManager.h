@@ -13,6 +13,7 @@ public:
 	void Initialize();
 
 	void LoadModel(const std::string& directoryPath, const std::string& filePath);
+	void LoadModel(const std::string& fileFullPath);
 
 	// 終了
 	void Finalize();
@@ -29,6 +30,7 @@ public:
 	/// <param name="filePath">モデルのファイルパス</param>
 	/// <returns>モデル</returns>
 	Model* FindModel(const std::string& directoryPath, const std::string& filePath);
+	Model* FindModel(const std::string& fileFullPath);
 
 	/// Setter
 
@@ -36,7 +38,7 @@ public:
 	Model* SetModel(const std::string& directoryPath, const std::string& filePath);
 
 private:
-	static ModelManager* instance;
+	//static ModelManager* instance;
 	ModelManager() = default;
 	~ModelManager() = default;
 	ModelManager(const ModelManager& obj) = default;

@@ -8,10 +8,13 @@ void IPostEffect::Initialize() {
 
 	// テクスチャバッファの作成
 	texBuff_.resource = CreateTextureBufferResource();
+	depthTexBuff_.resource = CreateTextureBufferResource();
 
 #pragma region SRV
 	// ノーマル
 	texBuff_ = CreateSRV(texBuff_);
+	depthTexBuff_ = CreateSRV(depthTexBuff_);
+
 #pragma endregion
 
 #pragma region RTV
@@ -21,6 +24,7 @@ void IPostEffect::Initialize() {
 	// RTVの作成
 	// 何も加工しない
 	CreateRTV(texBuff_, 0);
+	CreateRTV(depthTexBuff_, 1);
 #pragma endregion
 
 #pragma region DSV
@@ -103,7 +107,7 @@ void IPostEffect::PreDrawScene() {
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = GetCPUDescriptorHandle(descHeapDSV_.Get(), descriptorSizeRTV, 0);
 	// レンダーターゲットをセット
-	directXCommon_->GetCommandList()->OMSetRenderTargets(1, rtvHandles_, false, &dsvHandle);
+	directXCommon_->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[0], false, &dsvHandle);
 
 	// ビューポートの設定
 	D3D12_VIEWPORT viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::kClientWidth_, WinApp::kClientHeight_);
@@ -193,7 +197,7 @@ void IPostEffect::SpriteInitialize(RenderingTextureData texData) {
 
 	// アンカーポイントのスクリーン座標
 	worldTransform_.Initialize();
-	worldTransform_.transform.translate = { 640,360,1 };
+	worldTransform_.translate = { 640,360,1 };
 
 	// カメラ
 	camera_ = std::make_unique<Camera>();

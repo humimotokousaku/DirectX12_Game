@@ -6,51 +6,47 @@ Camera::~Camera() {
 }
 
 void Camera::Initialize() {
-	// トランスフォーム
-	transform_ = {
-		{1,1,1},
-		{0,0,0},
-		{0,0,0}
-	};
 	CreateViewProjection();
+	worldTransform_.Initialize();
 }
 
 void Camera::Update() {
 	UpdateMatrix();
+	worldTransform_.UpdateMatrix();
 
-	// 座標移動
-	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
-		transform_.translate.x += 0.01f;
-	}
-	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
-		transform_.translate.x -= 0.01f;
-	}
-	if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
-		transform_.translate.y += 0.01f;
-	}
-	else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
-		transform_.translate.z += 0.01f;
-	}
-	if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
-		transform_.translate.y -= 0.01f;
-	}
-	else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
-		transform_.translate.z -= 0.01f;
-	}
+	//// 座標移動
+	//if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
+	//	worldTransform_.translate.x += 0.01f;
+	//}
+	//if (Input::GetInstance()->PressKey(DIK_LEFT)) {
+	//	worldTransform_.translate.x -= 0.01f;
+	//}
+	//if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
+	//	worldTransform_.translate.y += 0.01f;
+	//}
+	//else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
+	//	worldTransform_.translate.z += 0.01f;
+	//}
+	//if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
+	//	worldTransform_.translate.y -= 0.01f;
+	//}
+	//else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
+	//	worldTransform_.translate.z -= 0.01f;
+	//}
 
-	// 回転
-	if (Input::GetInstance()->PressKey(DIK_W)) {
-		transform_.rotate.x += -0.01f;
-	}
-	if (Input::GetInstance()->PressKey(DIK_S)) {
-		transform_.rotate.x += 0.01f;
-	}
-	if (Input::GetInstance()->PressKey(DIK_A)) {
-		transform_.rotate.y += -0.01f;
-	}
-	if (Input::GetInstance()->PressKey(DIK_D)) {
-		transform_.rotate.y += 0.01f;
-	}
+	//// 回転
+	//if (Input::GetInstance()->PressKey(DIK_W)) {
+	//	worldTransform_.rotate.x += -0.01f;
+	//}
+	//if (Input::GetInstance()->PressKey(DIK_S)) {
+	//	worldTransform_.rotate.x += 0.01f;
+	//}
+	//if (Input::GetInstance()->PressKey(DIK_A)) {
+	//	worldTransform_.rotate.y += -0.01f;
+	//}
+	//if (Input::GetInstance()->PressKey(DIK_D)) {
+	//	worldTransform_.rotate.y += 0.01f;
+	//}
 }
 
 void Camera::CreateViewProjection() {
@@ -80,7 +76,7 @@ void Camera::TransferMatrix() {
 }
 
 void Camera::UpdateViewMatrix() {
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	viewProjection_.matView = Inverse(cameraMatrix);
 }
 

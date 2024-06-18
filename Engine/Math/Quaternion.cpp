@@ -137,34 +137,6 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& q, const Vect
 }
 
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
-	//Quaternion quaternion0 = q0;
-	//float dot = Dot(Vector3{ q0.x, q0.y, q0.z }, Vector3{ q1.x, q1.y, q1.z });
-	//if (dot < 0) {
-	//	quaternion0 = Quaternion{ -q0.x, -q0.y, -q0.z ,-q0.w };
-	//	dot = -dot;
-	//}
-	//Quaternion result;
-	//if (dot >= 1.0f - std::numeric_limits<float>::epsilon()) {
-	//	result.x = (1.0f - t) * q0.x + t * q1.x;
-	//	result.y = (1.0f - t) * q0.y + t * q1.y;
-	//	result.z = (1.0f - t) * q0.z + t * q1.z;
-	//	result.w = (1.0f - t) * q0.w + t * q1.w;
-	//	return result;
-	//}
-
-	//// なす角を求める
-	//float theta = std::acos(dot);
-	//float scale0 = sinf((1 - t) * theta) / sin(theta);
-	//float scale1 = sin(t * theta) / sin(theta);
-
-	//result.x = scale0 * quaternion0.x + scale1 * q1.x;
-	//result.y = scale0 * quaternion0.y + scale1 * q1.y;
-	//result.z = scale0 * quaternion0.z + scale1 * q1.z;
-	//result.w = scale0 * quaternion0.w + scale1 * q1.w;
-
-	//return result;
-
-
 	Quaternion quaternion0 = q0;
 	float dot = Dot(q0,q1);
 

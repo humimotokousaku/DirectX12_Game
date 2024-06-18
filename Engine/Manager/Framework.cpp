@@ -70,7 +70,7 @@ void Framework::Initialize() {
 
 void Framework::Update() {
 	GameTimer::GetInstance()->Tick();
-	pointLight_->ImGuiAdjustParameter();
+	//pointLight_->ImGuiAdjustParameter();
 }
 
 void Framework::Run() {

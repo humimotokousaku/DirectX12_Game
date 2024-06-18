@@ -121,7 +121,7 @@ void Sphere::Draw(uint32_t textureHandle, const ViewProjection& viewProjection) 
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
-	cameraPosData_ = viewProjection.transform.translate;
+	cameraPosData_ = viewProjection.translate;
 
 	/// コマンドを積む
 	// 使用するPSO

@@ -67,6 +67,7 @@ public:
 	Skeleton skeleton_;
 	// スキンクラスタ
 	SkinCluster skinCluster_;
+
 private:
 #pragma region エンジン機能
 	// DirectX

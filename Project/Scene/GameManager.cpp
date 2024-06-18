@@ -15,7 +15,7 @@ GameManager::~GameManager() {
 void GameManager::Initialize() {
 	Framework::Initialize();
 	//初期シーンの設定
-	sceneNum_ = TITLE_SCENE;
+	sceneNum_ = GAME_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 }
@@ -38,10 +38,12 @@ void GameManager::Update() {
 	/// 
 	sceneArr_[sceneNum_]->Update();
 
+#ifdef _DEBUG
 	// FPSカウンターの表示
 	ImGui::Begin("Control panel");
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
+#endif
 }
 
 void GameManager::Draw() {

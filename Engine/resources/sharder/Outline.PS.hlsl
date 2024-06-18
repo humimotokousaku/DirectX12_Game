@@ -7,15 +7,21 @@ struct Material
     float32_t4x4 uvTransform;
 };
 
-ConstantBuffer<Material> gMaterial : register(b0);
+struct PixelShaderOutput
+{
+    float32_t4 color : SV_TARGET0;
+};
 
+ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
 //Texture2D<float32_t> gTexture : register(t1);
 SamplerState gSampler : register(s0);
 
-struct PixelShaderOutput
-{
-    float32_t4 color : SV_TARGET0;
+// 変数
+static const float32_t kPrewittHorizontalKernel[3][3] = {
+    { -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
+    { -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
+    { -1.0f / 6.0f, 0.0f, 1.0f / 6.0f }
 };
 
 PixelShaderOutput main(VertexShaderOutput input)

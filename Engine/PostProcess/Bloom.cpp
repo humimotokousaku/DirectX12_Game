@@ -22,6 +22,7 @@ void Bloom::Initialize() {
 	bloomData_->isActive = false;
 	bloomData_->strength = 1.0f;
 	bloomData_->threshold = 0.3f;
+	isActive_ = bloomData_->isActive;
 }
 
 void Bloom::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
@@ -32,7 +33,7 @@ void Bloom::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resourc
 	ImGui::Checkbox("isActive", &bloomData_->isActive);
 	ImGui::End();
 #endif
-
+	isActive_ = bloomData_->isActive;
 	IPostEffect::Draw(psoNum, bloomResource_);
 }
 

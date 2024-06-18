@@ -209,9 +209,9 @@ void Object3D::ImGuiParameter(const char* name) {
 		if (animation_[i].name[0] == '\0') {
 			std::string beginName = name + std::to_string(index);
 			if (ImGui::TreeNode(beginName.c_str())) {
-				ImGui::DragFloat3("translation", &worldTransform.transform.translate.x, 0.01f, -100, 100);
-				ImGui::DragFloat3("scale", &worldTransform.transform.scale.x, 0.01f, -100, 100);
-				ImGui::DragFloat3("rotate", &worldTransform.transform.rotate.x, 0.01f, -6.28f, 6.28f);
+				ImGui::DragFloat3("translation", &worldTransform.translate.x, 0.01f, -100, 100);
+				ImGui::DragFloat3("scale", &worldTransform.scale.x, 0.01f, -100, 100);
+				ImGui::DragFloat3("rotate", &worldTransform.rotate.x, 0.01f, -6.28f, 6.28f);
 				ImGui::DragFloat("playBackSpeed", &animation_[i].playBackSpeed, 0.01f, -10.0f, 10.0f);
 				ImGui::Checkbox("isAnimation", &animation_[i].isActive);
 				ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.10);
@@ -222,9 +222,9 @@ void Object3D::ImGuiParameter(const char* name) {
 		// アニメーションに名前を設定しているとき
 		else {
 			if (ImGui::TreeNode(animation_[i].name)) {
-				ImGui::DragFloat3("translation", &worldTransform.transform.translate.x, 0.01f, -100, 100);
-				ImGui::DragFloat3("scale", &worldTransform.transform.scale.x, 0.01f, -100, 100);
-				ImGui::DragFloat3("rotate", &worldTransform.transform.rotate.x, 0.01f, -6.28f, 6.28f);
+				ImGui::DragFloat3("translation", &worldTransform.translate.x, 0.01f, -100, 100);
+				ImGui::DragFloat3("scale", &worldTransform.scale.x, 0.01f, -100, 100);
+				ImGui::DragFloat3("rotate", &worldTransform.rotate.x, 0.01f, -6.28f, 6.28f);
 				ImGui::DragFloat("playBackSpeed", &animation_[i].playBackSpeed, 0.01f, -10.0f, 10.0f);
 				ImGui::Checkbox("isAnimation", &animation_[i].isActive);
 				ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.10);

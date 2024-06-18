@@ -9,18 +9,34 @@
 #include "SkyboxPSO.h"
 #include "LinePSO.h"
 #include "ParticlePSO.h"
-
+#include "OutlinePSO.h"
 #include "DissolvePSO.h"
 #include "GaussPSO.h"
 #include "SmoothingPSO.h"
 #include "RadialBlurPSO.h"
-#include "GaussPSO.h"
 #include "BloomPSO.h"
 #include "PostEffectPSO.h"
 
 #include <dxcapi.h>
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
+
+
+/// <summary>
+/// 使用できるポストエフェクトの種類
+/// </summary>
+enum PostEffectType {
+	NORMAL,
+	//OUTLINE,
+	RADIALBLUR,
+	//SMOOTHING,
+	GAUSSIAN,
+	/*HIGHINTENSITY,
+	BLUR,*/
+	//DISSOLVE,
+	BLOOM,
+	COUNT
+};
 
 enum BlendMode {
 	// ブレンドなし

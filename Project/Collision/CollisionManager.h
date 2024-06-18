@@ -29,7 +29,14 @@ public:
 		colliders_.remove(collider);
 	}
 
+	bool ColOBBs(const OBB& obb1, const OBB& obb2);
+
+	// 分離軸に投影された軸成分から投影線分長を算出
+	float LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
+
+	///
 	/// Setter
+	/// 
 	
 	/// <summary>
 	/// コライダーリストに登録
@@ -38,13 +45,6 @@ public:
 	void SetColliderList(Collider* collider) { 
 		colliders_.push_back(collider); 
 	}
-
-	bool ColOBBs(const OBB& obb1, const OBB& obb2);
-
-	// 分離軸に投影された軸成分から投影線分長を算出
-	float LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3 = 0);
-
-private:
 
 private:
 	// コライダーリスト

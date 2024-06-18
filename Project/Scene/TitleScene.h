@@ -13,9 +13,9 @@
 #include "Cube.h"
 #include "IPrimitive.h"
 #include "Animation.h"
-#include "GameObject/Player.h"
-#include "GameObject/Enemy.h"
-#include "Collision/CollisionManager.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "CollisionManager.h"
 
 class GameManager;
 

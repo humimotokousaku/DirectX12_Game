@@ -49,6 +49,8 @@ public:
 #pragma region Getter
 	// レンダーテクスチャの取得
 	uint32_t GetRenderTexture() { return texBuff_.srvIndex; }
+	// ポストエフェクトを使用するかを取得
+	bool GetIsActive() { return isActive_; }
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
@@ -102,11 +104,14 @@ protected:// プライベートな変数
 
 	// テクスチャバッファ
 	RenderingTextureData texBuff_;
+	// depth用のテクスチャ
+	RenderingTextureData depthTexBuff_;
+
 	// 深度バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff_;
 	// RTV用のデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapRTV_;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[1];
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];
 	// DSV用のデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapDSV_;
 
@@ -147,4 +152,7 @@ protected:// プライベートな変数
 
 	uint32_t textureIndex_;
 #pragma endregion
+
+	// ポストエフェクトを使用するか
+	bool isActive_;
 };

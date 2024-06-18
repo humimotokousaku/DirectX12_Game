@@ -1,4 +1,10 @@
 #include "PostEffectManager.h"
+#include "PostEffect.h"
+#include "RadialBlur.h"
+#include "Bloom.h"
+#include "Gauss.h"
+#include "Dissolve.h"
+#include "Outline.h"
 
 PostEffectManager::~PostEffectManager() {
 	for (IPostEffect* postEffect : postEffect_) {
@@ -16,6 +22,11 @@ void PostEffectManager::Initialize() {
 	normal->Initialize();
 	renderTexture_.push_back(normal->GetRenderTexture());
 	postEffect_.push_back(normal);
+	// outline
+	//Outline* outline = new Outline();
+	//outline->Initialize();
+	//renderTexture_.push_back(outline->GetRenderTexture());
+	//postEffect_.push_back(outline);
 	// RadialBlur
 	RadialBlur* radialBlur = new RadialBlur();
 	radialBlur->Initialize();
@@ -51,9 +62,11 @@ void PostEffectManager::PostDraw() {
 	postEffect_[NORMAL]->PostDrawScene();
 
 	for (int i = 0; i < COUNT - 1; i++) {
-		postEffect_[i + 1]->PreDrawScene();
-		postEffect_[i]->Draw(i);
-		postEffect_[i + 1]->PostDrawScene();
+		//if (postEffect_[i]->GetIsActive()) {
+			postEffect_[i + 1]->PreDrawScene();
+			postEffect_[i]->Draw(i);
+			postEffect_[i + 1]->PostDrawScene();
+		//}
 	}
 
 	//object_->Draw(renderTexture_[0]);

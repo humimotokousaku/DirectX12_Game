@@ -17,11 +17,16 @@ void OutlinePSO::CreateRootSignature() {
 	descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	descriptorRange_.resize(1);
+	descriptorRange_.resize(2);
 	descriptorRange_[0].BaseShaderRegister = 0;
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	// DepthTexture
+	descriptorRange_[1].BaseShaderRegister = 1;
+	descriptorRange_[1].NumDescriptors = 1;
+	descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
@@ -50,7 +55,7 @@ void OutlinePSO::CreateRootSignature() {
 	descriptionRootSignature_.NumParameters = static_cast<UINT>(rootParameters_.size());
 
 #pragma region sampler
-	staticSamplers_.resize(1);
+	staticSamplers_.resize(2);
 	staticSamplers_[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	staticSamplers_[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	staticSamplers_[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -59,6 +64,15 @@ void OutlinePSO::CreateRootSignature() {
 	staticSamplers_[0].MaxLOD = D3D12_FLOAT32_MAX;
 	staticSamplers_[0].ShaderRegister = 0;
 	staticSamplers_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	staticSamplers_[1].Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+	staticSamplers_[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers_[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers_[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	staticSamplers_[1].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	staticSamplers_[1].MaxLOD = D3D12_FLOAT32_MAX;
+	staticSamplers_[1].ShaderRegister = 1;
+	staticSamplers_[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	descriptionRootSignature_.pStaticSamplers = staticSamplers_.data();
 	descriptionRootSignature_.NumStaticSamplers = static_cast<UINT>(staticSamplers_.size());
 #pragma endregion

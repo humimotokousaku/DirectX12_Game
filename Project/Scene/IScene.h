@@ -24,8 +24,14 @@ public:
 	/// </summary>
 	void LoadJSONFile(const std::string fileName);
 
+	void AddModel(Model* model) { models_.push_back(model); }
+
 	int GetSceneNum() { return sceneNum; }
 protected:
 	static int sceneNum;
+	// ブレンダーで読み込むオブジェクト
 	std::vector<Object3D*> levelObjects_;
+
+	// 登録用のモデル
+	std::vector<Model*> models_;
 };

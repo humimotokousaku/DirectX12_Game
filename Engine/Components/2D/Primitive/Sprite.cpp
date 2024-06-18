@@ -101,7 +101,7 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 
 	// アンカーポイントのスクリーン座標
 	worldTransform_.Initialize();
-	worldTransform_.transform.translate = { 0,0,1 };
+	worldTransform_.translate = { 0,0,1 };
 
 	// カメラ
 	camera_ = std::make_unique<Camera>();
@@ -174,9 +174,9 @@ void Sprite::AdjustTextureSize(const std::string& directoryPath, std::string tex
 void Sprite::ImGuiAdjustParameter() {
 	// ウィンドウの初期サイズを指定
 	ImGui::Begin("Sprite");
-	ImGui::DragFloat3("Translate", &worldTransform_.transform.translate.x, 0.5f, 0, 1280, "%.1f");
-	ImGui::DragFloat3("Scale", &worldTransform_.transform.scale.x, 0.1f, -5, 5, "%.1f");
-	ImGui::DragFloat3("Rotate.z", &worldTransform_.transform.rotate.x, 0.1f, -6.28f, 6.28f, "%.1f");
+	ImGui::DragFloat3("Translate", &worldTransform_.translate.x, 0.5f, 0, 1280, "%.1f");
+	ImGui::DragFloat3("Scale", &worldTransform_.scale.x, 0.1f, -5, 5, "%.1f");
+	ImGui::DragFloat3("Rotate.z", &worldTransform_.rotate.x, 0.1f, -6.28f, 6.28f, "%.1f");
 	ImGui::DragFloat2("AnchorPoint", &anchorPoint_.x, 0.01f, -1.0f, 1.0f, "%.2f");
 	ImGui::DragFloat2("Size", &size_.x, 0.1f, 0, 1280, "%.1f");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);

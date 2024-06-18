@@ -57,7 +57,7 @@ void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, c
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
-	cameraPosData_ = viewProjection.transform.translate;
+	cameraPosData_ = viewProjection.translate;
 
 	// 使用するPSO
 	Object3dPSO::GetInstance()->SetCommand();

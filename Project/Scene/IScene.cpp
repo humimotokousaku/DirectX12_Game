@@ -5,9 +5,11 @@
 int IScene::sceneNum;
 
 IScene::~IScene() {
-	/*for (Object3D* object : levelObjects_) {
+	for (Object3D* object : levelObjects_) {
 		delete object;
-	}*/
+	}
+	levelObjects_.clear();
+	models_.clear();
 }
 
 void IScene::LoadJSONFile(const std::string fileName) {
@@ -81,29 +83,25 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		}
 	}
 
-	for (auto& objectData : levelData->objects_) {
+	for (auto& objectData : levelData->objects_) {	
+		Model* model;
+		// モデルの読み込み
+		ModelManager::GetInstance()->LoadModel("level", objectData.fileName);
 		// ファイル名から登録済みモデルを検索
-		Model* model = new Model();
-		decltype(ModelManager::GetInstance()->models_)::iterator it = ModelManager::GetInstance()->models_.find(objectData.fileName);
-		if (it != ModelManager::GetInstance()->models_.end()) {		
-			model = it->second.get();
-		}
-		model->Initialize("level/" + objectData.fileName);
+		model = (ModelManager::GetInstance()->FindModel("level", objectData.fileName));
+
 		// モデルを指定して3Dオブジェクト生成
-		std::unique_ptr<Object3D> newObject = std::make_unique<Object3D>();
+		Object3D* newObject = new Object3D();
 		newObject->Initialize();
 		newObject->SetModel(model);
 		// 座標
-		newObject->worldTransform.transform.translate = objectData.translate;
+		newObject->worldTransform.translate = objectData.translate;
 		// 回転
-		newObject->worldTransform.transform.rotate = objectData.rotate;
+		newObject->worldTransform.rotate = objectData.rotate;
 		// 座標
-		newObject->worldTransform.transform.scale = objectData.scale;
+		newObject->worldTransform.scale = objectData.scale;
 
-		objects.push_back(newObject.get());
-
-		// モデルをmapコンテナに格納
-		ModelManager::GetInstance()->models_.insert(std::make_pair("engine/resources/level" + fileName, std::move(model)));
+		objects.push_back(newObject);
 	}
 
 	levelObjects_ = objects;

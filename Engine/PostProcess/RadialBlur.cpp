@@ -22,6 +22,7 @@ void RadialBlur::Initialize() {
 	radialBlurData_->isActive = false;
 	radialBlurData_->blurWidth = 0.005f;
 	radialBlurData_->center = { 0.5f, 0.5f };
+	isActive_ = radialBlurData_->isActive;
 }
 
 void RadialBlur::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
@@ -32,6 +33,8 @@ void RadialBlur::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> re
 	ImGui::Checkbox("isActive", &radialBlurData_->isActive);
 	ImGui::End();
 #endif // _DEBUG
+
+	isActive_ = radialBlurData_->isActive;
 	IPostEffect::Draw(psoNum, radialBlurResource_);
 }
 

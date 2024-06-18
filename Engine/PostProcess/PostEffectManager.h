@@ -1,10 +1,5 @@
 #pragma once
-#include "PostEffect.h"
-#include "RadialBlur.h"
-#include "Bloom.h"
-#include "Gauss.h"
-#include "Dissolve.h"
-#include "PostEffectPSO.h"
+#include "IPostEffect.h"
 #include "Object3D.h"
 
 class PostEffectManager {

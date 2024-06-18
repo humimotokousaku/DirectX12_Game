@@ -51,7 +51,7 @@ public:
 	// 縦幅、横幅
 	Vector2 GetSize() { return size_; }
 	// 座標
-	Vector2 GetPos() { return { worldTransform_.transform.translate.x, worldTransform_.transform.translate.y }; }
+	Vector2 GetPos() { return { worldTransform_.translate.x, worldTransform_.translate.y }; }
 	// Spriteのアンカーポイント
 	Vector2 GetAnchorPoint() { return anchorPoint_; }
 	// 画像の切り出しサイズ
@@ -62,8 +62,8 @@ public:
 	void SetSize(Vector2 size) { size_ = size; }
 	// 座標
 	void SetPos(Vector2 pos) {
-		worldTransform_.transform.translate.x = pos.x;
-		worldTransform_.transform.translate.y = pos.y;
+		worldTransform_.translate.x = pos.x;
+		worldTransform_.translate.y = pos.y;
 	}
 	// Spriteのアンカーポイント
 	void SetAnchorPoint(Vector2 anchorPoint) { anchorPoint_ = anchorPoint; }
@@ -77,7 +77,7 @@ public:
 	void AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath);
 
 	// このスプライトを背景として扱う
-	void SetIsBackGround() { worldTransform_.transform.translate.z = 100000; }
+	void SetIsBackGround() { worldTransform_.translate.z = 100000; }
 
 	// 色を設定
 	void SetColor(Vector4 color) { materialData_->color = color; }

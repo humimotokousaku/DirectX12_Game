@@ -4,7 +4,6 @@
 #include "Camera.h"
 #include "PostEffectPSO.h"
 #include "IPostEffect.h"
-#include <Windows.h>
 
 class RadialBlur : public IPostEffect {
 private:// 構造体

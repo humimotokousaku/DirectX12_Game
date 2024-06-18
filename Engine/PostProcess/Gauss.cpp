@@ -16,6 +16,7 @@ void Gauss::Initialize() {
 
 	gaussData_->isActive = false;
 	gaussData_->strength = 1.0f;
+	isActive_ = gaussData_->isActive;
 }
 
 void Gauss::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
@@ -25,6 +26,8 @@ void Gauss::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resourc
 	ImGui::Checkbox("isActive", &gaussData_->isActive);
 	ImGui::End();
 #endif
+
+	isActive_ = gaussData_->isActive;
 	IPostEffect::Draw(psoNum, gaussResource_);
 }
 

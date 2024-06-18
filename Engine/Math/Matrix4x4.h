@@ -46,6 +46,9 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 // ベクトルに変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
+// 座標変換
+Vector3 Transforms(const Vector3& vector, const Matrix4x4& matrix);
+
 #pragma region カメラ計算
 
 // 透視投影行列

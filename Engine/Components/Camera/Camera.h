@@ -1,5 +1,6 @@
 #pragma once
 #include "ViewProjection.h"
+#include "WorldTransform.h"
 #include "ModelStructs.h"
 #include "Input.h"
 
@@ -29,23 +30,23 @@ public:
 	
 	/// Getter
 	// transformの取得
-	Transform GetTransform() { return transform_; }
+	//Transform GetTransform() { return transform_; }
 	// スケールの取得
-	Vector3 GetScale()const { return transform_.scale; }
+	Vector3 GetScale()const { return worldTransform_.scale; }
 	// 座標の取得
-	Vector3 GetTranslate()const { return transform_.translate; }
+	Vector3 GetTranslate()const { return worldTransform_.translate; }
 	// 角度の取得
-	Vector3 GetRotate() const { return transform_.rotate; }
+	Vector3 GetRotate() const { return worldTransform_.rotate; }
 	// viewProjectionの取得
 	ViewProjection GetViewProjection() { return viewProjection_; }
 
 	/// Setter
 	// スケールをセット
-	void SetScale(const Vector3& scale) { transform_.scale = scale; }
+	void SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 	// 座標をセット
-	void SetTranslate(Vector3 pos) { transform_.translate = pos; }
+	void SetTranslate(Vector3 pos) { worldTransform_.translate = pos; }
 	// 角度をセット
-	void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
+	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 	// 垂直方向の視野角をセット
 	void SetFovY(const float& fovY) { viewProjection_.fovAngleY = fovY; }
 	// ビューポートのアスペクト比のセット
@@ -54,6 +55,8 @@ public:
 	void SetNearClip(const float& nearZ) { viewProjection_.nearZ = nearZ; }
 	// 深度限界(奥側)のセット
 	void SetFarClip(const float& farZ) { viewProjection_.farZ = farZ; }
+	// viewMatrixのセット
+	void SetViewMatrix(Matrix4x4 matrix) { viewProjection_.matView = matrix; }
 
 private:
 	/// <summary>
@@ -86,7 +89,8 @@ private:
 	void UpdateProjectionMatrix();
 
 public:// パブリックなメンバ変数
-	Transform transform_;
+	//Transform transform_;
+	WorldTransform worldTransform_;
 
 private:// プライベートなメンバ変数
 	ViewProjection viewProjection_;

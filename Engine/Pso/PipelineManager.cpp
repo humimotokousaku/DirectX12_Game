@@ -45,6 +45,9 @@ void PipelineManager::Initialize() {
 	// 何もしない
 	PostEffectPSO* normal = new PostEffectPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "PostEffectTestPS.hlsl");
 	postEffect_.push_back(normal);
+	// outline
+	//OutlinePSO* outline = new OutlinePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "LuminanceBasedOutline.PS.hlsl");
+	//postEffect_.push_back(outline);
 	// RadialBlur
 	RadialBlurPSO* radialBlur = new RadialBlurPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "RadialBlur.PS.hlsl");
 	postEffect_.push_back(radialBlur);

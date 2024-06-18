@@ -86,8 +86,10 @@ public:
 	/// <param name="frequency">秒</param>
 	void SetEmitterFrequency(float frequency) { emitter_.frequency = frequency; }
 
+	void SetParticle(Vector3 scale){}
+
 	// ImGuiでパラメータをまとめたもの
-	void ImGuiAdjustParameter();
+	//void ImGuiAdjustParameter();
 
 private:
 	// particleの座標と速度のランダム生成

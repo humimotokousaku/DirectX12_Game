@@ -29,6 +29,8 @@ public:
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
 	// ポストエフェクト用
 	void CreateSRVforPostEffect(uint32_t srvIndex, ID3D12Resource* pResource);
+	// Depth用
+	void CreateSRVforDepth(uint32_t srvIndex, ID3D12Resource* pResource);
 
 	//*** Getter ***//
 

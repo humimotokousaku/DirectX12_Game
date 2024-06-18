@@ -36,16 +36,16 @@ public:
 	/// 座標を設定
 	/// </summary>
 	/// <param name="pos">座標</param>
-	void SetPosition(Vector3 pos) { worldTransform_.transform.translate = pos; }
+	void SetPosition(Vector3 pos) { worldTransform_.translate = pos; }
 	/// <summary>
 	/// スケールの設定
 	/// </summary>
 	/// <param name="scale">スケール</param>
-	void SetScale(Vector3 scale) { worldTransform_.transform.scale = scale; }
+	void SetScale(Vector3 scale) { worldTransform_.scale = scale; }
 	/// <summary>
 	/// 回転角を設定
 	/// </summary>
 	/// <param name="rotate">回転角</param>
-	void SetRotate(Vector3 rotate) { worldTransform_.transform.rotate = rotate; }
+	void SetRotate(Vector3 rotate) { worldTransform_.rotate = rotate; }
 };
 

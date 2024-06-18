@@ -300,10 +300,10 @@
     <ClCompile Include="Engine\Components\3D\Primitive\Plane.cpp">
       <Filter>ソース ファイル\Engine\Components\3D\Primitive</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player.cpp">
+    <ClCompile Include="Project\GameObject\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="engine\PostProcess\PostEffectManager.cpp">
@@ -373,6 +373,30 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Pso\SkyboxPSO.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostProcess\Outline.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\EnemyBullet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\EnemyStateApproach.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\EnemyStateLeave.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\IEnemyState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\TimedCall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Components\RailCamera\RailCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -539,10 +563,10 @@
     <ClInclude Include="Engine\Components\Animation\Animation.h">
       <Filter>ヘッダー ファイル\Engine\Components\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player.h">
+    <ClInclude Include="Project\GameObject\Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy.h">
+    <ClInclude Include="Project\GameObject\Enemy\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="engine\PostProcess\PostEffectManager.h">
@@ -614,6 +638,30 @@
     <ClInclude Include="Engine\Pso\SkyboxPSO.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostProcess\Outline.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\EnemyBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\EnemyStateApproach.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\EnemyStateLeave.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\IEnemyState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\TimedCall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Components\RailCamera\RailCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\PlayerBullet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -680,5 +728,6 @@
     <FxCompile Include="Engine\resources\sharder\LuminanceBasedOutline.PS.hlsl" />
     <FxCompile Include="Engine\resources\sharder\Skybox.VS.hlsl" />
     <FxCompile Include="Engine\resources\sharder\Skybox.PS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\DepthBasedOutline.PS.hlsl" />
   </ItemGroup>
 </Project>

@@ -19,12 +19,11 @@ struct WorldTransform {
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff_;
 	// マッピング済みアドレス
 	ConstBufferDataWorldTransform* constMap = nullptr;
-	// トランスフォーム
-	Transform transform = {
-		{1,1,1},
-		{0,0,0},
-		{0,0,0}
-	};
+
+	Vector3 translate;
+	Vector3 rotate;
+	Vector3 scale = { 1,1,1 };
+
 	// ローカル → ワールド変換行列
 	Matrix4x4 matWorld_;
 	// 親となるワールド変換へのポインタ
