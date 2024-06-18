@@ -77,8 +77,6 @@ private:// プライベートなメンバ変数
 	std::list<EnemyBullet*> enemyBullets_;
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
-	// 天球
-	//Skydome* skydome_ = nullptr;
 	// カメラレール
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 	// skybox
@@ -95,15 +93,11 @@ private:// プライベートなメンバ変数
 	std::vector<Vector3> controlPoints_;
 	// 線分で描画する用の頂点リスト
 	std::vector<Vector3> pointsDrawing_;
-
 	// 移動ルートの線(デバッグ用)
 	std::array<std::unique_ptr<Line>, segmentCount> line_;
-
 	Vector3 target_;
-
 	float t_;
 	float targetT_;
-
 	bool isMoveCamera_;
 };
 

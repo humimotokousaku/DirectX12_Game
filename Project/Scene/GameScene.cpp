@@ -34,7 +34,6 @@ void GameScene::Initialize() {
 
 	// 衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
-	//collisionManager_->SetColliderList(player_.get());
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
@@ -51,10 +50,6 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
-
-	// 天球
-	/*skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_, { 0, 0, 0 });*/
 
 	// 線
 	for (int i = 0; i < segmentCount; i++) {
@@ -73,7 +68,7 @@ void GameScene::Initialize() {
 	};
 	t_ = 0;
 	targetT_ = 1.0f / segmentCount;
-	isMoveCamera_ = false;
+	isMoveCamera_ = true;
 
 	// Skybox
 	cube_ = std::make_unique<Cube>();
@@ -129,9 +124,6 @@ void GameScene::Update() {
 		bullet->Update();
 	}
 
-	// 天球
-	//skydome_->Update();
-
 	// 線分の数+1個分の頂点座標の計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {
 		float t = 1.0f / segmentCount * i;
@@ -142,14 +134,14 @@ void GameScene::Update() {
 	if (isMoveCamera_) {
 		// カメラの移動
 		if (t_ < 0.99f) {
-			t_ += 1.0f / segmentCount / 10;
+			t_ += 1.0f / segmentCount / 100;
 		}
 		else {
 			t_ = 0.99f;
 			isMoveCamera_ = false;
 		}
 		if (targetT_ < 0.99f) {
-			targetT_ += 1.0f / segmentCount / 10;
+			targetT_ += 1.0f / segmentCount / 100;
 		}
 		else {
 			targetT_ = 1.0f;
@@ -159,13 +151,9 @@ void GameScene::Update() {
 	UpdatePlayerPosition(t_);
 	// デバッグカメラの更新
 	railCamera_->Update(target_);
-	//camera_->Update();
 
-	// 当たり判定を必要とするObjectをまとめてセットする
-	//collisionManager_->SetGameObject(player_, enemy_, enemyBullets_, playerBullets_);
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
-
 
 #ifdef USE_IMGUI
 
@@ -247,8 +235,6 @@ void GameScene::SpawnEnemy(Vector3 pos) {
 
 	// 初期化
 	enemy->Initialize(pos);
-	// 座標を指定
-	//enemy->SetPosition(pos);
 
 	// リストに登録
 	enemy_.push_back(enemy);
