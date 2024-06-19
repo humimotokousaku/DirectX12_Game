@@ -177,11 +177,11 @@ void TitleScene::Draw() {
 	}
 
 	for (Object3D* object : levelObjects_) {
-		object->Draw(uvcheckerTexture_);
+		//object->Draw(uvcheckerTexture_);
 	}
 
 	//player_->Draw();
-	cube_->Draw(ddsTexture_);
+	//cube_->Draw(ddsTexture_);
 
 	//particle_->Draw(uvcheckerTexture_);
 }

@@ -43,7 +43,7 @@ void Enemy::Draw() {
 }
 
 void Enemy::OnCollision(Collider* collider) {
-
+	isDead_ = true;
 }
 
 void Enemy::ChangeState(IEnemyState* pState) {

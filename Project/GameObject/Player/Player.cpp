@@ -22,7 +22,7 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.translate = { 0,-2,50 };
+	object3d_->worldTransform.translate = { 0,-2,10 };
 
 	// 3Dレティクルモデル作成
 	object3dReticle_ = std::make_unique<Object3D>();
@@ -46,26 +46,28 @@ void Player::Update() {
 
 	/// 移動処理↓
 
-	XINPUT_STATE joyState;
+	// キーボード入力
+	if (input_->PressKey(DIK_UP)) {
+		object3d_->worldTransform.translate.y += 0.1f;
+	}
+	if (input_->PressKey(DIK_DOWN)) {
+		object3d_->worldTransform.translate.y -= 0.1f;
+	}
+	if (input_->PressKey(DIK_RIGHT)) {
+		object3d_->worldTransform.translate.x += 0.1f;
+	}
+	if (input_->PressKey(DIK_LEFT)) {
+		object3d_->worldTransform.translate.x -= 0.1f;
+	}
+
 	// ゲームパッド状態取得
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	if (Input::GetInstance()->GetJoystickState(0, joyState_)) {
 		// デッドゾーンの設定
-		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbLX);
-		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbLY);
+		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbLX);
+		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbLY);
 		move.x += (float)leftThumbX / SHRT_MAX * kCharacterSpeed;
 		move.y += (float)leftThumbY / SHRT_MAX * kCharacterSpeed;
 	}
-	// 移動限界座標
-	const Vector2 kMoveLimit = { 40 - 10, 30 - 15 };
-	// 範囲を超えない処理
-	object3d_->worldTransform.translate.x = max(object3d_->worldTransform.translate.x, -kMoveLimit.x);
-	object3d_->worldTransform.translate.x = min(object3d_->worldTransform.translate.x, kMoveLimit.x);
-	object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
-	object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
-	// 座標移動
-	object3d_->worldTransform.translate.x += move.x;
-	object3d_->worldTransform.translate.y += move.y;
-	object3d_->worldTransform.translate.z += move.z;
 
 	/// 移動処理↑
 
@@ -82,22 +84,31 @@ void Player::Update() {
 	// 2Dレティクルを配置
 	//Deploy2DReticle(viewProjection);
 
-	// 3Dレティクルの移動
-	Vector2 joyRange{};
-	// ジョイスティック状態取得
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		// デッドゾーンの設定
-		SHORT rightThumbX = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbRX);
-		SHORT rightThumbY = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbRY);
-		joyRange.y += (float)rightThumbY / SHRT_MAX / 62.8f;
-		joyRange.x += (float)rightThumbX / SHRT_MAX / 62.8f;
-		object3d_->worldTransform.rotate.x -= joyRange.y;
-		object3d_->worldTransform.rotate.y += joyRange.x;
-		object3d_->worldTransform.UpdateMatrix();
-	}
+	//// 3Dレティクルの移動
+	//Vector2 joyRange{};
+	//// ジョイスティック状態取得
+	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//	// デッドゾーンの設定
+	//	SHORT rightThumbX = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbRX);
+	//	SHORT rightThumbY = Input::GetInstance()->ApplyDeadzone(joyState.Gamepad.sThumbRY);
+	//	joyRange.y += (float)rightThumbY / SHRT_MAX / 62.8f;
+	//	joyRange.x += (float)rightThumbX / SHRT_MAX / 62.8f;
+	//	object3d_->worldTransform.rotate.x -= joyRange.y;
+	//	object3d_->worldTransform.rotate.y += joyRange.x;
+	//	object3d_->worldTransform.UpdateMatrix();
+	//}
 
-#pragma endregion
-
+	// 移動限界座標
+	const Vector2 kMoveLimit = { 3, 2 };
+	// 範囲を超えない処理
+	object3d_->worldTransform.translate.x = max(object3d_->worldTransform.translate.x, -kMoveLimit.x);
+	object3d_->worldTransform.translate.x = min(object3d_->worldTransform.translate.x, kMoveLimit.x);
+	object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
+	object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
+	// 座標移動
+	object3d_->worldTransform.translate.x += move.x;
+	object3d_->worldTransform.translate.y += move.y;
+	object3d_->worldTransform.translate.z += move.z;
 
 	// ImGui
 	object3d_->ImGuiParameter("Player");
@@ -119,7 +130,7 @@ void Player::DrawUI() {
 void Player::Rotate() {
 	// 回転速さ[ラジアン/frame]
 	const float kRotSpeed = 0.02f;
-
+	Vector2 joyRange{};
 	// 押した方向で移動ベクトルを変更
 	if (input_->PressKey(DIK_A)) {
 		object3d_->worldTransform.rotate.y -= kRotSpeed;
@@ -127,18 +138,30 @@ void Player::Rotate() {
 	else if (input_->PressKey(DIK_D)) {
 		object3d_->worldTransform.rotate.y += kRotSpeed;
 	}
+	if (input_->PressKey(DIK_W)) {
+		object3d_->worldTransform.rotate.x -= kRotSpeed;
+	}
+	else if (input_->PressKey(DIK_S)) {
+		object3d_->worldTransform.rotate.x += kRotSpeed;
+	}
+
+	// ゲームパッド
+	if (Input::GetInstance()->GetJoystickState(0, joyState_)) {
+		// デッドゾーンの設定
+		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbRX);
+		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbRY);
+		joyRange.y += (float)leftThumbY / SHRT_MAX / 62.8f;
+		joyRange.x += (float)leftThumbX / SHRT_MAX / 62.8f;
+		object3d_->worldTransform.rotate.x -= joyRange.y;
+		object3d_->worldTransform.rotate.y += joyRange.x;
+		object3d_->worldTransform.UpdateMatrix();
+	}
 }
 
 // 攻撃
 void Player::Attack() {
-	XINPUT_STATE joyState;
-	// ゲームパッド未接続なら何もせず抜ける
-	//if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-	//	return;
-	//}
-
 	// Rトリガーを押していたら
-	if (/*joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER ||*/ Input::GetInstance()->TriggerKey(DIK_SPACE)) {
+	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER || Input::GetInstance()->TriggerKey(DIK_SPACE)) {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);

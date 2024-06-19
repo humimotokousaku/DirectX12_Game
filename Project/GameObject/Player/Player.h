@@ -100,6 +100,7 @@ public:// パブリックなメンバ関数
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
+	XINPUT_STATE joyState_;
 
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
