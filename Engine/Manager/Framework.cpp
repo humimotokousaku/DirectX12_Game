@@ -9,7 +9,7 @@ Framework::Framework() {
 
 void Framework::Initialize() {
 	// タイトル名を入力
-	const char kWindowTitle[] = "GE3_CLASS";
+	const char kWindowTitle[] = "Shooting";
 	// タイトルバーの変換
 	auto&& titleString = ConvertString(kWindowTitle);
 
@@ -44,9 +44,6 @@ void Framework::Initialize() {
 	// ポストエフェクトのPSO
 	//postEffectPSO_ = PostEffectPSO::GetInstance();
 	//postEffectPSO_->Initialize();
-
-
-
 	// ポストエフェクト
 	postEffectManager_ = new PostEffectManager();
 	postEffectManager_->Initialize();
@@ -70,7 +67,22 @@ void Framework::Initialize() {
 
 void Framework::Update() {
 	GameTimer::GetInstance()->Tick();
-	//pointLight_->ImGuiAdjustParameter();
+#ifdef _DEBUG
+	ImGui::Begin("Light");
+	if (ImGui::TreeNode("PointLight")) {
+		pointLight_->ImGuiAdjustParameter();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("DirectinalLight")) {
+		directionalLight_->ImGuiAdjustParameter();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("SpotLight")) {
+		spotLight_->ImGuiAdjustParameter();
+		ImGui::TreePop();
+	}
+	ImGui::End();
+#endif
 }
 
 void Framework::Run() {
@@ -99,7 +111,7 @@ void Framework::Run() {
 			postEffectManager_->PostDraw();
 			
 			directXCommon_->PreDraw();
-			// 2パス目を描画
+			// 最後のパスを描画
 			postEffectManager_->Draw();
 			// 描画後の処理
 			EndFrame();

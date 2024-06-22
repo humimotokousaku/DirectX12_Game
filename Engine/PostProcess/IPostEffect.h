@@ -80,9 +80,14 @@ protected:
 
 	// テクスチャを作成
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureBufferResource();
+	// DepthTextureを作成
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateDepthTextureBufferResource();
 
 	// SRVの作成
 	RenderingTextureData CreateSRV(RenderingTextureData texData);
+
+	// DepthTexture用のSRVの作成
+	RenderingTextureData CreateDepthSRV(RenderingTextureData texData);
 
 	// RTVの作成
 	void CreateRTV(RenderingTextureData texData, uint32_t index);
@@ -108,7 +113,7 @@ protected:// プライベートな変数
 	RenderingTextureData depthTexBuff_;
 
 	// 深度バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff_;
+	//Microsoft::WRL::ComPtr<ID3D12Resource> depthBuff_;
 	// RTV用のデスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descHeapRTV_;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];

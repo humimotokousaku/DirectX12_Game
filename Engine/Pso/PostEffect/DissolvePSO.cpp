@@ -10,7 +10,7 @@ DissolvePSO::DissolvePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIn
 
 void DissolvePSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
 	// dissolveテクスチャを読み込む
-	TextureManager::GetInstance()->LoadTexture("", "noise.png");
+	TextureManager::GetInstance()->LoadTexture("noise.png");
 	dissolveTextureHandle_ = TextureManager::GetInstance()->GetSrvIndex("noise.png");	
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);

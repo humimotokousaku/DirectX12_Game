@@ -31,6 +31,7 @@ protected:
 	static int sceneNum;
 	// ブレンダーで読み込むオブジェクト
 	std::vector<Object3D*> levelObjects_;
+	std::vector<Vector3> controlPoints_;
 
 	// 登録用のモデル
 	std::vector<Model*> models_;

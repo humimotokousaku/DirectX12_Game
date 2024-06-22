@@ -14,7 +14,7 @@ IScene::~IScene() {
 
 void IScene::LoadJSONFile(const std::string fileName) {
 	// ファイルのフルパス
-	const std::string fullPath = "engine/resources/level/" + fileName;
+	const std::string fullPath = "Engine/resources/Level/" + fileName;
 	// ファイルストリーム
 	std::ifstream file;
 	// ファイルを開く
@@ -52,6 +52,33 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		//種別を取得
 		std::string type = object["type"].get<std::string>();
 
+		if (type.compare("CURVE") == 0) {
+			// 要素追加
+			levelData->railCameraControlPoint_.emplace_back(LevelData::CurveData{});
+			// 追加した要素の参照を取得
+			LevelData::CurveData& railCameraData = levelData->railCameraControlPoint_.back();
+
+			// トランスフォームのパラメータ読み込み
+			assert(object.contains("curve_data"));
+			nlohmann::json& curve_data = object["curve_data"];
+			assert(curve_data.is_array());
+
+			// 各制御点を走査
+			for (const auto& pointData : curve_data) {
+				assert(pointData.contains("point"));
+				const auto& point = pointData["point"];
+				assert(point.is_array());
+				assert(point.size() == 3);
+
+				// ワールド座標に変換して追加
+				railCameraData.points.emplace_back(Vector3{
+					(float)point[0],
+					(float)point[2],
+					(float)point[1]
+					});
+			}
+			controlPoints_ = railCameraData.points;
+		}
 		// MESH
 		if (type.compare("MESH") == 0) {
 			// 要素追加
@@ -103,6 +130,10 @@ void IScene::LoadJSONFile(const std::string fileName) {
 
 		objects.push_back(newObject);
 	}
+
+	/*for (auto& controlPoint : levelData->railCameraControlPoint_) {
+		controlPoints_.push_back(controlPoint.point);
+	}*/
 
 	levelObjects_ = objects;
 }

@@ -81,11 +81,11 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		// 光の減衰
 		float32_t distance = length(gPointLight.pos - input.worldPosition);
 		float32_t factor = pow(saturate(-distance / gPointLight.radius + 1.0), gPointLight.decay);
+		
 		// 拡散反射
 		float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * gPointLight.intensity * factor;
 		// 鏡面反射
-		float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
-		
+		float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);	
 		// 拡散反射 + 鏡面反射
 		output.color.rgb = diffusePointLight + specularPointLight;
 		// アルファ値

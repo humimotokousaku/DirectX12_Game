@@ -73,6 +73,11 @@ public:
 		skinCluster_.push_back(skinCluster);
 	}
 
+	// 特定の部位にobjectをセットする
+	/*void SetParentObject(const WorldTransform* parent, int index) {
+		worldTransform.
+	}*/
+
 #pragma region アニメーション
 	// アニメーション追加
 	void AddAnimation(const std::string& directoryPath, const std::string& filePath, const char* animName = "\0") {

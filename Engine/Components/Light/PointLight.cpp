@@ -17,9 +17,9 @@ void PointLight::Initialize() {
 
 	// PointLightingのデフォ値
 	pointLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	pointLightData_->pos = { 0.0f, 2.0f, 0.0f };
+	pointLightData_->pos = { 0.0f, 2.0f, 20.0f };
 	pointLightData_->intensity = 1.0f;
-	pointLightData_->radius = 300.0f;
+	pointLightData_->radius = 10.0f;
 	pointLightData_->decay = 1.0f;
 }
 
@@ -64,6 +64,6 @@ void PointLight::ImGuiAdjustParameter() {
 	ImGui::DragFloat3("PointLighting.pos", &pointLightData_->pos.x, 0.1f, -100, 100);
 	ImGui::ColorEdit3("PointLighting.color", &pointLightData_->color.x);
 	ImGui::DragFloat("PointLighting.intensity", &pointLightData_->intensity,0.01f, 0, 1);
-	ImGui::DragFloat("PointLighting.radius", &pointLightData_->radius, 0.1f, 0, 10);
-	ImGui::DragFloat("PointLighting.decay", &pointLightData_->decay,0.01f, 0, 10);
+	ImGui::DragFloat("PointLighting.radius", &pointLightData_->radius, 0.1f, 0, 1000);
+	ImGui::DragFloat("PointLighting.decay", &pointLightData_->decay,0.01f, 0, 100);
 }

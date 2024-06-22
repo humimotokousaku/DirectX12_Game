@@ -1,8 +1,8 @@
 #include "BloomPSO.h"
 
 BloomPSO::BloomPSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
-	TextureManager::GetInstance()->LoadTexture("", "uvChecker.png");
-	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "uvChecker.png");
+	TextureManager::GetInstance()->LoadTexture("uvChecker.png");
+	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("uvChecker.png");
 	// 初期化
 	Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }

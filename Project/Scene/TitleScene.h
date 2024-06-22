@@ -61,7 +61,9 @@ private:
 	uint32_t monsterBallTexture_;
 	uint32_t particleTexture_;
 	uint32_t blockTexture_;
+	uint32_t whiteTexture_;
 	uint32_t ddsTexture_;
+	std::array<uint32_t, 10> numbersTexture_;
 
 	int textureNum_;
 	Input* input_;

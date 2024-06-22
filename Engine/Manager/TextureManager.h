@@ -66,7 +66,7 @@ public:
 	/// <summary>
 	/// SRVインデックスの取得
 	/// </summary>
-	/// <param name="directoryPath">テクスチャの入っているフォルダの名前(Engine/resources/は書く必要なし)</param>
+	/// <param name="directoryPath">テクスチャの入っているフォルダまでのパス(Engine/resources/は書く必要なし)</param>
 	/// <param name="fileName">テクスチャの名前</param>
 	/// <returns></returns>
 	uint32_t GetSrvIndex(const std::string& directoryPath, const std::string& fileName);
@@ -80,7 +80,7 @@ public:
 	/// <summary>
 	/// テクスチャの名前からGPUハンドルを取得
 	/// </summary>
-	/// <param name="directoryPath">テクスチャの入っているフォルダの名前(Engine/resources/は書く必要なし)</param>
+	/// <param name="directoryPath">テクスチャの入っているフォルダまでのパス(Engine/resources/は書く必要なし)</param>
 	/// <param name="fileName">テクスチャの名前</param>
 	/// <returns></returns>
 	uint32_t GetTextureIndexByFilePath(const std::string& directoryPath, const std::string& fileName);

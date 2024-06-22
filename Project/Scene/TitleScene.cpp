@@ -12,22 +12,31 @@ void TitleScene::Initialize() {
 	// カメラの初期化
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate(Vector3{ 0,0,0 });
+	camera_->SetTranslate(Vector3{ 0,8,5 });
 
+#pragma region 読み込み
 	// テクスチャの読み込み
-	TextureManager::GetInstance()->LoadTexture("", "uvChecker.png");
-	TextureManager::GetInstance()->LoadTexture("", "monsterBall.png");
-	TextureManager::GetInstance()->LoadTexture("", "circle.png");
-	TextureManager::GetInstance()->LoadTexture("", "block.png");
-	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
+	TextureManager::GetInstance()->LoadTexture("uvChecker.png");
+	TextureManager::GetInstance()->LoadTexture("monsterBall.png");
+	TextureManager::GetInstance()->LoadTexture("circle.png");
+	TextureManager::GetInstance()->LoadTexture("block.png");
+	TextureManager::GetInstance()->LoadTexture("rostock_laage_airport_4k.dds");
+	for (int i = 0; i < numbersTexture_.size(); i++) {
+		TextureManager::GetInstance()->LoadTexture(std::to_string(i) + ".png");
+	}
 	// srvの番号取得
-	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "uvChecker.png");
-	monsterBallTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "monsterBall.png");
-	particleTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "circle.png");
-	blockTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "block.png");
+	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("uvChecker.png");
+	monsterBallTexture_ = TextureManager::GetInstance()->GetSrvIndex("monsterBall.png");
+	particleTexture_ = TextureManager::GetInstance()->GetSrvIndex("circle.png");
+	blockTexture_ = TextureManager::GetInstance()->GetSrvIndex("block.png");
 	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds");
+	whiteTexture_ = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture","white.png");
+	for (int i = 0; i < numbersTexture_.size(); i++) {
+		numbersTexture_[i] = TextureManager::GetInstance()->GetSrvIndex(std::to_string(i) + ".png");
+	}
+
 	/// モデル読み込み
-	/// 骨とアニメーションあり 
+	// 骨とアニメーションあり 
 	ModelManager::GetInstance()->LoadModel("SimpleSkin", "simpleSkin.gltf");
 	ModelManager::GetInstance()->LoadModel("Human", "walk.gltf");
 	ModelManager::GetInstance()->LoadModel("Human", "sneakWalk.gltf");
@@ -37,12 +46,22 @@ void TitleScene::Initialize() {
 	ModelManager::GetInstance()->LoadModel("", "axis.obj");
 	ModelManager::GetInstance()->LoadModel("", "block.obj");
 
-	// パーティクル
-	particle_ = std::make_unique<Particles>();
-	particle_->Initialize();
-	particle_->SetCamera(camera_.get());
-	particle_->SetEmitterCount(20);
-	particle_->SetEmitterFrequency(0.1f);
+	// 音の読み込み
+	bgm_[0] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
+	bgm_[1] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
+	bgm_[2] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
+	bgm_[3] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
+	for (int i = 0; i < 1; i++) {
+		//Audio::GetInstance()->SoundPlayWave(bgm_[i], 1.0f, 1.0f, 1.0f);
+	}
+
+	// Blender
+	LoadJSONFile("sample_map.json");
+	for (Object3D* object : levelObjects_) {
+		object->SetCamera(camera_.get());
+		object->SetIsLighting(true);
+	}
+#pragma endregion
 
 #pragma region 3Dモデルの生成
 	// 平面(骨とアニメーションあり)
@@ -108,6 +127,13 @@ void TitleScene::Initialize() {
 	axis_->SetIsLighting(true);
 #pragma endregion
 
+	// パーティクル
+	particle_ = std::make_unique<Particles>();
+	particle_->Initialize();
+	particle_->SetCamera(camera_.get());
+	particle_->SetEmitterCount(20);
+	particle_->SetEmitterFrequency(0.1f);
+
 	//// 自機
 	//player_ = std::make_unique<Player>();
 	//for (int i = 0; i < 2; i++) {
@@ -116,37 +142,54 @@ void TitleScene::Initialize() {
 	//player_->SetCamera(camera_.get());
 	//player_->Initialize();
 
-
-
 	// Skybox
 	cube_ = std::make_unique<Cube>();
 	cube_->SetCamera(camera_.get());
 	cube_->SetScale(Vector3{ 100,100,100 });
 	cube_->SetPosition(Vector3{ 0,0,10 });
-
-
-	// 音の読み込み
-	bgm_[0] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
-	bgm_[1] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
-	bgm_[2] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
-	bgm_[3] = Audio::GetInstance()->SoundLoadWave("engine/resources/fanfare.wav");
-	for (int i = 0; i < 1; i++) {
-		//Audio::GetInstance()->SoundPlayWave(bgm_[i], 1.0f, 1.0f, 1.0f);
-	}
-
-	// Blender
-	LoadJSONFile("sample_map.json");
-	for (Object3D* object : levelObjects_) {
-		object->SetCamera(camera_.get());
-	}
 }
 
 void TitleScene::Update() {
-
+#pragma region カメラ
 	camera_->Update();
+	// 座標移動
+	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
+		camera_->worldTransform_.translate.x += 0.01f;
+	}
+	if (Input::GetInstance()->PressKey(DIK_LEFT)) {
+		camera_->worldTransform_.translate.x -= 0.01f;
+	}
+	if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
+		camera_->worldTransform_.translate.y += 0.01f;
+	}
+	else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_UP)) {
+		camera_->worldTransform_.translate.z += 0.01f;
+	}
+	if (!Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
+		camera_->worldTransform_.translate.y -= 0.01f;
+	}
+	else if (Input::GetInstance()->PressKey(DIK_SPACE) && Input::GetInstance()->PressKey(DIK_DOWN)) {
+		camera_->worldTransform_.translate.z -= 0.01f;
+	}
+
+	// 回転
+	if (Input::GetInstance()->PressKey(DIK_W)) {
+		camera_->worldTransform_.rotate.x += -0.01f;
+	}
+	if (Input::GetInstance()->PressKey(DIK_S)) {
+		camera_->worldTransform_.rotate.x += 0.01f;
+	}
+	if (Input::GetInstance()->PressKey(DIK_A)) {
+		camera_->worldTransform_.rotate.y += -0.01f;
+	}
+	if (Input::GetInstance()->PressKey(DIK_D)) {
+		camera_->worldTransform_.rotate.y += 0.01f;
+	}
+#pragma endregion
+
 	//particle_->Update();
 	//player_->Update();
-#pragma region パーティクル以外の処理
+
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		sceneNum = GAME_SCENE;
 	}
@@ -155,33 +198,31 @@ void TitleScene::Update() {
 	}
 
 #ifdef _DEBUG
-	ImGui::Begin("Current Scene");
-	ImGui::Text("TITLE");
-	ImGui::Text("keyInfo\n1:scene change");
-	ImGui::End();
-	human_[0]->ImGuiParameter("Human");
-	plane_[0]->ImGuiParameter("Plane");
+	//ImGui::Begin("Current Scene");
+	//ImGui::Text("TITLE");
+	//ImGui::Text("keyInfo\n1:scene change");
+	//ImGui::End();
+	//human_[0]->ImGuiParameter("Human");
+	//plane_[0]->ImGuiParameter("Plane");
 	//box_[0]->ImGuiParameter("AnimCube");
 #endif
-#pragma endregion
 }
 
 void TitleScene::Draw() {
 	//axis_->Draw(particleTexture_);
-	//human_[0]->Draw(monsterBallTexture_);
-	//plane_[0]->Draw(uvcheckerTexture_);
 	for (int i = 0; i < 2; i++) {
 		//plane_[i]->Draw(uvcheckerTexture_);
 		//box_[i]->Draw(uvcheckerTexture_);
 		//human_[i]->Draw(uvcheckerTexture_);
 	}
 
+	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		//object->Draw(uvcheckerTexture_);
+		object->Draw();
 	}
 
 	//player_->Draw();
-	//cube_->Draw(ddsTexture_);
+	cube_->Draw(ddsTexture_);
 
 	//particle_->Draw(uvcheckerTexture_);
 }

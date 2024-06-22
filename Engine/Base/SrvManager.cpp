@@ -74,11 +74,20 @@ void SrvManager::CreateSRVforPostEffect(uint32_t srvIndex, ID3D12Resource* pReso
 
 void SrvManager::CreateSRVforDepth(uint32_t srvIndex, ID3D12Resource* pResource) {
 	D3D12_SHADER_RESOURCE_VIEW_DESC depthTextureSrvDesc{};
-	depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	// 深度ステンシルビューの作成
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS; // 適切なフォーマットを指定
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.PlaneSlice = 0;
+	srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	/*depthTextureSrvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	depthTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	depthTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	depthTextureSrvDesc.Texture2D.MipLevels = UINT(1);
-	directXCommon_->GetDevice()->CreateShaderResourceView(pResource, &depthTextureSrvDesc, GetCPUDescriptorHandle(srvIndex));
+	depthTextureSrvDesc.Texture2D.MipLevels = UINT(1);*/
+	directXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 }
 
 void SrvManager::SetGraphicsRootDesctiptorTable(UINT rootParameterIndex, uint32_t srvIndex) {

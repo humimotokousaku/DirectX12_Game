@@ -278,7 +278,14 @@ void Model::CreateMaterialResource() {
 ModelData Model::LoadModelFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData;
 	Assimp::Importer importer;
-	std::string filePath = "Engine/resources/" + directoryPath + "/" + filename;
+	std::string filePath;
+	// directoryPathに何も入ってない場合
+	if (directoryPath.size() == 0) {
+		filePath = "Engine/resources/" + filename;
+	}
+	else {
+		filePath = "Engine/resources/" + directoryPath + "/" + filename;
+	}
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes());
 
@@ -342,7 +349,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = "Engine/resources/" + directoryPath + "/" + textureFilePath.C_Str();
+			modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
 		}
 	}
 
@@ -352,10 +359,10 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 	return modelData;
 }
 
-ModelData Model::LoadModelFile(const std::string& filename) {
+ModelData Model::LoadModelFile(const std::string& fullPath) {
 	ModelData modelData;
 	Assimp::Importer importer;
-	std::string filePath = "Engine/resources/" + filename;
+	std::string filePath = "Engine/resources/" + fullPath;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes());
 
@@ -421,7 +428,7 @@ ModelData Model::LoadModelFile(const std::string& filename) {
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			modelData.material.textureFilePath = "Engine/resources/" + (std::string)textureFilePath.C_Str();
+			modelData.material.textureFilePath = (std::string)textureFilePath.C_Str();
 		}
 	}
 

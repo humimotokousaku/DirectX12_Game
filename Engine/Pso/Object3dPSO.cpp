@@ -7,8 +7,8 @@ Object3dPSO* Object3dPSO::GetInstance() {
 }
 
 void Object3dPSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
-	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
-	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds");
+	TextureManager::GetInstance()->LoadTexture("rostock_laage_airport_4k.dds");
+	ddsTexture_ = TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds");
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }

@@ -6,27 +6,6 @@ void IPostEffect::Initialize() {
 
 	HRESULT result;
 
-	// テクスチャバッファの作成
-	texBuff_.resource = CreateTextureBufferResource();
-	depthTexBuff_.resource = CreateTextureBufferResource();
-
-#pragma region SRV
-	// ノーマル
-	texBuff_ = CreateSRV(texBuff_);
-	depthTexBuff_ = CreateSRV(depthTexBuff_);
-
-#pragma endregion
-
-#pragma region RTV
-	// RTV用のデスクリプタヒープ
-	descHeapRTV_ = CreateRTVDescriptorHeap(directXCommon_->GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false).Get();
-
-	// RTVの作成
-	// 何も加工しない
-	CreateRTV(texBuff_, 0);
-	CreateRTV(depthTexBuff_, 1);
-#pragma endregion
-
 #pragma region DSV
 	// 深度バッファリソース設定
 	CD3DX12_RESOURCE_DESC depthResDesc =
@@ -47,7 +26,7 @@ void IPostEffect::Initialize() {
 		&depthResDesc,
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&clearValue,
-		IID_PPV_ARGS(&depthBuff_)
+		IID_PPV_ARGS(&depthTexBuff_.resource)
 	);
 	assert(SUCCEEDED(result));
 
@@ -64,10 +43,31 @@ void IPostEffect::Initialize() {
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	directXCommon_->GetDevice()->CreateDepthStencilView(
-		depthBuff_.Get(),
+		depthTexBuff_.resource.Get(),
 		&dsvDesc,
 		GetCPUDescriptorHandle(descHeapDSV_.Get(), descriptorSizeRTV, 0)
 	);
+#pragma endregion
+
+	// テクスチャバッファの作成
+	texBuff_.resource = CreateTextureBufferResource();
+	//depthTexBuff_.resource = depthBuff_;
+
+#pragma region SRV
+	// ノーマル
+	texBuff_ = CreateSRV(texBuff_);
+	depthTexBuff_ = CreateDepthSRV(depthTexBuff_);
+
+#pragma endregion
+
+#pragma region RTV
+	// RTV用のデスクリプタヒープ
+	descHeapRTV_ = CreateRTVDescriptorHeap(directXCommon_->GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false).Get();
+
+	// RTVの作成
+	// 何も加工しない
+	CreateRTV(texBuff_, 0);
+	//CreateRTV(depthTexBuff_, 0);
 #pragma endregion
 
 	// スプライトの初期化
@@ -286,7 +286,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> IPostEffect::CreateTextureBufferResource(
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		WinApp::kClientWidth_,
 		(UINT)WinApp::kClientHeight_,
-		2, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
+		1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET
 	);
 
 	// テクスチャバッファの生成
@@ -299,6 +299,35 @@ Microsoft::WRL::ComPtr<ID3D12Resource> IPostEffect::CreateTextureBufferResource(
 		&textureDesc,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 		&clearColor,
+		IID_PPV_ARGS(&texBuff)
+	);
+	assert(SUCCEEDED(result));
+
+	return texBuff;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> IPostEffect::CreateDepthTextureBufferResource() {
+	HRESULT result;
+	// 深度バッファリソース設定
+	CD3DX12_RESOURCE_DESC depthResDesc =
+		CD3DX12_RESOURCE_DESC::Tex2D(
+			DXGI_FORMAT_D24_UNORM_S8_UINT,
+			WinApp::kClientWidth_,
+			WinApp::kClientHeight_,
+			1, 0,
+			1, 0,
+			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+		);
+	// 深度バッファの生成
+	Microsoft::WRL::ComPtr<ID3D12Resource> texBuff;
+	D3D12_HEAP_PROPERTIES depthHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D24_UNORM_S8_UINT, 1.0F, 0);
+	result = directXCommon_->GetDevice()->CreateCommittedResource(
+		&depthHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&clearValue,
 		IID_PPV_ARGS(&texBuff)
 	);
 	assert(SUCCEEDED(result));
@@ -340,6 +369,17 @@ IPostEffect::RenderingTextureData IPostEffect::CreateSRV(RenderingTextureData te
 	return texBuff;
 }
 
+IPostEffect::RenderingTextureData IPostEffect::CreateDepthSRV(RenderingTextureData texData) {
+	// デスクリプタヒープにSRV作成
+	RenderingTextureData texBuff = texData;
+	texBuff.srvIndex = SrvManager::GetInstance()->Allocate();
+	texBuff.srvHandleCPU = SrvManager::GetInstance()->GetCPUDescriptorHandle(texBuff.srvIndex);
+	texBuff.srvHandleGPU = SrvManager::GetInstance()->GetGPUDescriptorHandle(texBuff.srvIndex);
+	SrvManager::GetInstance()->CreateSRVforDepth(texBuff.srvIndex, texBuff.resource.Get());
+
+	return texBuff;
+}
+
 void IPostEffect::CreateRTV(RenderingTextureData texData, uint32_t index) {
 	// レンダーターゲットビューの設定
 	D3D12_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
@@ -358,7 +398,7 @@ void IPostEffect::CreateRTV(RenderingTextureData texData, uint32_t index) {
 }
 
 void IPostEffect::SetBarrier(Microsoft::WRL::ComPtr<ID3D12Resource> texBuff, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState, UINT numBarrier) {
-	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(), beforeState, afterState);
+	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(texBuff.Get(), beforeState, afterState, 0, D3D12_RESOURCE_BARRIER_FLAG_NONE);
 	directXCommon_->GetCommandList()->ResourceBarrier(numBarrier, &barrier);
 }
 

@@ -90,7 +90,7 @@ private:// プライベートなメンバ変数
 	int32_t waitTime_ = 0;
 
 	// スプライン曲線制御点（通過点）
-	std::vector<Vector3> controlPoints_;
+	//std::vector<Vector3> controlPoints_;
 	// 線分で描画する用の頂点リスト
 	std::vector<Vector3> pointsDrawing_;
 	// 移動ルートの線(デバッグ用)

@@ -5,6 +5,8 @@
 
 class CollisionManager {
 public:
+	~CollisionManager();
+
 	/// <summary>
 	/// 当たっているなら衝突応答関数を呼ぶ
 	/// </summary>

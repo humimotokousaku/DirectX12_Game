@@ -51,9 +51,19 @@ private:
 
 	void CreateMaterialResource();
 
-	// ファイルの読み込み
+	/// <summary>
+	/// ファイルの読み込み
+	/// </summary>
+	/// <param name="directoryPath">ファイル名よりも前のパス(Engine/resources/は書かない)</param>
+	/// <param name="filename">ファイル名</param>
+	/// <returns></returns>
 	ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
-	ModelData LoadModelFile(const std::string& filename);
+	/// <summary>
+	/// ファイルの読み込み
+	/// </summary>
+	/// <param name="fullPath">Engine/resources/よりも後の全てのパス</param>
+	/// <returns></returns>
+	ModelData LoadModelFile(const std::string& fullPath);
 
 public:
 	// Material

@@ -1,6 +1,10 @@
 #include "CollisionManager.h"
 #include <assert.h>
 
+CollisionManager::~CollisionManager() {
+	ClearColliderList();
+}
+
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	// 衝突フィルタリング
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||

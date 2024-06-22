@@ -57,7 +57,7 @@ void GameScene::Initialize() {
 		line_[i]->Initialize();
 	}
 	// スプライン曲線制御点（通過点）の初期化
-	controlPoints_ = {
+	/*controlPoints_ = {
 		{0,  0,  0},
 		{0,  0,  30},
 		{10, 10, 10},
@@ -65,10 +65,16 @@ void GameScene::Initialize() {
 		{20, 15, 20},
 		{20, 0,  0},
 		{30, 0,  -10}
-	};
+	};*/
 	t_ = 0;
 	targetT_ = 1.0f / segmentCount;
 	isMoveCamera_ = true;
+	// Blender
+	LoadJSONFile("sample_map.json");
+	for (Object3D* object : levelObjects_) {
+		object->SetCamera(railCamera_->GetCamera());
+		object->SetIsLighting(true);
+	}
 
 	// Skybox
 	cube_ = std::make_unique<Cube>();
@@ -134,14 +140,14 @@ void GameScene::Update() {
 	if (isMoveCamera_) {
 		// カメラの移動
 		if (t_ < 0.99f) {
-			t_ += 1.0f / segmentCount / 100;
+			t_ += 1.0f / segmentCount / 10;
 		}
 		else {
 			t_ = 0.99f;
 			isMoveCamera_ = false;
 		}
 		if (targetT_ < 0.99f) {
-			targetT_ += 1.0f / segmentCount / 100;
+			targetT_ += 1.0f / segmentCount / 10;
 		}
 		else {
 			targetT_ = 1.0f;
@@ -181,8 +187,13 @@ void GameScene::Draw() {
 		bullet->Draw();
 	}
 
+	// Blenderで配置したオブジェクト
+	for (Object3D* object : levelObjects_) {
+		object->Draw();
+	}
+
 	// skybox
-	cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("", "rostock_laage_airport_4k.dds"));
+	cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
 }
 
 void GameScene::Finalize() {
@@ -206,8 +217,6 @@ void GameScene::Finalize() {
 	enemy_.clear();
 	// 通常敵の弾
 	enemyBullets_.clear();
-	// 全コライダー
-	collisionManager_->ClearColliderList();
 }
 
 void GameScene::UpdatePlayerPosition(float t) {
