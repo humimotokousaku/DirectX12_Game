@@ -73,7 +73,8 @@ void GameScene::Initialize() {
 	LoadJSONFile("sample_map.json");
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(railCamera_->GetCamera());
-		object->SetIsLighting(true);
+		object->SetIsLighting(false);
+
 	}
 
 	// Skybox

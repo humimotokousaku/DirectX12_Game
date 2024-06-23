@@ -56,11 +56,11 @@ void TitleScene::Initialize() {
 	}
 
 	// Blender
-	LoadJSONFile("sample_map.json");
+	/*LoadJSONFile("sample_map.json");
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(camera_.get());
 		object->SetIsLighting(true);
-	}
+	}*/
 #pragma endregion
 
 #pragma region 3Dモデルの生成
