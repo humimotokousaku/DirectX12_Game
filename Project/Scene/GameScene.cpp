@@ -8,6 +8,7 @@ GameScene::GameScene() {
 void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
 
+	TextureManager::GetInstance()->LoadTexture("", "reticle.png");
 	// 使用するモデルの読み込み
 	ModelManager::GetInstance()->LoadModel("", "block.obj");
 
@@ -51,10 +52,33 @@ void GameScene::Initialize() {
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
+	// Blender
+	LoadJSONFile("sample_map.json");
+	for (Object3D* object : levelObjects_) {
+		object->SetCamera(railCamera_->GetCamera());
+		object->SetIsLighting(false);
+
+	}
 	// 線
 	for (int i = 0; i < segmentCount; i++) {
 		line_[i] = std::make_unique<Line>();
 		line_[i]->Initialize();
+		line_[i]->SetCamera(railCamera_->GetCamera());
+	}
+
+	// 線分の数+1個分の頂点座標の計算
+	for (size_t i = 0; i < segmentCount + 1; i++) {
+		float t = 1.0f / segmentCount * i;
+		if (t >= 1.0f) {
+			t = 0.99f;
+		}
+		Vector3 pos = Lerps::CatmullRomSpline(controlPoints_, t);
+		// 描画用頂点リストに追加
+		pointsDrawing_.push_back(pos);
+	}
+	for (int i = 0; i < segmentCount; i++) {
+		line_[i]->startPos_ = pointsDrawing_[i];
+		line_[i]->endPos_ = pointsDrawing_[i + 1];
 	}
 	// スプライン曲線制御点（通過点）の初期化
 	/*controlPoints_ = {
@@ -66,16 +90,10 @@ void GameScene::Initialize() {
 		{20, 0,  0},
 		{30, 0,  -10}
 	};*/
-	t_ = 0;
+	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
 	isMoveCamera_ = true;
-	// Blender
-	LoadJSONFile("sample_map.json");
-	for (Object3D* object : levelObjects_) {
-		object->SetCamera(railCamera_->GetCamera());
-		object->SetIsLighting(false);
 
-	}
 
 	// Skybox
 	cube_ = std::make_unique<Cube>();
@@ -131,28 +149,19 @@ void GameScene::Update() {
 		bullet->Update();
 	}
 
-	// 線分の数+1個分の頂点座標の計算
-	for (size_t i = 0; i < segmentCount + 1; i++) {
-		float t = 1.0f / segmentCount * i;
-		Vector3 pos = Lerps::CatmullRomSpline(controlPoints_, t);
-		// 描画用頂点リストに追加
-		pointsDrawing_.push_back(pos);
-	}
 	if (isMoveCamera_) {
-		// カメラの移動
-		if (t_ < 0.99f) {
-			t_ += 1.0f / segmentCount / 10;
+		// 
+		if(targetT_ <= 1.0f){
+			targetT_ += 1.0f / segmentCount / 10;			
 		}
-		else {
-			t_ = 0.99f;
+		if (targetT_ >= 1.0f) {
+			targetT_ = 1.0f;
 			isMoveCamera_ = false;
 		}
-		if (targetT_ < 0.99f) {
-			targetT_ += 1.0f / segmentCount / 10;
-		}
-		else {
-			targetT_ = 1.0f;
-		}
+		// カメラの移動
+		if (t_ <= 1.0f) {
+			t_ += 1.0f / segmentCount / 10;		
+		}		
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
 	UpdatePlayerPosition(t_);
@@ -162,16 +171,22 @@ void GameScene::Update() {
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
 
-#ifdef USE_IMGUI
+///#ifdef USE_IMGUI
 
 	ImGui::Begin("Current Scene");
 	ImGui::Text("GAME");
 	ImGui::Text("SPACE:scene change");
+	ImGui::DragFloat("cameraT", &targetT_, 0);
+	ImGui::DragFloat("playerT", &t_, 0);
 	ImGui::End();
-#endif
+//#endif
 }
 
 void GameScene::Draw() {
+	for (int i = 0; i < segmentCount; i++) {
+		line_[i]->Draw();
+	}
+
 	// 自機
 	player_->Draw();
 	// 自機の弾
@@ -192,6 +207,9 @@ void GameScene::Draw() {
 	for (Object3D* object : levelObjects_) {
 		object->Draw();
 	}
+
+	// 自機のレティクル
+	player_->DrawUI();
 
 	// skybox
 	cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
@@ -224,8 +242,8 @@ void GameScene::UpdatePlayerPosition(float t) {
 	Vector3 cameraPosition{};
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t);
-	cameraPosition.y += 0.01f;
-	cameraPosition.z += 0.01f;
+	cameraPosition.y += 0.02f;
+	//cameraPosition.z += 0.01f;
 	railCamera_->SetTranslation(cameraPosition);
 }
 

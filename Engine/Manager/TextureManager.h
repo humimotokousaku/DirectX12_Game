@@ -87,7 +87,15 @@ public:
 
 	// textureResource(ユーザー使用禁止)
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetTextureResource(const std::string& directoryPath, const std::string& fileName) {
-		TextureData& textureData = textureDatas_["Engine/resources/" + directoryPath + "/" + fileName];
+		std::string filePath;
+		// directoryPathが空の場合
+		if (directoryPath.size() == 0) {
+			filePath = "Engine/resources/" + fileName;
+		}
+		else {
+			filePath = "Engine/resources/" + directoryPath + "/" + fileName;
+		}
+		TextureData& textureData = textureDatas_[filePath];
 		return textureData.resource;
 	}
 

@@ -1,6 +1,9 @@
 #include "Lerp.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
+#include <numbers>
+#include <algorithm>
+#include <array>
+#include <assert.h>
 
 namespace Lerps {
 
@@ -14,7 +17,7 @@ namespace Lerps {
 
 	Vector3 Slerp(const Vector3& start, const Vector3& end, float t) {
 		float dot = Dot(start, end);
-		float theta = (float)acos((dot * (float)(float)M_PI) / 180);
+		float theta = (float)acos((dot * (float)std::numbers::pi) / 180);
 		float sinTheta = (float)sin(theta);
 		float weightStart = (float)sin((1 - t) * theta) / sinTheta;
 		float weightEnd = (float)sin(t * theta) / sinTheta;
@@ -26,7 +29,67 @@ namespace Lerps {
 		return result;
 	}
 
+
+
+	Vector3 CatmullRomSpline(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) {
+		const float s = 0.5f;
+		float t2 = t * t;
+		float t3 = t2 * t;
+
+		Vector3 e3 = (p0 * -1.0f) + (p1 * 3.0f) - (p2 * 3.0f) + p3;
+		Vector3 e2 = (p0 * 2.0f) - (p1 * 5.0f) + (p2 * 4.0f) - p3;
+		Vector3 e1 = (p0 * -1.0f) + p2;
+		Vector3 e0 = p1 * 2.0f;
+		return (e3 * t3 + e2 * t2 + e1 * t + e0) * s;
+	}
 	Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t) {
+		assert(controlPoints.size() >= 4 && "制御点は4点未満です");
+
+		// 区画数を制御点の数-1
+		size_t division = controlPoints.size() - 1;
+		// 1区間の長さ(全体を1)
+		float areaWidth = 1.0f / division;
+
+		// 区間内の始点を0 終点を1の時の現在地
+		float t_2 = std::fmod(t, areaWidth) * division;
+		// 0~1を出ないようにする
+		t_2 = std::clamp<float>(t_2, 0.0f, 1.0f);
+
+		// 区間番号
+		size_t index = static_cast<size_t>(t / areaWidth);
+		// 区間番号が上限を超えないようにする
+		index = std::clamp<size_t>(index, 0, controlPoints.size() - 1);
+
+		// 4線分のインデックス
+		size_t indeces0 = index - 1;
+		size_t indeces1 = index;
+		size_t indeces2 = index + 1;
+		size_t indeces3 = index + 2;
+		// 制御点のサイズを超えないようにする
+		indeces0 = std::clamp<size_t>(indeces0, 0, controlPoints.size() - 1);
+		indeces1 = std::clamp<size_t>(indeces1, 0, controlPoints.size() - 1);
+		indeces2 = std::clamp<size_t>(indeces2, 0, controlPoints.size() - 1);
+		indeces3 = std::clamp<size_t>(indeces3, 0, controlPoints.size() - 1);
+
+		// 最初の区間のp0はp1を重複使用
+		if (index == 0) {
+			indeces0 = indeces1;
+		}
+		// 最後の区間のp3はp2を重複使用
+		if (indeces3 >= controlPoints.size()) {
+			indeces2 -= 1;
+			indeces3 = indeces2;
+		}
+		// 4点の座標
+		const Vector3& points0 = controlPoints[indeces0];
+		const Vector3& points1 = controlPoints[indeces1];
+		const Vector3& points2 = controlPoints[indeces2];
+		const Vector3& points3 = controlPoints[indeces3];
+
+		return CatmullRomSpline(points0, points1, points2, points3, t_2);
+	}
+
+	/*Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t) {
 		int n = (int)controlPoints.size();
 		int segment = static_cast<int>(t * (n - 1));
 		float tSegment = t * (n - 1) - segment;
@@ -51,7 +114,7 @@ namespace Lerps {
 				(-p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * (tSegment * tSegment * tSegment));
 
 		return interpolatedPoint;
-	}
+	}*/
 }
 
 namespace Easings {
@@ -189,7 +252,7 @@ namespace Easings {
 #pragma region Elastic
 
 	float EaseInElastic(float x) {
-		const float c4 = (2 * (float)M_PI) / 3;
+		const float c4 = (2 * (float)std::numbers::pi) / 3;
 		if (x == 0) {
 			return x = 0;
 		}
@@ -204,7 +267,7 @@ namespace Easings {
 	}
 
 	float EaseOutElastic(float x) {
-		const float c4 = (2 * (float)M_PI) / 3;
+		const float c4 = (2 * (float)std::numbers::pi) / 3;
 		if (x == 0) {
 			return x = 0;
 		}
@@ -219,7 +282,7 @@ namespace Easings {
 	}
 
 	float EaseInOutElastic(float x) {
-		const float c5 = (2 * (float)M_PI) / 4.5f;
+		const float c5 = (2 * (float)std::numbers::pi) / 4.5f;
 		if (x == 0) {
 			return x = 0;
 		}

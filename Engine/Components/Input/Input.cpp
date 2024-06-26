@@ -69,6 +69,18 @@ bool Input::ReleaseKey(BYTE keyNumber)const {
 	}
 }
 
+bool Input::DetectKeyInput() {
+	BYTE keysState{};
+	// 値が0なら何も入力されてない
+	for (int i = 0; i < 256; i++) {
+		keysState += key_[i];
+	}
+	if (keysState == 0) {
+		return true;
+	}
+	return false;
+}
+
 bool Input::GetJoystickState(int32_t stickNo,XINPUT_STATE& state) {
 	DWORD result = XInputGetState(stickNo, &state);
 
@@ -109,4 +121,14 @@ bool Input::GamePadPress(int GAMEPAD_NUM) {
 	else {
 		return false;
 	}
+}
+
+bool Input::DetectThumbInput(SHORT sThumbX, SHORT sThumbY) {
+	// デッドゾーン以内なら入力なし
+	if (abs(sThumbX) < DEADZONE_THRESHOLD) {
+		if (abs(sThumbY) < DEADZONE_THRESHOLD) {
+			return true;
+		}
+	}
+	return false;
 }

@@ -56,11 +56,11 @@ void TitleScene::Initialize() {
 	}
 
 	// Blender
-	/*LoadJSONFile("sample_map.json");
+	LoadJSONFile("sample_map.json");
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(camera_.get());
-		object->SetIsLighting(true);
-	}*/
+		object->SetIsLighting(false);
+	}
 #pragma endregion
 
 #pragma region 3Dモデルの生成
@@ -109,13 +109,14 @@ void TitleScene::Initialize() {
 	box_[0]->SetModel("AnimatedCube", "AnimatedCube.gltf");
 	box_[0]->SetCamera(camera_.get());
 	box_[0]->SetAnimName("Animation");
+	box_[0]->StartAnim("Animation");
 	box_[0]->worldTransform.translate = { -4,2,10 };
 	// objの箱
 	box_[1] = std::make_unique<Object3D>();
 	box_[1]->Initialize();
-	box_[1]->SetModel("", "block.obj");
+	box_[1]->SetModel("AnimatedCube", "AnimatedCube.gltf");
 	box_[1]->SetCamera(camera_.get());
-	box_[1]->SetAnimName("NonAnim");
+	//box_[1]->StartAnim(0);
 	box_[1]->worldTransform.translate = { -4,-2,10 };
 
 	// 3D線(obj読み込み)
@@ -212,13 +213,13 @@ void TitleScene::Draw() {
 	//axis_->Draw(particleTexture_);
 	for (int i = 0; i < 2; i++) {
 		//plane_[i]->Draw(uvcheckerTexture_);
-		//box_[i]->Draw(uvcheckerTexture_);
-		//human_[i]->Draw(uvcheckerTexture_);
+		box_[i]->Draw(uvcheckerTexture_);
+		human_[i]->Draw(uvcheckerTexture_);
 	}
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		object->Draw();
+		//object->Draw();
 	}
 
 	//player_->Draw();

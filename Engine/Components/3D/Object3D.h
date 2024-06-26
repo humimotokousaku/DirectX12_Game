@@ -53,9 +53,10 @@ public:
 
 	// モデルのセット
 	void SetModel(const std::string& directoryPath, const std::string& filePath) { 
-		model_ = ModelManager::GetInstance()->SetModel(directoryPath, filePath);
+		*model_ = *ModelManager::GetInstance()->SetModel(directoryPath, filePath);
+		Motion animation = model_->animation_;
 		// アニメーション
-		animation_.push_back(model_->animation_);
+		animation_.push_back(animation);
 		// スケルトン
 		skeleton_ = model_->skeleton_;
 		// スキンクラスタ
@@ -63,9 +64,10 @@ public:
 		skinCluster_.push_back(skinCluster);
 	}
 	void SetModel(Model* model) {
-		model_ = model;
+		*model_ = *model;
+		Motion animation = model_->animation_;
 		// アニメーション
-		animation_.push_back(model_->animation_);
+		animation_.push_back(animation);
 		// スケルトン
 		skeleton_ = model_->skeleton_;
 		// スキンクラスタ
@@ -115,6 +117,19 @@ public:
 	void StartAnim(const char* animName) {
 		for (int i = 0; i < animation_.size(); i++) {
 			if (animation_[i].name == animName) {
+				animation_[i].isActive = true;
+				//model_->animation_.isActive = animation_[i].isActive;
+				model_->animation_ = animation_[i];
+				model_->skinCluster_ = skinCluster_[i];
+			}
+			else {
+				animation_[i].isActive = false;
+			}
+		}
+	}
+	void StartAnim(const int index) {
+		for (int i = 0; i < animation_.size(); i++) {
+			if (i == index) {
 				animation_[i].isActive = true;
 				//model_->animation_.isActive = animation_[i].isActive;
 				model_->animation_ = animation_[i];

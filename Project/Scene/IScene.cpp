@@ -121,6 +121,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		Object3D* newObject = new Object3D();
 		newObject->Initialize();
 		newObject->SetModel(model);
+		//newObject->StartAnim(0);
 		// 座標
 		newObject->worldTransform.translate = objectData.translate;
 		// 回転

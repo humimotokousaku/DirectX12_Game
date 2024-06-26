@@ -8,6 +8,7 @@ namespace Lerps {
 	// 球面線形補間
 	Vector3 Slerp(const Vector3& start, const Vector3& end, float t);
 	// Cat-mullRom曲線
+	Vector3 CatmullRomSpline(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 	Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t);
 };
 

@@ -81,7 +81,7 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	ID3D12Resource* textureBuffer = textureManager_->GetTextureResource(directoryPath, textureFilePath).Get();
 	// 指定番号の画像が読み込み済みなら
 	if (textureBuffer) {
-		//// テクスチャ情報取得
+		// テクスチャ情報取得
 		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
 		// UVの頂点
 		float tex_left = textureLeftTop_.x / resDesc.Width;
@@ -106,10 +106,6 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	// カメラ
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	//viewProjection_.Initialize();
-	//viewProjection_.constMap->view = MakeIdentity4x4();
-	//viewProjection_.constMap->projection = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kClientWidth_), float(WinApp::kClientHeight_), 0.0f, 100.0f);
-	//cameraPosData_ = viewProjection_.transform.translate;
 	camera_->GetViewProjection().constMap->projection = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kClientWidth_), float(WinApp::kClientHeight_), 0.0f, 100.0f);
 	cameraPosData_ = camera_->GetTranslate();
 }

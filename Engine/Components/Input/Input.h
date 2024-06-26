@@ -32,6 +32,9 @@ public:
 	bool PressKey(BYTE keyNumber)const;
 	// キーを離した瞬間
 	bool ReleaseKey(BYTE keyNumber)const;
+	// 何もキー入力されていないかを検出
+	// 何も入力されてないならtrue
+	bool DetectKeyInput();
 
 	///
 	/// GamePad Method
@@ -48,6 +51,9 @@ public:
 	bool GamePadRelease(int GAMEPAD_NUM);
 	// 押してるときの処理
 	bool GamePadPress(int GAMEPAD_NUM);
+	// Lスティックが何も入力されていないかを検出
+	// 何も入力されてないならtrue
+	bool DetectThumbInput(SHORT sThumbX, SHORT sThumbY);
 
 private:
 	/// 

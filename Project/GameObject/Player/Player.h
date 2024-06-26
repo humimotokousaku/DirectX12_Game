@@ -50,7 +50,7 @@ public:// パブリックなメンバ関数
 	/// <summary>
 	/// 2Dレティクルの配置
 	/// </summary>
-	void Deploy2DReticle(const ViewProjection& viewProjection);
+	void Deploy2DReticle();
 
 	// 自機の回転処理
 	void Rotate();
@@ -60,8 +60,14 @@ public:// パブリックなメンバ関数
 	/// </summary>
 	void Attack();
 
+	///
+	/// Getter
+	/// 
+
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	// レティクルの座標
+	Vector3 GetWorld3DReticlePosition();
 
 	///
 	/// Setter
@@ -69,9 +75,6 @@ public:// パブリックなメンバ関数
 	
 	// モデルを追加
 	void AddModel(Model* model) { models_.push_back(model); }
-
-	// レティクルの座標
-	//Vector3 GetWorld3DReticlePosition();
 
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }

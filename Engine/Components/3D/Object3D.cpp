@@ -6,10 +6,12 @@ Object3D::~Object3D() {
 	worldTransform.constBuff_.ReleaseAndGetAddressOf();
 	skinCluster_.clear();
 	animation_.clear();
+	delete model_;
 }
 
 void Object3D::Initialize() {
 	worldTransform.Initialize();
+	model_ = new Model();
 }
 
 void Object3D::Draw(uint32_t textureNum) {

@@ -5,6 +5,100 @@ struct Vector3 final {
 	float x;
 	float y;
 	float z;
+
+	// 算術演算子のオーバーロード
+	// 加算
+	Vector3 operator+(const Vector3& obj)const {
+		return  { x + obj.x, y + obj.y, z + obj.z };
+	}
+	Vector3 operator+=(const Vector3& obj)const {
+		Vector3 result = {
+			result.x += obj.x,
+			result.y += obj.y,
+			result.z += obj.z
+		};
+		return result;
+	}
+	Vector3 operator+(float obj)const {
+		return  { x + obj, y + obj, z + obj };
+	}
+	Vector3 operator+=(float obj)const {
+		Vector3 result = {
+			result.x += obj,
+			result.y += obj,
+			result.z += obj
+		};
+		return result;
+	}
+	// 減算
+	Vector3 operator-(const Vector3& obj)const {
+		return  { x - obj.x, y - obj.y, z - obj.z };
+	}
+	Vector3 operator-=(const Vector3& obj)const {
+		Vector3 result = {
+			result.x -= obj.x,
+			result.y -= obj.y,
+			result.z -= obj.z
+		};
+		return result;
+	}
+	Vector3 operator-(float obj)const {
+		return  { x - obj, y - obj, z - obj };
+	}
+	Vector3 operator-=(float obj)const {
+		Vector3 result = {
+			result.x -= obj,
+			result.y -= obj,
+			result.z -= obj
+		};
+		return result;
+	}
+	// 掛け算
+	Vector3 operator*(const Vector3& obj)const {
+		return  { x * obj.x, y * obj.y, z * obj.z };
+	}
+	Vector3 operator*=(const Vector3& obj)const {
+		Vector3 result = {
+			result.x *= obj.x,
+			result.y *= obj.y,
+			result.z *= obj.z
+		};
+		return result;
+	}
+	Vector3 operator*(float scalar)const {
+		return  { x * scalar, y * scalar, z * scalar };
+	}
+	Vector3 operator*=(float scalar)const {
+		Vector3 result = {
+			result.x *= scalar,
+			result.y *= scalar,
+			result.z *= scalar
+		};
+		return result;
+	}
+	// 割り算
+	Vector3 operator/(const Vector3& obj)const {
+		return  { x / obj.x, y / obj.y, z / obj.z };
+	}
+	Vector3 operator/=(const Vector3& obj)const {
+		Vector3 result = {
+			result.x /= obj.x,
+			result.y /= obj.y,
+			result.z /= obj.z
+		};
+		return result;
+	}
+	Vector3 operator/(float obj)const {
+		return  { x / obj, y / obj, z / obj };
+	}
+	Vector3 operator/=(float obj)const {
+		Vector3 result = {
+			result.x /= obj,
+			result.y /= obj,
+			result.z /= obj
+		};
+		return result;
+	}
 };
 
 // 加算
