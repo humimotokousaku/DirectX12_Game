@@ -10,6 +10,8 @@ Bloom::Bloom() {
 }
 
 void Bloom::Initialize() {
+	TextureManager::GetInstance()->LoadTexture("uvChecker.png");
+	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("uvChecker.png");
 	// 基底クラスの初期化
 	IPostEffect::Initialize();
 #pragma region シェーダ内のパラメータを調整するための準備
@@ -34,6 +36,7 @@ void Bloom::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resourc
 	ImGui::End();
 #endif
 	isActive_ = bloomData_->isActive;
+	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, bloomResource_);
 	IPostEffect::Draw(psoNum, bloomResource_);
 }
 

@@ -11,6 +11,7 @@ void Dissolve::Initialize() {
 }
 
 void Dissolve::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
+	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum,resource);
 	IPostEffect::Draw(psoNum);
 }
 

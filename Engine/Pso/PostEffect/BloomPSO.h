@@ -41,7 +41,6 @@ public:
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// BloomData
 		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, resource.Get()->GetGPUVirtualAddress());
-		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, uvcheckerTexture_);
 	}
 
 private:// プライベートな変数

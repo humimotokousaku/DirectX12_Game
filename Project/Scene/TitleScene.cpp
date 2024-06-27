@@ -12,7 +12,7 @@ void TitleScene::Initialize() {
 	// カメラの初期化
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->SetTranslate(Vector3{ 0,8,5 });
+	//camera_->SetTranslate(Vector3{ 0,8,5 });
 
 #pragma region 読み込み
 	// テクスチャの読み込み
@@ -210,9 +210,9 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
-	//axis_->Draw(particleTexture_);
+	axis_->Draw(particleTexture_);
 	for (int i = 0; i < 2; i++) {
-		//plane_[i]->Draw(uvcheckerTexture_);
+		plane_[i]->Draw(uvcheckerTexture_);
 		box_[i]->Draw(uvcheckerTexture_);
 		human_[i]->Draw(uvcheckerTexture_);
 	}

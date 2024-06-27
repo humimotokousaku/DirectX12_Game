@@ -12,6 +12,7 @@ void PostEffect::Initialize() {
 }
 
 void PostEffect::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
+	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, resource);
 	IPostEffect::Draw(psoNum, resource);
 }
 

@@ -50,8 +50,8 @@ public:
 	void ComInit();
 
 	// Textureを読む
-	void LoadTexture(const std::string& filePath);
-	void LoadTexture(const std::string& directoryPath, const std::string& fileName);
+	void LoadTexture(const std::string& filePath, bool isDepthTexture = false);
+	void LoadTexture(const std::string& directoryPath, const std::string& fileName, bool isDepthTexture = false);
 
 	/// Getter
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);

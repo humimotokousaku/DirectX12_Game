@@ -1,27 +1,18 @@
 #pragma once
-#include "Sprite.h"
-#include "DirectXCommon.h"
-#include "Camera.h"
-#include "PostEffectPSO.h"
 #include "IPostEffect.h"
-#include <Windows.h>
 
-class Bloom : public IPostEffect {
+class GrayScale : public IPostEffect {
 private:// 構造体
-	struct BloomData {
-		bool isActive;	// 使用するか
-		float strength;	// ぼかしの強さ
-		float threshold; // ぼかすの閾値
+	struct GrayScaleData {
+		bool isActive;
+		float strength;
 	};
+
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	Bloom();
-	/// <summary>
-	/// デストラクタ
-	/// </summary>
-	~Bloom()override = default;
+	GrayScale();
 
 	/// <summary>
 	/// 初期化
@@ -48,10 +39,8 @@ public:
 	/// </summary>
 	void PostDrawScene()override;
 
-	std::vector<uint32_t> renderTexture_;
-
-private:// プライベートなメンバ変数
-	BloomData* bloomData_;
-	Microsoft::WRL::ComPtr<ID3D12Resource> bloomResource_;
-	uint32_t uvcheckerTexture_;
+private:
+	GrayScaleData* grayData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> grayResource_;
 };
+

@@ -36,7 +36,7 @@ void TextureManager::ComUninit() {
 	CoUninitialize();
 }
 
-void TextureManager::LoadTexture(const std::string& filePath) {
+void TextureManager::LoadTexture(const std::string& filePath, bool isDepthTexture) {
 	// 読み込み済みテクスチャを検索
 	if (textureDatas_.contains("Engine/resources/" + filePath)) {
 		return;
@@ -79,10 +79,14 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	textureData.srvIndex = srvManager_->Allocate();
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, textureData.metadata.mipLevels, textureData.metadata);
+	if (!isDepthTexture) {
+		srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, textureData.metadata.mipLevels, textureData.metadata);
+		return;
+	}
+	srvManager_->CreateSRVforDepth(textureData.srvIndex, textureData.resource.Get());
 }
 
-void TextureManager::LoadTexture(const std::string& directoryPath, const std::string& fileName) {
+void TextureManager::LoadTexture(const std::string& directoryPath, const std::string& fileName, bool isDepthTexture) {
 	std::string filePath;
 	// directoryPathが空の場合
 	if (directoryPath.size() == 0) {
@@ -134,7 +138,11 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	textureData.srvIndex = srvManager_->Allocate();
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, textureData.metadata.mipLevels, textureData.metadata);
+	if (!isDepthTexture) {
+		srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metadata.format, textureData.metadata.mipLevels, textureData.metadata);
+		return;
+	}
+	srvManager_->CreateSRVforDepth(textureData.srvIndex, textureData.resource.Get());
 }
 
 uint32_t TextureManager::GetTextureIndexByFilePath(const std::string& filePath) {

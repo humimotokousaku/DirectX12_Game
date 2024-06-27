@@ -1,20 +1,18 @@
-#include "BloomPSO.h"
+#include "GrayScalePSO.h"
 
-BloomPSO::BloomPSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
-	TextureManager::GetInstance()->LoadTexture("uvChecker.png");
-	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("uvChecker.png");
+GrayScalePSO::GrayScalePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
 	// 初期化
 	Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 }
 
-void BloomPSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
+void GrayScalePSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 	// PSO作成
 	CreatePSO();
 }
 
-void BloomPSO::CreateRootSignature() {
+void GrayScalePSO::CreateRootSignature() {
 	HRESULT hr;
 	descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
@@ -45,7 +43,7 @@ void BloomPSO::CreateRootSignature() {
 	rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	rootParameters_[3].Descriptor.ShaderRegister = 1;
-	// BloomData
+	// GrayScaleData
 	rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters_[4].Descriptor.ShaderRegister = 1;
@@ -82,7 +80,7 @@ void BloomPSO::CreateRootSignature() {
 	assert(SUCCEEDED(hr));
 }
 
-void BloomPSO::CreatePSO() {
+void GrayScalePSO::CreatePSO() {
 	HRESULT hr;
 
 	// rootSignatureの作成

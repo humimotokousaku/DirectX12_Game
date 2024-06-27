@@ -3,6 +3,7 @@
 #include "RadialBlur.h"
 #include "Bloom.h"
 #include "Gauss.h"
+#include "GrayScale.h"
 #include "Dissolve.h"
 #include "Outline.h"
 
@@ -32,26 +33,28 @@ void PostEffectManager::Initialize() {
 	radialBlur->Initialize();
 	renderTexture_.push_back(radialBlur->GetRenderTexture());
 	postEffect_.push_back(radialBlur);
+	// GrayScale
+	GrayScale* gray = new GrayScale();
+	gray->Initialize();
+	renderTexture_.push_back(gray->GetRenderTexture());
+	postEffect_.push_back(gray);
 	// Gauss
 	Gauss* gauss = new Gauss();
 	gauss->Initialize();
 	renderTexture_.push_back(gauss->GetRenderTexture());
 	postEffect_.push_back(gauss);
 	// Dissolve
-	//Dissolve* dissolve = new Dissolve();
-	//dissolve->Initialize();
-	//renderTexture_.push_back(normal->GetRenderTexture());
-	//postEffect_.push_back(dissolve);
+	Dissolve* dissolve = new Dissolve();
+	dissolve->Initialize();
+	renderTexture_.push_back(normal->GetRenderTexture());
+	postEffect_.push_back(dissolve);
 	// Bloom
 	Bloom* bloom = new Bloom();
 	bloom->Initialize();
 	renderTexture_.push_back(bloom->GetRenderTexture());
+	bloom->renderTexture_.push_back(gray->GetRenderTexture());
+	bloom->renderTexture_.push_back(gauss->GetRenderTexture());
 	postEffect_.push_back(bloom);
-
-	//object_ = std::make_unique<Object3D>();
-	//object_->Initialize();
-	//object_->SetModel("", "block.obj");
-	//object_->SetCamera(camera_.get());
 }
 
 void PostEffectManager::PreDraw() {
@@ -68,8 +71,6 @@ void PostEffectManager::PostDraw() {
 			postEffect_[i + 1]->PostDrawScene();
 		//}
 	}
-
-	//object_->Draw(renderTexture_[0]);
 }
 
 void PostEffectManager::Draw() {

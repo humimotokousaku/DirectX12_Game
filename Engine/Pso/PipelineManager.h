@@ -11,6 +11,7 @@
 #include "ParticlePSO.h"
 #include "OutlinePSO.h"
 #include "DissolvePSO.h"
+#include "GrayScalePSO.h"
 #include "GaussPSO.h"
 #include "SmoothingPSO.h"
 #include "RadialBlurPSO.h"
@@ -29,11 +30,9 @@ enum PostEffectType {
 	NORMAL,
 	//OUTLINE,
 	RADIALBLUR,
-	//SMOOTHING,
+	GRAYSCALE,
 	GAUSSIAN,
-	/*HIGHINTENSITY,
-	BLUR,*/
-	//DISSOLVE,
+	DISSOLVE,
 	BLOOM,
 	COUNT
 };

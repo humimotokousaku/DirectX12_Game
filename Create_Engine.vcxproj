@@ -177,6 +177,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Components\3D\Primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\PostProcess\Outline.cpp" />
     <ClCompile Include="Engine\Utility\TimedCall.cpp" />
+    <ClCompile Include="Engine\PostProcess\GrayScale.cpp" />
+    <ClCompile Include="Engine\Pso\PostEffect\GrayScalePSO.cpp" />
     <ClCompile Include="Project\Components\RailCamera\RailCamera.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyStateApproach.cpp" />
@@ -261,6 +263,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Components\3D\Primitive\IPrimitive.h" />
     <ClInclude Include="Engine\PostProcess\Outline.h" />
     <ClInclude Include="Engine\Utility\TimedCall.h" />
+    <ClInclude Include="Engine\PostProcess\GrayScale.h" />
+    <ClInclude Include="Engine\Pso\PostEffect\GrayScalePSO.h" />
     <ClInclude Include="Project\Components\RailCamera\RailCamera.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyStateApproach.h" />
@@ -400,6 +404,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="engine\resources\sharder\GaussianFilter.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\GrayScale.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Pixel</ShaderType>

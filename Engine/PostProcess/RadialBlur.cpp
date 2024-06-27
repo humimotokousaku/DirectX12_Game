@@ -35,6 +35,7 @@ void RadialBlur::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> re
 #endif // _DEBUG
 
 	isActive_ = radialBlurData_->isActive;
+	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, radialBlurResource_);
 	IPostEffect::Draw(psoNum, radialBlurResource_);
 }
 

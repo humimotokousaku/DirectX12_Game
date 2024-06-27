@@ -399,6 +399,12 @@
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\PostProcess\GrayScale.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Pso\PostEffect\GrayScalePSO.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -662,6 +668,12 @@
     <ClInclude Include="Project\GameObject\Player\PlayerBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\PostProcess\GrayScale.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Pso\PostEffect\GrayScalePSO.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -729,5 +741,6 @@
     <FxCompile Include="Engine\resources\sharder\Skybox.VS.hlsl" />
     <FxCompile Include="Engine\resources\sharder\Skybox.PS.hlsl" />
     <FxCompile Include="Engine\resources\sharder\DepthBasedOutline.PS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\GrayScale.PS.hlsl" />
   </ItemGroup>
 </Project>

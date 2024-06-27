@@ -79,7 +79,7 @@ void IPostEffect::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> r
 	worldTransform_.UpdateMatrix();
 
 	/// コマンドを積む
-	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, resource);
+	//PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, resource);
 
 	// VBVを設定
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);

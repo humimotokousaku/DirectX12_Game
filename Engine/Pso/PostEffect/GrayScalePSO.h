@@ -1,15 +1,15 @@
 #pragma once
 #include "IPSO.h"
 
-class DissolvePSO : public IPSO
+class GrayScalePSO : public IPSO
 {
 public:
 	///
 	/// Default Method
 	///
 
-	DissolvePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName);
-	~DissolvePSO() = default;
+	GrayScalePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName);
+	~GrayScalePSO() = default;
 
 	/// <summary>
 	/// 初期化
@@ -30,8 +30,6 @@ public:
 
 	///** Setter **///
 
-	//void SetRootParameter
-
 	/// <summary>
 	/// 描画前に積むコマンド
 	/// </summary>
@@ -42,13 +40,11 @@ public:
 		dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());
 		// 形状を設定
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		// DissolveData
+		// GaussData
 		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, resource.Get()->GetGPUVirtualAddress());
-		// Dissolve用のテクスチャ
-		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, dissolveTextureHandle_);
 	}
 
 private:// プライベートな変数
-	// dissolve用のテクスチャ
-	uint32_t dissolveTextureHandle_;
+
 };
+

@@ -28,6 +28,7 @@ void Gauss::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resourc
 #endif
 
 	isActive_ = gaussData_->isActive;
+	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, gaussResource_);
 	IPostEffect::Draw(psoNum, gaussResource_);
 }
 
