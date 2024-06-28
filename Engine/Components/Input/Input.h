@@ -6,6 +6,7 @@
 #pragma comment(lib, "dxguid.lib")
 #include "../../base/WinApp.h"
 #include <array>
+#include <vector>
 #include <windows.h>
 #include <Xinput.h>
 
@@ -32,9 +33,14 @@ public:
 	bool PressKey(BYTE keyNumber)const;
 	// キーを離した瞬間
 	bool ReleaseKey(BYTE keyNumber)const;
-	// 何もキー入力されていないかを検出
-	// 何も入力されてないならtrue
-	bool DetectKeyInput();
+	// 
+	
+	/// <summary>
+	/// 何もキー入力されていないかを検出
+	/// </summary>
+	/// <param name="detectKeys">入力を検知したいキー</param>
+	/// <returns>入力なし:true</returns>
+	bool DetectKeyInput(std::vector<int> detectKeys);
 
 	///
 	/// GamePad Method

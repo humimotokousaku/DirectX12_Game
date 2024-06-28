@@ -10,6 +10,9 @@ namespace Lerps {
 	// Cat-mullRom曲線
 	Vector3 CatmullRomSpline(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 	Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t);
+
+	// 指数補間関数
+	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping, float deltaTime);
 };
 
 namespace Easings {

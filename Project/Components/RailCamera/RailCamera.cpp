@@ -6,9 +6,6 @@
 void RailCamera::Initialize() {
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	//camera_->worldTransform_.translate.x = 5;
-	//camera_->worldTransform_.translate.y = 5;
-	//camera_->worldTransform_.translate.z = -30;
 }
 
 void RailCamera::Update(Vector3 target) {
@@ -21,7 +18,6 @@ void RailCamera::Update(Vector3 target) {
 	// X軸周りの角度(θx)
 	camera_->worldTransform_.rotate.x = std::atan2(-velocity.y, velocityXZ);
 	// 行列の更新
-	//worldTransform_.UpdateMatrix();
 	camera_->Update();
 
 	// カメラオブジェクトのワールド行列からビュー行列を計算する

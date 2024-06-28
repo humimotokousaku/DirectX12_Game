@@ -12,10 +12,6 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		return;
 	}
 
-	//// コライダーのワールド座標を取得
-	//colliderA->GetWorldPosition();
-	//colliderB->GetWorldPosition();
-
 	/// 球体同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
 		// 座標AとBの距離を求める

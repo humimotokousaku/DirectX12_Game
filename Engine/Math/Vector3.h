@@ -11,93 +11,56 @@ struct Vector3 final {
 	Vector3 operator+(const Vector3& obj)const {
 		return  { x + obj.x, y + obj.y, z + obj.z };
 	}
-	Vector3 operator+=(const Vector3& obj)const {
-		Vector3 result = {
-			result.x += obj.x,
-			result.y += obj.y,
-			result.z += obj.z
-		};
-		return result;
+	Vector3 operator+=(const Vector3& obj) {
+		return *this = *this + obj;
 	}
 	Vector3 operator+(float obj)const {
 		return  { x + obj, y + obj, z + obj };
 	}
-	Vector3 operator+=(float obj)const {
-		Vector3 result = {
-			result.x += obj,
-			result.y += obj,
-			result.z += obj
-		};
-		return result;
+	Vector3 operator+=(float obj) {
+		return *this = *this + obj;
 	}
+
 	// 減算
 	Vector3 operator-(const Vector3& obj)const {
 		return  { x - obj.x, y - obj.y, z - obj.z };
 	}
-	Vector3 operator-=(const Vector3& obj)const {
-		Vector3 result = {
-			result.x -= obj.x,
-			result.y -= obj.y,
-			result.z -= obj.z
-		};
-		return result;
+	Vector3 operator-=(const Vector3& obj) {
+		return *this = *this - obj;
 	}
 	Vector3 operator-(float obj)const {
 		return  { x - obj, y - obj, z - obj };
 	}
-	Vector3 operator-=(float obj)const {
-		Vector3 result = {
-			result.x -= obj,
-			result.y -= obj,
-			result.z -= obj
-		};
-		return result;
+	Vector3 operator-=(float obj) {
+		return *this = *this - obj;
 	}
+
 	// 掛け算
 	Vector3 operator*(const Vector3& obj)const {
 		return  { x * obj.x, y * obj.y, z * obj.z };
 	}
-	Vector3 operator*=(const Vector3& obj)const {
-		Vector3 result = {
-			result.x *= obj.x,
-			result.y *= obj.y,
-			result.z *= obj.z
-		};
-		return result;
+	Vector3 operator*=(const Vector3& obj) {
+		return *this = *this * obj;
 	}
 	Vector3 operator*(float scalar)const {
 		return  { x * scalar, y * scalar, z * scalar };
 	}
-	Vector3 operator*=(float scalar)const {
-		Vector3 result = {
-			result.x *= scalar,
-			result.y *= scalar,
-			result.z *= scalar
-		};
-		return result;
+	Vector3 operator*=(float scalar) {
+		return *this = *this * scalar;
 	}
+
 	// 割り算
 	Vector3 operator/(const Vector3& obj)const {
 		return  { x / obj.x, y / obj.y, z / obj.z };
 	}
-	Vector3 operator/=(const Vector3& obj)const {
-		Vector3 result = {
-			result.x /= obj.x,
-			result.y /= obj.y,
-			result.z /= obj.z
-		};
-		return result;
+	Vector3 operator/=(const Vector3& obj) {
+		return *this = *this / obj;;
 	}
 	Vector3 operator/(float obj)const {
 		return  { x / obj, y / obj, z / obj };
 	}
-	Vector3 operator/=(float obj)const {
-		Vector3 result = {
-			result.x /= obj,
-			result.y /= obj,
-			result.z /= obj
-		};
-		return result;
+	Vector3 operator/=(float obj) {
+		return *this = *this / obj;;
 	}
 };
 

@@ -42,24 +42,7 @@ public:// パブリックなメンバ関数
 	/// User Method
 	/// 
 
-	/// <summary>
-	/// レティクルの配置
-	/// </summary>
-	void Deploy3DReticle();
-
-	/// <summary>
-	/// 2Dレティクルの配置
-	/// </summary>
-	void Deploy2DReticle();
-
-	// 自機の回転処理
-	void Rotate();
-
-	/// <summary>
-	/// 攻撃処理
-	/// </summary>
-	void Attack();
-
+public:
 	///
 	/// Getter
 	/// 
@@ -100,9 +83,38 @@ public:// パブリックなメンバ関数
 	// 衝突判定
 	void OnCollision(Collider* collider)override;
 
+private:// プライベートなメンバ関数
+	/// <summary>
+	/// レティクルの配置
+	/// </summary>
+	void Deploy3DReticle();
+
+	/// <summary>
+	/// 2Dレティクルの配置
+	/// </summary>
+	void Deploy2DReticle();
+
+	/// <summary>
+	/// 自機の回転処理
+	/// </summary>
+	void Rotate();
+
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void Attack();
+
+	/// <summary>
+	/// 対象の座標の補間を算出
+	/// </summary>
+	/// <returns></returns>
+	Vector3 TargetPosOffset();
+
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
+	// 移動に使うキー
+	std::vector<int> moveKeys_;
 	XINPUT_STATE joyState_;
 
 	// 自機
@@ -132,4 +144,7 @@ private:// プライベートなメンバ変数
 
 	// 3Dレティクルの座標
 	std::unique_ptr<Object3D> object3dReticle_;
+
+	// 移動速度
+	Vector3 velocity_;
 };

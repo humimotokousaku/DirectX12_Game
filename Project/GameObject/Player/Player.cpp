@@ -17,6 +17,12 @@ Player::~Player() {
 void Player::Initialize() {
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
+	// 移動キーの登録
+	moveKeys_.resize(4);
+	moveKeys_[0] = DIK_UP;
+	moveKeys_[1] = DIK_DOWN;
+	moveKeys_[2] = DIK_LEFT;
+	moveKeys_[3] = DIK_RIGHT;
 
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
@@ -44,28 +50,36 @@ void Player::Initialize() {
 void Player::Update() {
 	// キャラクターの移動ベクトル
 	Vector3 move = { 0, 0, 0 };
+
 	// キャラクターの移動の速さ
-	const float kCharacterSpeed = 0.2f;
+	const float kCharacterSpeed = 0.1f;
 
 	/// 移動処理↓
 
 	// キーボード入力
 	if (input_->PressKey(DIK_UP)) {
-		object3d_->worldTransform.translate.y += 0.1f;
+		move.y += kCharacterSpeed;
 	}
-	else if (input_->PressKey(DIK_DOWN)) {
-		object3d_->worldTransform.translate.y -= 0.1f;
+	if (input_->PressKey(DIK_DOWN)) {
+		move.y -= kCharacterSpeed;
 	}
-	else if (input_->PressKey(DIK_RIGHT)) {
-		object3d_->worldTransform.translate.x += 0.1f;
+	if (input_->PressKey(DIK_RIGHT)) {
+		move.x += kCharacterSpeed;
 	}
-	else if (input_->PressKey(DIK_LEFT)) {
-		object3d_->worldTransform.translate.x -= 0.1f;
+	if (input_->PressKey(DIK_LEFT)) {
+		move.x -= kCharacterSpeed;
 	}
 	// 入力がない時
-	if (input_->DetectKeyInput()) {
+	if (input_->DetectKeyInput(moveKeys_)) {
 		move = { 0,0,0 };
+		// 徐々に速度を落とす
+		velocity_ = Lerps::ExponentialInterpolate(velocity_, move, 2.5f, 0.1f);
 	}
+	else {
+		// 徐々に速度を上げる
+		velocity_ = Lerps::ExponentialInterpolate(velocity_, move, 2.5f, 0.1f);
+	}
+
 	// ゲームパッド状態取得
 	if (Input::GetInstance()->GetJoystickState(0, joyState_)) {
 		// デッドゾーンの設定
@@ -75,9 +89,18 @@ void Player::Update() {
 		move.y += (float)leftThumbY / SHRT_MAX * kCharacterSpeed;
 	}
 	// 入力がない時
-	if (input_->DetectThumbInput(joyState_.Gamepad.sThumbLX, joyState_.Gamepad.sThumbLY)) {
+	/*if (input_->DetectThumbInput(joyState_.Gamepad.sThumbLX, joyState_.Gamepad.sThumbLY)) {
 		move = { 0,0,0 };
-	}
+		velocity_ *= 0.8;
+	}*/
+
+	
+	//velocity_ += move;
+	//velocity_ *= 1.5f;
+	// 移動速度の上限
+	//velocity_.x = std::clamp<float>(velocity_.x, -0.1f, 0.1f);
+	//velocity_.y = std::clamp<float>(velocity_.y, -0.1f, 0.1f);
+	//velocity_.z = std::clamp<float>(velocity_.z, -0.1f, 0.1f);
 
 	/// 移動処理↑
 
@@ -102,12 +125,11 @@ void Player::Update() {
 	object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
 	object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
 	// 座標移動
-	object3d_->worldTransform.translate.x += move.x;
-	object3d_->worldTransform.translate.y += move.y;
-	object3d_->worldTransform.translate.z += move.z;
+	object3d_->worldTransform.translate += velocity_;
 
 	// ImGui
 	object3d_->ImGuiParameter("Player");
+	ImGui::DragFloat3("velocity", &velocity_.x, 0);
 }
 
 void Player::Draw() {
@@ -120,6 +142,44 @@ void Player::Draw() {
 
 void Player::DrawUI() {
 	sprite2DReticle_->Draw();
+}
+
+
+
+void Player::SetParent(const WorldTransform* parent) {
+	// 親子関係を結ぶ
+	object3d_->worldTransform.parent_ = parent;
+}
+
+void Player::OnCollision(Collider* collider) {
+
+}
+
+Vector3 Player::GetRotation() {
+	Vector3 rotate = object3d_->worldTransform.rotate;
+	return rotate;
+}
+
+Vector3 Player::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos = object3d_->worldTransform.translate;
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
+	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
+	worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+Vector3 Player::GetWorld3DReticlePosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos = object3dReticle_->worldTransform.translate;
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = object3dReticle_->worldTransform.matWorld_.m[3][0];
+	worldPos.y = object3dReticle_->worldTransform.matWorld_.m[3][1];
+	worldPos.z = object3dReticle_->worldTransform.matWorld_.m[3][2];
+
+	return worldPos;
 }
 
 void Player::Rotate() {
@@ -166,11 +226,9 @@ void Player::Attack() {
 		Vector3 worldReticlePos = {
 			object3dReticle_->worldTransform.matWorld_.m[3][0], object3dReticle_->worldTransform.matWorld_.m[3][1],
 			object3dReticle_->worldTransform.matWorld_.m[3][2] };
-		velocity = Subtract(worldReticlePos, worldPos);
+		velocity = worldReticlePos - worldPos;
 		velocity = Normalize(velocity);
-		velocity.x *= kBulletSpeed;
-		velocity.y *= kBulletSpeed;
-		velocity.z *= kBulletSpeed;
+		velocity *= kBulletSpeed;
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -192,15 +250,12 @@ void Player::Deploy3DReticle() {
 	offset = TransformNormal(offset, object3d_->worldTransform.matWorld_);
 	offset = Normalize(offset);
 	// ベクトルの長さを整える
-	offset.x *= kDistancePlayerTo3DReticle;
-	offset.y *= kDistancePlayerTo3DReticle;
-	offset.z *= kDistancePlayerTo3DReticle;
+	offset *= kDistancePlayerTo3DReticle;
 
 	// 3Dレティクルの座標を設定
-	object3dReticle_->worldTransform.translate.x = GetWorldPosition().x + offset.x;
-	object3dReticle_->worldTransform.translate.y = GetWorldPosition().y + offset.y;
-	object3dReticle_->worldTransform.translate.z = GetWorldPosition().z + offset.z;
+	object3dReticle_->worldTransform.translate = GetWorldPosition() + offset;
 
+	// 
 	object3dReticle_->worldTransform.UpdateMatrix();
 }
 
@@ -220,38 +275,13 @@ void Player::Deploy2DReticle() {
 	sprite2DReticle_->SetPos(Vector2(positionReticle.x, positionReticle.y));
 }
 
-void Player::SetParent(const WorldTransform* parent) {
-	// 親子関係を結ぶ
-	object3d_->worldTransform.parent_ = parent;
-}
+Vector3 Player::TargetPosOffset() {
+	// 追従対象からのオフセット
+	Vector3 offset = { 0, 0, 0 };
+	// 回転行列を合成
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(object3d_->worldTransform.rotate);
+	// オフセットをカメラの回転に合わせて回転
+	offset = TransformNormal(offset, rotateMatrix);
 
-void Player::OnCollision(Collider* collider) {
-
-}
-
-Vector3 Player::GetRotation() {
-	Vector3 rotate = object3d_->worldTransform.rotate;
-	return rotate;
-}
-
-Vector3 Player::GetWorldPosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos = object3d_->worldTransform.translate;
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
-}
-
-Vector3 Player::GetWorld3DReticlePosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos = object3dReticle_->worldTransform.translate;
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3dReticle_->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3dReticle_->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3dReticle_->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
+	return offset;
 }

@@ -6,7 +6,6 @@
 #include <assert.h>
 
 namespace Lerps {
-
 	Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
 		float newX = (1.0f - t) * start.x + t * end.x;
 		float newY = (1.0f - t) * start.y + t * end.y;
@@ -28,8 +27,6 @@ namespace Lerps {
 		result.z = (weightStart * start.z + weightEnd * end.z);
 		return result;
 	}
-
-
 
 	Vector3 CatmullRomSpline(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t) {
 		const float s = 0.5f;
@@ -61,60 +58,43 @@ namespace Lerps {
 		index = std::clamp<size_t>(index, 0, controlPoints.size() - 1);
 
 		// 4線分のインデックス
-		size_t indeces0 = index - 1;
-		size_t indeces1 = index;
-		size_t indeces2 = index + 1;
-		size_t indeces3 = index + 2;
+		std::array<size_t, 4> indeces = {
+			indeces[0] = index - 1,
+			indeces[1] = index,
+			indeces[2] = index + 1,
+			indeces[3] = index + 2
+		};
 		// 制御点のサイズを超えないようにする
-		indeces0 = std::clamp<size_t>(indeces0, 0, controlPoints.size() - 1);
-		indeces1 = std::clamp<size_t>(indeces1, 0, controlPoints.size() - 1);
-		indeces2 = std::clamp<size_t>(indeces2, 0, controlPoints.size() - 1);
-		indeces3 = std::clamp<size_t>(indeces3, 0, controlPoints.size() - 1);
+		indeces[0] = std::clamp<size_t>(indeces[0], 0, controlPoints.size() - 1);
+		indeces[1] = std::clamp<size_t>(indeces[1], 0, controlPoints.size() - 1);
+		indeces[2] = std::clamp<size_t>(indeces[2], 0, controlPoints.size() - 1);
+		indeces[3] = std::clamp<size_t>(indeces[3], 0, controlPoints.size() - 1);
 
 		// 最初の区間のp0はp1を重複使用
 		if (index == 0) {
-			indeces0 = indeces1;
+			indeces[0] = indeces[1];
 		}
 		// 最後の区間のp3はp2を重複使用
-		if (indeces3 >= controlPoints.size()) {
-			indeces2 -= 1;
-			indeces3 = indeces2;
+		if (indeces[3] >= controlPoints.size()) {
+			indeces[2] -= 1;
+			indeces[3] = indeces[2];
 		}
 		// 4点の座標
-		const Vector3& points0 = controlPoints[indeces0];
-		const Vector3& points1 = controlPoints[indeces1];
-		const Vector3& points2 = controlPoints[indeces2];
-		const Vector3& points3 = controlPoints[indeces3];
+		std::array<Vector3, 4> points = {
+			points[0] = controlPoints[indeces[0]],
+			points[1] = controlPoints[indeces[1]],
+			points[2] = controlPoints[indeces[2]],
+			points[3] = controlPoints[indeces[3]]
+		};
 
-		return CatmullRomSpline(points0, points1, points2, points3, t_2);
+		return CatmullRomSpline(points[0], points[1], points[2], points[3], t_2);
 	}
 
-	/*Vector3 CatmullRomSpline(const std::vector<Vector3>& controlPoints, float t) {
-		int n = (int)controlPoints.size();
-		int segment = static_cast<int>(t * (n - 1));
-		float tSegment = t * (n - 1) - segment;
-
-		Vector3 p0 = controlPoints[segment > 0 ? segment - 1 : 0];
-		Vector3 p1 = controlPoints[segment];
-		Vector3 p2 = controlPoints[segment < n - 1 ? segment + 1 : n - 1];
-		Vector3 p3 = controlPoints[segment < n - 2 ? segment + 2 : n - 1];
-
-		Vector3 interpolatedPoint;
-		interpolatedPoint.x =
-			0.5f * ((2.0f * p1.x) + (-p0.x + p2.x) * tSegment +
-				(2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * (tSegment * tSegment) +
-				(-p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * (tSegment * tSegment * tSegment));
-		interpolatedPoint.y =
-			0.5f * ((2.0f * p1.y) + (-p0.y + p2.y) * tSegment +
-				(2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * (tSegment * tSegment) +
-				(-p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * (tSegment * tSegment * tSegment));
-		interpolatedPoint.z =
-			0.5f * ((2.0f * p1.z) + (-p0.z + p2.z) * tSegment +
-				(2.0f * p0.z - 5.0f * p1.z + 4.0f * p2.z - p3.z) * (tSegment * tSegment) +
-				(-p0.z + 3.0f * p1.z - 3.0f * p2.z + p3.z) * (tSegment * tSegment * tSegment));
-
-		return interpolatedPoint;
-	}*/
+	// 指数補間関数
+	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping, float deltaTime) {
+		float factor = 1.0f - std::exp(-damping * deltaTime);
+		return current + (target - current) * factor;
+	}
 }
 
 namespace Easings {

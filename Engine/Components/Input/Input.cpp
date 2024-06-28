@@ -69,12 +69,14 @@ bool Input::ReleaseKey(BYTE keyNumber)const {
 	}
 }
 
-bool Input::DetectKeyInput() {
+bool Input::DetectKeyInput(std::vector<int> detectKeys) {
 	BYTE keysState{};
-	// 値が0なら何も入力されてない
-	for (int i = 0; i < 256; i++) {
-		keysState += key_[i];
+	for (int i = 0; i < detectKeys.size(); i++) {
+		if (key_[detectKeys[i]] != 0) {
+			keysState += 1;
+		}
 	}
+
 	if (keysState == 0) {
 		return true;
 	}

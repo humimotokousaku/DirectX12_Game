@@ -150,18 +150,20 @@ void GameScene::Update() {
 	}
 
 	if (isMoveCamera_) {
-		// 
-		if(targetT_ <= 1.0f){
-			targetT_ += 1.0f / segmentCount / 10;			
-		}
-		if (targetT_ >= 1.0f) {
-			targetT_ = 1.0f;
-			isMoveCamera_ = false;
-		}
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			t_ += 1.0f / segmentCount / 10;		
-		}		
+			t_ += 1.0f / segmentCount / 1;		
+		}	
+		// 
+		if(targetT_ <= 1.0f){
+			targetT_ += 1.0f / segmentCount / 1;			
+		}
+		if (targetT_ >= 1.0f) {
+			targetT_ = 0.999f;
+			t_ = 0.98f;
+			isMoveCamera_ = false;
+		}
+			
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
 	UpdatePlayerPosition(t_);
