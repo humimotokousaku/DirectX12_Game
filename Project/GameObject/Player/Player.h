@@ -88,34 +88,39 @@ private:// プライベートなメンバ関数
 	/// レティクルの配置
 	/// </summary>
 	void Deploy3DReticle();
-
 	/// <summary>
 	/// 2Dレティクルの配置
 	/// </summary>
 	void Deploy2DReticle();
 
+#pragma region 入力処理
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
 	/// <summary>
 	/// 自機の回転処理
 	/// </summary>
-	void Rotate();
-
+	//void Rotate();
+	/// <summary>
+	/// レティクルの配置、移動の処理
+	/// </summary>
+	void Aim();
 	/// <summary>
 	/// 攻撃処理
 	/// </summary>
 	void Attack();
-
-	/// <summary>
-	/// 対象の座標の補間を算出
-	/// </summary>
-	/// <returns></returns>
-	Vector3 TargetPosOffset();
+#pragma endregion
 
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
+	// ゲームパッド
+	XINPUT_STATE joyState_;
 	// 移動に使うキー
 	std::vector<int> moveKeys_;
-	XINPUT_STATE joyState_;
+	// 自機の回転に使うキー
+	std::vector<int> rotateKeys_;
 
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
@@ -145,6 +150,10 @@ private:// プライベートなメンバ変数
 	// 3Dレティクルの座標
 	std::unique_ptr<Object3D> object3dReticle_;
 
-	// 移動速度
-	Vector3 velocity_;
+	// 自機の移動速度
+	Vector3 moveVel_;
+	// レティクルの移動速度
+	Vector3 reticleMoveVel_;
+	//自機の回転速度
+	Vector3 rotateVel_;
 };

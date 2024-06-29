@@ -92,7 +92,7 @@ void GameScene::Initialize() {
 	};*/
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMoveCamera_ = true;
+	//isMoveCamera_ = true;
 
 
 	// Skybox

@@ -33,14 +33,19 @@ public:
 	bool PressKey(BYTE keyNumber)const;
 	// キーを離した瞬間
 	bool ReleaseKey(BYTE keyNumber)const;
-	// 
 	
 	/// <summary>
-	/// 何もキー入力されていないかを検出
+	/// 何もキーが入力されていないかを検出
 	/// </summary>
 	/// <param name="detectKeys">入力を検知したいキー</param>
 	/// <returns>入力なし:true</returns>
 	bool DetectKeyInput(std::vector<int> detectKeys);
+	/// <summary>
+	/// 特定のキーが入力押されていないかを検出
+	/// </summary>
+	/// <param name="detectKey">入力を検知したいキー</param>
+	/// <returns>入力なし:true</returns>
+	bool DetectKeyInput(int detectKey);
 
 	///
 	/// GamePad Method

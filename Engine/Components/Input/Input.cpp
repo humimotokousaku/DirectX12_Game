@@ -83,6 +83,13 @@ bool Input::DetectKeyInput(std::vector<int> detectKeys) {
 	return false;
 }
 
+bool Input::DetectKeyInput(int detectKey) {
+	if (key_[detectKey] == 0) {
+		return true;
+	}
+	return false;
+}
+
 bool Input::GetJoystickState(int32_t stickNo,XINPUT_STATE& state) {
 	DWORD result = XInputGetState(stickNo, &state);
 
