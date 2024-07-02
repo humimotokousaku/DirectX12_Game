@@ -9,12 +9,17 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(std::vector<Vector3> controlPoints);
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
 	void Update(Vector3 target);
+
+	/// <summary>
+	/// カメラの移動ルートの表示
+	/// </summary>
+	void MoveRouteDraw();
 
 	///
 	/// Getter
@@ -25,21 +30,28 @@ public:
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
 
-	//ViewProjection& GetViewProjection() { return viewProjection_; }
-	//const WorldTransform& GetWorldTransform() { return worldTransform_; }
-
 	///
 	/// Setter
 	///
 
-	//void SetViewTranslation(Vector3 pos) { viewProjection_.translate = pos; }
 	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
 
-private:
-	// ワールド変換データ
-	//WorldTransform worldTransform_;
-	// ビュープロジェクション
-	//ViewProjection viewProjection_;
+public:// パブリックなメンバ変数
+	// 線分の数
+	static const size_t segmentCount = 100;
 
+private:
 	std::unique_ptr<Camera> camera_;
+
+	// スプライン曲線制御点（通過点）
+	std::vector<Vector3> controlPoints_;
+	// 線分で描画する用の頂点リスト
+	std::vector<Vector3> pointsDrawing_;
+	// 移動ルートの線(デバッグ用)
+	std::array<std::unique_ptr<Line>, segmentCount> line_;
+
+	Vector3 target_;
+	float t_;
+	float targetT_;
+	bool isMoveCamera_;
 };

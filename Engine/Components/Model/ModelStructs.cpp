@@ -266,6 +266,11 @@ void ApplyAnimation(Skeleton& skeleton, Motion& animation, float animationTime) 
 
 SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData) {
 	SkinCluster skinCluster;
+	// クラスターデータがないなら早期リターン
+	if (!modelData.isSkinClusterData) {
+		return skinCluster;
+	}
+	
 #pragma region palette用のResourceを確保
 	skinCluster.paletteResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;

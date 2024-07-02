@@ -90,7 +90,6 @@ namespace Lerps {
 		return CatmullRomSpline(points[0], points[1], points[2], points[3], t_2);
 	}
 
-	// 指数補間関数
 	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping, float deltaTime) {
 		float factor = 1.0f - std::exp(-damping * deltaTime);
 		return current + (target - current) * factor;

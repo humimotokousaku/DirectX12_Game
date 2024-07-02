@@ -69,6 +69,16 @@ float Dot(Quaternion q0, Quaternion q1) {
 	return q0.w * q1.w + q0.x * q1.x + q0.y * q1.y + q0.z * q1.z;
 }
 
+Quaternion EulerToQuaternion(Vector3 rotate) {
+	Quaternion q = {
+		std::sinf(rotate.x / 2.0f) * std::cosf(rotate.y / 2.0f) * std::cosf(rotate.z / 2.0f) + std::cosf(rotate.x / 2.0f) * std::sinf(rotate.y / 2.0f) * std::sinf(rotate.z / 2.0f),
+		std::cosf(rotate.x / 2.0f) * std::sinf(rotate.y / 2.0f) * std::cosf(rotate.z / 2.0f) - std::sinf(rotate.x / 2.0f) * std::cosf(rotate.y / 2.0f) * std::sinf(rotate.z / 2.0f),
+		std::cosf(rotate.x / 2.0f) * std::cosf(rotate.y / 2.0f) * std::sinf(rotate.z / 2.0f) + std::sinf(rotate.x / 2.0f) * std::sinf(rotate.y / 2.0f) * std::cosf(rotate.z / 2.0f),
+		std::cosf(rotate.x / 2.0f) * std::cosf(rotate.y / 2.0f) * std::cosf(rotate.z / 2.0f) - std::sinf(rotate.x / 2.0f) * std::sinf(rotate.y / 2.0f) * std::sinf(rotate.z / 2.0f)
+	};
+	return Normalize(q);
+}
+
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
 	Quaternion result;
 	result.x = axis.x * sinf(angle / 2.0f);
@@ -131,7 +141,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& q, const Vect
 	Matrix4x4 transformMatrix = MakeTranslateMatrix(translate);
 
 	// アフィン変換行列の計算
-	Matrix4x4 result = Multiply(Multiply(scaleMatrix, rotateMatrix), transformMatrix);
+	Matrix4x4 result = Multiply(scaleMatrix, Multiply(rotateMatrix, transformMatrix));
 
 	return result;
 }

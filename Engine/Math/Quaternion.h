@@ -23,6 +23,8 @@ Quaternion Normalize(const Quaternion& quaternion);
 Quaternion Inverse(const Quaternion& quaternion);
 // 内積
 float Dot(Quaternion q0, Quaternion q1);
+// オイラー角からクォータニオンに変換
+Quaternion EulerToQuaternion(Vector3 rotate);
 // 任意軸回転を表すQuaternionの生成
 Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
 // ベクトルをQuaternionで回転させた結果のベクトルを求める

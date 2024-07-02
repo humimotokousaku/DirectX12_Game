@@ -63,70 +63,70 @@ void TitleScene::Initialize() {
 	}
 #pragma endregion
 
-#pragma region 3Dモデルの生成
-	// 平面(骨とアニメーションあり)
-	plane_[0] = std::make_unique<Object3D>();
-	plane_[0]->Initialize();
-	plane_[0]->SetModel("SimpleSkin", "simpleSkin.gltf");
-	plane_[0]->SetCamera(camera_.get());
-	plane_[0]->SetAnimName("SimpleSkin");
-	plane_[0]->worldTransform.translate = { 0,0,5 };
-	plane_[0]->worldTransform.rotate = { 0,3.14f,0 };
-	plane_[0]->StartAnim("SimpleSkin");
-	// 平面(スケルトンなしのgltf)
-	plane_[1] = std::make_unique<Object3D>();
-	plane_[1]->Initialize();
-	plane_[1]->SetModel("", "testPlane.gltf");
-	plane_[1]->SetCamera(camera_.get());
-	plane_[1]->SetAnimName("NonAnim");
-	plane_[1]->worldTransform.translate = { 0,-2,10 };
-	plane_[1]->worldTransform.rotate = { -1.57f,0,0 };
-	// 人間(スケルトンありのgltf)
-	// Walk
-	human_[0] = std::make_unique<Object3D>();
-	human_[0]->Initialize();
-	human_[0]->SetModel("Human", "walk.gltf");
-	human_[0]->SetAnimName("Walk");
-	human_[0]->SetCamera(camera_.get());
-	human_[0]->SetColor({ 1,1,1,1 });
-	human_[0]->worldTransform.translate = { 2,0,5 };
-	human_[0]->SetIsLighting(true);
-	//human_[0]->StartAnim("Walk");
-	// sneakWalk
-	human_[1] = std::make_unique<Object3D>();
-	human_[1]->Initialize();
-	human_[1]->SetModel("Human", "sneakWalk.gltf");
-	human_[1]->SetCamera(camera_.get());
-	human_[1]->SetAnimName("SneakWalk");
-	human_[1]->worldTransform.translate = { 2,-2,5 };
-	human_[1]->StartAnim("SneakWalk");
-	// walkアニメーションにsneakWalkを追加
-	human_[0]->AddAnimation(human_[1]->GetModel());
-
-	// 
-	box_[0] = std::make_unique<Object3D>();
-	box_[0]->Initialize();
-	box_[0]->SetModel("AnimatedCube", "AnimatedCube.gltf");
-	box_[0]->SetCamera(camera_.get());
-	box_[0]->SetAnimName("Animation");
-	box_[0]->StartAnim("Animation");
-	box_[0]->worldTransform.translate = { -4,2,10 };
-	// objの箱
-	box_[1] = std::make_unique<Object3D>();
-	box_[1]->Initialize();
-	box_[1]->SetModel("AnimatedCube", "AnimatedCube.gltf");
-	box_[1]->SetCamera(camera_.get());
-	//box_[1]->StartAnim(0);
-	box_[1]->worldTransform.translate = { -4,-2,10 };
-
-	// 3D線(obj読み込み)
-	axis_ = std::make_unique<Object3D>();
-	axis_->Initialize();
-	axis_->SetModel("", "axis.obj");
-	axis_->SetCamera(camera_.get());
-	axis_->worldTransform.translate = { -2,0,5 };
-	axis_->SetIsLighting(true);
-#pragma endregion
+//#pragma region 3Dモデルの生成
+//	// 平面(骨とアニメーションあり)
+//	plane_[0] = std::make_unique<Object3D>();
+//	plane_[0]->Initialize();
+//	plane_[0]->SetModel("SimpleSkin", "simpleSkin.gltf");
+//	plane_[0]->SetCamera(camera_.get());
+//	plane_[0]->SetAnimName("SimpleSkin");
+//	plane_[0]->worldTransform.translate = { 0,0,5 };
+//	plane_[0]->worldTransform.rotate = { 0,3.14f,0 };
+//	plane_[0]->StartAnim("SimpleSkin");
+//	// 平面(スケルトンなしのgltf)
+//	plane_[1] = std::make_unique<Object3D>();
+//	plane_[1]->Initialize();
+//	plane_[1]->SetModel("", "testPlane.gltf");
+//	plane_[1]->SetCamera(camera_.get());
+//	plane_[1]->SetAnimName("NonAnim");
+//	plane_[1]->worldTransform.translate = { 0,-2,10 };
+//	plane_[1]->worldTransform.rotate = { -1.57f,0,0 };
+//	// 人間(スケルトンありのgltf)
+//	// Walk
+//	human_[0] = std::make_unique<Object3D>();
+//	human_[0]->Initialize();
+//	human_[0]->SetModel("Human", "walk.gltf");
+//	human_[0]->SetAnimName("Walk");
+//	human_[0]->SetCamera(camera_.get());
+//	human_[0]->SetColor({ 1,1,1,1 });
+//	human_[0]->worldTransform.translate = { 2,0,5 };
+//	human_[0]->SetIsLighting(true);
+//	//human_[0]->StartAnim("Walk");
+//	// sneakWalk
+//	human_[1] = std::make_unique<Object3D>();
+//	human_[1]->Initialize();
+//	human_[1]->SetModel("Human", "sneakWalk.gltf");
+//	human_[1]->SetCamera(camera_.get());
+//	human_[1]->SetAnimName("SneakWalk");
+//	human_[1]->worldTransform.translate = { 2,-2,5 };
+//	human_[1]->StartAnim("SneakWalk");
+//	// walkアニメーションにsneakWalkを追加
+//	human_[0]->AddAnimation(human_[1]->GetModel());
+//
+//	// 
+//	box_[0] = std::make_unique<Object3D>();
+//	box_[0]->Initialize();
+//	box_[0]->SetModel("AnimatedCube", "AnimatedCube.gltf");
+//	box_[0]->SetCamera(camera_.get());
+//	box_[0]->SetAnimName("Animation");
+//	box_[0]->StartAnim("Animation");
+//	box_[0]->worldTransform.translate = { -4,2,10 };
+//	// objの箱
+//	box_[1] = std::make_unique<Object3D>();
+//	box_[1]->Initialize();
+//	box_[1]->SetModel("AnimatedCube", "AnimatedCube.gltf");
+//	box_[1]->SetCamera(camera_.get());
+//	//box_[1]->StartAnim(0);
+//	box_[1]->worldTransform.translate = { -4,-2,10 };
+//
+//	// 3D線(obj読み込み)
+//	axis_ = std::make_unique<Object3D>();
+//	axis_->Initialize();
+//	axis_->SetModel("", "axis.obj");
+//	axis_->SetCamera(camera_.get());
+//	axis_->worldTransform.translate = { -2,0,5 };
+//	axis_->SetIsLighting(true);
+//#pragma endregion
 
 	// パーティクル
 	particle_ = std::make_unique<Particles>();
@@ -191,12 +191,12 @@ void TitleScene::Update() {
 	//particle_->Update();
 	//player_->Update();
 
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+	if (Input::GetInstance()->TriggerKey(DIK_1) || Input::GetInstance()->GamePadTrigger(XINPUT_GAMEPAD_A)) {
 		sceneNum = GAME_SCENE;
 	}
-	if (Input::GetInstance()->TriggerKey(DIK_R)) {
-		human_[0]->EndAnim();
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_R)) {
+	//	human_[0]->EndAnim();
+	//}
 
 #ifdef _DEBUG
 	//ImGui::Begin("Current Scene");
@@ -211,19 +211,21 @@ void TitleScene::Update() {
 
 void TitleScene::Draw() {
 	//axis_->Draw(particleTexture_);
+	//box_[0]->Draw(uvcheckerTexture_);
+	//human_[0]->Draw(uvcheckerTexture_);
 	for (int i = 0; i < 2; i++) {
 		//plane_[i]->Draw(uvcheckerTexture_);
-		box_[i]->Draw(uvcheckerTexture_);
-		human_[i]->Draw(uvcheckerTexture_);
+		//box_[i]->Draw(uvcheckerTexture_);
+		//human_[i]->Draw(uvcheckerTexture_);
 	}
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		//object->Draw();
+		object->Draw();
 	}
 
 	//player_->Draw();
-	cube_->Draw(ddsTexture_);
+	//cube_->Draw(ddsTexture_);
 
 	//particle_->Draw(uvcheckerTexture_);
 }

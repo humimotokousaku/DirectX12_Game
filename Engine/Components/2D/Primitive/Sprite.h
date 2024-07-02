@@ -65,6 +65,12 @@ public:
 		worldTransform_.translate.x = pos.x;
 		worldTransform_.translate.y = pos.y;
 	}
+	void SetPosX(float x) {
+		worldTransform_.translate.x = x;
+	}
+	void SetPosY(float y) {
+		worldTransform_.translate.y = y;
+	}
 	// Spriteのアンカーポイント
 	void SetAnchorPoint(Vector2 anchorPoint) { anchorPoint_ = anchorPoint; }
 	// 画像の切り出しサイズ

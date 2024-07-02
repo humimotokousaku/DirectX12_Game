@@ -98,7 +98,7 @@ bool Input::GetJoystickState(int32_t stickNo,XINPUT_STATE& state) {
 
 // デッドゾーンを適用する関数
 SHORT Input::ApplyDeadzone(SHORT inputValue) {
-	if (abs(inputValue) < DEADZONE_THRESHOLD) {
+	if (abs(inputValue) < DEADZONE_THRESHOLD / 2) {
 		return 0; // デッドゾーン内の入力は無視
 	}
 	// デッドゾーン外の入力はそのまま返す
@@ -134,8 +134,8 @@ bool Input::GamePadPress(int GAMEPAD_NUM) {
 
 bool Input::DetectThumbInput(SHORT sThumbX, SHORT sThumbY) {
 	// デッドゾーン以内なら入力なし
-	if (abs(sThumbX) < DEADZONE_THRESHOLD) {
-		if (abs(sThumbY) < DEADZONE_THRESHOLD) {
+	if (abs(sThumbX) < DEADZONE_THRESHOLD / 2) {
+		if (abs(sThumbY) < DEADZONE_THRESHOLD / 2) {
 			return true;
 		}
 	}

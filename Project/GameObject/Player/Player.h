@@ -66,6 +66,8 @@ public:
 	// 衝突マネージャのアドレスを設定
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
+	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+
 	/// <summary>
 	/// 親となるワールドトランスフォームを設定
 	/// </summary>
@@ -112,15 +114,28 @@ private:// プライベートなメンバ関数
 	void Attack();
 #pragma endregion
 
+public:// 定数
+	// 自機の移動速度の減衰率
+	const Vector3 kMoveSpeedAttenuationRate = { 4.0f, 4.0f, 4.0f };
+	// 自機の回転速度の減衰率
+	const Vector3 kRotateSpeedAttenuationRate = { 0.6f,0.6f,0.6f };
+
+	// 自機の最大移動速度
+	const float kMaxSpeed = 0.05f;
+	// 自機の最大回転速度
+	const float kMaxRotSpeed = 0.9f;
+
+	// カメラから照準オブジェクトの距離
+	const float kDistanceObject = 50.0f;
+
+	// 弾の発射間隔[frame]
+	const int kBulletInterval = 5;
+
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
 	// ゲームパッド
 	XINPUT_STATE joyState_;
-	// 移動に使うキー
-	std::vector<int> moveKeys_;
-	// 自機の回転に使うキー
-	std::vector<int> rotateKeys_;
 
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
@@ -156,4 +171,12 @@ private:// プライベートなメンバ変数
 	Vector3 reticleMoveVel_;
 	//自機の回転速度
 	Vector3 rotateVel_;
+	Vector3 kRotateSpeedRate = { 0.5f,0.5f,0.5f };
+
+	// 横方向
+	bool isVertical_;
+	bool isHorizontal_;
+
+	// 弾の発射間隔
+	int bulletInterval_;
 };
