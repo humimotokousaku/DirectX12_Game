@@ -59,9 +59,11 @@ public:
 		animation_.push_back(animation);
 		// スケルトン
 		skeleton_ = model_->skeleton_;
-		// スキンクラスタ
-		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
-		skinCluster_.push_back(skinCluster);
+		// スキンクラスタがあるなら作る
+		if (model_->GetModelData().isSkinClusterData) {
+			SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+			skinCluster_.push_back(skinCluster);
+		}
 	}
 	void SetModel(Model* model) {
 		*model_ = *model;
@@ -70,9 +72,11 @@ public:
 		animation_.push_back(animation);
 		// スケルトン
 		skeleton_ = model_->skeleton_;
-		// スキンクラスタ
-		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
-		skinCluster_.push_back(skinCluster);
+		// スキンクラスタがあるなら作る
+		if (model_->GetModelData().isSkinClusterData) {		
+			SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+			skinCluster_.push_back(skinCluster);
+		}
 	}
 
 	// 特定の部位にobjectをセットする
