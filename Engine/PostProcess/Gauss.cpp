@@ -20,12 +20,12 @@ void Gauss::Initialize() {
 }
 
 void Gauss::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	ImGui::Begin("Gauss");
 	ImGui::DragFloat("strength", &gaussData_->strength, 0.01f, 0, 100);
 	ImGui::Checkbox("isActive", &gaussData_->isActive);
 	ImGui::End();
-#endif
+//#endif
 
 	isActive_ = gaussData_->isActive;
 	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, gaussResource_);

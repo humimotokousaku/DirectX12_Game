@@ -28,13 +28,13 @@ void Bloom::Initialize() {
 }
 
 void Bloom::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	ImGui::Begin("Bloom");
 	ImGui::DragFloat("strength", &bloomData_->strength, 0.01f, -100, 100);
 	ImGui::DragFloat("threshold", &bloomData_->threshold, 0.001f, 0, 1);
 	ImGui::Checkbox("isActive", &bloomData_->isActive);
 	ImGui::End();
-#endif
+//#endif
 	isActive_ = bloomData_->isActive;
 	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, bloomResource_);
 	IPostEffect::Draw(psoNum, bloomResource_);
