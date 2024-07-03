@@ -12,7 +12,6 @@ void TitleScene::Initialize() {
 	// カメラの初期化
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	//camera_->SetTranslate(Vector3{ 0,8,5 });
 
 #pragma region 読み込み
 	// テクスチャの読み込み
@@ -188,14 +187,14 @@ void TitleScene::Update() {
 	}
 #pragma endregion
 
-	//particle_->Update();
+	particle_->Update();
 	//player_->Update();
 
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		sceneNum = GAME_SCENE;
+		//sceneNum = GAME_SCENE;
 	}
 	if (Input::GetInstance()->TriggerKey(DIK_R)) {
-		human_[0]->EndAnim();
+		//human_[0]->EndAnim();
 	}
 
 #ifdef _DEBUG
@@ -219,13 +218,13 @@ void TitleScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		//object->Draw();
+		object->Draw();
 	}
 
 	//player_->Draw();
 	cube_->Draw(ddsTexture_);
 
-	//particle_->Draw(uvcheckerTexture_);
+	particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {

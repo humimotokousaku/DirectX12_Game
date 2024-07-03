@@ -43,11 +43,11 @@ void PostEffectManager::Initialize() {
 	gauss->Initialize();
 	renderTexture_.push_back(gauss->GetRenderTexture());
 	postEffect_.push_back(gauss);
-	// Dissolve
-	Dissolve* dissolve = new Dissolve();
-	dissolve->Initialize();
-	renderTexture_.push_back(normal->GetRenderTexture());
-	postEffect_.push_back(dissolve);
+	//// Dissolve
+	//Dissolve* dissolve = new Dissolve();
+	//dissolve->Initialize();
+	//renderTexture_.push_back(normal->GetRenderTexture());
+	//postEffect_.push_back(dissolve);
 	// Bloom
 	Bloom* bloom = new Bloom();
 	bloom->Initialize();

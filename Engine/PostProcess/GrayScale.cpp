@@ -14,7 +14,7 @@ void GrayScale::Initialize() {
 	grayResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&grayData_));
 #pragma endregion
 
-	grayData_->isActive = false;
+	grayData_->isActive = true;
 	isActive_ = grayData_->isActive;
 }
 

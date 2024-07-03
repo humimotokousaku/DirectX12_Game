@@ -32,7 +32,7 @@ enum PostEffectType {
 	RADIALBLUR,
 	GRAYSCALE,
 	GAUSSIAN,
-	DISSOLVE,
+	//DISSOLVE,
 	BLOOM,
 	COUNT
 };

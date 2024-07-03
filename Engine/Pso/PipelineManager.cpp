@@ -58,9 +58,9 @@ void PipelineManager::Initialize() {
 	// Gauss
 	GaussPSO* gauss = new GaussPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "GaussianFilter.PS.hlsl");
 	postEffect_.push_back(gauss);
-	// Dissolve
-	DissolvePSO* dissolve = new DissolvePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "Dissolve.PS.hlsl");
-	postEffect_.push_back(dissolve);
+	//// Dissolve
+	//DissolvePSO* dissolve = new DissolvePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "Dissolve.PS.hlsl");
+	//postEffect_.push_back(dissolve);
 	// Bloom
 	BloomPSO* bloom = new BloomPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "BloomPS.hlsl");
 	postEffect_.push_back(bloom);
