@@ -18,6 +18,8 @@ public:
 	std::vector<std::string> type_;
 	std::vector<std::string> name_;
 
+	std::vector<Vector3> enemyPoints_;
+
 	std::vector<ObjectData> objects_;
 
 	std::vector<CurveData> railCameraControlPoint_;

@@ -51,6 +51,9 @@ void IScene::LoadJSONFile(const std::string fileName) {
 
 		//種別を取得
 		std::string type = object["type"].get<std::string>();
+		std::string name = object["name"].get<std::string>();
+		// 敵の出現場所かの判別をする
+		std::string checkSpawnPoint = "enemy_point";
 
 		if (type.compare("CURVE") == 0) {
 			// 要素追加
@@ -81,28 +84,44 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		}
 		// MESH
 		if (type.compare("MESH") == 0) {
-			// 要素追加
-			levelData->objects_.emplace_back(LevelData::ObjectData{});
-			// 追加した要素の参照を取得
-			LevelData::ObjectData& objectData = levelData->objects_.back();
+			if(name.substr(0,11) == checkSpawnPoint.substr(0,11)) {
+				// 要素追加
+				levelData->enemyPoints_.emplace_back(Vector3{});
+				// 追加した要素の参照を取得
+				Vector3& enemyPoint = levelData->enemyPoints_.back();
+				nlohmann::json& pos = object["spawn_data"][0];
+				enemyPoint = (Vector3{
+					(float)pos["point"][0],
+					(float)pos["point"][2],
+					(float)pos["point"][1]
+					});
 
-			if (object.contains("file_name")) {
-				// ファイル名
-				objectData.fileName = object["file_name"];
+				enemyPoints_.push_back(enemyPoint);
 			}
-			// トランスフォームのパラメータ読み込み
-			nlohmann::json& transform = object["transform"];
-			// 平行移動
-			objectData.translate.x = (float)transform["translation"][0];
-			objectData.translate.y = (float)transform["translation"][2];
-			objectData.translate.z = (float)transform["translation"][1];
-			// 回転角
-			Vector3 rotate = { Degree2Radian(-(float)transform["rotation"][0]) ,Degree2Radian(-(float)transform["rotation"][2]),Degree2Radian(-(float)transform["rotation"][1]) };
-			objectData.rotate = rotate;
-			// スケーリング
-			objectData.scale.x = (float)transform["scaling"][0];
-			objectData.scale.y = (float)transform["scaling"][2];
-			objectData.scale.z = (float)transform["scaling"][1];
+			else {
+				// 要素追加
+				levelData->objects_.emplace_back(LevelData::ObjectData{});
+				// 追加した要素の参照を取得
+				LevelData::ObjectData& objectData = levelData->objects_.back();
+
+				if (object.contains("file_name")) {
+					// ファイル名
+					objectData.fileName = object["file_name"];
+				}
+				// トランスフォームのパラメータ読み込み
+				nlohmann::json& transform = object["transform"];
+				// 平行移動
+				objectData.translate.x = (float)transform["translation"][0];
+				objectData.translate.y = (float)transform["translation"][2];
+				objectData.translate.z = (float)transform["translation"][1];
+				// 回転角
+				Vector3 rotate = { Degree2Radian(-(float)transform["rotation"][0]) ,Degree2Radian(-(float)transform["rotation"][2]),Degree2Radian(-(float)transform["rotation"][1]) };
+				objectData.rotate = rotate;
+				// スケーリング
+				objectData.scale.x = (float)transform["scaling"][0];
+				objectData.scale.y = (float)transform["scaling"][2];
+				objectData.scale.z = (float)transform["scaling"][1];
+			}
 		}
 
 		if (object.contains("children")) {
@@ -131,10 +150,6 @@ void IScene::LoadJSONFile(const std::string fileName) {
 
 		objects.push_back(newObject);
 	}
-
-	/*for (auto& controlPoint : levelData->railCameraControlPoint_) {
-		controlPoints_.push_back(controlPoint.point);
-	}*/
 
 	levelObjects_ = objects;
 }
