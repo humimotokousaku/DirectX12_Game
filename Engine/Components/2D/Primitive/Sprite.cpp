@@ -5,20 +5,22 @@
 #include "SpotLight.h"
 #include <cassert>
 
-Sprite::Sprite(const std::string& directoryPath, std::string textureFilePath) {
-	Initialize(directoryPath, textureFilePath);
-}
-
-Sprite* Sprite::Create(const std::string& directoryPath, std::string textureFilePath)
-{
-	Sprite* sprite = new Sprite(directoryPath, textureFilePath);
-
-	return sprite;
-}
+//Sprite::Sprite(const std::string& directoryPath, std::string textureFilePath) {
+//	Initialize(directoryPath, textureFilePath);
+//}
+//
+//Sprite* Sprite::Create(const std::string& directoryPath, std::string textureFilePath)
+//{
+//	Sprite* sprite = new Sprite(directoryPath, textureFilePath);
+//
+//	return sprite;
+//}
 
 void Sprite::Initialize(const std::string& directoryPath, std::string textureFilePath) {
 	textureManager_ = TextureManager::GetInstance();
 	psoManager_ = PipelineManager::GetInstance();
+	// テクスチャを読み込む
+	TextureManager::GetInstance()->LoadTexture(directoryPath, textureFilePath);
 
 	/// メモリ確保
 	// 頂点データ

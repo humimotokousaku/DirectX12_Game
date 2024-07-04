@@ -10,7 +10,7 @@ void Line::Initialize() {
 	// 書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	*materialData_ = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Line::Draw() {

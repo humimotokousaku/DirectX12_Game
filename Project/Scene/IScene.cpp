@@ -5,10 +5,15 @@
 int IScene::sceneNum;
 
 IScene::~IScene() {
+
+}
+
+void IScene::Finalize() {
 	for (Object3D* object : levelObjects_) {
 		delete object;
 	}
 	levelObjects_.clear();
+	enemyPoints_.clear();
 	models_.clear();
 }
 
@@ -90,11 +95,11 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 追加した要素の参照を取得
 				Vector3& enemyPoint = levelData->enemyPoints_.back();
 				nlohmann::json& pos = object["spawn_data"][0];
-				enemyPoint = (Vector3{
+				enemyPoint = Vector3{
 					(float)pos["point"][0],
 					(float)pos["point"][2],
 					(float)pos["point"][1]
-					});
+					};
 
 				enemyPoints_.push_back(enemyPoint);
 			}

@@ -8,7 +8,8 @@
 #include <vector>
 
 class Player;
-class GameScene;
+//class GameScene;
+class EnemyManager;
 class Enemy : public Collider
 {
 public:
@@ -74,10 +75,12 @@ public:
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// ゲームシーンのアドレスを設定
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	//void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	// 衝突マネージャのアドレスを設定
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
-	
+	// エネミーマネージャのアドレスを設定
+	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+
 	// 死亡フラグを設定
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
 
@@ -108,9 +111,11 @@ private:
 	// カメラのアドレス
 	Camera* camera_;
 	// ゲームシーンのアドレス
-	GameScene* gameScene_ = nullptr;
+	//GameScene* gameScene_ = nullptr;
 	// 衝突マネージャー
 	CollisionManager* collisionManager_ = nullptr;
+	// エネミーマネージャ
+	EnemyManager* enemyManager_ = nullptr;
 
 	// 状態遷移
 	IEnemyState* state_;

@@ -15,6 +15,7 @@
 #include "Animation.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "RailCamera.h"
 #include "CollisionManager.h"
 
 class GameManager;
@@ -42,19 +43,20 @@ public:
 	/// 
 
 private:
+	Input* input_;
+
 	std::array<std::unique_ptr<Object3D>, 2> plane_;
 	std::unique_ptr<Object3D> axis_;
 	std::array<std::unique_ptr<Object3D>, 2> box_;
 	std::array<std::unique_ptr<Object3D>, 2> human_;
-
-	std::unique_ptr<Animation> anim_;
-	std::unique_ptr<CollisionManager> collisionManager_;
-	std::unique_ptr<Player> player_;
-	//std::array<std::unique_ptr<Enemy> , 2u> enemy_;
-	// パーティクル
-	std::unique_ptr<Particles> particle_;
-
+	// skybox
 	std::unique_ptr<Cube> cube_;
+	// UI
+	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+	// カメラ
+	std::unique_ptr<Camera> camera_;
+	// レールカメラ
+	std::unique_ptr<RailCamera> railCamera_;
 
 	// テクスチャ
 	uint32_t uvcheckerTexture_;
@@ -64,12 +66,6 @@ private:
 	uint32_t whiteTexture_;
 	uint32_t ddsTexture_;
 	std::array<uint32_t, 10> numbersTexture_;
-
-	int textureNum_;
-	Input* input_;
-	ViewProjection viewProjection_;
-	WorldTransform world_;
-	std::unique_ptr<Camera> camera_;
 
 	uint32_t bgm_[4];
 };

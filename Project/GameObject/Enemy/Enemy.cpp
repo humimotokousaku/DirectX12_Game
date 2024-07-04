@@ -2,7 +2,8 @@
 #include "EnemyStateApproach.h"
 #include "TextureManager.h"
 #include "CollisionConfig.h"
-#include "GameScene.h"
+//#include "GameScene.h"
+#include "EnemyManager.h" 
 
 Enemy::Enemy() {
 	state_ = new EnemyStateApproach();
@@ -75,7 +76,7 @@ void Enemy::Fire() {
 	newBullet->Initialize(models_[1], object3d_->worldTransform.translate, velocity);
 
 	// 弾を登録
-	gameScene_->AddEnemyBullet(newBullet);
+	enemyManager_->AddEnemyBullet(newBullet);
 }
 
 

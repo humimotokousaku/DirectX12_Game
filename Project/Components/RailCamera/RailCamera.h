@@ -10,11 +10,12 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize(std::vector<Vector3> controlPoints);
+	void Initialize(std::vector<Vector3> controlPoints, Camera* camera);
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
-	void Update(Vector3 target);
+	void Update();
 
 	/// <summary>
 	/// カメラの移動ルートの表示

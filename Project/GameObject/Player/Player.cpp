@@ -33,7 +33,9 @@ void Player::Initialize() {
 
 	gameSpeed_ = 1.0f;
 	// 2Dレティクル作成
-	sprite2DReticle_ = Sprite::Create("", "reticle.png");
+	sprite2DReticle_ = new Sprite();
+	sprite2DReticle_->Initialize("", "reticle.png");
+	//sprite2DReticle_ = Sprite::Create("", "reticle.png");
 	sprite2DReticle_->SetPos(Vector2(WinApp::kClientWidth_ / 2, WinApp::kClientHeight_ / 2));
 
 	// colliderの設定

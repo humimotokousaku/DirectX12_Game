@@ -24,9 +24,6 @@ void GameScene::Initialize() {
 	// 通常敵の弾
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 
-	// 敵の出現情報を読み込む
-	LoadEnemyPopData();
-
 	// Blender
 	LoadJSONFile("sample_map.json");
 #pragma endregion
@@ -57,6 +54,18 @@ void GameScene::Initialize() {
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
+	// エネミーマネージャの生成
+	enemyManager_ = std::make_unique<EnemyManager>();
+	//enemyManager_ = new EnemyManager();
+	// 通常敵の体
+	enemyManager_->AddModel(models_[3]);
+	// 通常敵の弾
+	enemyManager_->AddModel(models_[4]);
+	enemyManager_->SetCamera(railCamera_->GetCamera());
+	enemyManager_->SetCollisionManager(collisionManager_.get());
+	enemyManager_->SetPlayer(player_.get());
+	enemyManager_->Initialize();
+
 	// Skybox
 	cube_ = std::make_unique<Cube>();
 	cube_->SetCamera(railCamera_->GetCamera());
@@ -66,7 +75,7 @@ void GameScene::Initialize() {
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(railCamera_->GetCamera());
-		object->SetIsLighting(false);
+		//object->SetIsLighting(false);
 	}
 }
 
@@ -74,33 +83,14 @@ void GameScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		sceneNum = TITLE_SCENE;
 	}
+	if (Input::GetInstance()->TriggerKey(DIK_2)) {
+		sceneNum = GAMEOVER_SCENE;
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_3)) {
+		sceneNum = GAMECLEAR_SCENE;
+	}
 
-	// 敵の出現するタイミングと座標
-	UpdateEnemyPopCommands();
-	// 敵の削除
-	enemy_.remove_if([](Enemy* enemy) {
-		if (enemy->IsDead()) {
-			delete enemy;
-			return true;
-		}
-		return false;
-	});
-	// enemyの更新
-	for (Enemy* enemy : enemy_) {
-		enemy->Update();
-	}
-	// 弾の更新
-	for (EnemyBullet* bullet : enemyBullets_) {
-  		bullet->Update();
-	}
-	// 終了した弾を削除
-	enemyBullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->isDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-		});
+	enemyManager_->Update();
 
 	// 自キャラの更新
 	player_->Update();
@@ -118,37 +108,22 @@ void GameScene::Update() {
 	}
 
 	// デバッグカメラの更新
-	railCamera_->Update(target_);
+	railCamera_->Update();
 
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
-
-///#ifdef USE_IMGUI
-	ImGui::Begin("Current Scene");
-	ImGui::Text("GAME");
-	ImGui::Text("SPACE:scene change");
-	ImGui::DragFloat("cameraT", &targetT_, 0);
-	ImGui::DragFloat("playerT", &t_, 0);
-	ImGui::End();
-//#endif
 }
 
 void GameScene::Draw() {
 	// レールカメラの移動ルート表示
 	railCamera_->MoveRouteDraw();
+
+	enemyManager_->Draw();
+
 	// 自機
 	player_->Draw();
 	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
-		bullet->Draw();
-	}
-
-	// 通常敵
-	for (Enemy* enemy : enemy_) {
-		enemy->Draw();
-	}
-	// 通常敵の弾
-	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw();
 	}
 
@@ -169,22 +144,17 @@ void GameScene::Finalize() {
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
 	}
-	// 通常敵
-	for (Enemy* enemy : enemy_) {
-		delete enemy;
-	}
-	// 通常敵の弾
-	for (EnemyBullet* bullet : enemyBullets_) {
-		delete bullet;
-	}
+
+	//delete enemyManager_;
+	enemyManager_->Finalize();
+	collisionManager_->ClearColliderList();
 
 	// リストのクリア
 	// 自機の弾
 	playerBullets_.clear();
-	// 通常敵
-	enemy_.clear();
-	// 通常敵の弾
-	enemyBullets_.clear();
+
+	// 基底クラスの解放
+	IScene::Finalize();
 }
 
 void GameScene::UpdatePlayerPosition(float t) {
@@ -194,109 +164,7 @@ void GameScene::UpdatePlayerPosition(float t) {
 	railCamera_->SetTranslation(cameraPosition);
 }
 
-void GameScene::SpawnEnemy(Vector3 pos) {
-	Enemy* enemy = new Enemy();
-
-	// 敵モデルを追加
-	enemy->AddModel(models_[3]);
-	// 弾のモデルを追加
-	enemy->AddModel(models_[4]);
-
-	// 必要なアドレスを設定
-	enemy->SetPlayer(player_.get());
-	enemy->SetCamera(railCamera_->GetCamera());
-	enemy->SetCollisionManager(collisionManager_.get());
-	enemy->SetGameScene(this);
-
-	// 初期化
-	enemy->Initialize(pos);
-
-	// リストに登録
-	enemy_.push_back(enemy);
-}
-
-void GameScene::LoadEnemyPopData() {
-	// ファイルを開く
-	std::ifstream file;
-	file.open("Engine/resources/csv/enemyPop.csv");
-	assert(file.is_open());
-
-	// ファイルの内容を文字列ストリームにコピー
-	enemyPopCommands_ << file.rdbuf();
-
-	// ファイルを閉じる
-	file.close();
-}
-
-void GameScene::UpdateEnemyPopCommands() {
-	// 待機処理
-	if (isWait_) {
-		waitTime_--;
-		if (waitTime_ <= 0) {
-			// 待機完了
-			isWait_ = false;
-		}
-		return;
-	}
-
-	// 1桁分の文字列を入れる変数
-	std::string line;
-
-	// コマンド実行ループ
-	while (getline(enemyPopCommands_, line)) {
-		// 1桁の文字列をストリームに変換して解析しやすくする
-		std::istringstream line_stream(line);
-
-		std::string word;
-		// ,区切りで行の先頭文字列を取得
-		getline(line_stream, word, ',');
-
-		// "//"から始まる行はコメント
-		if (word.find("//") == 0) {
-			// コメント行を飛ばす
-			continue;
-		}
-
-		// POPコマンド
-		if (word.find("POP") == 0) {
-			// x座標
-			getline(line_stream, word, ',');
-			float x = (float)std::atof(word.c_str());
-
-			// y座標
-			getline(line_stream, word, ',');
-			float y = (float)std::atof(word.c_str());
-
-			// z座標
-			getline(line_stream, word, ',');
-			float z = (float)std::atof(word.c_str());
-
-			// 敵を発生させる
-			SpawnEnemy(Vector3(x, y, z));
-		}
-		// WAITコマンド
-		else if (word.find("WAIT") == 0) {
-			getline(line_stream, word, ',');
-
-			// 待ち時間
-			int32_t waitTime = atoi(word.c_str());
-
-			// 待ち時間
-			isWait_ = true;
-			waitTime_ = waitTime;
-
-			// コマンドループを抜ける
-			break;
-		}
-	}
-}
-
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {
 	// リストに登録する
 	playerBullets_.push_back(playerBullet);
-}
-
-void GameScene::AddEnemyBullet(EnemyBullet* enemyBullet) {
-	// リストに登録する
-	enemyBullets_.push_back(enemyBullet);
 }

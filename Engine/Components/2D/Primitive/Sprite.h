@@ -14,14 +14,15 @@
 class Sprite
 {
 public:
-	Sprite(const std::string& directoryPath, std::string textureFilePath);
+	Sprite() = default;
+	//Sprite(const std::string& directoryPath, std::string textureFilePath);
 	~Sprite() = default;
 
 	/// <summary>
 	/// インスタンスの生成
 	/// </summary>
 	/// <param name="size">画像の縦幅、横幅</param>
-	static Sprite* Create(const std::string& directoryPath, std::string textureFilePath);
+	//static Sprite* Create(const std::string& directoryPath, std::string textureFilePath);
 
 	/// <summary>
 	/// 初期化

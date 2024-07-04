@@ -124,7 +124,9 @@ public:
 				animation_[i].isActive = true;
 				//model_->animation_.isActive = animation_[i].isActive;
 				model_->animation_ = animation_[i];
-				model_->skinCluster_ = skinCluster_[i];
+				if (model_->GetModelData().isSkinClusterData) {
+					model_->skinCluster_ = skinCluster_[i];
+				}
 			}
 			else {
 				animation_[i].isActive = false;
@@ -137,7 +139,9 @@ public:
 				animation_[i].isActive = true;
 				//model_->animation_.isActive = animation_[i].isActive;
 				model_->animation_ = animation_[i];
-				model_->skinCluster_ = skinCluster_[i];
+				if (model_->GetModelData().isSkinClusterData) {
+					model_->skinCluster_ = skinCluster_[i];
+				}
 			}
 			else {
 				animation_[i].isActive = false;

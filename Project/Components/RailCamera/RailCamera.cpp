@@ -31,8 +31,36 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 	targetT_ = 1.0f / segmentCount;
 	isMoveCamera_ = true;
 }
+void RailCamera::Initialize(std::vector<Vector3> controlPoints, Camera* camera) {
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	controlPoints_ = controlPoints;
 
-void RailCamera::Update(Vector3 target) {
+	// 線分の数+1個分の頂点座標の計算
+	for (size_t i = 0; i < segmentCount + 1; i++) {
+		float t = 1.0f / segmentCount * i;
+		if (t >= 1.0f) {
+			t = 0.99f;
+		}
+		Vector3 pos = Lerps::CatmullRomSpline(controlPoints_, t);
+		// 描画用頂点リストに追加
+		pointsDrawing_.push_back(pos);
+	}
+	// 線
+	for (int i = 0; i < segmentCount; i++) {
+		line_[i] = std::make_unique<Line>();
+		line_[i]->Initialize();
+		line_[i]->SetCamera(camera);
+		line_[i]->startPos_ = pointsDrawing_[i];
+		line_[i]->endPos_ = pointsDrawing_[i + 1];
+	}
+
+	t_ = 0.0f;
+	targetT_ = 1.0f / segmentCount;
+	isMoveCamera_ = true;
+}
+
+void RailCamera::Update() {
 	if (isMoveCamera_) {
 		// カメラの移動
 		if (t_ <= 1.0f) {
