@@ -7,6 +7,11 @@
 
 class EnemyManager {
 public:
+	struct SpawnPointData {
+		Vector3 distance;
+		bool isActive;
+	};
+public:
 	///
 	/// Default Method
 	/// 
@@ -40,6 +45,9 @@ public:
 	/// User Method
 	/// 
 
+	// 発生条件
+	void CheckSpawn();
+
 	/// <summary>
 	/// 敵の発生
 	/// </summary>
@@ -61,6 +69,16 @@ public:
 		// リストに登録する
 		enemyBullets_.push_back(enemyBullet);
 	}
+
+	///
+	/// Getter
+	/// 
+
+	/// <summary>
+	/// 全敵のアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	std::list<Enemy*> GetEnemyList() { return enemy_; }
 
 	///
 	/// Setter
@@ -88,6 +106,15 @@ public:
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
 
+	/// <summary>
+	/// 出現する場所のリストを設定
+	/// </summary>
+	/// <param name="spawnPoints">敵の出現する場所</param>
+	void SetSpawnPoints(std::vector<Vector3> spawnPoints) { 
+		spawnPoints_ = spawnPoints; 
+		spawnPointDatas_.resize(spawnPoints_.size());
+	}
+
 private:// プライベートなメンバ変数
 	// カメラのアドレス
 	Camera* camera_;
@@ -110,4 +137,9 @@ private:// プライベートなメンバ変数
 	bool isWait_ = false;
 	// 敵が発生するまでの時間
 	int32_t waitTime_ = 0;
+
+	// 敵の発生する場所
+	std::vector<Vector3> spawnPoints_;
+	// 自機と出現場所の距離
+	std::vector<SpawnPointData> spawnPointDatas_;
 };

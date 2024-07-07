@@ -64,11 +64,11 @@ void RailCamera::Update() {
 	if (isMoveCamera_) {
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			t_ += 1.0f / segmentCount / 10;
+			//t_ += 1.0f / segmentCount / 10;
 		}
 		// カメラの見ている座標を移動
 		if (targetT_ <= 1.0f) {
-			targetT_ += 1.0f / segmentCount / 10;
+			//targetT_ += 1.0f / segmentCount / 10;
 		}
 		if (targetT_ >= 1.0f) {
 			targetT_ = 0.999f;
@@ -77,10 +77,11 @@ void RailCamera::Update() {
 		}
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
-
+	target_.y += 0.2f;
 	Vector3 cameraPosition{};
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
+	cameraPosition.y += 0.2f;
 	camera_->worldTransform_.translate = cameraPosition;
 
 

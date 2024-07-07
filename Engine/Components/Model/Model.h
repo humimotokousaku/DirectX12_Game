@@ -44,6 +44,9 @@ public:
 	// 色の設定
 	void SetColor(Vector4 RGBA) { materialData_->color = RGBA; }
 
+	// マテリアルのリソースを設定(ユーザーの使用禁止)
+	void SetMaterialResource(Microsoft::WRL::ComPtr<ID3D12Resource> materialResource) { materialResource_ = materialResource; }
+
 private:
 	void CreateVertexResource();
 

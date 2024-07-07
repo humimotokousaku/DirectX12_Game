@@ -39,7 +39,7 @@ public:
 
 public:// パブリックなメンバ変数
 	// 線分の数
-	static const size_t segmentCount = 100;
+	static const size_t segmentCount = 200;
 
 private:
 	std::unique_ptr<Camera> camera_;

@@ -54,6 +54,16 @@ public:
 	// モデルのセット
 	void SetModel(const std::string& directoryPath, const std::string& filePath) { 
 		*model_ = *ModelManager::GetInstance()->SetModel(directoryPath, filePath);
+		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+		Material* materialData;
+		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();	
+		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+		model_->SetMaterialResource(materialResource);
+		materialData->enableLighting = false;
+		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
+		materialData->uvTransform = MakeIdentity4x4();
+		model_->materialData_ = materialData;
+		
 		Motion animation = model_->animation_;
 		// アニメーション
 		animation_.push_back(animation);
@@ -67,6 +77,16 @@ public:
 	}
 	void SetModel(Model* model) {
 		*model_ = *model;
+		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+		Material* materialData;
+		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
+		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+		model_->SetMaterialResource(materialResource);
+		materialData->enableLighting = false;
+		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
+		materialData->uvTransform = MakeIdentity4x4();
+		model_->materialData_ = materialData;
+
 		Motion animation = model_->animation_;
 		// アニメーション
 		animation_.push_back(animation);
@@ -78,11 +98,6 @@ public:
 			skinCluster_.push_back(skinCluster);
 		}
 	}
-
-	// 特定の部位にobjectをセットする
-	/*void SetParentObject(const WorldTransform* parent, int index) {
-		worldTransform.
-	}*/
 
 #pragma region アニメーション
 	// アニメーション追加
@@ -175,7 +190,7 @@ public:
 	void SetShininess(float shininess) { model_->SetShininess(shininess); }
 
 	// 色の設定
-	void SetColor(Vector4 RGBA) { model_->SetColor(RGBA); }
+	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
 #pragma endregion
 
 public:// パブリックな変数

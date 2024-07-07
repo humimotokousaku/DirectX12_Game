@@ -5,6 +5,7 @@
 #include "EnemyManager.h"
 #include "PlayerBullet.h"
 #include "Player.h"
+#include "AimAssist/AimAssist.h"
 #include "RailCamera.h"
 #include "Cube.h"
 #include "CollisionManager.h"
@@ -62,32 +63,14 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Player> player_;
 	// 自弾
 	std::list<PlayerBullet*> playerBullets_;
+	AimAssist* aimAssist_;
 	// 衝突マネージャー
 	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 	// エネミーマネージャ
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
-	//EnemyManager* enemyManager_ = nullptr;
 	// カメラレール
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 	// skybox
 	std::unique_ptr<Cube> cube_;
-
-	//// 敵の発生時間や座標などのCSVファイル
-	//std::stringstream enemyPopCommands_;
-	//// 敵が発生待機中か
-	//bool isWait_ = false;
-	//// 敵が発生するまでの時間
-	//int32_t waitTime_ = 0;
-
-	// スプライン曲線制御点（通過点）
-	//std::vector<Vector3> controlPoints_;
-	// 線分で描画する用の頂点リスト
-	//std::vector<Vector3> pointsDrawing_;
-	//// 移動ルートの線(デバッグ用)
-	//std::array<std::unique_ptr<Line>, segmentCount> line_;
-	//Vector3 target_;
-	//float t_;
-	//float targetT_;
-	//bool isMoveCamera_;
 };
 

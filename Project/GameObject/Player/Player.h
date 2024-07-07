@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "PlayerBullet.h"
 
+class AimAssist;
 class GameScene;
 class Player : public Collider {
 public:// パブリックなメンバ関数
@@ -49,7 +50,7 @@ public:
 
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
-	// レティクルの座標
+	// 3Dレティクルの座標
 	Vector3 GetWorld3DReticlePosition();
 
 	///
@@ -67,6 +68,7 @@ public:
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
 	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	void SetReticle3DPos(Vector3 pos) { object3dReticle_->worldTransform.translate = pos; }
 
 	/// <summary>
 	/// 親となるワールドトランスフォームを設定
@@ -86,6 +88,11 @@ public:
 	void OnCollision(Collider* collider)override;
 
 private:// プライベートなメンバ関数
+	/// <summary>
+	/// HPの減少処理
+	/// </summary>
+	void DecrementHP();
+
 	/// <summary>
 	/// レティクルの配置
 	/// </summary>
@@ -131,6 +138,12 @@ public:// 定数
 	// 弾の発射間隔[frame]
 	const int kBulletInterval = 5;
 
+	// HPスプライトの最大サイズ
+	const Vector2 kMaxHPSize = { 300.0f, 32.0f };
+
+	// 無敵時間
+	const int kMaxInvinsibleFrame = 60;
+
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
@@ -142,9 +155,9 @@ private:// プライベートなメンバ変数
 	std::vector<Model*> models_;
 	// 2Dレティクル用のスプライト
 	Sprite* sprite2DReticle_ = nullptr;
+	// HP用のスプライト
+	Sprite* hpSprite_ = nullptr;
 
-	// テクスチャハンドル
-	uint32_t playerTexture_ = 0u;
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
 
@@ -155,6 +168,8 @@ private:// プライベートなメンバ変数
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameScene* gameScene_;
+	// エイムアシストのアドレス
+	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス
 	CollisionManager* collisionManager_;
 
@@ -179,4 +194,12 @@ private:// プライベートなメンバ変数
 
 	// 弾の発射間隔
 	int bulletInterval_;
+
+	// HPテクスチャのサイズ
+	Vector2 hpSize_;
+
+	// 無敵中か
+	bool isInvinsible_;
+	// 無敵時間
+	int invinsibleFrame_;
 };

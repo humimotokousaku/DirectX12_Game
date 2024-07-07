@@ -143,7 +143,7 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 #pragma region カメラ
-	//camera_->Update();
+	camera_->Update();
 	// 座標移動
 	if (Input::GetInstance()->PressKey(DIK_RIGHT)) {
 		camera_->worldTransform_.translate.x += 0.05f;
@@ -194,11 +194,11 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
-	axis_->Draw(particleTexture_);
+	//axis_->Draw(particleTexture_);
 	for (int i = 0; i < 2; i++) {
-		plane_[i]->Draw(uvcheckerTexture_);
-		box_[i]->Draw(uvcheckerTexture_);
-		human_[i]->Draw(uvcheckerTexture_);
+		//plane_[i]->Draw(uvcheckerTexture_);
+		//box_[i]->Draw(uvcheckerTexture_);
+		//human_[i]->Draw(uvcheckerTexture_);
 	}
 
 	// Blenderで配置したオブジェクト

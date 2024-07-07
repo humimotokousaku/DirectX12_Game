@@ -47,14 +47,13 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->SetOBBDirect(i);
 		}
 		if (ColOBBs(colliderA->GetOBB(), colliderB->GetOBB())) {
+			// 今当たっている
+			colliderA->SetIsOnCollision(true);
+			colliderB->SetIsOnCollision(true);
 			// コライダーAの衝突時コールバックを呼び出す
 			colliderA->OnCollision(colliderA);
 			// コライダーBの衝突時コールバックを呼び出す
 			colliderB->OnCollision(colliderB);
-
-			// 今当たっている
-			colliderA->SetIsOnCollision(true);
-			colliderB->SetIsOnCollision(true);
 		}
 		else {
 			// 今は当たっていない

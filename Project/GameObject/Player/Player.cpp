@@ -3,6 +3,7 @@
 #include "CollisionConfig.h"
 #include "GameTime.h"
 #include "GameScene.h"
+#include "AimAssist/AimAssist.h"
 #include "ImGuiManager.h"
 #include "Input.h"
 #include <numbers>
@@ -11,6 +12,7 @@ Player::Player() {}
 Player::~Player() {
 	models_.clear();
 	delete sprite2DReticle_;
+	delete hpSprite_;
 	//collisionManager_->ClearColliderList(this);
 }
 
@@ -35,14 +37,27 @@ void Player::Initialize() {
 	// 2Dレティクル作成
 	sprite2DReticle_ = new Sprite();
 	sprite2DReticle_->Initialize("", "reticle.png");
-	//sprite2DReticle_ = Sprite::Create("", "reticle.png");
 	sprite2DReticle_->SetPos(Vector2(WinApp::kClientWidth_ / 2, WinApp::kClientHeight_ / 2));
+	// HP作成
+	hpSize_ = kMaxHPSize;
+	hpSprite_ = new Sprite();
+	hpSprite_->Initialize("DefaultTexture", "white.png");
+	hpSprite_->SetSize(hpSize_);
+	hpSprite_->SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	hpSprite_->SetPos(Vector2(64.0f, 64.0f));
+	// 緑色にする
+	hpSprite_->SetColor(Vector4{ 0,1,0,1 });
+	isInvinsible_ = false;
+	// 無敵時間
+	invinsibleFrame_ = kMaxInvinsibleFrame;
 
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	SetCollisionMask(~kCollisionAttributePlayer);
 	collisionManager_->SetColliderList(this);
+
+	aimAssist_ = AimAssist::GetInstance();
 }
 
 void Player::Update() {
@@ -64,6 +79,23 @@ void Player::Update() {
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
+	// 無敵演出
+	if (isInvinsible_) {	
+		if (invinsibleFrame_ % 3 == 0) {
+			object3d_->SetColor(Vector4{ 1,1,1,1 });
+		}
+		else {
+			object3d_->SetColor(Vector4{ 1,1,1,0.1f });
+		}
+		invinsibleFrame_--;
+		invinsibleFrame_ = std::clamp<int>(invinsibleFrame_, 0, kMaxInvinsibleFrame);
+		// 無敵時間終了
+		if (invinsibleFrame_ <= 0) {
+			isInvinsible_ = false;
+			object3d_->SetColor(Vector4{ 1,1,1,1 });
+		}
+	}
+
 	// ImGui
 	object3d_->ImGuiParameter("Player");
 	object3dReticle_->ImGuiParameter("Reticle");
@@ -81,6 +113,7 @@ void Player::Draw() {
 
 void Player::DrawUI() {
 	sprite2DReticle_->Draw();
+	hpSprite_->Draw();
 }
 
 void Player::SetParent(const WorldTransform* parent) {
@@ -89,7 +122,8 @@ void Player::SetParent(const WorldTransform* parent) {
 }
 
 void Player::OnCollision(Collider* collider) {
-
+	// HP減少処理
+	DecrementHP();
 }
 
 Vector3 Player::GetRotation() {
@@ -269,6 +303,9 @@ void Player::Move() {
 
 void Player::Aim() {
 	Deploy3DReticle();
+	// ロックオン処理
+	aimAssist_->LockOn(sprite2DReticle_->GetPos());
+	object3dReticle_->worldTransform.UpdateMatrix();
 	Deploy2DReticle();
 }
 
@@ -308,6 +345,19 @@ void Player::Attack() {
 	bulletInterval_ = std::clamp<int>(bulletInterval_, 0, kBulletInterval);
 }
 
+void Player::DecrementHP() {
+	// 今無敵か
+	if (!isInvinsible_) {
+		if (PressOnCollision()) {
+			hpSize_.x -= kMaxHPSize.x / 3;
+			hpSprite_->SetSize(hpSize_);
+			// 1秒無敵
+			invinsibleFrame_ = kMaxInvinsibleFrame;
+			isInvinsible_ = true;
+		}
+	}
+}
+
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset{ 0, 0, 1.0f };
@@ -322,11 +372,13 @@ void Player::Deploy3DReticle() {
 	object3dReticle_->worldTransform.translate = GetWorldPosition() + offset;
 
 	object3dReticle_->worldTransform.UpdateMatrix();
+
+	// ロックオンしてないときの3Dレティクル座標を設定
+	aimAssist_->Set3DReticle(GetWorldPosition());
 }
 
 void Player::Deploy2DReticle() {
 	// 3Dレティクルのワールド座標を取得
-	//Vector3 positionReticle = GetWorld3DReticlePosition();
 	Vector3 positionReticle = object3dReticle_->worldTransform.translate;
 
 	// ビューポート行列

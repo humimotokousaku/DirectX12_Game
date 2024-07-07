@@ -56,7 +56,6 @@ void GameScene::Initialize() {
 
 	// エネミーマネージャの生成
 	enemyManager_ = std::make_unique<EnemyManager>();
-	//enemyManager_ = new EnemyManager();
 	// 通常敵の体
 	enemyManager_->AddModel(models_[3]);
 	// 通常敵の弾
@@ -64,7 +63,13 @@ void GameScene::Initialize() {
 	enemyManager_->SetCamera(railCamera_->GetCamera());
 	enemyManager_->SetCollisionManager(collisionManager_.get());
 	enemyManager_->SetPlayer(player_.get());
+	enemyManager_->SetSpawnPoints(enemyPoints_);
 	enemyManager_->Initialize();
+
+	// 自機のロックオンクラス生成
+	aimAssist_ = AimAssist::GetInstance();
+	aimAssist_->SetCamera(railCamera_->GetCamera());
+	aimAssist_->SetPlayer(player_.get());
 
 	// Skybox
 	cube_ = std::make_unique<Cube>();
@@ -75,7 +80,7 @@ void GameScene::Initialize() {
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(railCamera_->GetCamera());
-		//object->SetIsLighting(false);
+		//object->SetIsLighting(true);
 	}
 }
 
@@ -91,6 +96,7 @@ void GameScene::Update() {
 	}
 
 	enemyManager_->Update();
+	aimAssist_->SetEnemyList(enemyManager_->GetEnemyList());
 
 	// 自キャラの更新
 	player_->Update();
@@ -120,23 +126,23 @@ void GameScene::Draw() {
 
 	enemyManager_->Draw();
 
-	// 自機
-	player_->Draw();
-	// 自機の弾
-	for (PlayerBullet* bullet : playerBullets_) {
-		bullet->Draw();
-	}
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
 		object->Draw();
 	}
 
+	// 自機
+	player_->Draw();
+	// 自機の弾
+	for (PlayerBullet* bullet : playerBullets_) {
+		bullet->Draw();
+	}
 	// 自機のレティクル
 	player_->DrawUI();
 
 	// skybox
-	cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
+	//cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
 }
 
 void GameScene::Finalize() {
@@ -145,9 +151,8 @@ void GameScene::Finalize() {
 		delete bullet;
 	}
 
-	//delete enemyManager_;
-	enemyManager_->Finalize();
-	collisionManager_->ClearColliderList();
+	//enemyManager_->Finalize();
+	//collisionManager_->ClearColliderList();
 
 	// リストのクリア
 	// 自機の弾

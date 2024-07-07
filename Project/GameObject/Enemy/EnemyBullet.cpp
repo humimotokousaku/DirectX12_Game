@@ -76,7 +76,9 @@ void EnemyBullet::SettingScale() {
 	object3d_->worldTransform.scale.z = 1.0f;
 }
 
-void EnemyBullet::OnCollision(Collider* collider) { isDead_ = true; }
+void EnemyBullet::OnCollision(Collider* collider) { 
+	isDead_ = true;
+}
 
 Vector3 EnemyBullet::GetWorldPosition() {
 	// ワールド座標を入れる変数

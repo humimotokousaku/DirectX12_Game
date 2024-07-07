@@ -402,6 +402,9 @@
     <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -666,6 +669,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Components\AimAssist\AimAssist.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

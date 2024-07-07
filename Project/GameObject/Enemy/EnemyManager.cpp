@@ -13,7 +13,17 @@ void EnemyManager::Initialize() {
 
 void EnemyManager::Update() {
 	// 敵の出現するタイミングと座標
-	UpdateEnemyPopCommands();
+	//UpdateEnemyPopCommands();
+	CheckSpawn();
+	//if (CheckSpawn()) {
+	//	for (int i = 0; i < spawnPoints_.size(); i++) {
+	//		if (spawnPointDatas_[i].isActive) {
+	//			SpawnEnemy(spawnPoints_[i]);
+	//			//spawnPointDatas_[i].isActive = false;
+	//		}
+	//	}
+	//}
+
 	// 敵の削除
 	enemy_.remove_if([](Enemy* enemy) {
 		if (enemy->IsDead()) {
@@ -24,11 +34,11 @@ void EnemyManager::Update() {
 		});
 	// enemyの更新
 	for (Enemy* enemy : enemy_) {
-		enemy->Update();
+		//enemy->Update();
 	}
 	// 弾の更新
 	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Update();
+		//bullet->Update();
 	}
 	// 終了した弾を削除
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
@@ -64,6 +74,22 @@ void EnemyManager::Finalize() {
 	enemyBullets_.clear();
 	models_.clear();
 	enemyPopCommands_.clear();
+}
+
+void EnemyManager::CheckSpawn() {
+	// 自機から出現場所の距離を調べる
+	for (int i = 0; i < spawnPoints_.size(); i++) {
+		if (!spawnPointDatas_[i].isActive) {
+			spawnPointDatas_[i].distance = spawnPoints_[i] - player_->GetWorldPosition();
+			if (100.0f >= Length(spawnPointDatas_[i].distance)) {
+				spawnPointDatas_[i].isActive = true;
+			}
+			if (spawnPointDatas_[i].isActive) {
+				SpawnEnemy(spawnPoints_[i]);
+				//spawnPointDatas_[i].isActive = false;
+			}
+		}
+	}
 }
 
 void EnemyManager::SpawnEnemy(Vector3 pos) {
