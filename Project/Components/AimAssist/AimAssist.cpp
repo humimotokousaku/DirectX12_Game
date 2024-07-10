@@ -50,7 +50,7 @@ void AimAssist::LockOn(Vector2 reticlePos) {
 			Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
 			float dot = Dot(enemy->GetWorldPosition(), player_->GetWorldPosition());
 			// レティクルと自機の距離内にいるならロックオン対象
-			if (30.0f >= Length(p2e)) {
+			if (100.0f >= Length(p2e)) {
 				// 敵がレティクルの一定範囲にいるならロックオン(判定はスクリーン座標で行う)
 				Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
 				// ロックオンしていないときの3Dレティクルをスクリーン座標に変換

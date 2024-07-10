@@ -62,17 +62,17 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Camera* camera) 
 
 void RailCamera::Update() {
 	if (isMoveCamera_) {
+		currentFrame_++;
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			t_ += 1.0f / segmentCount / 10;
+			t_ = Lerps::Lerp(0, 0.99f, currentFrame_ / kTimeToEndPoint);
 		}
 		// カメラの見ている座標を移動
 		if (targetT_ <= 1.0f) {
-			targetT_ += 1.0f / segmentCount / 10;
+			targetT_ = Lerps::Lerp(0.01f, 1.0f, currentFrame_ / kTimeToEndPoint);
 		}
 		if (targetT_ >= 1.0f) {
-			targetT_ = 0.999f;
-			t_ = 0.98f;
+			currentFrame_ = 0;
 			isMoveCamera_ = false;
 		}
 	}

@@ -43,7 +43,10 @@ public:
 
 public:// パブリックなメンバ変数
 	// 線分の数
-	static const size_t segmentCount = 200;
+	static const size_t segmentCount = 20;
+
+	// レールカメラが終点に着くまでにかかる時間
+	const float kTimeToEndPoint = 3600;
 
 private:
 	std::unique_ptr<Camera> camera_;
@@ -56,6 +59,7 @@ private:
 	std::array<std::unique_ptr<Line>, segmentCount> line_;
 
 	Vector3 velocity_;
+	float currentFrame_;
 
 	Vector3 target_;
 	float t_;

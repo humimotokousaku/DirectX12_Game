@@ -25,7 +25,7 @@ void GameScene::Initialize() {
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 
 	// Blender
-	LoadJSONFile("sample_map.json");
+	LoadJSONFile("GameMap_00.json");
 #pragma endregion
 
 	// カメラの生成
