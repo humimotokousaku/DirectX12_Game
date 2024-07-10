@@ -91,15 +91,14 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		if (type.compare("MESH") == 0) {
 			if(name.substr(0,11) == checkSpawnPoint.substr(0,11)) {
 				// 要素追加
-				levelData->enemyPoints_.emplace_back(Vector3{});
+				levelData->enemyPoints_.emplace_back(LevelData::EnemyPoint{});
 				// 追加した要素の参照を取得
-				Vector3& enemyPoint = levelData->enemyPoints_.back();
+				LevelData::EnemyPoint& enemyPoint = levelData->enemyPoints_.back();
 				nlohmann::json& pos = object["spawn_data"][0];
-				enemyPoint = Vector3{
-					(float)pos["point"][0],
-					(float)pos["point"][2],
-					(float)pos["point"][1]
-					};
+				enemyPoint.point.x = (float)pos["point"][0];
+				enemyPoint.point.y = (float)pos["point"][2];
+				enemyPoint.point.z = (float)pos["point"][1];
+				enemyPoint.percentage = (float)pos["percentage"];
 
 				enemyPoints_.push_back(enemyPoint);
 			}

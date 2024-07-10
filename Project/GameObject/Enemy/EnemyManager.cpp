@@ -15,14 +15,6 @@ void EnemyManager::Update() {
 	// 敵の出現するタイミングと座標
 	//UpdateEnemyPopCommands();
 	CheckSpawn();
-	//if (CheckSpawn()) {
-	//	for (int i = 0; i < spawnPoints_.size(); i++) {
-	//		if (spawnPointDatas_[i].isActive) {
-	//			SpawnEnemy(spawnPoints_[i]);
-	//			//spawnPointDatas_[i].isActive = false;
-	//		}
-	//	}
-	//}
 
 	// 敵の削除
 	enemy_.remove_if([](Enemy* enemy) {
@@ -77,16 +69,14 @@ void EnemyManager::Finalize() {
 }
 
 void EnemyManager::CheckSpawn() {
-	// 自機から出現場所の距離を調べる
 	for (int i = 0; i < spawnPoints_.size(); i++) {
 		if (!spawnPointDatas_[i].isActive) {
-			spawnPointDatas_[i].distance = spawnPoints_[i] - player_->GetWorldPosition();
-			if (100.0f >= Length(spawnPointDatas_[i].distance)) {
+			if (railCameraProgress_ >= spawnPoints_[i].percentage / 100) {
 				spawnPointDatas_[i].isActive = true;
 			}
+
 			if (spawnPointDatas_[i].isActive) {
-				SpawnEnemy(spawnPoints_[i]);
-				//spawnPointDatas_[i].isActive = false;
+				SpawnEnemy(spawnPoints_[i].point);
 			}
 		}
 	}

@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Enemy\EnemyStateWait.cpp" />
     <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Engine\PostProcess\Dissolve.cpp" />
@@ -245,6 +246,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Pso\SkyboxPSO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Enemy\EnemyStateWait.h" />
     <ClInclude Include="Project\Components\AimAssist\AimAssist.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h" />
     <ClInclude Include="Engine\PostProcess\Dissolve.h" />

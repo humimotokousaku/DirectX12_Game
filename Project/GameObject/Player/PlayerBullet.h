@@ -72,7 +72,7 @@ private: // メンバ変数
 	CollisionManager* collisionManager_ = nullptr;
 
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 5;
+	static const int32_t kLifeTime = 60 * 2;
 	// 死亡タイマー
 	int32_t deathTimer_ = kLifeTime;
 	// 死亡フラグ

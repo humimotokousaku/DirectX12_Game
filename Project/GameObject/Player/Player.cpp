@@ -203,7 +203,7 @@ void Player::Move() {
 		rotate.x = 0.0f;
 		// 徐々に速度を落とす
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.1f).y;
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.04f).x;
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.02f).x;
 	}
 	else {
 		// 徐々に速度を上げる
@@ -221,8 +221,8 @@ void Player::Move() {
 		rotate.z = 0.0f;
 		// 徐々に速度を落とす
 		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.1f).y;
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.1f).z;
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.02f).y;
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.02f).z;
 	}
 	else {
 		// 徐々に速度を上げる
@@ -374,7 +374,7 @@ void Player::Deploy3DReticle() {
 	object3dReticle_->worldTransform.UpdateMatrix();
 
 	// ロックオンしてないときの3Dレティクル座標を設定
-	aimAssist_->Set3DReticle(GetWorldPosition());
+	aimAssist_->Set3DReticle(GetWorld3DReticlePosition());
 }
 
 void Player::Deploy2DReticle() {

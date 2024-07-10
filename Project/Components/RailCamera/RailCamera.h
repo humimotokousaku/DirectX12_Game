@@ -18,7 +18,7 @@ public:
 	void Update();
 
 	/// <summary>
-	/// カメラの移動ルートの表示
+	/// カメラの移動ルートの表示(表示しているとだんだん重くなるので基本的に使わない)
 	/// </summary>
 	void MoveRouteDraw();
 
@@ -30,6 +30,10 @@ public:
 	Camera* GetCamera() { return camera_.get(); }
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
+	// レールの何パーセント進んだかを取得
+	float GetRailPercentage() { return t_; }
+	// 方向ベクトルを取得
+	Vector3 GetDirectionVelocity() { return velocity_; }
 
 	///
 	/// Setter
@@ -50,6 +54,8 @@ private:
 	std::vector<Vector3> pointsDrawing_;
 	// 移動ルートの線(デバッグ用)
 	std::array<std::unique_ptr<Line>, segmentCount> line_;
+
+	Vector3 velocity_;
 
 	Vector3 target_;
 	float t_;

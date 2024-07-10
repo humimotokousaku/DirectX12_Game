@@ -64,11 +64,11 @@ void RailCamera::Update() {
 	if (isMoveCamera_) {
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			//t_ += 1.0f / segmentCount / 10;
+			t_ += 1.0f / segmentCount / 10;
 		}
 		// カメラの見ている座標を移動
 		if (targetT_ <= 1.0f) {
-			//targetT_ += 1.0f / segmentCount / 10;
+			targetT_ += 1.0f / segmentCount / 10;
 		}
 		if (targetT_ >= 1.0f) {
 			targetT_ = 0.999f;
@@ -77,22 +77,22 @@ void RailCamera::Update() {
 		}
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
-	target_.y += 0.2f;
+	//target_.y += 0.2f;
 	Vector3 cameraPosition{};
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
-	cameraPosition.y += 0.2f;
+	//cameraPosition.y += 0.2f;
 	camera_->worldTransform_.translate = cameraPosition;
 
 
-	Vector3 velocity = Subtract(target_, camera_->worldTransform_.translate);
+	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
 	// Y軸周り角度(θy)
-	camera_->worldTransform_.rotate.y = std::atan2(velocity.x, velocity.z);
+	camera_->worldTransform_.rotate.y = std::atan2(velocity_.x, velocity_.z);
 	// 横軸方向の長さを求める
 	float velocityXZ;
-	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
 	// X軸周りの角度(θx)
-	camera_->worldTransform_.rotate.x = std::atan2(-velocity.y, velocityXZ);
+	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 	// 行列の更新
 	camera_->Update();
 

@@ -14,11 +14,16 @@ public:
 		std::string type;
 		std::vector<Vector3> points;
 	};
+	// 敵の出現場所
+	struct EnemyPoint {
+		Vector3 point;		// 座標
+		float percentage;	// 出現条件:カーブの割合
+	};
 	std::vector<Transform> transform_;
 	std::vector<std::string> type_;
 	std::vector<std::string> name_;
 
-	std::vector<Vector3> enemyPoints_;
+	std::vector<EnemyPoint> enemyPoints_;
 
 	std::vector<ObjectData> objects_;
 

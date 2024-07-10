@@ -34,7 +34,7 @@ protected:
 	// レールカメラの移動ルートの制御点
 	std::vector<Vector3> controlPoints_;
 	// 敵の出現場所
-	std::vector<Vector3> enemyPoints_;
+	std::vector<LevelData::EnemyPoint> enemyPoints_;
 
 	// 登録用のモデル
 	std::vector<Model*> models_;

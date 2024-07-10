@@ -45,20 +45,6 @@ void EnemyStateApproach::Update(Enemy* enemy) {
 		timedCall->Update();
 	}
 
-	//if (isAnimation_) {
-	//	animCount_++;
-	//	// アニメーション
-	//	t_ = EaseOutBack((float)animCount_ / 60);
-	//	enemy->SetScale(Lerps::Lerp(Vector3{ 2,2,2 }, Vector3{ 1,1,1 }, t_));
-	//	
-	//	if (t_ > 1.0f) {
-	//		isAnimation_ = false;
-	//		t_ = 0;
-	//		animCount_ = 0;
-	//		enemy->SetScale(Vector3{ 1,1,1 });
-	//	}
-	//}
-
 	// 既定の位置に到達したら離脱
 	if (enemy->GetEnemyPos().z < 60.0f) {
 		isAnimation_ = false;
@@ -68,7 +54,6 @@ void EnemyStateApproach::Update(Enemy* enemy) {
 		timedCalls_.clear();
 		enemy->ChangeState(new EnemyStateLeave());
 	}
-
 }
 
 float EnemyStateApproach::EaseOutBack(float x) {

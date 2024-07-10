@@ -110,10 +110,12 @@ public:
 	/// 出現する場所のリストを設定
 	/// </summary>
 	/// <param name="spawnPoints">敵の出現する場所</param>
-	void SetSpawnPoints(std::vector<Vector3> spawnPoints) { 
+	void SetSpawnPoints(std::vector<LevelData::EnemyPoint> spawnPoints) { 
 		spawnPoints_ = spawnPoints; 
 		spawnPointDatas_.resize(spawnPoints_.size());
 	}
+
+	void SetRailCameraProgress(float percentage) { railCameraProgress_ = percentage; }
 
 private:// プライベートなメンバ変数
 	// カメラのアドレス
@@ -139,7 +141,10 @@ private:// プライベートなメンバ変数
 	int32_t waitTime_ = 0;
 
 	// 敵の発生する場所
-	std::vector<Vector3> spawnPoints_;
+	std::vector<LevelData::EnemyPoint> spawnPoints_;
 	// 自機と出現場所の距離
 	std::vector<SpawnPointData> spawnPointDatas_;
+
+	// レールカメラの進行度
+	float railCameraProgress_;
 };

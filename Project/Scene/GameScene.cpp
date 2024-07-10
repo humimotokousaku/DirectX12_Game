@@ -72,10 +72,10 @@ void GameScene::Initialize() {
 	aimAssist_->SetPlayer(player_.get());
 
 	// Skybox
-	cube_ = std::make_unique<Cube>();
-	cube_->SetCamera(railCamera_->GetCamera());
-	cube_->SetScale(Vector3{ 100,100,100 });
-	cube_->SetPosition(Vector3{ 0,0,10 });
+	//cube_ = std::make_unique<Cube>();
+	//cube_->SetCamera(railCamera_->GetCamera());
+	//cube_->SetScale(Vector3{ 100,100,100 });
+	//cube_->SetPosition(Vector3{ 0,0,10 });
 
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
@@ -115,6 +115,8 @@ void GameScene::Update() {
 
 	// デバッグカメラの更新
 	railCamera_->Update();
+	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
+	enemyManager_->SetRailCameraProgress(railCamera_->GetRailPercentage());
 
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
@@ -122,10 +124,10 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 	// レールカメラの移動ルート表示
-	railCamera_->MoveRouteDraw();
+	//railCamera_->MoveRouteDraw();
 
+	// 敵の体、弾を描画
 	enemyManager_->Draw();
-
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
@@ -138,7 +140,7 @@ void GameScene::Draw() {
 	for (PlayerBullet* bullet : playerBullets_) {
 		bullet->Draw();
 	}
-	// 自機のレティクル
+	// 自機のレティクルとHP
 	player_->DrawUI();
 
 	// skybox
@@ -150,9 +152,6 @@ void GameScene::Finalize() {
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
 	}
-
-	//enemyManager_->Finalize();
-	//collisionManager_->ClearColliderList();
 
 	// リストのクリア
 	// 自機の弾

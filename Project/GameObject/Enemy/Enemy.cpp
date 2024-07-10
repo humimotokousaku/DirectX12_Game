@@ -1,12 +1,10 @@
 #include "Enemy.h"
-#include "EnemyStateApproach.h"
-#include "TextureManager.h"
+#include "EnemyStateWait.h"
 #include "CollisionConfig.h"
-//#include "GameScene.h"
 #include "EnemyManager.h" 
 
 Enemy::Enemy() {
-	state_ = new EnemyStateApproach();
+	state_ = new EnemyStateWait();
 }
 Enemy::~Enemy() {
 	collisionManager_->ClearColliderList(this);
