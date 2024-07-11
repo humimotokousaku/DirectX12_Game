@@ -23,6 +23,7 @@ void TitleScene::Initialize() {
 	for (int i = 0; i < numbersTexture_.size(); i++) {
 		TextureManager::GetInstance()->LoadTexture(std::to_string(i) + ".png");
 	}
+	TextureManager::GetInstance()->LoadTexture("gray.png");
 	// srvの番号取得
 	uvcheckerTexture_ = TextureManager::GetInstance()->GetSrvIndex("uvChecker.png");
 	monsterBallTexture_ = TextureManager::GetInstance()->GetSrvIndex("monsterBall.png");
@@ -33,6 +34,7 @@ void TitleScene::Initialize() {
 	for (int i = 0; i < numbersTexture_.size(); i++) {
 		numbersTexture_[i] = TextureManager::GetInstance()->GetSrvIndex(std::to_string(i) + ".png");
 	}
+	grayTexture_ = TextureManager::GetInstance()->GetSrvIndex("gray.png");
 
 	/// モデル読み込み
 	// 骨とアニメーションあり 
@@ -88,16 +90,15 @@ void TitleScene::Initialize() {
 	human_[0]->SetAnimName("Walk");
 	human_[0]->SetCamera(camera_.get());
 	human_[0]->SetColor({ 1,1,1,1 });
-	human_[0]->worldTransform.translate = { 2,0,5 };
-	human_[0]->SetIsLighting(true);
-	//human_[0]->StartAnim("Walk");
+	human_[0]->worldTransform.translate = { 0,0,5 };
+	human_[0]->StartAnim("Walk");
 	// sneakWalk
 	human_[1] = std::make_unique<Object3D>();
 	human_[1]->Initialize();
 	human_[1]->SetModel("Human", "sneakWalk.gltf");
 	human_[1]->SetCamera(camera_.get());
 	human_[1]->SetAnimName("SneakWalk");
-	human_[1]->worldTransform.translate = { 2,-2,5 };
+	human_[1]->worldTransform.translate = { 0,-2,5 };
 	human_[1]->StartAnim("SneakWalk");
 	// walkアニメーションにsneakWalkを追加
 	human_[0]->AddAnimation(human_[1]->GetModel());
@@ -133,14 +134,6 @@ void TitleScene::Initialize() {
 	particle_->SetCamera(camera_.get());
 	particle_->SetEmitterCount(20);
 	particle_->SetEmitterFrequency(0.1f);
-
-	//// 自機
-	//player_ = std::make_unique<Player>();
-	//for (int i = 0; i < 2; i++) {
-	//	//player_->AddModel(human_[i].get());
-	//}
-	//player_->SetCamera(camera_.get());
-	//player_->Initialize();
 
 	// Skybox
 	cube_ = std::make_unique<Cube>();
@@ -187,8 +180,7 @@ void TitleScene::Update() {
 	}
 #pragma endregion
 
-	particle_->Update();
-	//player_->Update();
+	//particle_->Update();
 
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		//sceneNum = GAME_SCENE;
@@ -196,35 +188,25 @@ void TitleScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_R)) {
 		//human_[0]->EndAnim();
 	}
-
-#ifdef _DEBUG
-	//ImGui::Begin("Current Scene");
-	//ImGui::Text("TITLE");
-	//ImGui::Text("keyInfo\n1:scene change");
-	//ImGui::End();
-	//human_[0]->ImGuiParameter("Human");
-	//plane_[0]->ImGuiParameter("Plane");
-	//box_[0]->ImGuiParameter("AnimCube");
-#endif
 }
 
 void TitleScene::Draw() {
-	axis_->Draw(particleTexture_);
+	//axis_->Draw(grayTexture_);
 	for (int i = 0; i < 2; i++) {
-		plane_[i]->Draw(uvcheckerTexture_);
-		box_[i]->Draw(uvcheckerTexture_);
-		human_[i]->Draw(uvcheckerTexture_);
+		//plane_[i]->Draw(grayTexture_);
+		//box_[i]->Draw(grayTexture_);
+		human_[i]->Draw();
 	}
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		object->Draw();
+		//object->Draw(grayTexture_);
 	}
 
 	//player_->Draw();
 	cube_->Draw(ddsTexture_);
 
-	particle_->Draw(uvcheckerTexture_);
+	//particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {

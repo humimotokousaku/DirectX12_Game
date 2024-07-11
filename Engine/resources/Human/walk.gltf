@@ -3778,8 +3778,8 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"white",
-			"uri":"white.png"
+			"name":"gray",
+			"uri":"gray.png"
 		}
 	],
 	"skins":[

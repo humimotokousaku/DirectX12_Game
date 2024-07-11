@@ -26,13 +26,13 @@ void RadialBlur::Initialize() {
 }
 
 void RadialBlur::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	ImGui::Begin("RadialBlur");
 	ImGui::DragFloat("blurWidth", &radialBlurData_->blurWidth, 0.001f, 0, 100);
 	ImGui::DragFloat2("center", &radialBlurData_->center.x, 0.01f, 0, 100);
 	ImGui::Checkbox("isActive", &radialBlurData_->isActive);
 	ImGui::End();
-//#endif // _DEBUG
+#endif // _DEBUG
 
 	isActive_ = radialBlurData_->isActive;
 	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, radialBlurResource_);

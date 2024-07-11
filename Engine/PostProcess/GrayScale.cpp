@@ -14,16 +14,16 @@ void GrayScale::Initialize() {
 	grayResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&grayData_));
 #pragma endregion
 
-	grayData_->isActive = true;
+	grayData_->isActive = false;
 	isActive_ = grayData_->isActive;
 }
 
 void GrayScale::Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	ImGui::Begin("Gray");
 	ImGui::Checkbox("isActive", &grayData_->isActive);
 	ImGui::End();
-//#endif
+#endif
 
 	isActive_ = grayData_->isActive;
 	PipelineManager::GetInstance()->SetPostEffectPSO(psoNum, grayResource_);
