@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
 	/// <summary>
-	void Initialize(Vector3 pos);
+	void Initialize(Vector3 pos, Vector3 rotate);
 
 	/// <summary>
 	/// 更新
@@ -103,6 +103,9 @@ private:
 	std::vector<Model*> models_;
 	// 敵の3DObject
 	std::unique_ptr<Object3D> object3d_;
+
+	// 敵のテクスチャ
+	uint32_t enemyTexture_;
 
 	// 弾
 	std::list<EnemyBullet*> bullets_;

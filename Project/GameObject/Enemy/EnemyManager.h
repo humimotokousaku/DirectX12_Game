@@ -52,14 +52,7 @@ public:
 	/// 敵の発生
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
-	void SpawnEnemy(Vector3 pos);
-
-#pragma region csvの読み込みと更新
-	// 読み込み
-	void LoadEnemyPopData();
-	// 更新
-	void UpdateEnemyPopCommands();
-#pragma endregion
+	void SpawnEnemy(Vector3 pos, Vector3 rotate);
 
 	/// <summary>
 	/// 弾のアドレスを登録

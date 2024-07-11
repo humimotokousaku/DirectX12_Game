@@ -14,7 +14,7 @@ Enemy::~Enemy() {
 	models_.clear();
 }
 
-void Enemy::Initialize(Vector3 pos) {
+void Enemy::Initialize(Vector3 pos, Vector3 rotate) {
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributeEnemy);
@@ -26,6 +26,10 @@ void Enemy::Initialize(Vector3 pos) {
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.rotate = rotate;
+	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
+
+	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
 	// 状態遷移
 	state_->Initialize(this);
@@ -38,7 +42,7 @@ void Enemy::Update() {
 
 void Enemy::Draw() {
 	// Enemy
-	object3d_->Draw();
+	object3d_->Draw(enemyTexture_);
 }
 
 void Enemy::OnCollision(Collider* collider) {

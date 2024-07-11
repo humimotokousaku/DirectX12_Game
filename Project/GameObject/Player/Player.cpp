@@ -26,6 +26,9 @@ void Player::Initialize() {
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
 	object3d_->worldTransform.translate = { 0,0,10 };
+	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
+	// 自機のテクスチャ
+	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 
 	// 3Dレティクルモデル作成
 	object3dReticle_ = std::make_unique<Object3D>();
@@ -106,7 +109,7 @@ void Player::Update() {
 
 void Player::Draw() {
 	// 自機
-	object3d_->Draw();
+	object3d_->Draw(playerTexture_);
 	// 3Dレティクル
 	object3dReticle_->Draw();
 }

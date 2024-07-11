@@ -43,7 +43,7 @@ public:
 
 public:// パブリックなメンバ変数
 	// 線分の数
-	static const size_t segmentCount = 20;
+	static const size_t segmentCount = 7;
 
 	// レールカメラが終点に着くまでにかかる時間
 	const float kTimeToEndPoint = 3600;

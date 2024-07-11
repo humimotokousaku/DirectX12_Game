@@ -286,7 +286,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 	else {
 		filePath = "Engine/resources/" + directoryPath + "/" + filename;
 	}
-	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
 	assert(scene->HasMeshes());
 
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
@@ -363,7 +363,7 @@ ModelData Model::LoadModelFile(const std::string& fullPath) {
 	ModelData modelData;
 	Assimp::Importer importer;
 	std::string filePath = "Engine/resources/" + fullPath;
-	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
 	assert(scene->HasMeshes());
 
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {

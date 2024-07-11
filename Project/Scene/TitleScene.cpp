@@ -55,14 +55,14 @@ void TitleScene::Initialize() {
 	}
 
 	// Blender
-	LoadJSONFile("sample_map.json");
+	//LoadJSONFile("sample_map.json");
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(camera_.get());
 		object->SetIsLighting(false);
 	}
 	// カメラレールの生成
 	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Initialize(controlPoints_, camera_.get());
+	//railCamera_->Initialize(controlPoints_, camera_.get());
 #pragma endregion
 
 #pragma region 3Dモデルの生成
@@ -205,7 +205,7 @@ void TitleScene::Draw() {
 	for (Object3D* object : levelObjects_) {
 		object->Draw();
 	}
-	railCamera_->MoveRouteDraw();
+	//railCamera_->MoveRouteDraw();
 	//cube_->Draw(ddsTexture_);
 
 	// UI

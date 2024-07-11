@@ -10,17 +10,21 @@ void GameScene::Initialize() {
 
 #pragma region 読み込み
 	TextureManager::GetInstance()->LoadTexture("", "reticle.png");
+	TextureManager::GetInstance()->LoadTexture("Textures", "Bob_Red.png");
+	TextureManager::GetInstance()->LoadTexture("Textures", "Spitfire_Purple.png");
 	// 使用するモデルの読み込み
 	ModelManager::GetInstance()->LoadModel("", "block.obj");
+	ModelManager::GetInstance()->LoadModel("", "Bob.obj");
+	ModelManager::GetInstance()->LoadModel("", "Spitfire.obj");
 
 	// 自機
-	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	AddModel(ModelManager::GetInstance()->SetModel("", "Bob.obj"));
 	// 3Dレティクル
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 	// 自機の弾
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 	// 通常敵のモデル
-	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	AddModel(ModelManager::GetInstance()->SetModel("", "Spitfire.obj"));
 	// 通常敵の弾
 	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
 
@@ -124,7 +128,7 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 	// レールカメラの移動ルート表示
-	//railCamera_->MoveRouteDraw();
+	railCamera_->MoveRouteDraw();
 
 	// 敵の体、弾を描画
 	enemyManager_->Draw();

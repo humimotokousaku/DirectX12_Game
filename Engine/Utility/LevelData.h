@@ -17,6 +17,7 @@ public:
 	// 敵の出現場所
 	struct EnemyPoint {
 		Vector3 point;		// 座標
+		Vector3 rotate;		// 向き
 		float percentage;	// 出現条件:カーブの割合
 	};
 	std::vector<Transform> transform_;
