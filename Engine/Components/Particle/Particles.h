@@ -34,14 +34,14 @@ struct Emitter {
 	float frequencyTime;
 };
 
-struct AABB {
+struct P_AABB {
 	Vector3 min;
 	Vector3 max;
 };
 
 struct AccField {
 	Vector3 acc;  // 加速度
-	AABB area;	  // 範囲
+	P_AABB area;	  // 範囲
 	bool isActive;// Fieldの活性化
 };
 
@@ -98,7 +98,7 @@ private:
 
 	std::list<Particle> Emission(const Emitter& emitter, std::mt19937& randomEngine);
 
-	bool IsCollision(const AABB& aabb, const Vector3& point);
+	bool IsCollision(const P_AABB& aabb, const Vector3& point);
 
 	// 線形補完
 	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);

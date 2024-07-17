@@ -162,7 +162,7 @@ void Particles::Draw(uint32_t textureHandle) {
 	DirectXCommon::GetInstance()->GetCommandList()->DrawInstanced(6, numInstance, 0, 0);
 }
 
-bool Particles::IsCollision(const AABB& aabb, const Vector3& point) {
+bool Particles::IsCollision(const P_AABB& aabb, const Vector3& point) {
 	if ((aabb.min.x <= point.x && aabb.max.x >= point.x) &&
 		(aabb.min.y <= point.y && aabb.max.y >= point.y) &&
 		(aabb.min.z <= point.z && aabb.max.z >= point.z)

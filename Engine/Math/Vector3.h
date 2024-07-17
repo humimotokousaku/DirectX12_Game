@@ -13,9 +13,9 @@ struct Vector3 final {
 	}
 	Vector3 operator+=(const Vector3& obj)const {
 		Vector3 result = {
-			result.x += obj.x,
-			result.y += obj.y,
-			result.z += obj.z
+			result.x = x + obj.x,
+			result.y = y + obj.y,
+			result.z = z + obj.z
 		};
 		return result;
 	}

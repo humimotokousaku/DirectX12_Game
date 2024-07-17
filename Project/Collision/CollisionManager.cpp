@@ -7,14 +7,37 @@ CollisionManager::~CollisionManager() {
 
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	// 衝突フィルタリング
-	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
+	/*if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
-	}
+	}*/
 
-	//// コライダーのワールド座標を取得
-	//colliderA->GetWorldPosition();
-	//colliderB->GetWorldPosition();
+	/// AABB同士の判定
+	if (colliderA->GetCollisionPrimitive() == kCollisionAABB && colliderB->GetCollisionPrimitive() == kCollisionAABB) {
+		AABB aabb_A = colliderA->GetAABB();
+		aabb_A.max = aabb_A.max + colliderA->GetWorldPosition();
+		aabb_A.min = aabb_A.min + colliderA->GetWorldPosition();
+		AABB aabb_B = colliderB->GetAABB();
+		aabb_B.max = aabb_B.max + colliderB->GetWorldPosition();
+		aabb_B.min = aabb_B.min + colliderB->GetWorldPosition();
+		if ((aabb_A.min.x < aabb_B.max.x && aabb_A.max.x > aabb_B.min.x) &&
+			(aabb_A.min.y < aabb_B.max.y && aabb_A.max.y > aabb_B.min.y) &&
+			(aabb_A.min.z < aabb_B.max.z && aabb_A.max.z > aabb_B.min.z)) {
+			// コライダーAの衝突時コールバックを呼び出す
+			colliderA->OnCollision(colliderB);
+			// コライダーBの衝突時コールバックを呼び出す
+			colliderB->OnCollision(colliderA);
+
+			// 今当たっている
+			colliderA->SetIsOnCollision(true);
+			colliderB->SetIsOnCollision(true);
+		}
+		else {
+			// 今は当たっていない
+			colliderA->SetIsOnCollision(false);
+			colliderB->SetIsOnCollision(false);
+		}
+	}
 
 	/// 球体同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
@@ -28,9 +51,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		// 球と球の交差判定
 		if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
 			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderA);
+			colliderA->OnCollision(colliderB);
 			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderB);
+			colliderB->OnCollision(colliderA);
 
 			// 今当たっている
 			colliderA->SetIsOnCollision(true);
@@ -52,9 +75,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		}
 		if (ColOBBs(colliderA->GetOBB(), colliderB->GetOBB())) {
 			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderA);
+			colliderA->OnCollision(colliderB);
 			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderB);
+			colliderB->OnCollision(colliderA);
 
 			// 今当たっている
 			colliderA->SetIsOnCollision(true);

@@ -21,6 +21,11 @@ public:
 	float GetRadius() { return radius_; }
 	// OBBの取得
 	OBB GetOBB() { return obb_; }
+	/// <summary>
+	/// AABBのサイズを取得
+	/// </summary>
+	/// <returns></returns>
+	AABB GetAABB() { return aabb_; };
 
 	// 衝突属性(自分)を取得
 	uint32_t GetCollisionAttribute() { return collisionAttribute_; }
@@ -43,10 +48,15 @@ public:
 	// OBBの設定
 	void SetOBB(OBB obb) { obb_ = obb; }
 	void SetOBBCenterPos(Vector3 centerPos) { obb_.m_Pos = centerPos; }
-	void SetOBBDirect(int index) { 
+	void SetOBBDirect(int index) {
 		Vector3 rotateResult = TransformNormal(obb_.m_NormaDirect[index], MakeRotateMatrix(GetRotation()));
 		obb_.m_NormaDirect[index] = Normalize(rotateResult);
 	}
+	/// <summary>
+	/// AABBのサイズを設定
+	/// </summary>
+	/// <param name="aabb"></param>
+	void SetAABB(AABB& aabb) { aabb_ = aabb; };
 
 	// 衝突属性(自分)を設定
 	void SetCollisionAttribute(uint32_t collisionAttribute) { collisionAttribute_ = collisionAttribute; }
@@ -83,6 +93,9 @@ private:
 		{0,1,0},
 		{0,0,1}}
 	};
+	// aabb
+	AABB aabb_;
+
 
 	// 衝突属性(自分)
 	uint32_t collisionAttribute_ = 0xffffffff;

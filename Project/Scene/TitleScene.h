@@ -16,6 +16,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "CollisionManager.h"
+#include "../Project/GameObject/TestCollision/TestCollision.h"
 
 class GameManager;
 
@@ -55,6 +56,8 @@ private:
 	std::unique_ptr<Particles> particle_;
 
 	std::unique_ptr<Cube> cube_;
+
+	std::array<std::unique_ptr<TestCollision>, 2> testCollision_;
 
 	// テクスチャ
 	uint32_t uvcheckerTexture_;

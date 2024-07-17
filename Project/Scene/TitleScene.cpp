@@ -13,6 +13,8 @@ void TitleScene::Initialize() {
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
+	collisionManager_ = std::make_unique<CollisionManager>();
+
 #pragma region 読み込み
 	// テクスチャの読み込み
 	TextureManager::GetInstance()->LoadTexture("uvChecker.png");
@@ -140,6 +142,17 @@ void TitleScene::Initialize() {
 	cube_->SetCamera(camera_.get());
 	cube_->SetScale(Vector3{ 100,100,100 });
 	cube_->SetPosition(Vector3{ 0,0,10 });
+
+
+
+	for (int i = 0; i < 2; i++) {
+		testCollision_[i] = std::make_unique<TestCollision>();
+		testCollision_[i]->SetCamera(camera_.get());
+		testCollision_[i]->SetCollisionManager(collisionManager_.get());
+		testCollision_[i]->Init();
+	}
+	testCollision_[0]->SetPos(Vector3{ 6,0,10 });
+	testCollision_[1]->SetPos(Vector3{ -6,0,10 });
 }
 
 void TitleScene::Update() {
@@ -188,6 +201,11 @@ void TitleScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_R)) {
 		//human_[0]->EndAnim();
 	}
+
+	testCollision_[0]->ImGuiParam("player");
+	testCollision_[1]->ImGuiParam("object");
+
+	collisionManager_->CheckAllCollisions();
 }
 
 void TitleScene::Draw() {
@@ -195,7 +213,7 @@ void TitleScene::Draw() {
 	for (int i = 0; i < 2; i++) {
 		//plane_[i]->Draw(grayTexture_);
 		//box_[i]->Draw(grayTexture_);
-		human_[i]->Draw();
+		//human_[i]->Draw();
 	}
 
 	// Blenderで配置したオブジェクト
@@ -204,9 +222,14 @@ void TitleScene::Draw() {
 	}
 
 	//player_->Draw();
-	cube_->Draw(ddsTexture_);
+	//cube_->Draw(ddsTexture_);
 
 	//particle_->Draw(uvcheckerTexture_);
+
+
+	for (int i = 0; i < 2; i++) {
+		testCollision_[i]->Draw();
+	}
 }
 
 void TitleScene::Finalize() {

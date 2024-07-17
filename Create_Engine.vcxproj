@@ -243,6 +243,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="engine\Pso\PostEffect\RadialBlurPSO.cpp" />
     <ClCompile Include="engine\PostProcess\RadialBlur.cpp" />
     <ClCompile Include="Engine\Pso\SkyboxPSO.cpp" />
+    <ClCompile Include="Project\GameObject\TestCollision\TestCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\PostProcess\Dissolve.h" />
@@ -334,6 +335,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="engine\Pso\PostEffect\RadialBlurPSO.h" />
     <ClInclude Include="engine\PostProcess\RadialBlur.h" />
     <ClInclude Include="Engine\Pso\SkyboxPSO.h" />
+    <ClInclude Include="Project\GameObject\TestCollision\TestCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />
