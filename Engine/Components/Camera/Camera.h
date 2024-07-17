@@ -29,8 +29,7 @@ public:
 	/// 
 	
 	/// Getter
-	// transformの取得
-	//Transform GetTransform() { return transform_; }
+
 	// スケールの取得
 	Vector3 GetScale()const { return worldTransform_.scale; }
 	// 座標の取得

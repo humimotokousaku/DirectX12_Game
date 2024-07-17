@@ -9,6 +9,14 @@
 #include <math.h>
 
 void Sphere::Initialize() {
+	directXCommon_ = DirectXCommon::GetInstance();
+	srvManager_ = SrvManager::GetInstance();
+	textureManager_ = TextureManager::GetInstance();
+
+	// テクスチャの読み込み
+	textureManager_->LoadTexture("Default", "white.png");
+	defaultTexture_ = textureManager_->GetSrvIndex("Default", "white.png");
+
 	CreateVertexResource();
 
 	CreateMaterialResource();
@@ -113,7 +121,7 @@ void Sphere::Initialize() {
 	worldTransform.Initialize();
 }
 
-void Sphere::Draw(uint32_t textureHandle, const ViewProjection& viewProjection) {
+void Sphere::Draw(uint32_t textureHandle) {
 	worldTransform.UpdateMatrix();
 
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -121,39 +129,66 @@ void Sphere::Draw(uint32_t textureHandle, const ViewProjection& viewProjection) 
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
-	cameraPosData_ = viewProjection.translate;
+	cameraPosData_ = camera_->GetViewProjection().translate;
 
 	/// コマンドを積む
 	// 使用するPSO
 	Object3dPSO::GetInstance()->SetCommand();
 	
-	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
+	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.constBuff_->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.constBuff_->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera_->GetViewProjection().constBuff_->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
 
 
 	// DescriptorTableの設定
-	//DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall_ ? TextureManager::GetInstance()->GetSrvHandleGPU(2) : TextureManager::GetInstance()->GetSrvHandleGPU(1));
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureHandle);
+	srvManager_->SetGraphicsRootDesctiptorTable(2, textureHandle);
 
 	// マテリアルCBufferの場所を設定
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
 
-	DirectXCommon::GetInstance()->GetCommandList()->DrawInstanced(vertexIndex, 1, 0, 0);
+	directXCommon_->GetCommandList()->DrawInstanced(vertexIndex, 1, 0, 0);
 }
 
-//void Sphere::Release() {
-//
-//}
+void Sphere::Draw() {
+	worldTransform.UpdateMatrix();
+
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	materialData_->uvTransform = uvTransformMatrix_;
+
+	cameraPosData_ = camera_->GetViewProjection().translate;
+
+	/// コマンドを積む
+	// 使用するPSO
+	Object3dPSO::GetInstance()->SetCommand();
+
+	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
+
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.constBuff_->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera_->GetViewProjection().constBuff_->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
+
+
+	// DescriptorTableの設定
+	srvManager_->SetGraphicsRootDesctiptorTable(2, defaultTexture_);
+
+	// マテリアルCBufferの場所を設定
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
+	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
+
+	directXCommon_->GetCommandList()->DrawInstanced(vertexIndex, 1, 0, 0);
+}
 
 void Sphere::ImGuiAdjustParameter() {
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	ImGui::Checkbox("useMonsterBall", &useMonsterBall_);
 	ImGui::Text("UvTransform");
 	ImGui::SliderFloat2("UvTranslate", &uvTransform_.translate.x, -5, 5);
 	ImGui::SliderFloat2("UvScale", &uvTransform_.scale.x, -5, 5);

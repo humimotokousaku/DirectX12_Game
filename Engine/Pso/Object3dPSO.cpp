@@ -24,7 +24,6 @@ void Object3dPSO::CreateRootSignature() {
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	// CubeMap用
-	//D3D12_DESCRIPTOR_RANGE descriptorRange[1];
 	descriptorRange_[1].BaseShaderRegister = 1;
 	descriptorRange_[1].NumDescriptors = 1;
 	descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;

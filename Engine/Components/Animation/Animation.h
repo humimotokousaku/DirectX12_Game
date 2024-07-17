@@ -45,7 +45,7 @@ public: // メンバ関数
 	/// 
 
 	// 特定のアニメーションを削除
-	void ClearAnimation(AnimData& animData) {}
+	//void ClearAnimation(AnimData& animData) {}
 	// 全てのアニメーションを削除
 	void AllClearAnimation() { animData_.clear(); }
 

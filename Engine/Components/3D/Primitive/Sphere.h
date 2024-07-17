@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "DirectXCommon.h"
 #include "WorldTransform.h"
-#include "ViewProjection.h"
+#include "Camera.h"
 #include <d3d12.h>
 
 class Sphere
@@ -21,13 +21,23 @@ public:
 	void Initialize();
 
 	// 描画処理
-	void Draw(uint32_t textureHandle, const ViewProjection& viewProjection);
+	void Draw(uint32_t textureHandle);
+	void Draw();
 
 	// 解放処理
 	//void Release();
 
 	// ImGuiをまとめた関数
 	void ImGuiAdjustParameter();
+
+	///
+	/// User Method
+	/// 
+	
+#pragma region Setter
+	// カメラの設定
+	void SetCamera(Camera* camera) { camera_ = camera; }
+#pragma endregion
 
 private:// プライベートなメンバ関数
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
@@ -44,6 +54,10 @@ public:// パブリックなメンバ変数
 	WorldTransform worldTransform;
 
 private:
+	DirectXCommon* directXCommon_;
+	SrvManager* srvManager_;
+	TextureManager* textureManager_;
+
 	// Material
 	Material* materialData_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
@@ -57,12 +71,13 @@ private:
 	// カメラ
 	Microsoft::WRL::ComPtr<ID3D12Resource> cameraPosResource_;
 	Vector3 cameraPosData_;
+	Camera* camera_;
 
 	//分割数
 	const uint32_t kSubdivision = 16;
 	// 頂点数
 	uint32_t vertexIndex = kSubdivision * kSubdivision * 6;
 
-	// Sphereの画像切り替え
-	bool useMonsterBall_ = true;
+	// デフォルト画像
+	uint32_t defaultTexture_;
 };

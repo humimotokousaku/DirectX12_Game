@@ -20,7 +20,7 @@ public:
 	/// </summary>
 	/// <param name="VS_fileName">VSのファイル名</param>
 	/// <param name="PS_fileName">PSのファイル名</param>
-	virtual void Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler,IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName);
+	virtual void Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName);
 
 	/// <summary>
 	/// rootSignatureの作成
@@ -31,6 +31,53 @@ public:
 	/// PSOの作成
 	/// </summary>
 	virtual void CreatePSO() = 0;
+
+#pragma region 詳細な設定の作成
+	/// <summary>
+	/// DescriptorRangeの作成
+	/// </summary>
+	/// <param name="descriptorRange"></param>
+	void CreateDescriptorRange(std::vector<D3D12_DESCRIPTOR_RANGE> descriptorRange) { descriptorRange_ = descriptorRange; }
+	/// <summary>
+	/// ルートパラメータの作成
+	/// </summary>
+	/// <param name="rootParameters"></param>
+	void CreateRootParameter(std::vector<D3D12_ROOT_PARAMETER> rootParameters) {
+		rootParameters = rootParameters;
+		// rootParameterの設定を入れる
+		descriptionRootSignature_.pParameters = rootParameters_.data();
+		descriptionRootSignature_.NumParameters = static_cast<UINT>(rootParameters_.size());
+	}
+	/// <summary>
+	/// Samplerの作成
+	/// </summary>
+	/// <param name="staticSamplers"></param>
+	void CreateSampler(std::vector<D3D12_STATIC_SAMPLER_DESC> staticSamplers) {
+		staticSamplers_ = staticSamplers;
+		descriptionRootSignature_.pStaticSamplers = staticSamplers_.data();
+		descriptionRootSignature_.NumStaticSamplers = static_cast<UINT>(staticSamplers_.size());
+	}
+	/// <summary>
+	/// InputElementの作成
+	/// </summary>
+	/// <param name="inputElementDescs"></param>
+	void CreateInputElement(std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs) {
+		inputElementDescs_ = inputElementDescs;
+		inputLayoutDesc_.pInputElementDescs = inputElementDescs_.data();
+		inputLayoutDesc_.NumElements = static_cast<UINT>(inputElementDescs_.size());
+	}
+	/// <summary>
+	/// BlendStateの作成
+	/// </summary>
+	/// <param name="blendDesc"></param>
+	void CreateBlendState(D3D12_BLEND_DESC blendDesc) { blendDesc_ = blendDesc; }
+	/// <summary>
+	/// Rasterizerの作成
+	/// </summary>
+	/// <param name="rasterizerDesc"></param>
+	void CreateRasterizer(D3D12_RASTERIZER_DESC rasterizerDesc) { rasterizerDesc_ = rasterizerDesc; }
+
+#pragma endregion
 
 	// シェーダのコンパイル
 	IDxcBlob* CompileShader(

@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "Object3D.h"
+#include "Particles.h"
 #include "Input.h"
 #include "PlayerBullet.h"
 
@@ -52,6 +53,8 @@ public:
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 3Dレティクルの座標
 	Vector3 GetWorld3DReticlePosition();
+	// カメラの移動幅
+	Vector3* GetCameraOffset() { return &cameraOffset_; }
 
 	///
 	/// Setter
@@ -157,6 +160,8 @@ private:// プライベートなメンバ変数
 	Sprite* sprite2DReticle_ = nullptr;
 	// HP用のスプライト
 	Sprite* hpSprite_ = nullptr;
+	// 自機の軌道パーティクル
+	std::unique_ptr<Particles> particle_;
 
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
@@ -189,6 +194,8 @@ private:// プライベートなメンバ変数
 	//自機の回転速度
 	Vector3 rotateVel_;
 	Vector3 kRotateSpeedRate = { 0.5f,0.5f,0.5f };
+	// カメラの移動
+	Vector3 cameraOffset_;
 
 	// 横方向
 	bool isVertical_;

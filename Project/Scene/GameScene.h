@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "AimAssist/AimAssist.h"
 #include "RailCamera.h"
+#include "FollowCamera.h"
 #include "Cube.h"
 #include "CollisionManager.h"
 
@@ -45,17 +46,14 @@ public:
 	/// User Method
 	/// 
 
-	// レールカメラに沿って自機を動かす
-	void UpdatePlayerPosition(float t);
-
 	// 自機の弾を追加
 	void AddPlayerBullet(PlayerBullet* playerBullet);
 
-public:// パブリックなメンバ変数
-	// 線分の数
-	static const size_t segmentCount = 100;
-
 private:// プライベートなメンバ変数
+	// 基本機能
+	TextureManager* textureManager_;
+	ModelManager* modelManager_;
+
 	// カメラ
 	std::unique_ptr<Camera> camera_;
 
@@ -70,6 +68,8 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	// カメラレール
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
+
+	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 	// skybox
 	std::unique_ptr<Cube> cube_;
 };

@@ -75,14 +75,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\RailCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -100,7 +100,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\RailCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -130,7 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -139,7 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\RailCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\Components\Camera\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyStateWait.cpp" />
     <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp" />
@@ -180,7 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Components\3D\Primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\PostProcess\Outline.cpp" />
     <ClCompile Include="Engine\Utility\TimedCall.cpp" />
-    <ClCompile Include="Project\Components\RailCamera\RailCamera.cpp" />
+    <ClCompile Include="Project\Components\Camera\RailCamera\RailCamera.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyStateApproach.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyStateLeave.cpp" />
@@ -246,6 +247,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Pso\SkyboxPSO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\Components\Camera\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyStateWait.h" />
     <ClInclude Include="Project\Components\AimAssist\AimAssist.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h" />
@@ -267,7 +269,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Components\3D\Primitive\IPrimitive.h" />
     <ClInclude Include="Engine\PostProcess\Outline.h" />
     <ClInclude Include="Engine\Utility\TimedCall.h" />
-    <ClInclude Include="Project\Components\RailCamera\RailCamera.h" />
+    <ClInclude Include="Project\Components\Camera\RailCamera\RailCamera.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyStateApproach.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyStateLeave.h" />

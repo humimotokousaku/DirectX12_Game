@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Camera.h"
 #include "ModelManager.h"
+#include "Sphere.h"
 
 class Object3D {
 public:
@@ -41,6 +42,11 @@ public:
 
 	// ImGuiを表示
 	void ImGuiParameter(const char* name);
+
+	/// <summary>
+	/// モデルのエディターモードを起動
+	/// </summary>
+	void StartEditor();
 
 #pragma region Getter
 	// モデル
@@ -116,13 +122,13 @@ public:
 	}
 	void AddAnimation(Model* model, const char* animName = "\0") {
 		// アニメーションデータを代入
-		Motion animation = model_->animation_;
+		Motion animation = model->animation_;
 		// アニメーションの名前を代入
 		animation.name = animName;
 		animation_.push_back(animation);
 
 		// 新しくリソースを作成
-		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
+		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model->GetModelData());
 		skinCluster_.push_back(skinCluster);
 	}
 	
@@ -208,4 +214,9 @@ private:// プライベートな変数
 	std::vector<SkinCluster> skinCluster_;
 	// スケルトン
 	Skeleton skeleton_;
+
+	// 選択された頂点表示用の球体
+	std::unique_ptr<Sphere> sphere_;
+	// エディターモード起動
+	bool isEditor_;
 };

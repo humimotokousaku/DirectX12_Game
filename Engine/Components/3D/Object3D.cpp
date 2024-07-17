@@ -75,9 +75,13 @@ void Object3D::Draw() {
 	if (camera_) {
 		//camera_->Update();
 	}
-
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
+
+	// エディターモード起動中
+	if (isEditor_) {
+		sphere_->Draw();
+	}
 
 	/// コマンドを積む
 
@@ -187,4 +191,10 @@ void Object3D::ImGuiParameter(const char* name) {
 
 	ImGui::DragFloat("animTime", &animationTime_, 0, -100, 100);
 	ImGui::End();
+}
+
+void Object3D::StartEditor() {
+	isEditor_ = true;
+	sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();
 }

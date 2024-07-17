@@ -30,8 +30,11 @@ struct ParticleForGPU {
 struct Emitter {
 	Transform transform;
 	uint32_t count;
+	uint32_t spawnCount;
+	uint32_t spawnLeft = 1;	// 発生の残り回数 
 	float frequency;
 	float frequencyTime;
+	bool isRandom;
 };
 
 struct AABB {
@@ -73,7 +76,10 @@ public:
 	// カメラ
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
-	// パーティクルの発生源の座標
+	/// <summary>
+	/// パーティクルの発生源の座標
+	/// </summary>
+	/// <param name="translate">座標</param>
 	void SetEmitterPos(Vector3 translate) { emitter_.transform.translate = translate; }
 	/// <summary>
 	/// 一回で発生するパーティクルの数
@@ -81,12 +87,25 @@ public:
 	/// <param name="count">発生するパーティクルの数</param>
 	void SetEmitterCount(uint32_t count) { emitter_.count = count; }
 	/// <summary>
+	/// パーティクルの発生回数(0なら無制限に出る)
+	/// </summary>
+	/// <param name="spawnCount">発生回数</param>
+	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount;	}
+	/// <summary>
 	/// パーティクルが発生する頻度
 	/// </summary>
 	/// <param name="frequency">秒</param>
-	void SetEmitterFrequency(float frequency) { emitter_.frequency = frequency; }
+	void SetEmitterFrequency(float frequency) { 
+		emitter_.frequency = frequency; 
+		emitter_.frequencyTime = frequency;
+	}
+	/// <summary>
+	/// パーティクルの座標,速度,色,消えるまでの時間をランダム生成するか
+	/// </summary>
+	/// <param name="isActive">ランダムにするか</param>
+	void SetRandomPerticle(bool isActive) { emitter_.isRandom = isActive; }
 
-	void SetParticle(Vector3 scale){}
+	//void SetParticle(Vector3 scale){}
 
 	// ImGuiでパラメータをまとめたもの
 	//void ImGuiAdjustParameter();

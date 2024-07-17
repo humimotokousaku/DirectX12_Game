@@ -45,7 +45,7 @@ void AimAssist::LockOn(Vector2 reticlePos) {
 	bool isLockOn = false;
 	for (Enemy* enemy : enemys_) {
 		// カメラの後ろ側ではないかを算出
-		if (!IsEnemyBehindCamera(camera_->GetTranslate(), cameraDirVel_, enemy->GetWorldPosition())) {
+		if (!IsEnemyBehindCamera(camera_->GetTranslate(), *cameraDirVel_, enemy->GetWorldPosition())) {
 			// 自機との距離を調べる
 			Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
 			// レティクルと自機の距離内にいるならロックオン対象

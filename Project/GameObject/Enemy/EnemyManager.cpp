@@ -7,7 +7,9 @@ EnemyManager::~EnemyManager() {
 }
 
 void EnemyManager::Initialize() {
-
+	textureManager_ = TextureManager::GetInstance();
+	textureManager_->LoadTexture("DefaultTexture", "white.png");
+	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
 }
 
 void EnemyManager::Update() {
@@ -23,13 +25,13 @@ void EnemyManager::Update() {
 		return false;
 		});
 	// enemyの更新
-	for (Enemy* enemy : enemy_) {
+	//for (Enemy* enemy : enemy_) {
 		//enemy->Update();
-	}
+	//}
 	// 弾の更新
-	for (EnemyBullet* bullet : enemyBullets_) {
+	//for (EnemyBullet* bullet : enemyBullets_) {
 		//bullet->Update();
-	}
+	//}
 	// 終了した弾を削除
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->isDead()) {
@@ -38,6 +40,11 @@ void EnemyManager::Update() {
 		}
 		return false;
 		});
+
+	// 出現時のパーティクル
+	for (Particles* particle : spawnParticles_) {
+		particle->Update();
+	}
 }
 
 void EnemyManager::Draw() {
@@ -48,6 +55,10 @@ void EnemyManager::Draw() {
 	// 通常敵の弾
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw();
+	}
+	// 出現時のパーティクル
+	for (Particles* particle : spawnParticles_) {
+		particle->Draw(spawnParticleTex_);
 	}
 }
 
@@ -62,14 +73,18 @@ void EnemyManager::Finalize() {
 		delete bullet;
 	}
 	enemyBullets_.clear();
+	// 出現時のパーティクル
+	for (Particles* particle : spawnParticles_) {
+		delete particle;
+	}
+	spawnParticles_.clear();
 	models_.clear();
-	enemyPopCommands_.clear();
 }
 
 void EnemyManager::CheckSpawn() {
 	for (int i = 0; i < spawnPoints_.size(); i++) {
 		if (!spawnPointDatas_[i].isActive) {
-			if (railCameraProgress_ >= spawnPoints_[i].percentage / 100) {
+			if ((*railCameraProgress_) >= spawnPoints_[i].percentage / 100) {
 				spawnPointDatas_[i].isActive = true;
 			}
 
@@ -99,4 +114,16 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
 
 	// リストに登録
 	enemy_.push_back(enemy);
+
+	// 出現時のパーティクルを生成
+	Particles* particle = new Particles();
+	particle->Initialize();
+	particle->SetCamera(camera_);
+	particle->SetEmitterPos(pos);
+	particle->SetEmitterFrequency(1);
+	particle->SetEmitterCount(40);
+	particle->SetEmitterSpawnCount(1);
+	particle->SetRandomPerticle(true);
+
+	spawnParticles_.push_back(particle);
 }

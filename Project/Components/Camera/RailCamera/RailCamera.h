@@ -31,9 +31,9 @@ public:
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
 	// レールの何パーセント進んだかを取得
-	float GetRailPercentage() { return t_; }
+	float* GetRailPercentage() { return &t_; }
 	// 方向ベクトルを取得
-	Vector3 GetDirectionVelocity() { return velocity_; }
+	Vector3* GetDirectionVelocity() { return &velocity_; }
 
 	///
 	/// Setter

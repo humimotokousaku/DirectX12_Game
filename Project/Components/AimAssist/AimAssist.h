@@ -64,7 +64,7 @@ public:
 	/// カメラの方向ベクトルを設定
 	/// </summary>
 	/// <param name="dirVel"></param>
-	void SetCameraDirectionVelocity(Vector3 dirVel) { cameraDirVel_ = dirVel; }
+	void SetCameraDirectionVelocity(Vector3* dirVel) { cameraDirVel_ = dirVel; }
 #pragma endregion
 
 #pragma region Getter
@@ -85,7 +85,7 @@ private:
 	Vector3 reticle3DPos_;
 
 	// カメラの方向ベクトル
-	Vector3 cameraDirVel_;
+	Vector3* cameraDirVel_;
 
 	// ロックオン中か
 	bool isLockOn_;

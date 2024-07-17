@@ -25,7 +25,7 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.translate = { 0,0,10 };
+	object3d_->worldTransform.translate = { 0,0,0 };
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
@@ -37,10 +37,12 @@ void Player::Initialize() {
 	object3dReticle_->SetCamera(camera_);
 
 	gameSpeed_ = 1.0f;
+
 	// 2Dレティクル作成
 	sprite2DReticle_ = new Sprite();
 	sprite2DReticle_->Initialize("", "reticle.png");
-	sprite2DReticle_->SetPos(Vector2(WinApp::kClientWidth_ / 2, WinApp::kClientHeight_ / 2));
+	sprite2DReticle_->SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+
 	// HP作成
 	hpSize_ = kMaxHPSize;
 	hpSprite_ = new Sprite();
@@ -53,6 +55,16 @@ void Player::Initialize() {
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
+
+	// 自機の軌道パーティクルの作成
+	particle_ = std::make_unique<Particles>();
+	particle_->Initialize();
+	particle_->SetCamera(camera_);
+	// 発生頻度
+	particle_->SetEmitterFrequency(1.0f / 60.0f);
+	// 一度に発生する個数
+	particle_->SetEmitterCount(1);
+	particle_->SetRandomPerticle(false);
 
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
@@ -99,6 +111,10 @@ void Player::Update() {
 		}
 	}
 
+	// 自機の軌道パーティクル
+	particle_->SetEmitterPos(GetWorldPosition());
+	particle_->Update();
+
 	// ImGui
 	object3d_->ImGuiParameter("Player");
 	object3dReticle_->ImGuiParameter("Reticle");
@@ -117,6 +133,7 @@ void Player::Draw() {
 void Player::DrawUI() {
 	sprite2DReticle_->Draw();
 	hpSprite_->Draw();
+	particle_->Draw(playerTexture_);
 }
 
 void Player::SetParent(const WorldTransform* parent) {
@@ -210,7 +227,7 @@ void Player::Move() {
 	}
 	else {
 		// 徐々に速度を上げる
-		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.1f).y;
+		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.05f).y;
 		// レティクルが画面端でなければ回転
 		if (!isVertical_) {
 			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.05f).x;
@@ -229,7 +246,7 @@ void Player::Move() {
 	}
 	else {
 		// 徐々に速度を上げる
-		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;
+		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.05f).x;
 		// レティクルが画面端でなければ回転
 		if (!isHorizontal_) {
 			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.05f).y;
@@ -250,6 +267,11 @@ void Player::Move() {
 	object3d_->worldTransform.translate += moveVel_;
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate = rotateVel_;
+
+	cameraOffset_ += moveVel_;
+	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -kMaxSpeed*100, kMaxSpeed*100);
+	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -kMaxSpeed*100, kMaxSpeed*100);
+	cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -kMaxSpeed*100, kMaxSpeed*100);
 }
 
 //void Player::Rotate() {
@@ -404,8 +426,8 @@ void Player::Deploy2DReticle() {
 		isHorizontal_ = true;
 		// 左右どちらの画面端にいるかを検出し、レティクル座標を合わせる
 		// 右
-		if (sprite2DReticle_->GetPos().x > WinApp::kClientWidth_ + 1.0f) {
-			sprite2DReticle_->SetPosX(WinApp::kClientWidth_);
+		if (sprite2DReticle_->GetPos().x > (float)WinApp::kClientWidth_ + 1.0f) {
+			sprite2DReticle_->SetPosX((float)WinApp::kClientWidth_);
 		}
 		// 左
 		else if(sprite2DReticle_->GetPos().x < 0.0f - 1.0f){
@@ -435,8 +457,8 @@ void Player::Deploy2DReticle() {
 		isVertical_ = true;
 		// 上下どちらの画面端にいるかを検出し、レティクル座標を合わせる
 		// 下
-		if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f) {
-			sprite2DReticle_->SetPosY(WinApp::kClientHeight_);
+		if (sprite2DReticle_->GetPos().y > (float)WinApp::kClientHeight_ + 1.0f) {
+			sprite2DReticle_->SetPosY((float)WinApp::kClientHeight_);
 		}
 		// 上
 		else if(sprite2DReticle_->GetPos().y < 0.0f - 1.0f){

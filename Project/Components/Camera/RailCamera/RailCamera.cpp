@@ -83,10 +83,6 @@ void RailCamera::Update() {
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
 	cameraPosition.y += 0.3f;
 	camera_->worldTransform_.translate = cameraPosition;
-	if (t_ >= 0.2f) {
-		//isMoveCamera_ = false;
-	}
-
 
 	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
 	// Y軸周り角度(θy)

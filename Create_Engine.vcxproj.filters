@@ -393,7 +393,7 @@
     <ClCompile Include="Engine\Utility\TimedCall.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Components\RailCamera\RailCamera.cpp">
+    <ClCompile Include="Project\Components\Camera\RailCamera\RailCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
@@ -406,6 +406,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\EnemyStateWait.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Components\Camera\FollowCamera\FollowCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -665,7 +668,7 @@
     <ClInclude Include="Engine\Utility\TimedCall.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Components\RailCamera\RailCamera.h">
+    <ClInclude Include="Project\Components\Camera\RailCamera\RailCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Player\PlayerBullet.h">
@@ -678,6 +681,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\EnemyStateWait.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Components\Camera\FollowCamera\FollowCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

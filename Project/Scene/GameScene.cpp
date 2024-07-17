@@ -7,26 +7,28 @@ GameScene::GameScene() {
 
 void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
+	textureManager_ = TextureManager::GetInstance();
+	modelManager_ = ModelManager::GetInstance();
 
 #pragma region 読み込み
-	TextureManager::GetInstance()->LoadTexture("", "reticle.png");
-	TextureManager::GetInstance()->LoadTexture("Textures", "Bob_Red.png");
-	TextureManager::GetInstance()->LoadTexture("Textures", "Spitfire_Purple.png");
+	textureManager_->LoadTexture("", "reticle.png");
+	textureManager_->LoadTexture("Textures", "Bob_Red.png");
+	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
 	// 使用するモデルの読み込み
-	ModelManager::GetInstance()->LoadModel("", "block.obj");
-	ModelManager::GetInstance()->LoadModel("", "Bob.obj");
-	ModelManager::GetInstance()->LoadModel("", "Spitfire.obj");
+	modelManager_->LoadModel("", "block.obj");
+	modelManager_->LoadModel("", "Bob.obj");
+	modelManager_->LoadModel("", "Spitfire.obj");
 
 	// 自機
-	AddModel(ModelManager::GetInstance()->SetModel("", "Bob.obj"));
+	AddModel(modelManager_->SetModel("", "Bob.obj"));
 	// 3Dレティクル
-	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	AddModel(modelManager_->SetModel("", "block.obj"));
 	// 自機の弾
-	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	AddModel(modelManager_->SetModel("", "block.obj"));
 	// 通常敵のモデル
-	AddModel(ModelManager::GetInstance()->SetModel("", "Spitfire.obj"));
+	AddModel(modelManager_->SetModel("", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel(ModelManager::GetInstance()->SetModel("", "block.obj"));
+	AddModel(modelManager_->SetModel("", "block.obj"));
 
 	// Blender
 	LoadJSONFile("GameMap_00.json");
@@ -38,6 +40,10 @@ void GameScene::Initialize() {
 	// カメラレールの生成
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize(controlPoints_);
+	// 追従カメラの生成
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize();
+	followCamera_->SetParent(&railCamera_->GetWorldTransform());
 
 	// 衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
@@ -51,7 +57,7 @@ void GameScene::Initialize() {
 	// 弾モデル
 	player_->AddModel(models_[2]);
 	// 必要なクラスのアドレスをセットする
-	player_->SetCamera(railCamera_->GetCamera());
+	player_->SetCamera(followCamera_->GetCamera());
 	player_->SetGameScene(this);
 	player_->SetCollisionManager(collisionManager_.get());
 	player_->Initialize();
@@ -64,7 +70,7 @@ void GameScene::Initialize() {
 	enemyManager_->AddModel(models_[3]);
 	// 通常敵の弾
 	enemyManager_->AddModel(models_[4]);
-	enemyManager_->SetCamera(railCamera_->GetCamera());
+	enemyManager_->SetCamera(followCamera_->GetCamera());
 	enemyManager_->SetCollisionManager(collisionManager_.get());
 	enemyManager_->SetPlayer(player_.get());
 	enemyManager_->SetSpawnPoints(enemyPoints_);
@@ -72,8 +78,15 @@ void GameScene::Initialize() {
 
 	// 自機のロックオンクラス生成
 	aimAssist_ = AimAssist::GetInstance();
-	aimAssist_->SetCamera(railCamera_->GetCamera());
+	aimAssist_->SetCamera(followCamera_->GetCamera());
 	aimAssist_->SetPlayer(player_.get());
+
+	// カメラの方向ベクトルをアドレスで渡す
+	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
+	// レールカメラの進行度のアドレスを渡す
+	enemyManager_->SetRailCameraProgress(railCamera_->GetRailPercentage());
+	// 
+	followCamera_->SetCameraOffset(player_->GetCameraOffset());
 
 	// Skybox
 	//cube_ = std::make_unique<Cube>();
@@ -83,7 +96,7 @@ void GameScene::Initialize() {
 
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
-		object->SetCamera(railCamera_->GetCamera());
+		object->SetCamera(followCamera_->GetCamera());
 		//object->SetIsLighting(true);
 	}
 }
@@ -119,8 +132,7 @@ void GameScene::Update() {
 
 	// デバッグカメラの更新
 	railCamera_->Update();
-	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
-	enemyManager_->SetRailCameraProgress(railCamera_->GetRailPercentage());
+	followCamera_->Update();
 
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
@@ -128,7 +140,7 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 	// レールカメラの移動ルート表示
-	railCamera_->MoveRouteDraw();
+	//railCamera_->MoveRouteDraw();
 
 	// 敵の体、弾を描画
 	enemyManager_->Draw();
@@ -163,13 +175,6 @@ void GameScene::Finalize() {
 
 	// 基底クラスの解放
 	IScene::Finalize();
-}
-
-void GameScene::UpdatePlayerPosition(float t) {
-	Vector3 cameraPosition{};
-	// Catmull-Romスプライン関数で補間された位置を取得
-	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t);
-	railCamera_->SetTranslation(cameraPosition);
 }
 
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Camera.h"
 #include "CollisionManager.h"
+#include "Particles.h"
 
 class EnemyManager {
 public:
@@ -108,9 +109,12 @@ public:
 		spawnPointDatas_.resize(spawnPoints_.size());
 	}
 
-	void SetRailCameraProgress(float percentage) { railCameraProgress_ = percentage; }
+	void SetRailCameraProgress(float* percentage) { railCameraProgress_ = percentage; }
 
 private:// プライベートなメンバ変数
+	// 基本機能
+	TextureManager* textureManager_;
+
 	// カメラのアドレス
 	Camera* camera_;
 	// 衝突マネージャのアドレス
@@ -122,16 +126,14 @@ private:// プライベートなメンバ変数
 	std::list<Enemy*> enemy_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
+	// 出現時のパーティクル
+	std::vector<Particles*> spawnParticles_;
 
 	// 使用するモデル
 	std::vector<Model*> models_;
 
-	// 敵の発生時間や座標などのCSVファイル
-	std::stringstream enemyPopCommands_;
-	// 敵が発生待機中か
-	bool isWait_ = false;
-	// 敵が発生するまでの時間
-	int32_t waitTime_ = 0;
+	// 出現時のパーティクルのテクスチャ
+	uint32_t spawnParticleTex_;
 
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;
@@ -139,5 +141,5 @@ private:// プライベートなメンバ変数
 	std::vector<SpawnPointData> spawnPointDatas_;
 
 	// レールカメラの進行度
-	float railCameraProgress_;
+	float* railCameraProgress_;
 };

@@ -89,21 +89,22 @@ void Particles::Update() {
 			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
 			(*particleIterator).color.w = alpha;
 			instancingData_[numInstance].color = (*particleIterator).color;
-			instancingData_[numInstance].color.x = 1;
-			instancingData_[numInstance].color.y = 0;
-			instancingData_[numInstance].color.z = 0;
 			++numInstance;
 		}
-
 		++particleIterator;
 	}
 
 	emitter_.frequencyTime += kDeltaTime;
-	if (emitter_.frequency <= emitter_.frequencyTime) {
-		std::random_device seedGenerator;
-		std::mt19937 randomEngine(seedGenerator());
-		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-		emitter_.frequencyTime -= emitter_.frequency;
+	if (emitter_.spawnLeft <= emitter_.spawnCount || emitter_.spawnCount <= 0) {
+		if (emitter_.frequency <= emitter_.frequencyTime) {
+			std::random_device seedGenerator;
+			std::mt19937 randomEngine(seedGenerator());
+			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+			emitter_.frequencyTime -= emitter_.frequency;
+			if (emitter_.spawnCount != 0) {
+				emitter_.spawnLeft++;
+			}
+		}
 	}
 }
 
@@ -204,33 +205,27 @@ Particle Particles::MakeNewParticle(const Vector3& translate) {
 	particle.transform.translate = translate;
 	particle.vel = { 0,0,0 };
 	particle.color = { 1.0f,1.0f,1.0f,1.0f };
-	particle.lifeTime = 120;
+	particle.lifeTime = 1;
 	particle.currentTime = 0;
 	return particle;
 }
 
 std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
+	// ランダムの場合
+	if (emitter.isRandom) {
+		for (uint32_t count = 0; count < emitter.count; ++count) {
+			particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+			
+		}
+		return particles;
+	}
+
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+		particles.push_back(MakeNewParticle(emitter_.transform.translate));
 	}
 	return particles;
 }
-//
-//void Particles::ImGuiAdjustParameter()
-//{
-//	std::random_device seedGenerator;
-//	std::mt19937 randomEngine(seedGenerator());
-//	if (ImGui::TreeNode("Particles")) {
-//		if (ImGui::Button("Add Particle")) {
-//			particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
-//		}
-//		ImGui::Text("Emitter.frquencyTime:%f", emitter_.frequencyTime);
-//		ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
-//		ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
-//		ImGui::TreePop();
-//	}
-//}
 
 Vector3 Particles::KelvinToRGB(int kelvin) {
 	Vector3 color{};

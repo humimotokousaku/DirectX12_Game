@@ -99,7 +99,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Ae1
 	float rA = Length(Ae1);
 	float rB = LenSegOnSeparateAxis(&NAe1, &Be1, &Be2, &Be3);
-	float L = fabs(Dot(Interval, NAe1));
+	float L = fabsf(Dot(Interval, NAe1));
 	if (L > rA + rB) {
 		return false; // 衝突していない
 	}
@@ -107,7 +107,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Ae2
 	rA = Length(Ae2);
 	rB = LenSegOnSeparateAxis(&NAe2, &Be1, &Be2, &Be3);
-	L = fabs(Dot(Interval, NAe2));
+	L = fabsf(Dot(Interval, NAe2));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -115,7 +115,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Ae3
 	rA = Length(Ae3);
 	rB = LenSegOnSeparateAxis(&NAe3, &Be1, &Be2, &Be3);
-	L = fabs(Dot(Interval, NAe3));
+	L = fabsf(Dot(Interval, NAe3));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -123,7 +123,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Be1
 	rA = LenSegOnSeparateAxis(&NBe1, &Ae1, &Ae2, &Ae3);
 	rB = Length(Be1);
-	L = fabs(Dot(Interval, NBe1));
+	L = fabsf(Dot(Interval, NBe1));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -131,7 +131,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Be2
 	rA = LenSegOnSeparateAxis(&NBe2, &Ae1, &Ae2, &Ae3);
 	rB = Length(Be2);
-	L = fabs(Dot(Interval,NBe2));
+	L = fabsf(Dot(Interval,NBe2));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -139,7 +139,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 分離軸 : Be3
 	rA = LenSegOnSeparateAxis(&NBe3, &Ae1, &Ae2, &Ae3);
 	rB = Length(Be3);
-	L = fabs(Dot(Interval, NBe3));
+	L = fabsf(Dot(Interval, NBe3));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -149,7 +149,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe1, NBe1);
 	rA = LenSegOnSeparateAxis(&cross, &Ae2, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be2, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -158,7 +158,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe1, NBe2);
 	rA = LenSegOnSeparateAxis(&cross, &Ae2, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -167,7 +167,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe1, NBe3);
 	rA = LenSegOnSeparateAxis(&cross, &Ae2, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be2);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -176,7 +176,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe2, NBe1);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be2, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -185,7 +185,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe2, NBe2);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -194,7 +194,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe2, NBe3);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae3);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be2);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -203,7 +203,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe3, NBe1);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae2);
 	rB = LenSegOnSeparateAxis(&cross, &Be2, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -212,7 +212,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe3, NBe2);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae2);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be3);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -221,7 +221,7 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	cross = Cross(NAe3, NBe3);
 	rA = LenSegOnSeparateAxis(&cross, &Ae1, &Ae2);
 	rB = LenSegOnSeparateAxis(&cross, &Be1, &Be2);
-	L = fabs(Dot(Interval, cross));
+	L = fabsf(Dot(Interval, cross));
 	if (L > rA + rB) {
 		return false;
 	}
@@ -233,8 +233,8 @@ bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 float CollisionManager::LenSegOnSeparateAxis(Vector3* Sep, Vector3* e1, Vector3* e2, Vector3* e3){
 	// 3つの内積の絶対値の和で投影線分長を計算
 	// 分離軸Sepは標準化されていること
-	float r1 = fabs(Dot(*Sep, *e1));
-	float r2 = fabs(Dot(*Sep, *e2));
-	float r3 = e3 ? (fabs(Dot(*Sep, *e3))) : 0;
+	float r1 = fabsf(Dot(*Sep, *e1));
+	float r2 = fabsf(Dot(*Sep, *e2));
+	float r3 = e3 ? (fabsf(Dot(*Sep, *e3))) : 0;
 	return r1 + r2 + r3;
 }

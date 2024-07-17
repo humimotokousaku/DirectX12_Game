@@ -4,15 +4,17 @@
 
 class LevelData {
 public:
+	// 障害物
 	struct ObjectData {
-		Vector3 scale;
-		Vector3 rotate;
-		Vector3 translate;
-		std::string fileName;
+		Vector3 scale;			// 大きさ
+		Vector3 rotate;			// オイラー角
+		Vector3 translate;		// 座標
+		std::string fileName;	// モデルのファイル名
 	};
+	// レールカメラの移動ルート
 	struct CurveData {
-		std::string type;
-		std::vector<Vector3> points;
+		std::string type;				// カーブの種類
+		std::vector<Vector3> points;	// 制御点
 	};
 	// 敵の出現場所
 	struct EnemyPoint {
