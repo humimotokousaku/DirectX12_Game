@@ -1,5 +1,6 @@
 #include "FollowCamera.h"
 #include "Input.h"
+#include "ImGuiManager.h"
 
 void FollowCamera::Initialize() {
 	camera_ = std::make_unique<Camera>();
@@ -17,6 +18,15 @@ void FollowCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
+
+#ifdef _DEBUG
+
+	ImGui::Begin("FollowCamera");
+	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
+	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
+	ImGui::End();
+
+#endif // _DEBUG
 }
 
 Vector3 FollowCamera::TargetOffset() const {

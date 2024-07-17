@@ -65,6 +65,8 @@ void Player::Initialize() {
 	// 一度に発生する個数
 	particle_->SetEmitterCount(1);
 	particle_->SetRandomPerticle(false);
+	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
+	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
 
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
@@ -115,25 +117,29 @@ void Player::Update() {
 	particle_->SetEmitterPos(GetWorldPosition());
 	particle_->Update();
 
+#ifdef _DEBUG
 	// ImGui
 	object3d_->ImGuiParameter("Player");
 	object3dReticle_->ImGuiParameter("Reticle");
 	ImGui::DragFloat3("moveVel", &moveVel_.x, 0);
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
+#endif
 }
 
 void Player::Draw() {
 	// 自機
 	object3d_->Draw(playerTexture_);
 	// 3Dレティクル
+#ifdef _DEBUG
 	object3dReticle_->Draw();
+#endif // _DEBUG
 }
 
 void Player::DrawUI() {
 	sprite2DReticle_->Draw();
 	hpSprite_->Draw();
-	particle_->Draw(playerTexture_);
+	particle_->Draw(defaultTexture);
 }
 
 void Player::SetParent(const WorldTransform* parent) {
@@ -339,7 +345,7 @@ void Player::Attack() {
 	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER || Input::GetInstance()->PressKey(DIK_SPACE)) {
 		if (bulletInterval_ <= 0) {
 			// 弾の速度
-			const float kBulletSpeed = 1.0f;
+			const float kBulletSpeed = 5.0f;
 			Vector3 velocity(0, 0, kBulletSpeed);
 			// 速度ベクトルを自機の向きに合わせて回転させる
 			Vector3 worldPos = GetWorldPosition();

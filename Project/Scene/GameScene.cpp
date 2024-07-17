@@ -99,6 +99,17 @@ void GameScene::Initialize() {
 		object->SetCamera(followCamera_->GetCamera());
 		//object->SetIsLighting(true);
 	}
+
+	// UIのスプライトを作成
+	guideUI_[0] = std::make_unique<Sprite>();
+	guideUI_[0]->Initialize("Textures/UI", "guide_Attack.png");
+	guideUI_[0]->SetAnchorPoint(Vector2{ 0.5f, 0.5f });
+	guideUI_[0]->SetPos(Vector2{ 1200.0f, 64.0f });
+	guideUI_[0]->SetSize(Vector2{ 64.0f, 64.0f });
+	guideUI_[1] = std::make_unique<Sprite>();
+	guideUI_[1]->Initialize("Textures/UI", "guide_pad_RB.png");
+	guideUI_[1]->SetAnchorPoint(Vector2{ 0.5f, 0.5f });
+	guideUI_[1]->SetPos(Vector2{ 1132.0f, 64.0f });
 }
 
 void GameScene::Update() {
@@ -158,6 +169,11 @@ void GameScene::Draw() {
 	}
 	// 自機のレティクルとHP
 	player_->DrawUI();
+
+	// UI
+	for (int i = 0; i < 2; i++) {
+		guideUI_[i]->Draw();
+	}
 
 	// skybox
 	//cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));

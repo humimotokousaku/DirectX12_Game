@@ -68,9 +68,11 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
 	// カメラレール
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
-
+	// 追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
 	// skybox
 	std::unique_ptr<Cube> cube_;
+	// UI
+	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
 };
 

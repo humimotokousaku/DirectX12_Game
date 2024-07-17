@@ -184,7 +184,7 @@ Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& t
 	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
 
 	Particle particle;
-	particle.transform.scale = { 0.1f,0.1f,0.1f };
+	particle.transform.scale = { 0.3f,0.3f,0.3f };
 	particle.transform.rotate = { 0,0,0 };
 
 	Vector3 randomTranslate;

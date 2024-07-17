@@ -167,6 +167,8 @@ private:// プライベートなメンバ変数
 	uint32_t reticleTexture_ = 0u;
 	// 自機のスプライト
 	uint32_t playerTexture_ = 0u;
+	// パーティクルテクスチャ
+	uint32_t defaultTexture = 0u;
 
 	// 弾
 	std::list<PlayerBullet*> bullets_;

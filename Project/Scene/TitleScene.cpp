@@ -137,8 +137,13 @@ void TitleScene::Initialize() {
 	cube_->SetPosition(Vector3{ 0,0,10 });
 
 	// UIのスプライトを作成
-	//guideUI_[0].reset(Sprite::Create("", "Guide_TitleName.png"));
-	//guideUI_[1].reset(Sprite::Create("", "guide_pad_A.png"));
+	guideUI_[0] = std::make_unique<Sprite>();
+	guideUI_[0]->Initialize("Textures/UI", "titleName.png");
+	guideUI_[0]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 });
+	guideUI_[1] = std::make_unique<Sprite>();
+	guideUI_[1]->Initialize("Textures/UI", "guide_pad_A.png");
+	guideUI_[1]->SetSize(Vector2{ 64,64 });
+	guideUI_[1]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 * 3 });
 }
 
 void TitleScene::Update() {
@@ -182,6 +187,12 @@ void TitleScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_1) || Input::GetInstance()->GamePadTrigger(XINPUT_GAMEPAD_A)) {
 		sceneNum = GAME_SCENE;
 	}
+	if (Input::GetInstance()->TriggerKey(DIK_2)) {
+		sceneNum = GAMEOVER_SCENE;
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_3)) {
+		sceneNum = GAMECLEAR_SCENE;
+	}
 	//if (Input::GetInstance()->TriggerKey(DIK_R)) {
 	//	human_[0]->EndAnim();
 	//}
@@ -210,7 +221,7 @@ void TitleScene::Draw() {
 
 	// UI
 	for (int i = 0; i < 2; i++) {
-		//guideUI_[i]->Draw();
+		guideUI_[i]->Draw();
 	}
 }
 

@@ -98,14 +98,14 @@ void RailCamera::Update() {
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 
-	ImGui::Begin("Camera");
+	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
 	ImGui::End();
 
-//#endif // _DEBUG
+#endif // _DEBUG
 }
 
 void RailCamera::MoveRouteDraw() {
