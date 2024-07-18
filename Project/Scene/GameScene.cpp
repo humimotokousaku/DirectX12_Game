@@ -80,16 +80,6 @@ void GameScene::Initialize() {
 		line_[i]->startPos_ = pointsDrawing_[i];
 		line_[i]->endPos_ = pointsDrawing_[i + 1];
 	}
-	// スプライン曲線制御点（通過点）の初期化
-	/*controlPoints_ = {
-		{0,  0,  0},
-		{0,  0,  30},
-		{10, 10, 10},
-		{10, 15, 0},
-		{20, 15, 20},
-		{20, 0,  0},
-		{30, 0,  -10}
-	};*/
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
 	isMoveCamera_ = true;

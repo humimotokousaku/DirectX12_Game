@@ -13,12 +13,14 @@ public:
 	// 当たっているときを取得
 	bool PressOnCollision();
 
-	///
-	/// Getter
-	/// 
-
+#pragma region Getter
 	// 半径の取得
 	float GetRadius() { return radius_; }
+	/// <summary>
+	/// 速度を取得
+	/// </summary>
+	/// <returns></returns>
+	Vector3 GetVelocity() { return velocity_; }
 	// OBBの取得
 	OBB GetOBB() { return obb_; }
 	/// <summary>
@@ -38,13 +40,21 @@ public:
 	bool GetIsOnCollision() { return isOnCollision_; }
 	// 今当たっているかを設定
 	bool GetIsPreOnCollision() { return isPreOnCollision_; }
+	// 動いているかを取得
+	bool GetIsMove() { return isMove_; }
+#pragma endregion
 
-	///
-	/// Setter
-	///
-
-	// 半径の設定
+#pragma region Setter
+	/// <summary>
+	/// 半径の設定
+	/// </summary>
+	/// <param name="radius">半径</param>
 	void SetRadius(float radius) { radius_ = radius; }
+	/// <summary>
+	/// 速度を設定
+	/// </summary>
+	/// <param name="velocity">速度</param>
+	void SetVelocity(Vector3 velocity) { velocity_ = velocity; }
 	// OBBの設定
 	void SetOBB(OBB obb) { obb_ = obb; }
 	void SetOBBCenterPos(Vector3 centerPos) { obb_.m_Pos = centerPos; }
@@ -69,6 +79,7 @@ public:
 	void SetIsOnCollision(bool isOnCollision) { isOnCollision_ = isOnCollision; }
 	// 今当たっているかを設定
 	void SetIsPreOnCollision(bool isPreOnCollision) { isPreOnCollision_ = isPreOnCollision; }
+#pragma endregion
 
 	///
 	/// 純粋仮想関数
@@ -84,6 +95,8 @@ public:
 private:
 	// 衝突半径
 	float radius_ = 1.0f;
+	// 速度
+	Vector3 velocity_;
 	// OBB
 	OBB obb_ = {
 		{0,0,0},	// 位置
@@ -95,7 +108,6 @@ private:
 	};
 	// aabb
 	AABB aabb_;
-
 
 	// 衝突属性(自分)
 	uint32_t collisionAttribute_ = 0xffffffff;
@@ -110,4 +122,6 @@ private:
 	bool isOnCollision_ = false;
 	// 前に当たっている
 	bool isPreOnCollision_ = false;
+	// オブジェクトが動いているか
+	bool isMove_ = false;
 };

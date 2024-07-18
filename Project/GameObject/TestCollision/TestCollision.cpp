@@ -40,32 +40,40 @@ void TestCollision::OnCollision(Collider* collider) {
 	aabb.min.y = fabsf(aabb.min.y);
 	aabb.min.z = fabsf(aabb.min.z);
 
-	Vector3 c = aabb.min + GetAABB().max;
-	if (dirVel.x >= c.x) {
+	Vector3 c{};// = aabb.min + GetAABB().max;
+	if (fabsf(dirVel.x) >= aabb.min.x + GetAABB().max.x) {
 		return;
 	}
-	if (dirVel.y >= c.y) {
+	if (fabsf(dirVel.y) >= aabb.min.y + GetAABB().max.y) {
 		return;
 	}
-	if (dirVel.z >= c.z) {
+	if (fabsf(dirVel.z) >= aabb.min.z + GetAABB().max.z) {
 		return;
 	}
 
 	if (collider->GetWorldPosition().x < GetWorldPosition().x) {
 		c.x = aabb.max.x + -GetAABB().min.x;
 	}
+	else if (collider->GetWorldPosition().x > GetWorldPosition().x) {
+		c.x = GetAABB().max.x + aabb.min.x;
+	}
 	if (collider->GetWorldPosition().y < GetWorldPosition().y) {
 		c.y = aabb.max.y + -GetAABB().min.y;
+	}
+	else if (collider->GetWorldPosition().y > GetWorldPosition().y) {
+		c.y = GetAABB().max.y + aabb.min.y;
 	}
 	if (collider->GetWorldPosition().z < GetWorldPosition().z) {
 		c.z = aabb.max.z + -GetAABB().min.z;
 	}
+	else if (collider->GetWorldPosition().z > GetWorldPosition().z) {
+		c.z = GetAABB().max.z + aabb.min.z;
+	}
 
 	Vector3 a = c - dirVel;
-	dirVel = dirVel - a;
 
 	// 押し出し処理
-	object3d_->worldTransform.translate = object3d_->worldTransform.translate - dirVel;
+	object3d_->worldTransform.translate = object3d_->worldTransform.translate + a;
 	object3d_->worldTransform.UpdateMatrix();
 }
 
