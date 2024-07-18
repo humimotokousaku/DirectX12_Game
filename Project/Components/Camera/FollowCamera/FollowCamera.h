@@ -23,6 +23,8 @@ public:
 
 	void SetCameraOffset(Vector3* cameraOffset) { offset_ = cameraOffset; }
 
+	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
+
 	/// <summary>
 	/// カメラのアドレスを取得
 	/// </summary>
@@ -50,4 +52,6 @@ private:
 	std::unique_ptr<Camera> camera_;
 
 	Vector3* offset_;
+
+	Vector3 playerPos_;
 };

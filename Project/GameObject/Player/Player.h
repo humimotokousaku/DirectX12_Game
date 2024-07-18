@@ -55,6 +55,11 @@ public:
 	Vector3 GetWorld3DReticlePosition();
 	// カメラの移動幅
 	Vector3* GetCameraOffset() { return &cameraOffset_; }
+	/// <summary>
+	/// 体のワールドトランスフォームを取得
+	/// </summary>
+	/// <returns></returns>
+	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 
 	///
 	/// Setter

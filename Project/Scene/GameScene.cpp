@@ -43,7 +43,6 @@ void GameScene::Initialize() {
 	// 追従カメラの生成
 	followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_->Initialize();
-	followCamera_->SetParent(&railCamera_->GetWorldTransform());
 
 	// 衝突マネージャーの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
@@ -63,6 +62,7 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
+	followCamera_->SetParent(player_->GetWorldTransform());
 
 	// エネミーマネージャの生成
 	enemyManager_ = std::make_unique<EnemyManager>();
@@ -123,6 +123,7 @@ void GameScene::Update() {
 		sceneNum = GAMECLEAR_SCENE;
 	}
 
+
 	enemyManager_->Update();
 	aimAssist_->SetEnemyList(enemyManager_->GetEnemyList());
 
@@ -143,6 +144,7 @@ void GameScene::Update() {
 
 	// デバッグカメラの更新
 	railCamera_->Update();
+	followCamera_->SetPlayerPos(player_->GetWorldPosition());
 	followCamera_->Update();
 
 	// 衝突マネージャー(当たり判定)

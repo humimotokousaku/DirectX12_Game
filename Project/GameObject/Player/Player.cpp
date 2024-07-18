@@ -25,7 +25,7 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.translate = { 0,0,0 };
+	//object3d_->worldTransform.translate = { 0,0,0 };
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
@@ -88,10 +88,82 @@ void Player::Update() {
 	// 移動限界座標
 	const Vector2 kMoveLimit = { 7.0f, 4.0f };
 	// 範囲を超えない処理
-	object3d_->worldTransform.translate.x = max(object3d_->worldTransform.translate.x, -kMoveLimit.x);
-	object3d_->worldTransform.translate.x = min(object3d_->worldTransform.translate.x, kMoveLimit.x);
-	object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
-	object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
+	//object3d_->worldTransform.translate.x = max(object3d_->worldTransform.translate.x, -kMoveLimit.x);
+	//object3d_->worldTransform.translate.x = min(object3d_->worldTransform.translate.x, kMoveLimit.x);
+	//object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
+	//object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
+
+
+	// ワールド行列を更新
+	//object3d_->worldTransform.UpdateMatrix();
+
+	//// 3Dレティクルのワールド座標を取得
+	//Vector3 positionReticle = GetWorldPosition();
+
+	//// ビューポート行列
+	//Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
+	//// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+	//Matrix4x4 matViewProjectionViewport{};
+	//matViewProjectionViewport =
+	//	Multiply(camera_->GetViewProjection().matView, Multiply(camera_->GetViewProjection().matProjection, matViewport));
+	//// ワールド→スクリーン座標変換
+	//positionReticle = Transforms(positionReticle, matViewProjectionViewport);
+	//// スプライトのレティクルに座標設定
+	//Vector2 screenPos = { positionReticle.x, positionReticle.y };
+	//// 左右
+	//if (screenPos.x > WinApp::kClientWidth_ + 1.0f || screenPos.x < 0.0f - 1.0f) {
+	//	// 左右どちらの画面端にいるかを検出
+	//	// 右
+	//	if (screenPos.x > (float)WinApp::kClientWidth_ + 1.0f) {
+	//		screenPos.x = (float)WinApp::kClientWidth_;
+	//	}
+	//	// 左
+	//	else if (screenPos.x < 0.0f - 1.0f) {
+	//		screenPos.x = 0.0f;
+	//	}
+
+	//	// 合成行列の逆行列を計算する
+	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
+	//	// スクリーン座標
+	//	Vector3 posNear = Vector3((float)screenPos.x, (float)screenPos.y, 0);
+	//	Vector3 posFar = Vector3((float)screenPos.x, (float)screenPos.y, 1);
+	//	// スクリーン座標系からワールド座標系へ
+	//	posNear = Transforms(posNear, matInverseVPV);
+	//	posFar = Transforms(posFar, matInverseVPV);
+	//	// マウスレイの方向
+	//	Vector3 mouseDirection = Subtract(posFar, posNear);
+	//	mouseDirection = Normalize(mouseDirection);
+	//	// 3Dレティクルを2Dカーソルに配置
+	//	object3d_->worldTransform.translate = posNear - mouseDirection * 10;
+	//	object3d_->worldTransform.UpdateMatrix();
+	//}
+	//// 上下
+	//if (screenPos.y > WinApp::kClientHeight_ + 1.0f || screenPos.y < 0.0f - 1.0f) {
+	//	// 上下どちらの画面端にいるかを検出
+	//	// 下
+	//	if (screenPos.y > (float)WinApp::kClientHeight_ + 1.0f) {
+	//		screenPos.y = (float)WinApp::kClientHeight_;
+	//	}
+	//	// 上
+	//	else if (screenPos.y < 0.0f - 1.0f) {
+	//		screenPos.y = 0.0f;
+	//	}
+
+	//	// 合成行列の逆行列を計算する
+	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
+	//	// スクリーン座標
+	//	Vector3 posNear = Vector3((float)screenPos.x, (float)screenPos.y, 0);
+	//	Vector3 posFar = Vector3((float)screenPos.x, (float)screenPos.y, 1);
+	//	// スクリーン座標系からワールド座標系へ
+	//	posNear = Transforms(posNear, matInverseVPV);
+	//	posFar = Transforms(posFar, matInverseVPV);
+	//	// マウスレイの方向
+	//	Vector3 mouseDirection = Subtract(posFar, posNear);
+	//	mouseDirection = Normalize(mouseDirection);
+	//	// 3Dレティクルを2Dカーソルに配置
+	//	object3d_->worldTransform.translate = posNear - mouseDirection * 10;
+	//	object3d_->worldTransform.UpdateMatrix();
+	//}
 
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
@@ -280,58 +352,6 @@ void Player::Move() {
 	cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -kMaxSpeed*100, kMaxSpeed*100);
 }
 
-//void Player::Rotate() {
-//	Vector3 rotate = { 0,0,0 };
-//	// 回転速さ[ラジアン/frame]
-//	const float kRotSpeed = 0.02f;
-//	Vector2 joyRange{};
-//	// 押した方向で移動ベクトルを変更
-//	if (input_->PressKey(DIK_A)) {
-//		rotate.y -= kRotSpeed;
-//	}
-//	if (input_->PressKey(DIK_D)) {
-//		rotate.y += kRotSpeed;
-//	}
-//	if (input_->PressKey(DIK_W)) {
-//		rotate.x -= kRotSpeed;
-//	}
-//	if (input_->PressKey(DIK_S)) {
-//		rotate.x += kRotSpeed;
-//	}
-//	// 入力がない時
-//	if (input_->DetectKeyInput(rotateKeys_)) {
-//		rotate = { 0,0,0 };
-//		// 徐々に速度を落とす
-//		rotateVel_ = Lerps::ExponentialInterpolate(rotateVel_, rotate, 2.5f, 0.1f);
-//	}
-//	else {
-//		rotateVel_ = Lerps::ExponentialInterpolate(rotateVel_, rotate, 2.5f, 0.1f);
-//	}
-//
-//	// ゲームパッド
-//	if (Input::GetInstance()->GetJoystickState(0, joyState_)) {
-//		// デッドゾーンの設定
-//		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbRX);
-//		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbRY);
-//		joyRange.y += (float)leftThumbY / SHRT_MAX / 62.8f;
-//		joyRange.x += (float)leftThumbX / SHRT_MAX / 62.8f;
-//		object3d_->worldTransform.rotate.x -= joyRange.y;
-//		object3d_->worldTransform.rotate.y += joyRange.x;
-//		object3d_->worldTransform.UpdateMatrix();
-//	}
-//
-//	// 回転速度の制限
-//	rotateVel_.x = std::clamp<float>(rotateVel_.x, -0.04f, 0.04f);
-//	rotateVel_.y = std::clamp<float>(rotateVel_.y, -0.04f, 0.04f);
-//
-//	// 回転を足す
-//	object3d_->worldTransform.rotate += rotateVel_;
-//
-//	// 回転角の制限
-//	object3d_->worldTransform.rotate.x = std::clamp<float>(object3d_->worldTransform.rotate.x, -0.4f, 0.4f);
-//	object3d_->worldTransform.rotate.y = std::clamp<float>(object3d_->worldTransform.rotate.y, -0.74f, 0.74f);
-//}
-
 void Player::Aim() {
 	Deploy3DReticle();
 	// ロックオン処理
@@ -455,9 +475,6 @@ void Player::Deploy2DReticle() {
 		object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
 		object3dReticle_->worldTransform.UpdateMatrix();
 	}
-	else {
-		
-	}
 	// 上下
 	if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f || sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
 		isVertical_ = true;
@@ -485,9 +502,6 @@ void Player::Deploy2DReticle() {
 		// 3Dレティクルを2Dカーソルに配置
 		object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
 		object3dReticle_->worldTransform.UpdateMatrix();
-	}
-	else {
-		
 	}
 #pragma endregion
 }
