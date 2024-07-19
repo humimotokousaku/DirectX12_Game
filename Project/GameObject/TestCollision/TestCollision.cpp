@@ -34,6 +34,9 @@ void TestCollision::OnCollision(Collider* collider) {
 
 	// 衝突したオブジェクトとの方向ベクトル
 	Vector3 dirVel = GetWorldPosition() - collider->GetWorldPosition();
+	dirVel.x = fabsf(dirVel.x);
+	dirVel.y = fabsf(dirVel.y);
+	dirVel.z = fabsf(dirVel.z);
 
 	// minを正数に直す
 	aabb.min.x = fabsf(aabb.min.x);
