@@ -45,26 +45,23 @@ public:// パブリックなメンバ関数
 	/// 
 
 public:
-	///
-	/// Getter
-	/// 
-
+#pragma region Getter
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 3Dレティクルの座標
 	Vector3 GetWorld3DReticlePosition();
 	// カメラの移動幅
 	Vector3* GetCameraOffset() { return &cameraOffset_; }
+	// カメラの回転幅
+	Vector3* GetCameraRotateOffset() { return &cameraRotateOffset_; }
 	/// <summary>
 	/// 体のワールドトランスフォームを取得
 	/// </summary>
 	/// <returns></returns>
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
+#pragma endregion
 
-	///
-	/// Setter
-	/// 
-	
+#pragma region Setter
 	// モデルを追加
 	void AddModel(Model* model) { models_.push_back(model); }
 
@@ -83,6 +80,7 @@ public:
 	/// </summary>
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
+#pragma endregion
 
 	///
 	/// 純粋仮想関数
@@ -136,9 +134,15 @@ public:// 定数
 	const Vector3 kRotateSpeedAttenuationRate = { 0.6f,0.6f,0.6f };
 
 	// 自機の最大移動速度
-	const float kMaxSpeed = 0.05f;
+	const float kMaxSpeed = 0.1f;
 	// 自機の最大回転速度
 	const float kMaxRotSpeed = 0.9f;
+
+#pragma region カメラ演出
+	// 回転幅
+	const Vector3 kMaxCameraRotDirection = { 0.1f,0.1f,0.1f };
+
+#pragma endregion
 
 	// カメラから照準オブジェクトの距離
 	const float kDistanceObject = 50.0f;
@@ -201,8 +205,13 @@ private:// プライベートなメンバ変数
 	//自機の回転速度
 	Vector3 rotateVel_;
 	Vector3 kRotateSpeedRate = { 0.5f,0.5f,0.5f };
+
+#pragma region カメラ演出
 	// カメラの移動
 	Vector3 cameraOffset_;
+	// カメラの回転
+	Vector3 cameraRotateOffset_;
+#pragma endregion
 
 	// 横方向
 	bool isVertical_;

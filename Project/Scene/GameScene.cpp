@@ -87,6 +87,7 @@ void GameScene::Initialize() {
 	enemyManager_->SetRailCameraProgress(railCamera_->GetRailPercentage());
 	// 
 	followCamera_->SetCameraOffset(player_->GetCameraOffset());
+	followCamera_->SetCameraRotateOffset(player_->GetCameraRotateOffset());
 
 	// Skybox
 	//cube_ = std::make_unique<Cube>();
@@ -144,7 +145,8 @@ void GameScene::Update() {
 
 	// デバッグカメラの更新
 	railCamera_->Update();
-	followCamera_->SetPlayerPos(player_->GetWorldPosition());
+	//followCamera_->SetPlayerPos(player_->GetWorldPosition());
+	followCamera_->SetPlayerPos(railCamera_->GetWorldTransform().translate);
 	followCamera_->Update();
 
 	// 衝突マネージャー(当たり判定)

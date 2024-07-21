@@ -5,6 +5,7 @@
 #include "DirectXCommon.h"
 #include "WorldTransform.h"
 #include "Camera.h"
+#include "PipelineManager.h"
 #include <d3d12.h>
 
 class Sphere
@@ -21,8 +22,8 @@ public:
 	void Initialize();
 
 	// 描画処理
-	void Draw(uint32_t textureHandle);
-	void Draw();
+	void Draw(uint32_t textureHandleint, int fillMode = kFillModeSolid);
+	void Draw(int fillMode = kFillModeSolid);
 
 	// 解放処理
 	//void Release();

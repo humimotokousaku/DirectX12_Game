@@ -14,8 +14,8 @@ void Sphere::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 
 	// テクスチャの読み込み
-	textureManager_->LoadTexture("Default", "white.png");
-	defaultTexture_ = textureManager_->GetSrvIndex("Default", "white.png");
+	textureManager_->LoadTexture("DefaultTexture", "white.png");
+	defaultTexture_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
 
 	CreateVertexResource();
 
@@ -121,7 +121,7 @@ void Sphere::Initialize() {
 	worldTransform.Initialize();
 }
 
-void Sphere::Draw(uint32_t textureHandle) {
+void Sphere::Draw(uint32_t textureHandle, int fillMode) {
 	worldTransform.UpdateMatrix();
 
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -133,8 +133,8 @@ void Sphere::Draw(uint32_t textureHandle) {
 
 	/// コマンドを積む
 	// 使用するPSO
-	Object3dPSO::GetInstance()->SetCommand();
-	
+	PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
+
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 
 	directXCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform.constBuff_->GetGPUVirtualAddress());
@@ -154,7 +154,7 @@ void Sphere::Draw(uint32_t textureHandle) {
 	directXCommon_->GetCommandList()->DrawInstanced(vertexIndex, 1, 0, 0);
 }
 
-void Sphere::Draw() {
+void Sphere::Draw(int fillMode) {
 	worldTransform.UpdateMatrix();
 
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -166,7 +166,7 @@ void Sphere::Draw() {
 
 	/// コマンドを積む
 	// 使用するPSO
-	Object3dPSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
 
 	directXCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 

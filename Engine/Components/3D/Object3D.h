@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "ModelManager.h"
 #include "Sphere.h"
+#include "PipelineManager.h"
 
 class Object3D {
 public:
@@ -25,11 +26,11 @@ public:
 	/// </summary>
 	/// <param name="viewProjection">カメラ</param>
 	/// <param name="textureNum">テクスチャ番号</param>
-	void Draw(uint32_t textureNum);
+	void Draw(uint32_t textureNum, int fillMode = kFillModeSolid);
 	/// <summary>
 	/// 描画処理(モデルで使われているテクスチャを使用する)
 	/// </summary>
-	void Draw();
+	void Draw(int fillMode = kFillModeSolid);
 
 	/// <summary>
 	/// 今使用しているアニメーションの検出と更新
@@ -44,9 +45,9 @@ public:
 	void ImGuiParameter(const char* name);
 
 	/// <summary>
-	/// モデルのエディターモードを起動
+	/// モデルの頂点位置を確認するImGuiを起動
 	/// </summary>
-	void StartEditor();
+	void CheckVertex();
 
 #pragma region Getter
 	// モデル
@@ -55,7 +56,10 @@ public:
 
 #pragma region Setter
 	// カメラ
-	void SetCamera(Camera* camera) { camera_ = camera; }
+	void SetCamera(Camera* camera) { 
+		camera_ = camera; 
+		sphere_->SetCamera(camera_);
+	}
 
 	// モデルのセット
 	void SetModel(const std::string& directoryPath, const std::string& filePath) { 
@@ -219,4 +223,6 @@ private:// プライベートな変数
 	std::unique_ptr<Sphere> sphere_;
 	// エディターモード起動
 	bool isEditor_;
+	int selectVertex_ = -1;
+	//const char* verteciesName_[];
 };

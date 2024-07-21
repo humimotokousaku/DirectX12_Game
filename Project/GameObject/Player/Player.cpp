@@ -88,83 +88,9 @@ void Player::Update() {
 	// 移動限界座標
 	const Vector2 kMoveLimit = { 7.0f, 4.0f };
 	// 範囲を超えない処理
-	//object3d_->worldTransform.translate.x = max(object3d_->worldTransform.translate.x, -kMoveLimit.x);
-	//object3d_->worldTransform.translate.x = min(object3d_->worldTransform.translate.x, kMoveLimit.x);
-	//object3d_->worldTransform.translate.y = max(object3d_->worldTransform.translate.y, -kMoveLimit.y);
-	//object3d_->worldTransform.translate.y = min(object3d_->worldTransform.translate.y, kMoveLimit.y);
-
-
-	// ワールド行列を更新
-	//object3d_->worldTransform.UpdateMatrix();
-
-	//// 3Dレティクルのワールド座標を取得
-	//Vector3 positionReticle = GetWorldPosition();
-
-	//// ビューポート行列
-	//Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
-	//// ビュー行列とプロジェクション行列、ビューポート行列を合成する
-	//Matrix4x4 matViewProjectionViewport{};
-	//matViewProjectionViewport =
-	//	Multiply(camera_->GetViewProjection().matView, Multiply(camera_->GetViewProjection().matProjection, matViewport));
-	//// ワールド→スクリーン座標変換
-	//positionReticle = Transforms(positionReticle, matViewProjectionViewport);
-	//// スプライトのレティクルに座標設定
-	//Vector2 screenPos = { positionReticle.x, positionReticle.y };
-	//// 左右
-	//if (screenPos.x > WinApp::kClientWidth_ + 1.0f || screenPos.x < 0.0f - 1.0f) {
-	//	// 左右どちらの画面端にいるかを検出
-	//	// 右
-	//	if (screenPos.x > (float)WinApp::kClientWidth_ + 1.0f) {
-	//		screenPos.x = (float)WinApp::kClientWidth_;
-	//	}
-	//	// 左
-	//	else if (screenPos.x < 0.0f - 1.0f) {
-	//		screenPos.x = 0.0f;
-	//	}
-
-	//	// 合成行列の逆行列を計算する
-	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-	//	// スクリーン座標
-	//	Vector3 posNear = Vector3((float)screenPos.x, (float)screenPos.y, 0);
-	//	Vector3 posFar = Vector3((float)screenPos.x, (float)screenPos.y, 1);
-	//	// スクリーン座標系からワールド座標系へ
-	//	posNear = Transforms(posNear, matInverseVPV);
-	//	posFar = Transforms(posFar, matInverseVPV);
-	//	// マウスレイの方向
-	//	Vector3 mouseDirection = Subtract(posFar, posNear);
-	//	mouseDirection = Normalize(mouseDirection);
-	//	// 3Dレティクルを2Dカーソルに配置
-	//	object3d_->worldTransform.translate = posNear - mouseDirection * 10;
-	//	object3d_->worldTransform.UpdateMatrix();
-	//}
-	//// 上下
-	//if (screenPos.y > WinApp::kClientHeight_ + 1.0f || screenPos.y < 0.0f - 1.0f) {
-	//	// 上下どちらの画面端にいるかを検出
-	//	// 下
-	//	if (screenPos.y > (float)WinApp::kClientHeight_ + 1.0f) {
-	//		screenPos.y = (float)WinApp::kClientHeight_;
-	//	}
-	//	// 上
-	//	else if (screenPos.y < 0.0f - 1.0f) {
-	//		screenPos.y = 0.0f;
-	//	}
-
-	//	// 合成行列の逆行列を計算する
-	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-	//	// スクリーン座標
-	//	Vector3 posNear = Vector3((float)screenPos.x, (float)screenPos.y, 0);
-	//	Vector3 posFar = Vector3((float)screenPos.x, (float)screenPos.y, 1);
-	//	// スクリーン座標系からワールド座標系へ
-	//	posNear = Transforms(posNear, matInverseVPV);
-	//	posFar = Transforms(posFar, matInverseVPV);
-	//	// マウスレイの方向
-	//	Vector3 mouseDirection = Subtract(posFar, posNear);
-	//	mouseDirection = Normalize(mouseDirection);
-	//	// 3Dレティクルを2Dカーソルに配置
-	//	object3d_->worldTransform.translate = posNear - mouseDirection * 10;
-	//	object3d_->worldTransform.UpdateMatrix();
-	//}
-
+	//object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x , kMoveLimit.x);
+	//object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y , kMoveLimit.y);
+	
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -196,6 +122,7 @@ void Player::Update() {
 	ImGui::DragFloat3("moveVel", &moveVel_.x, 0);
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
+	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
 #endif
 }
 
@@ -302,13 +229,17 @@ void Player::Move() {
 		// 徐々に速度を落とす
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.1f).y;
 		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.02f).x;
+		// カメラ演出
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.x, 0.1f).x;
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.05f).y;
 		// レティクルが画面端でなければ回転
 		if (!isVertical_) {
-			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.05f).x;
+			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.07f).x;
+			// カメラ演出
+			cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.x, 0.1f).x;
 		}
 	}
 	// 横移動
@@ -318,21 +249,31 @@ void Player::Move() {
 		rotate.y = 0.0f;
 		rotate.z = 0.0f;
 		// 徐々に速度を落とす
-		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;
+		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;		
 		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.02f).y;
 		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.02f).z;
+		// カメラ演出
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.y, 0.1f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.z, 0.1f).z;
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.05f).x;
 		// レティクルが画面端でなければ回転
 		if (!isHorizontal_) {
-			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.05f).y;
-			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.05f).z;
+			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.07f).y;
+			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.07f).z;
+			// カメラ演出
+			cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.y, 0.1f).y;
+			cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.z, 0.1f).z;
 		}
 	}
 #pragma endregion
 
+	// カメラの移動幅上限
+	//cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -kMaxSpeed, kMaxSpeed);
+	//cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -kMaxSpeed, kMaxSpeed);
+	//cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -kMaxSpeed, kMaxSpeed);
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
 	moveVel_.y = std::clamp<float>(moveVel_.y, -kMaxSpeed, kMaxSpeed);
@@ -346,10 +287,7 @@ void Player::Move() {
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate = rotateVel_;
 
-	cameraOffset_ += moveVel_;
-	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -kMaxSpeed*100, kMaxSpeed*100);
-	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -kMaxSpeed*100, kMaxSpeed*100);
-	cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -kMaxSpeed*100, kMaxSpeed*100);
+	cameraOffset_ += moveVel_ * 0.3f;
 }
 
 void Player::Aim() {

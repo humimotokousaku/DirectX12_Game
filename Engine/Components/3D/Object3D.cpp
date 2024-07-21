@@ -1,6 +1,7 @@
 #include "Object3D.h"
 #include "PipelineManager.h"
 #include "ModelManager.h"
+#include <array>
 
 Object3D::~Object3D() {
 	worldTransform.constBuff_.ReleaseAndGetAddressOf();
@@ -12,23 +13,29 @@ Object3D::~Object3D() {
 void Object3D::Initialize() {
 	worldTransform.Initialize();
 	model_ = new Model();
+	sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize();
 }
 
-void Object3D::Draw(uint32_t textureNum) {
+void Object3D::Draw(uint32_t textureNum, int fillMode) {
 	// カメラ
 	if (camera_) {
 		//camera_->Update();
 	}
-
 	// ワールド座標の更新
 	worldTransform.UpdateMatrix();
+
+	if (isEditor_) {
+		// 選択されている頂点
+		sphere_->Draw(kFillModeWireFrame);
+	}
 
 	/// コマンドを積む
 
 	// スキンクラスタが存在している場合
 	if (model_->GetModelData().isSkinClusterData) {
 		// 使用するPSO
-		SkinningPSO::GetInstance()->SetCommand();
+		PipelineManager::GetInstance()->SetSkinningPSO(fillMode);
 		// アニメーション
 		if (model_->animation_.isActive) {
 			AnimationUpdate(model_->skinCluster_, model_->skeleton_, model_->animation_, animationTime_);
@@ -36,7 +43,7 @@ void Object3D::Draw(uint32_t textureNum) {
 	}
 	else {
 		// 使用するPSO
-		Object3dPSO::GetInstance()->SetCommand();
+		PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
 		// スキンクラスターはないがアニメーションがある
 		if (model_->animation_.isActive) {
 			animationTime_ += 1.0f / 60.0f * model_->animation_.playBackSpeed;
@@ -70,7 +77,7 @@ void Object3D::Draw(uint32_t textureNum) {
 	model_->Draw(camera_->GetViewProjection(), textureNum);
 }
 
-void Object3D::Draw() {
+void Object3D::Draw(int fillMode) {
 	// カメラ
 	if (camera_) {
 		//camera_->Update();
@@ -88,7 +95,7 @@ void Object3D::Draw() {
 	// スキンクラスタが存在している場合
 	if (model_->GetModelData().isSkinClusterData) {
 		// 使用するPSO
-		SkinningPSO::GetInstance()->SetCommand();
+		PipelineManager::GetInstance()->SetSkinningPSO(fillMode);
 		// アニメーション
 		if (model_->animation_.isActive) {
 			AnimationUpdate(model_->skinCluster_, skeleton_, model_->animation_, animationTime_);
@@ -96,7 +103,7 @@ void Object3D::Draw() {
 	}
 	else {
 		// 使用するPSO
-		Object3dPSO::GetInstance()->SetCommand();
+		PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
 		// スキンクラスターはないがアニメーションがある
 		if (model_->animation_.isActive) {
 			animationTime_ += 1.0f / 60.0f * model_->animation_.playBackSpeed;
@@ -160,6 +167,24 @@ void Object3D::CurrentAnimUpdate() {
 void Object3D::ImGuiParameter(const char* name) {
 	int index{};
 	ImGui::Begin(name);
+	if (isEditor_) {
+		//int size = model_->GetModelData().vertices.size();
+		//for (int i = 0; i < size; i++) {
+		//	std::string a = std::to_string(i);
+		//	verteciesName_[i] = "vertex"; +a.c_str();
+		//}
+		////ImGui::ListBox("##ListBox", &selectVertex_, verteciesName_, size, 4);
+		//// Create a ListBox
+		//if (ImGui::ListBox("##ListBox", &selectVertex_, verteciesName_, size, 4))
+		//{
+		//	// Item was clicked
+		//	if (selectVertex_ >= 0 && selectVertex_ < size)
+		//	{
+		//		// Handle the selected item
+		//		ImGui::Text("You selected: %s", verteciesName_[selectVertex_]);
+		//	}
+		//}
+	}
 	for (int i = 0; i < animation_.size(); i++) {
 		// アニメーションの名前を設定していないとき
 		if (animation_[i].name[0] == '\0') {
@@ -193,8 +218,6 @@ void Object3D::ImGuiParameter(const char* name) {
 	ImGui::End();
 }
 
-void Object3D::StartEditor() {
+void Object3D::CheckVertex() {
 	isEditor_ = true;
-	sphere_ = std::make_unique<Sphere>();
-	sphere_->Initialize();
 }

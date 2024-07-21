@@ -13,11 +13,6 @@ class LinePSO : public IPSO
 {
 public:
 	/// <summary>
-	/// シングルトン
-	/// </summary>
-	static LinePSO* GetInstance();
-
-	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) override;
@@ -42,9 +37,9 @@ public:
 	/// </summary>
 	void SetCommand(Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr) {
 		// シグネチャの設定
-		dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
+		dxCommon_->GetCommandList()->SetGraphicsRootSignature(psoData_.rootSignature_.Get());
 		// PSOを設定
-		dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());
+		dxCommon_->GetCommandList()->SetPipelineState(psoData_.graphicsPipelineState_.Get());
 		// 形状を設定
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	}

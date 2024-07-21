@@ -21,7 +21,9 @@ public:
 		camera_->worldTransform_.parent_ = target;
 	}
 
-	void SetCameraOffset(Vector3* cameraOffset) { offset_ = cameraOffset; }
+	void SetCameraOffset(Vector3* offset) { offset_ = offset; }
+
+	void SetCameraRotateOffset(Vector3* rotateOffset) { rotateOffset_ = rotateOffset; }
 
 	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
 
@@ -47,11 +49,17 @@ public:
 		return result;
 	}
 
+public:
+	// カメラ補間の精度
+	const float followRate = 0.1f;
+
 private:
 	// カメラ
 	std::unique_ptr<Camera> camera_;
 
 	Vector3* offset_;
+	Vector3* rotateOffset_;
 
 	Vector3 playerPos_;
+	Vector3 interTarget_;
 };

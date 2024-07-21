@@ -128,6 +128,7 @@ void TitleScene::Initialize() {
 	axis_->SetCamera(camera_.get());
 	axis_->worldTransform.translate = { -2,0,5 };
 	axis_->SetIsLighting(true);
+	axis_->CheckVertex();
 #pragma endregion
 
 	// Skybox
@@ -147,6 +148,7 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
+	ImGui::ShowDemoWindow();
 #pragma region カメラ
 	camera_->Update();
 	// 座標移動
@@ -201,6 +203,7 @@ void TitleScene::Update() {
 	//human_[0]->ImGuiParameter("Human");
 	//plane_[0]->ImGuiParameter("Plane");
 	//box_[0]->ImGuiParameter("AnimCube");
+	axis_->ImGuiParameter("axis");
 #endif
 }
 

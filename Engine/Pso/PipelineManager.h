@@ -21,6 +21,7 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
+#include <array>
 
 /// <summary>
 /// 使用できるポストエフェクトの種類
@@ -56,6 +57,14 @@ enum BlendMode {
 };
 
 /// <summary>
+/// オブジェクトの表示モード
+/// </summary>
+enum FillMode {
+	kFillModeSolid,		// 塗りつぶし
+	kFillModeWireFrame	// ワイヤーフレーム
+};
+
+/// <summary>
 /// 全てのPSOインスタンスを作成するクラス
 /// </summary>
 class PipelineManager {
@@ -79,17 +88,16 @@ public:
 	/// 描画前の処理
 	/// </summary>
 	void PreDraw();
-	//void PostDraw();
 
-	/// Setter
-
+#pragma region Setter
 	// ポストエフェクトで使用するコマンドをセット
 	void SetPostEffectPSO(int index, Microsoft::WRL::ComPtr<ID3D12Resource> resource) { postEffect_[index]->SetCommand(resource); }
-	void SetObject3dPSO() { object3dPSO_->SetCommand(); }
-	void SetSkinningPSO() { skinningPSO_->SetCommand(); }
+	void SetObject3dPSO(int fillMode) { object3dPSO_[fillMode]->SetCommand(); }
+	void SetSkinningPSO(int fillMode) { skinningPSO_[fillMode]->SetCommand(); }
 	void SetSkyboxPSO() { skyboxPSO_->SetCommand(); }
 	void SetLinePSO() { linePSO_->SetCommand(); }
 	void SetParticlePSO() { particlePSO_->SetCommand(); }
+#pragma endregion
 
 private:// プライベートな関数
 	void DXCInitialize();
@@ -107,11 +115,11 @@ private:
 	D3D12_RECT scissorRect_;
 
 	// PSO
-	Object3dPSO* object3dPSO_;
-	SkinningPSO* skinningPSO_;
-	SkyboxPSO* skyboxPSO_;
-	LinePSO* linePSO_;
-	ParticlePSO* particlePSO_;
+	std::array<std::unique_ptr<Object3dPSO>, 2> object3dPSO_;
+	std::array<std::unique_ptr<SkinningPSO>,2> skinningPSO_;
+	std::unique_ptr<SkyboxPSO> skyboxPSO_;
+	std::unique_ptr<LinePSO> linePSO_;
+	std::unique_ptr<ParticlePSO> particlePSO_;
 	// ポストエフェクトで使用するPSO
 	std::vector<IPSO*> postEffect_;
 

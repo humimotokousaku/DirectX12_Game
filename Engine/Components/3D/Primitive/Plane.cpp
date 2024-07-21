@@ -51,7 +51,7 @@ void Plane::Initialize() {
 	materialData_->shininess = 20;
 }
 
-void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection) {
+void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection, int fillMode) {
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
@@ -60,7 +60,7 @@ void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, c
 	cameraPosData_ = viewProjection.translate;
 
 	// 使用するPSO
-	Object3dPSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetObject3dPSO(kFillModeSolid);
 
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	DirectXCommon::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);

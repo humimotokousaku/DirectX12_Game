@@ -7,13 +7,59 @@ void IPSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHand
 	// directX
 	dxCommon_ = DirectXCommon::GetInstance();
 	// Pipelinemanager
-	dxcUtils_ = dxcUtils;
-	dxcCompiler_ = dxcCompiler;
-	includeHandler_ = includeHandler;
+	psoData_.dxcUtils_ = dxcUtils;
+	psoData_.dxcCompiler_ = dxcCompiler;
+	psoData_.includeHandler_ = includeHandler;
 	// VSのファイル名
-	VSFilePath_ = kDirectoryPath + ConvertString(VS_fileName);
+	psoData_.VSFilePath_ = kDirectoryPath + ConvertString(VS_fileName);
 	// PSのファイル名
-	PSFilePath_ = kDirectoryPath + ConvertString(PS_fileName);
+	psoData_.PSFilePath_ = kDirectoryPath + ConvertString(PS_fileName);
+}
+
+void IPSO::ApplyDetailedSettings() {
+	// シリアライズしてバイナリにする
+	HRESULT hr;
+	hr = D3D12SerializeRootSignature(&psoData_.descriptionRootSignature_,
+		D3D_ROOT_SIGNATURE_VERSION_1, &psoData_.signatureBlob_, &psoData_.errorBlob_);
+	if (FAILED(hr)) {
+		WinApp::Log(reinterpret_cast<char*>(psoData_.errorBlob_->GetBufferPointer()));
+		assert(false);
+	}
+	// バイナリをもとに生成
+	hr = dxCommon_->GetDevice()->CreateRootSignature(0, psoData_.signatureBlob_->GetBufferPointer(),
+		psoData_.signatureBlob_->GetBufferSize(), IID_PPV_ARGS(&psoData_.rootSignature_));
+	assert(SUCCEEDED(hr));
+
+	// rootSignature
+	psoData_.graphicsPipelineStateDescs_.pRootSignature = psoData_.rootSignature_.Get();
+	// InputLayout
+	psoData_.graphicsPipelineStateDescs_.InputLayout = psoData_.inputLayoutDesc_;
+	// vertexShader
+	psoData_.graphicsPipelineStateDescs_.VS = { psoData_.vertexShaderBlob_->GetBufferPointer(),
+	psoData_.vertexShaderBlob_->GetBufferSize() };
+	// pixelShader
+	psoData_.graphicsPipelineStateDescs_.PS = { psoData_.pixelShaderBlob_->GetBufferPointer(),
+	psoData_.pixelShaderBlob_->GetBufferSize() };
+	// DepthStencilの設定
+	psoData_.graphicsPipelineStateDescs_.DepthStencilState = dxCommon_->GetDepthStencilDesc();
+	psoData_.graphicsPipelineStateDescs_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	// blendState
+	psoData_.graphicsPipelineStateDescs_.BlendState = psoData_.blendDesc_;
+	// rasterizerState
+	psoData_.graphicsPipelineStateDescs_.RasterizerState = psoData_.rasterizerDesc_;
+	// 書き込むRTVの情報
+	psoData_.graphicsPipelineStateDescs_.NumRenderTargets = 1;
+	psoData_.graphicsPipelineStateDescs_.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	// 利用するトポロ時（形状）のタイプ。三角形
+	psoData_.graphicsPipelineStateDescs_.PrimitiveTopologyType =
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	// どのように画面に色を打ち込むかの設定（気にしなくてよい）
+	psoData_.graphicsPipelineStateDescs_.SampleDesc.Count = 1;
+	psoData_.graphicsPipelineStateDescs_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	// 実際に生成
+	hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&psoData_.graphicsPipelineStateDescs_,
+		IID_PPV_ARGS(&psoData_.graphicsPipelineState_));
+	assert(SUCCEEDED(hr));
 }
 
 IDxcBlob* IPSO::CompileShader(

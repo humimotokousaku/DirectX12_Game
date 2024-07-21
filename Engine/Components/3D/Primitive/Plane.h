@@ -5,6 +5,7 @@
 #include "DirectXCommon.h"
 #include "WorldTransform.h"
 #include "ViewProjection.h"
+#include "PipelineManager.h"
 #include <d3d12.h>
 
 class Plane {
@@ -20,7 +21,7 @@ public:
 	void Initialize();
 
 	// 描画処理
-	void Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection);
+	void Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection, int fillMode = kFillModeSolid);
 
 	// ImGuiをまとめた関数
 	void ImGuiAdjustParameter();

@@ -150,7 +150,7 @@ void Particles::Draw(uint32_t textureHandle) {
 
 	// コマンドを積む
 	// RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	ParticlePSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetParticlePSO();
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	// DescriptorTableの設定
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(1, srvIndex_);

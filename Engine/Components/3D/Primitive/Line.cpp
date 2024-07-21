@@ -1,6 +1,7 @@
 #include "Line.h"
 #include "ImGuiManager.h"
 #include "LinePSO.h"
+#include "PipelineManager.h"
 #include <cassert>
 
 void Line::Initialize() {
@@ -19,7 +20,7 @@ void Line::Draw() {
 
 	/// コマンドを積む
 	// 使用するPSO
-	LinePSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetLinePSO();
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1,camera_->GetViewProjection().constBuff_->GetGPUVirtualAddress());
 	// マテリアルCBufferの場所を設定
@@ -33,7 +34,7 @@ void Line::Draw(ViewProjection viewProjection) {
 	
 	//worldTransform.UpdateMatrix();
 	// RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	LinePSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetLinePSO();
 
 	// コマンドを積む
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定

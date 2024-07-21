@@ -5,17 +5,6 @@
 #include "SpotLight.h"
 #include <cassert>
 
-//Sprite::Sprite(const std::string& directoryPath, std::string textureFilePath) {
-//	Initialize(directoryPath, textureFilePath);
-//}
-//
-//Sprite* Sprite::Create(const std::string& directoryPath, std::string textureFilePath)
-//{
-//	Sprite* sprite = new Sprite(directoryPath, textureFilePath);
-//
-//	return sprite;
-//}
-
 void Sprite::Initialize(const std::string& directoryPath, std::string textureFilePath) {
 	textureManager_ = TextureManager::GetInstance();
 	psoManager_ = PipelineManager::GetInstance();
@@ -130,7 +119,7 @@ void Sprite::Draw() {
 	worldTransform_.UpdateMatrix();
 	/// コマンドを積む
 	// 使用するPSO
-	Object3dPSO::GetInstance()->SetCommand();
+	PipelineManager::GetInstance()->SetObject3dPSO(kFillModeSolid);
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	DirectXCommon::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 

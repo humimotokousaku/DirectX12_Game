@@ -21,23 +21,37 @@ void PipelineManager::Initialize() {
 	DXCInitialize();
 
 	// 3Dのオブジェクトに使用するPSO
-	object3dPSO_ = Object3dPSO::GetInstance();
-	object3dPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_,"Object3d.VS.hlsl","Object3d.PS.hlsl");
-	object3dPSO_->CreatePSO();
+	object3dPSO_[kFillModeSolid] = std::make_unique<Object3dPSO>();
+	object3dPSO_[kFillModeSolid]->Init(dxcUtils_, dxcCompiler_, includeHandler_,"Object3d.VS.hlsl","Object3d.PS.hlsl");
+	object3dPSO_[kFillModeSolid]->CreatePSO();
+	object3dPSO_[kFillModeWireFrame] = std::make_unique<Object3dPSO>();
+	object3dPSO_[kFillModeWireFrame]->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Object3d.VS.hlsl", "Object3d.PS.hlsl");
+	object3dPSO_[kFillModeWireFrame]->SetPSOData(object3dPSO_[kFillModeSolid]->GetPSOData());
+	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.FillMode = D3D12_FILL_MODE_WIREFRAME;
+	object3dPSO_[kFillModeWireFrame]->CreateRasterizer(rasterizerDesc);
+	object3dPSO_[kFillModeWireFrame]->ApplyDetailedSettings();
+
 	// スキニングを使用しているオブジェクトに使用する
-	skinningPSO_ = SkinningPSO::GetInstance();
-	skinningPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "SkinningObject3d.VS.hlsl", "Object3d.PS.hlsl");
-	skinningPSO_->CreatePSO();
+	skinningPSO_[kFillModeSolid] = std::make_unique<SkinningPSO>();
+	skinningPSO_[kFillModeSolid]->Init(dxcUtils_, dxcCompiler_, includeHandler_, "SkinningObject3d.VS.hlsl", "Object3d.PS.hlsl");
+	skinningPSO_[kFillModeSolid]->CreatePSO();
+	skinningPSO_[kFillModeWireFrame] = std::make_unique<SkinningPSO>();
+	skinningPSO_[kFillModeWireFrame]->Init(dxcUtils_, dxcCompiler_, includeHandler_, "SkinningObject3d.VS.hlsl", "Object3d.PS.hlsl");
+	skinningPSO_[kFillModeWireFrame]->SetPSOData(skinningPSO_[kFillModeSolid]->GetPSOData());
+	skinningPSO_[kFillModeWireFrame]->CreateRasterizer(rasterizerDesc);
+	skinningPSO_[kFillModeWireFrame]->ApplyDetailedSettings();
 	// skyboxを使用しているオブジェクトに使用する
-	skyboxPSO_ = SkyboxPSO::GetInstance();
+	skyboxPSO_ = std::make_unique<SkyboxPSO>();
 	skyboxPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Skybox.VS.hlsl", "Skybox.PS.hlsl");
 	skyboxPSO_->CreatePSO();
 	// 3Dの線に使用するPSO
-	linePSO_ = LinePSO::GetInstance();
+	linePSO_ = std::make_unique<LinePSO>();
 	linePSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_,"LineVS.hlsl", "LinePS.hlsl");
 	linePSO_->CreatePSO();
 	// particleに使用するPSO
-	particlePSO_ = ParticlePSO::GetInstance();
+	particlePSO_ = std::make_unique<ParticlePSO>();
 	particlePSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_,"Particle.VS.hlsl","Particle.PS.hlsl");
 	particlePSO_->CreatePSO();
 
