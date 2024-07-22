@@ -94,6 +94,19 @@ public:
 	void OnCollision(Collider* collider)override;
 
 private:// プライベートなメンバ関数
+	float AngleBetweenComponents(float componentA, float componentB) {
+		return std::acos(componentA / std::sqrt(componentA * componentA) * (componentB / std::sqrt(componentB * componentB)));
+	}
+
+	Vector3 CalculateAndPrintAngles(const Vector3& A, const Vector3& B) {
+		Vector3 result{};
+		result.x = AngleBetweenComponents(A.x, B.x);
+		result.y = AngleBetweenComponents(A.y, B.y);
+		result.z = AngleBetweenComponents(A.z, B.z);
+
+		return result;
+	}
+
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
@@ -131,12 +144,15 @@ public:// 定数
 	// 自機の移動速度の減衰率
 	const Vector3 kMoveSpeedAttenuationRate = { 4.0f, 4.0f, 4.0f };
 	// 自機の回転速度の減衰率
-	const Vector3 kRotateSpeedAttenuationRate = { 0.6f,0.6f,0.6f };
+	const Vector3 kRotateSpeedAttenuationRate = { 1.0f,1.0f,1.0f };
 
 	// 自機の最大移動速度
-	const float kMaxSpeed = 0.1f;
+	const float kMaxSpeed = 0.3f;
 	// 自機の最大回転速度
-	const float kMaxRotSpeed = 0.9f;
+	const Vector3 kMaxRotSpeed = { 0.5f , 0.7f, 1.0f };
+
+	// 移動限界座標
+	const Vector2 kMoveLimit = { 19.0f, 10.0f };
 
 #pragma region カメラ演出
 	// 回転幅

@@ -62,7 +62,6 @@ void GameScene::Initialize() {
 	player_->Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
-	followCamera_->SetParent(player_->GetWorldTransform());
 
 	// エネミーマネージャの生成
 	enemyManager_ = std::make_unique<EnemyManager>();
@@ -88,6 +87,7 @@ void GameScene::Initialize() {
 	// 
 	followCamera_->SetCameraOffset(player_->GetCameraOffset());
 	followCamera_->SetCameraRotateOffset(player_->GetCameraRotateOffset());
+	followCamera_->SetParent(&railCamera_->GetWorldTransform());
 
 	// Skybox
 	//cube_ = std::make_unique<Cube>();

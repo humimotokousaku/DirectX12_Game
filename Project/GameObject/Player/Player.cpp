@@ -85,17 +85,20 @@ void Player::Update() {
 	// 弾の発射処理
 	Attack();
 
-	// 移動限界座標
-	const Vector2 kMoveLimit = { 7.0f, 4.0f };
 	// 範囲を超えない処理
-	//object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x , kMoveLimit.x);
-	//object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y , kMoveLimit.y);
-	
+	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
+	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y, kMoveLimit.y);
+	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.x, kMoveLimit.x);
+
+	// 全ての処理が終わってからz軸を代入
+	// 現状、オイラー角を使用しているのでジンバルロックを回避できない。なのでレティクルの挙動をマシにするために最後に入れている
+	object3d_->worldTransform.rotate.z = rotateVel_.z;
+
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
 	// 無敵演出
-	if (isInvinsible_) {	
+	if (isInvinsible_) {
 		if (invinsibleFrame_ % 3 == 0) {
 			object3d_->SetColor(Vector4{ 1,1,1,1 });
 		}
@@ -188,21 +191,21 @@ void Player::Move() {
 	// キーボード入力
 	if (input_->PressKey(DIK_UP)) {
 		move.y += kMaxSpeed;
-		rotate.x -= kMaxRotSpeed;
+		rotate.x -= kMaxRotSpeed.x;
 	}
 	if (input_->PressKey(DIK_DOWN)) {
 		move.y -= kMaxSpeed;
-		rotate.x += kMaxRotSpeed;
+		rotate.x += kMaxRotSpeed.x;
 	}
 	if (input_->PressKey(DIK_RIGHT)) {
 		move.x += kMaxSpeed;
-		rotate.y += kMaxRotSpeed;
-		rotate.z -= kMaxRotSpeed;
+		rotate.y += kMaxRotSpeed.y;
+		rotate.z -= kMaxRotSpeed.z;
 	}
 	if (input_->PressKey(DIK_LEFT)) {
 		move.x -= kMaxSpeed;
-		rotate.y -= kMaxRotSpeed;
-		rotate.z += kMaxRotSpeed;
+		rotate.y -= kMaxRotSpeed.y;
+		rotate.z += kMaxRotSpeed.z;
 	}
 #pragma endregion
 
@@ -214,9 +217,9 @@ void Player::Move() {
 		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbLY);
 		move.x += (float)leftThumbX / SHRT_MAX * kMaxSpeed;
 		move.y += (float)leftThumbY / SHRT_MAX * kMaxSpeed;
-		rotate.y += (float)leftThumbX / SHRT_MAX * kMaxRotSpeed;
-		rotate.z -= (float)leftThumbX / SHRT_MAX * kMaxRotSpeed;
-		rotate.x -= (float)leftThumbY / SHRT_MAX * kMaxRotSpeed;
+		rotate.y += (float)leftThumbX / SHRT_MAX * kMaxRotSpeed.y;
+		rotate.z -= (float)leftThumbX / SHRT_MAX * kMaxRotSpeed.z;
+		rotate.x -= (float)leftThumbY / SHRT_MAX * kMaxRotSpeed.x;
 	}
 #pragma endregion
 
@@ -224,70 +227,70 @@ void Player::Move() {
 	// 縦移動
 	// 移動をしていない場合
 	if (move.y == 0.0f) {
-		move.y = 0.0f;
-		rotate.x = 0.0f;
 		// 徐々に速度を落とす
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.1f).y;
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.02f).x;
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.1f).x;
 		// カメラ演出
-		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.x, 0.1f).x;
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.x, 0.15f).x;
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.05f).y;
 		// レティクルが画面端でなければ回転
 		if (!isVertical_) {
-			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.07f).x;
-			// カメラ演出
-			cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.x, 0.1f).x;
+			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;		
 		}
+		// カメラ演出
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.x, 0.1f).x;
 	}
 	// 横移動
 	// 移動をしていない場合
 	if (move.x == 0.0f) {
-		move.x = 0.0f;
-		rotate.y = 0.0f;
-		rotate.z = 0.0f;
 		// 徐々に速度を落とす
-		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;		
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.02f).y;
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.02f).z;
+		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.1f).y;
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.1f).z;
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.y, 0.1f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.z, 0.1f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.y, 0.15f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.z, 0.15f).z;
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.05f).x;
 		// レティクルが画面端でなければ回転
 		if (!isHorizontal_) {
-			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.07f).y;
-			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.07f).z;
-			// カメラ演出
-			cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.y, 0.1f).y;
-			cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.z, 0.1f).z;
+			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
+			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
 		}
+		// カメラ演出
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.y, 0.1f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.z, 0.1f).z;
 	}
 #pragma endregion
 
-	// カメラの移動幅上限
-	//cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -kMaxSpeed, kMaxSpeed);
-	//cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -kMaxSpeed, kMaxSpeed);
-	//cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -kMaxSpeed, kMaxSpeed);
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
 	moveVel_.y = std::clamp<float>(moveVel_.y, -kMaxSpeed, kMaxSpeed);
 	moveVel_.z = std::clamp<float>(moveVel_.z, -kMaxSpeed, kMaxSpeed);
 	// 回転速度の上限
-	rotateVel_.x = std::clamp<float>(rotateVel_.x, -kMaxRotSpeed, kMaxRotSpeed);
-	rotateVel_.y = std::clamp<float>(rotateVel_.y, -kMaxRotSpeed, kMaxRotSpeed);
-	rotateVel_.z = std::clamp<float>(rotateVel_.z, -0.3f, 0.3f);
+	rotateVel_.x = std::clamp<float>(rotateVel_.x, -kMaxRotSpeed.x, kMaxRotSpeed.x);
+	rotateVel_.y = std::clamp<float>(rotateVel_.y, -kMaxRotSpeed.y, kMaxRotSpeed.y);
+	rotateVel_.z = std::clamp<float>(rotateVel_.z, -kMaxRotSpeed.z, kMaxRotSpeed.z);
 	// 速度を足す
 	object3d_->worldTransform.translate += moveVel_;
 	// 求めた回転を代入
-	object3d_->worldTransform.rotate = rotateVel_;
+	object3d_->worldTransform.rotate.x = rotateVel_.x;
+	object3d_->worldTransform.rotate.y = rotateVel_.y;
+	object3d_->worldTransform.rotate.z = 0;
 
-	cameraOffset_ += moveVel_ * 0.3f;
+	cameraOffset_ += moveVel_ / 2;
+	// カメラの移動幅上限
+	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
+	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);
+	cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -3.5f, 3.5f);
+
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void Player::Aim() {
@@ -349,14 +352,14 @@ void Player::DecrementHP() {
 
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
-	Vector3 offset{ 0, 0, 1.0f };
+	Vector3 offset{ 0, 0, kDistanceObject };
 
 	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, object3d_->worldTransform.matWorld_);
-	offset = Normalize(offset);
-	// ベクトルの長さを整える
-	offset *= kDistanceObject;
-	
+	// 回転行列を合成
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate);
+	//offset = TransformNormal(offset, object3d_->worldTransform.matWorld_);
+	offset = TransformNormal(offset, rotateMatrix);
+
 	// 3Dレティクルの座標を設定
 	object3dReticle_->worldTransform.translate = GetWorldPosition() + offset;
 
@@ -368,7 +371,7 @@ void Player::Deploy3DReticle() {
 
 void Player::Deploy2DReticle() {
 	// 3Dレティクルのワールド座標を取得
-	Vector3 positionReticle = object3dReticle_->worldTransform.translate;
+	Vector3 positionReticle = GetWorld3DReticlePosition();//object3dReticle_->worldTransform.translate;
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
@@ -384,6 +387,8 @@ void Player::Deploy2DReticle() {
 #pragma region 画面端の処理
 	isHorizontal_ = false;
 	isVertical_ = false;
+
+	Vector3 toReticle{};
 	// 左右
 	if (sprite2DReticle_->GetPos().x > WinApp::kClientWidth_ + 1.0f || sprite2DReticle_->GetPos().x < 0.0f - 1.0f) {
 		// 左右どちらかの画面端にいる
@@ -394,7 +399,7 @@ void Player::Deploy2DReticle() {
 			sprite2DReticle_->SetPosX((float)WinApp::kClientWidth_);
 		}
 		// 左
-		else if(sprite2DReticle_->GetPos().x < 0.0f - 1.0f){
+		else if (sprite2DReticle_->GetPos().x < 0.0f - 1.0f) {
 			sprite2DReticle_->SetPosX(0.0f);
 		}
 
@@ -412,34 +417,56 @@ void Player::Deploy2DReticle() {
 		// 3Dレティクルを2Dカーソルに配置
 		object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
 		object3dReticle_->worldTransform.UpdateMatrix();
+
+
+
+		//Vector3 offset{ 0, 0, 1.0f };
+		//// 自機のワールド行列の回転を反映する
+		//Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate + object3d_->worldTransform.parent_->rotate);
+		//offset = TransformNormal(offset, rotateMatrix);
+		//offset = Normalize(offset);
+		//// ベクトルの長さを整える
+		//offset *= kDistanceObject;
+		////offset += object3d_->worldTransform.parent_->translate;
+
+
+
+		//toReticle = (GetWorld3DReticlePosition()-GetWorldPosition());
+		//Vector3 r = CalculateAndPrintAngles(offset, toReticle);
+		//float a = std::atan2(toReticle.z, toReticle.x);
+		//// Y軸周り角度(θy)
+		//object3d_->worldTransform.rotate.y = r.y;
 	}
 	// 上下
-	if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f || sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
-		isVertical_ = true;
-		// 上下どちらの画面端にいるかを検出し、レティクル座標を合わせる
-		// 下
-		if (sprite2DReticle_->GetPos().y > (float)WinApp::kClientHeight_ + 1.0f) {
-			sprite2DReticle_->SetPosY((float)WinApp::kClientHeight_);
-		}
-		// 上
-		else if(sprite2DReticle_->GetPos().y < 0.0f - 1.0f){
-			sprite2DReticle_->SetPosY(0.0f);
-		}
+	//if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f || sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
+	//	isVertical_ = true;
+	//	// 上下どちらの画面端にいるかを検出し、レティクル座標を合わせる
+	//	// 下
+	//	if (sprite2DReticle_->GetPos().y > (float)WinApp::kClientHeight_ + 1.0f) {
+	//		sprite2DReticle_->SetPosY((float)WinApp::kClientHeight_);
+	//	}
+	//	// 上
+	//	else if (sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
+	//		sprite2DReticle_->SetPosY(0.0f);
+	//	}
 
-		// 合成行列の逆行列を計算する
-		Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-		// スクリーン座標
-		Vector3 posNear = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 0);
-		Vector3 posFar = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 1);
-		// スクリーン座標系からワールド座標系へ
-		posNear = Transforms(posNear, matInverseVPV);
-		posFar = Transforms(posFar, matInverseVPV);
-		// マウスレイの方向
-		Vector3 mouseDirection = Subtract(posFar, posNear);
-		mouseDirection = Normalize(mouseDirection);
-		// 3Dレティクルを2Dカーソルに配置
-		object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
-		object3dReticle_->worldTransform.UpdateMatrix();
-	}
+	//	// 合成行列の逆行列を計算する
+	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
+	//	// スクリーン座標
+	//	Vector3 posNear = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 0);
+	//	Vector3 posFar = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 1);
+	//	// スクリーン座標系からワールド座標系へ
+	//	posNear = Transforms(posNear, matInverseVPV);
+	//	posFar = Transforms(posFar, matInverseVPV);
+	//	// マウスレイの方向
+	//	Vector3 mouseDirection = Subtract(posFar, posNear);
+	//	mouseDirection = Normalize(mouseDirection);
+	//	// 3Dレティクルを2Dカーソルに配置
+	//	object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
+	//	object3dReticle_->worldTransform.UpdateMatrix();
+
+	//	//toReticle = (GetWorldPosition() - GetWorld3DReticlePosition());
+	//	//object3d_->worldTransform.rotate.x = object3d_->worldTransform.parent_->rotate.x - std::atan2(toReticle.z, toReticle.y);
+	//}
 #pragma endregion
 }

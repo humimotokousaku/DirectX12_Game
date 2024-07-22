@@ -8,17 +8,18 @@ void FollowCamera::Initialize() {
 }
 
 void FollowCamera::Update() {
-	camera_->worldTransform_.rotate = camera_->worldTransform_.parent_->parent_->rotate + (*rotateOffset_);
-	// 追従座標の補間
-	//interTarget_ = Lerps::Lerp(interTarget_, playerPos_, followRate);
-	
+	// 親のオイラー角を取得
+	camera_->worldTransform_.rotate = camera_->worldTransform_.parent_->rotate;
+
 	// 追従対象からカメラまでのオフセット
 	Vector3 offset = TargetOffset();
 
 	// 座標をコピーしてオフセット分ずらす
-	//camera_->worldTransform_.translate = interTarget_ + offset;
-	camera_->worldTransform_.translate = playerPos_ + offset + (*offset_);
+	camera_->worldTransform_.translate = playerPos_ + offset;
+	// 演出用のoffsetを加算
+	camera_->worldTransform_.rotate += (*rotateOffset_);
 
+	// カメラの更新
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
@@ -36,6 +37,7 @@ void FollowCamera::Update() {
 Vector3 FollowCamera::TargetOffset() const {
 	// 追従対象からのオフセット
 	Vector3 offset = { 0, 0, -20 };
+	offset += (*offset_);
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate);
 
