@@ -49,10 +49,63 @@ struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
 };
 
+float32_t3 RGBtoHSV(float32_t3 rgb)
+{
+
+        float4 K = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+        float4 p = rgb.g < rgb.b ? float4(rgb.bg, K.wz) : float4(rgb.gb, K.xy);
+        float4 q = rgb.r < p.x ? float4(p.xyw, rgb.r) : float4(rgb.r, p.yzx);
+
+        float d = q.x - min(q.w, q.y);
+        float e = 1.0e-10;
+        return float3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+float3 HSVtoRGB(float3 hsv)
+{
+    float H = hsv.x;
+    float S = hsv.y;
+    float V = hsv.z;
+
+    float C = V * S;
+    float X = C * (1.0 - abs(fmod(H * 6.0, 2.0) - 1.0));
+    float m = V - C;
+
+    float3 rgb;
+
+    if (H < 1.0 / 6.0)
+    {
+        rgb = float3(C, X, 0.0);
+    }
+    else if (H < 2.0 / 6.0)
+    {
+        rgb = float3(X, C, 0.0);
+    }
+    else if (H < 3.0 / 6.0)
+    {
+        rgb = float3(0.0, C, X);
+    }
+    else if (H < 4.0 / 6.0)
+    {
+        rgb = float3(0.0, X, C);
+    }
+    else if (H < 5.0 / 6.0)
+    {
+        rgb = float3(X, 0.0, C);
+    }
+    else
+    {
+        rgb = float3(C, 0.0, X);
+    }
+
+    return rgb + float3(m, m, m);
+}
+
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
 	float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
 	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
+	// HSVに変換
+    float32_t3 hsv = RGBtoHSV(textureColor.rgb);
 	// textureのα値が0.0以下の時にPixelを棄却
 	if (textureColor.a <= 0.0) {
 		discard;
@@ -82,7 +135,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		float32_t distance = length(gPointLight.pos - input.worldPosition);
 		float32_t factor = pow(saturate(-distance / gPointLight.radius + 1.0), gPointLight.decay);
 		// 拡散反射
-		float32_t3 diffusePointLight = gMaterial.color.rgb * textureColor.rgb * gPointLight.color.rgb * gPointLight.intensity * factor;
+        float32_t3 diffusePointLight = gMaterial.color.rgb * HSVtoRGB(hsv) * gPointLight.color.rgb * gPointLight.intensity * factor;
 		// 鏡面反射
 		float32_t3 specularPointLight = gPointLight.color.rgb * gPointLight.intensity * factor * pointLightSpecularPow * float32_t3(1.0f, 1.0f, 1.0f);
 		
@@ -92,7 +145,7 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		output.color.a = gMaterial.color.a * textureColor.a;
 	}
 	else {
-        output.color = gMaterial.color * textureColor + enviromentColor;
+        output.color = gMaterial.color * float32_t4(HSVtoRGB(hsv), textureColor.a) + enviromentColor;
     }
 
 	return output;
