@@ -24,6 +24,11 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->worldTransform.Initialize();
 	// 引数で受け取った初期座標をセット
 	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.scale = {
+		0.5f,0.5f,2.0f
+	};
+	// 緑にする
+	object3d_->SetColor(Vector4{ 0,1,0,1 });
 	
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;

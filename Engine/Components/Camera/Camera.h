@@ -87,10 +87,12 @@ private:
 	/// </summary>
 	void UpdateProjectionMatrix();
 
-public:// パブリックなメンバ変数
-	//Transform transform_;
-	WorldTransform worldTransform_;
+public:// 定数
+	const float kDefaultFov = 45.0f;
 
-private:// プライベートなメンバ変数
+public:// パブリックなメンバ変数
+	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+private:// プライベートなメンバ変数
+
 };

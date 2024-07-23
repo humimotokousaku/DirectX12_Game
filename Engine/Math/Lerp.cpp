@@ -99,6 +99,10 @@ namespace Lerps {
 		float factor = 1.0f - std::exp(-damping * deltaTime);
 		return current + (target - current) * factor;
 	}
+	float ExponentialInterpolate(const float& current, const float& target, float damping, float deltaTime) {
+		float factor = 1.0f - std::exp(-damping * deltaTime);
+		return current + (target - current) * factor;
+	}
 }
 
 namespace Easings {

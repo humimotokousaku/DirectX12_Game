@@ -27,6 +27,8 @@ public:
 
 	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
 
+	void SetFov(float* fov) { fov_ = fov; }
+
 	/// <summary>
 	/// カメラのアドレスを取得
 	/// </summary>
@@ -62,4 +64,6 @@ private:
 
 	Vector3 playerPos_;
 	Vector3 interTarget_;
+
+	float* fov_;
 };

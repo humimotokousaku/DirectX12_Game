@@ -14,6 +14,7 @@ namespace Lerps {
 
 	// 指数補間関数
 	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping, float deltaTime);
+	float ExponentialInterpolate(const float& current, const float& target, float damping, float deltaTime);
 };
 
 namespace Easings {

@@ -54,10 +54,9 @@ public:
 	Vector3* GetCameraOffset() { return &cameraOffset_; }
 	// カメラの回転幅
 	Vector3* GetCameraRotateOffset() { return &cameraRotateOffset_; }
-	/// <summary>
-	/// 体のワールドトランスフォームを取得
-	/// </summary>
-	/// <returns></returns>
+	// 加速モードかを取得
+	bool* GetIsBoost() { return &isBoost_; }
+	// 体のワールドトランスフォームを取得
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 #pragma endregion
 
@@ -94,19 +93,6 @@ public:
 	void OnCollision(Collider* collider)override;
 
 private:// プライベートなメンバ関数
-	float AngleBetweenComponents(float componentA, float componentB) {
-		return std::acos(componentA / std::sqrt(componentA * componentA) * (componentB / std::sqrt(componentB * componentB)));
-	}
-
-	Vector3 CalculateAndPrintAngles(const Vector3& A, const Vector3& B) {
-		Vector3 result{};
-		result.x = AngleBetweenComponents(A.x, B.x);
-		result.y = AngleBetweenComponents(A.y, B.y);
-		result.z = AngleBetweenComponents(A.z, B.z);
-
-		return result;
-	}
-
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
@@ -152,7 +138,7 @@ public:// 定数
 	const Vector3 kMaxRotSpeed = { 0.5f , 0.7f, 1.0f };
 
 	// 移動限界座標
-	const Vector2 kMoveLimit = { 19.0f, 10.0f };
+	const Vector3 kMoveLimit = { 19.0f, 10.0f, 5.0f };
 
 #pragma region カメラ演出
 	// 回転幅
@@ -180,6 +166,9 @@ private:// プライベートなメンバ変数
 
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
+	// 3Dレティクルの座標
+	std::unique_ptr<Object3D> object3dReticle_;
+	// 使用するモデル
 	std::vector<Model*> models_;
 	// 2Dレティクル用のスプライト
 	Sprite* sprite2DReticle_ = nullptr;
@@ -187,6 +176,8 @@ private:// プライベートなメンバ変数
 	Sprite* hpSprite_ = nullptr;
 	// 自機の軌道パーティクル
 	std::unique_ptr<Particles> particle_;
+	// 弾
+	std::list<PlayerBullet*> bullets_;
 
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
@@ -194,9 +185,6 @@ private:// プライベートなメンバ変数
 	uint32_t playerTexture_ = 0u;
 	// パーティクルテクスチャ
 	uint32_t defaultTexture = 0u;
-
-	// 弾
-	std::list<PlayerBullet*> bullets_;
 
 	// カメラのアドレス
 	Camera* camera_;
@@ -208,11 +196,7 @@ private:// プライベートなメンバ変数
 	CollisionManager* collisionManager_;
 
 	bool isDead_ = true;
-
 	float gameSpeed_;
-
-	// 3Dレティクルの座標
-	std::unique_ptr<Object3D> object3dReticle_;
 
 	// 自機の移動速度
 	Vector3 moveVel_;
@@ -220,7 +204,6 @@ private:// プライベートなメンバ変数
 	Vector3 reticleMoveVel_;
 	//自機の回転速度
 	Vector3 rotateVel_;
-	Vector3 kRotateSpeedRate = { 0.5f,0.5f,0.5f };
 
 #pragma region カメラ演出
 	// カメラの移動
@@ -243,4 +226,7 @@ private:// プライベートなメンバ変数
 	bool isInvinsible_;
 	// 無敵時間
 	int invinsibleFrame_;
+
+	// 加速モード
+	bool isBoost_;
 };

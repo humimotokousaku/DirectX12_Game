@@ -29,40 +29,25 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMoveCamera_ = true;
-}
-void RailCamera::Initialize(std::vector<Vector3> controlPoints, Camera* camera) {
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
-	controlPoints_ = controlPoints;
-
-	// 線分の数+1個分の頂点座標の計算
-	for (size_t i = 0; i < segmentCount + 1; i++) {
-		float t = 1.0f / segmentCount * i;
-		if (t >= 1.0f) {
-			t = 0.99f;
-		}
-		Vector3 pos = Lerps::CatmullRomSpline(controlPoints_, t);
-		// 描画用頂点リストに追加
-		pointsDrawing_.push_back(pos);
-	}
-	// 線
-	for (int i = 0; i < segmentCount; i++) {
-		line_[i] = std::make_unique<Line>();
-		line_[i]->Initialize();
-		line_[i]->SetCamera(camera);
-		line_[i]->startPos_ = pointsDrawing_[i];
-		line_[i]->endPos_ = pointsDrawing_[i + 1];
-	}
-
-	t_ = 0.0f;
-	targetT_ = 1.0f / segmentCount;
-	isMoveCamera_ = true;
+	isMove_ = true;
 }
 
 void RailCamera::Update() {
-	if (isMoveCamera_) {
+	// 加速時はfovを上げる
+	if (*isBoost_) {
+		// fov
+		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, 52, 1.0f, 0.9f);
+		boostVel_ = Lerps::ExponentialInterpolate(boostVel_, 2, 1.0f, 0.1f);
+	}
+	else {
+		// fov
+		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 1.0f, 0.1f);
+		boostVel_ = Lerps::ExponentialInterpolate(boostVel_, 0, 1.0f, 0.1f);
+	}
+
+	if (isMove_) {
 		currentFrame_++;
+		currentFrame_ += boostVel_;
 		// カメラの移動
 		if (t_ <= 1.0f) {
 			t_ = Lerps::Lerp(0, 0.99f, currentFrame_ / kTimeToEndPoint);
@@ -73,7 +58,7 @@ void RailCamera::Update() {
 		}
 		if (targetT_ >= 1.0f) {
 			currentFrame_ = 0;
-			isMoveCamera_ = false;
+			isMove_ = false;
 		}
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
@@ -92,17 +77,18 @@ void RailCamera::Update() {
 	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
 	// X軸周りの角度(θx)
 	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
+
 	// 行列の更新
 	camera_->Update();
-
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
 #ifdef _DEBUG
-
+	static float fov = camera_->viewProjection_.fovAngleY;
 	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
+	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0,200);
 	ImGui::End();
 
 #endif // _DEBUG

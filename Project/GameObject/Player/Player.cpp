@@ -25,7 +25,6 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	//object3d_->worldTransform.translate = { 0,0,0 };
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
@@ -88,7 +87,7 @@ void Player::Update() {
 	// 範囲を超えない処理
 	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
 	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y, kMoveLimit.y);
-	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.x, kMoveLimit.x);
+	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
 
 	// 全ての処理が終わってからz軸を代入
 	// 現状、オイラー角を使用しているのでジンバルロックを回避できない。なのでレティクルの挙動をマシにするために最後に入れている
@@ -124,7 +123,7 @@ void Player::Update() {
 	object3dReticle_->ImGuiParameter("Reticle");
 	ImGui::DragFloat3("moveVel", &moveVel_.x, 0);
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
-	ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
+	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
 #endif
 }
@@ -186,6 +185,8 @@ void Player::Move() {
 	Vector3 move{};
 	// 自機の回転
 	Vector3 rotate{};
+	// 加速モードをOFFにする
+	isBoost_ = false;
 
 #pragma region キーボード
 	// キーボード入力
@@ -221,6 +222,12 @@ void Player::Move() {
 		rotate.z -= (float)leftThumbX / SHRT_MAX * kMaxRotSpeed.z;
 		rotate.x -= (float)leftThumbY / SHRT_MAX * kMaxRotSpeed.x;
 	}
+
+	// ブースト
+	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_X)) {
+		isBoost_ = true;
+		move.z += 1.0f;
+	}
 #pragma endregion
 
 #pragma region 指数補間で速度を徐々に上げる,下げる
@@ -229,9 +236,9 @@ void Player::Move() {
 	if (move.y == 0.0f) {
 		// 徐々に速度を落とす
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.1f).y;
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.x, 0.1f).x;
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;
 		// カメラ演出
-		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.x, 0.15f).x;
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedAttenuationRate.x, 0.15f).x;
 	}
 	else {
 		// 徐々に速度を上げる
@@ -241,18 +248,18 @@ void Player::Move() {
 			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;		
 		}
 		// カメラ演出
-		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.x, 0.1f).x;
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;
 	}
 	// 横移動
 	// 移動をしていない場合
 	if (move.x == 0.0f) {
 		// 徐々に速度を落とす
 		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.1f).x;
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.y, 0.1f).y;
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedRate.z, 0.1f).z;
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.y, 0.15f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedRate.z, 0.15f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedAttenuationRate.y, 0.15f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, rotate, kRotateSpeedAttenuationRate.z, 0.15f).z;
 	}
 	else {
 		// 徐々に速度を上げる
@@ -263,31 +270,44 @@ void Player::Move() {
 			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
 		}
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.y, 0.1f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedRate.z, 0.1f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
 	}
 #pragma endregion
+	// 加速中なら速度を上げる
+	if (!isBoost_) {
+		// 徐々に速度を落とす
+		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate, move, kMoveSpeedAttenuationRate.z, 0.01f).z;
+		moveVel_.z = 0;
+	}
+	else {
+		// 徐々に速度を上げる
+		moveVel_.z = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.z, 1.0f).z;
+	}
 
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
 	moveVel_.y = std::clamp<float>(moveVel_.y, -kMaxSpeed, kMaxSpeed);
-	moveVel_.z = std::clamp<float>(moveVel_.z, -kMaxSpeed, kMaxSpeed);
+	moveVel_.z = std::clamp<float>(moveVel_.z, -1.0f, 1.0f);
 	// 回転速度の上限
 	rotateVel_.x = std::clamp<float>(rotateVel_.x, -kMaxRotSpeed.x, kMaxRotSpeed.x);
 	rotateVel_.y = std::clamp<float>(rotateVel_.y, -kMaxRotSpeed.y, kMaxRotSpeed.y);
 	rotateVel_.z = std::clamp<float>(rotateVel_.z, -kMaxRotSpeed.z, kMaxRotSpeed.z);
-	// 速度を足す
-	object3d_->worldTransform.translate += moveVel_;
+
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
 	object3d_->worldTransform.rotate.y = rotateVel_.y;
 	object3d_->worldTransform.rotate.z = 0;
+	// 速度を自機に加算
+	object3d_->worldTransform.translate += moveVel_;
 
+	// カメラ移動
 	cameraOffset_ += moveVel_ / 2;
 	// カメラの移動幅上限
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);
-	cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -3.5f, 3.5f);
+	cameraOffset_.z = 0.0f;
+	//cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -3.5f, 3.5f);
 
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
@@ -353,11 +373,10 @@ void Player::DecrementHP() {
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset{ 0, 0, kDistanceObject };
-
-	// 自機のワールド行列の回転を反映する
+	
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate);
-	//offset = TransformNormal(offset, object3d_->worldTransform.matWorld_);
+	// 自機のワールド行列の回転を反映する
 	offset = TransformNormal(offset, rotateMatrix);
 
 	// 3Dレティクルの座標を設定

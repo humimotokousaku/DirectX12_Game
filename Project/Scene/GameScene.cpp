@@ -84,10 +84,12 @@ void GameScene::Initialize() {
 	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
 	// レールカメラの進行度のアドレスを渡す
 	enemyManager_->SetRailCameraProgress(railCamera_->GetRailPercentage());
-	// 
+	// アドレス渡し
 	followCamera_->SetCameraOffset(player_->GetCameraOffset());
 	followCamera_->SetCameraRotateOffset(player_->GetCameraRotateOffset());
 	followCamera_->SetParent(&railCamera_->GetWorldTransform());
+	followCamera_->SetFov(railCamera_->GetFov());
+	railCamera_->SetIsBoost(player_->GetIsBoost());
 
 	// Skybox
 	//cube_ = std::make_unique<Cube>();

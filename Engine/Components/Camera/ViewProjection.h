@@ -20,11 +20,6 @@ struct ViewProjection{
 
 #pragma region ビュー行列の設定
 	// トランスフォーム
-	/*Transform transform = {
-		{1,1,1},
-		{0,0,0},
-		{0,0,-10}
-	};*/
 	Vector3 translate = { 0,0,10 };
 	Vector3 rotate;
 	Vector3 scale = { 1,1,1 };
@@ -32,7 +27,7 @@ struct ViewProjection{
 
 #pragma region 射影行列の設定
 	// 垂直方向視野角
-	float fovAngleY = 45.0f * 3.141592654f / 180.0f;
+	float fovAngleY = 45.0f;
 	// ビューポートのアスペクト比
 	float aspectRatio = (float)16 / 9;
 	// 深度限界（手前側）
