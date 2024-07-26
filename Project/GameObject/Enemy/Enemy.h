@@ -19,7 +19,7 @@ public:
 	/// <summary>
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
 	/// <summary>
-	void Initialize(Vector3 pos, Vector3 rotate);
+	void Initialize(Vector3 pos, Vector3 rotate,int id);
 
 	/// <summary>
 	/// 更新
@@ -48,44 +48,36 @@ public:
 	/// </summary>
 	void Fire();
 
-	///
-	/// Getter
-	/// 
-
-	// 座標を取得
-	Vector3 GetEnemyPos() { return object3d_->worldTransform.translate; }
-
-	// 弾リストを取得
-	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
-
-	// 完了ならtrueを返す
-	bool IsDead() const { return isDead_; }
-
-	/// 
-	/// Setter
-	/// 
-
 	// 敵モデルを追加
 	void AddModel(Model* model) {
 		models_.push_back(model);
 	}
 
+#pragma region Getter
+	// 座標を取得
+	Vector3 GetEnemyPos() { return object3d_->worldTransform.translate; }
+	// 管理番号の取得
+	int GetId() { return id_; }
+	// 弾リストを取得
+	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
+	// 完了ならtrueを返す
+	bool IsDead() const { return isDead_; }
+#pragma endregion
+
+#pragma region Setter
 	// 自機のアドレスを設定
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	// ゲームシーンのアドレスを設定
-	//void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	// 衝突マネージャのアドレスを設定
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	// エネミーマネージャのアドレスを設定
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
-
 	// 死亡フラグを設定
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
-
 	// 座標を設定
 	void SetPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+#pragma endregion
 
 	///
 	/// 純粋仮想関数
@@ -113,8 +105,6 @@ private:
 	Player* player_ = nullptr;
 	// カメラのアドレス
 	Camera* camera_;
-	// ゲームシーンのアドレス
-	//GameScene* gameScene_ = nullptr;
 	// 衝突マネージャー
 	CollisionManager* collisionManager_ = nullptr;
 	// エネミーマネージャ
@@ -125,5 +115,8 @@ private:
 
 	// 死亡フラグ
 	bool isDead_ = false;
+
+	// 管理番号
+	int id_;
 };
 

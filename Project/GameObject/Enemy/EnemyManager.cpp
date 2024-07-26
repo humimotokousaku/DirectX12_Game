@@ -1,11 +1,5 @@
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager() {
-}
-EnemyManager::~EnemyManager() {
-	Finalize();
-}
-
 void EnemyManager::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->LoadTexture("DefaultTexture", "white.png");
@@ -102,7 +96,6 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
 	enemy->AddModel(models_[0]);
 	// 弾のモデルを追加
 	enemy->AddModel(models_[1]);
-
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
@@ -110,10 +103,12 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
 	enemy->SetEnemyManager(this);
 
 	// 初期化
-	enemy->Initialize(pos, rotate);
-
+	enemy->Initialize(pos, rotate,id_);
 	// リストに登録
 	enemy_.push_back(enemy);
+
+	// 管理番号更新
+	id_++;
 
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();

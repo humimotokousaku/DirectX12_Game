@@ -11,9 +11,10 @@
 Player::Player() {}
 Player::~Player() {
 	models_.clear();
-	delete sprite2DReticle_;
+	for (Sprite* sprite : sprite2DReticle_) {
+		delete sprite;
+	}
 	delete hpSprite_;
-	//collisionManager_->ClearColliderList(this);
 }
 
 void Player::Initialize() {
@@ -30,17 +31,25 @@ void Player::Initialize() {
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 
 	// 3Dレティクルモデル作成
-	object3dReticle_ = std::make_unique<Object3D>();
-	object3dReticle_->Initialize();
-	object3dReticle_->SetModel(models_[1]);
-	object3dReticle_->SetCamera(camera_);
+	for (int i = 0; i < 2; i++) {
+		object3dReticle_[i] = std::make_unique<Object3D>();
+		object3dReticle_[i]->Initialize();
+		object3dReticle_[i]->SetModel(models_[1]);
+		object3dReticle_[i]->SetCamera(camera_);
+	}
+	// ロックオンしてない3Dレティクルの座標
+	default3dReticle_.Initialize();
+	default3dReticle_ = object3dReticle_[0]->worldTransform;
 
 	gameSpeed_ = 1.0f;
 
 	// 2Dレティクル作成
-	sprite2DReticle_ = new Sprite();
-	sprite2DReticle_->Initialize("", "reticle.png");
-	sprite2DReticle_->SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+	for (int i = 0; i < 2; i++) {
+		sprite2DReticle_[i] = new Sprite();
+		sprite2DReticle_[i]->Initialize("", "reticle.png");
+		sprite2DReticle_[i]->SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+	}
+	sprite2DReticle_[0]->SetSize(Vector2{ 50.0f,50.0f });
 
 	// HP作成
 	hpSize_ = kMaxHPSize;
@@ -120,7 +129,8 @@ void Player::Update() {
 #ifdef _DEBUG
 	// ImGui
 	object3d_->ImGuiParameter("Player");
-	object3dReticle_->ImGuiParameter("Reticle");
+	object3dReticle_[0]->ImGuiParameter("Reticle0");
+	object3dReticle_[1]->ImGuiParameter("Reticle1");
 	ImGui::DragFloat3("moveVel", &moveVel_.x, 0);
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
@@ -133,13 +143,22 @@ void Player::Draw() {
 	object3d_->Draw(playerTexture_);
 	// 3Dレティクル
 #ifdef _DEBUG
-	object3dReticle_->Draw();
+	for (int i = 0; i < 2; i++) {
+		object3dReticle_[i]->Draw();
+	}
 #endif // _DEBUG
 }
 
 void Player::DrawUI() {
-	sprite2DReticle_->Draw();
+	// レティクル
+	for (Sprite* sprite : sprite2DReticle_) {
+		sprite->Draw();
+	}
+
+	// HPバー
 	hpSprite_->Draw();
+
+	// 軌道
 	particle_->Draw(defaultTexture);
 }
 
@@ -169,13 +188,24 @@ Vector3 Player::GetWorldPosition() {
 	return worldPos;
 }
 
-Vector3 Player::GetWorld3DReticlePosition() {
+Vector3 Player::GetWorld3DReticlePosition(int index) {
 	// ワールド座標を入れる変数
-	Vector3 worldPos = object3dReticle_->worldTransform.translate;
+	Vector3 worldPos = object3dReticle_[index]->worldTransform.translate;
 	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3dReticle_->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3dReticle_->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3dReticle_->worldTransform.matWorld_.m[3][2];
+	worldPos.x = object3dReticle_[index]->worldTransform.matWorld_.m[3][0];
+	worldPos.y = object3dReticle_[index]->worldTransform.matWorld_.m[3][1];
+	worldPos.z = object3dReticle_[index]->worldTransform.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+Vector3 Player::GetDefault3DReticlePosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos = default3dReticle_.translate;
+	// ワールド行列の平行移動成分を取得
+	worldPos.x = default3dReticle_.matWorld_.m[3][0];
+	worldPos.y = default3dReticle_.matWorld_.m[3][1];
+	worldPos.z = default3dReticle_.matWorld_.m[3][2];
 
 	return worldPos;
 }
@@ -207,6 +237,11 @@ void Player::Move() {
 		move.x -= kMaxSpeed;
 		rotate.y -= kMaxRotSpeed.y;
 		rotate.z += kMaxRotSpeed.z;
+	}
+	// ブースト
+	if (input_->PressKey(DIK_B)) {
+		isBoost_ = true;
+		move.z += 1.0f;
 	}
 #pragma endregion
 
@@ -279,10 +314,12 @@ void Player::Move() {
 		// 徐々に速度を落とす
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate, move, kMoveSpeedAttenuationRate.z, 0.01f).z;
 		moveVel_.z = 0;
+		input_->GamePadVibration(0, 0, 0);
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.z = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.z, 1.0f).z;
+		input_->GamePadVibration(0, 65535, 65535);
 	}
 
 	// 移動速度の上限
@@ -314,11 +351,22 @@ void Player::Move() {
 }
 
 void Player::Aim() {
+	// 3Dレティクル配置
 	Deploy3DReticle();
-	// ロックオン処理
-	aimAssist_->LockOn(sprite2DReticle_->GetPos());
-	object3dReticle_->worldTransform.UpdateMatrix();
+
+	// ロックオン処理(必ず3Dレティクル配置と2Dレティクル配置の間に書く)
+	aimAssist_->LockOn(sprite2DReticle_[0]->GetPos());
+
+	// 2Dレティクル配置
 	Deploy2DReticle();
+
+	// ロックオンしたら赤くなる
+	if (*isLockOn_) {
+		sprite2DReticle_[0]->SetColor(Vector4{ 1,0,0,1 });
+	}
+	else {
+		sprite2DReticle_[0]->SetColor(Vector4{ 1,1,1,1 });
+	}
 }
 
 void Player::Attack() {
@@ -333,8 +381,8 @@ void Player::Attack() {
 			velocity = TransformNormal(velocity, object3d_->worldTransform.matWorld_);
 			// 自機から照準オブジェクトへのベクトル
 			Vector3 worldReticlePos = {
-				object3dReticle_->worldTransform.matWorld_.m[3][0], object3dReticle_->worldTransform.matWorld_.m[3][1],
-				object3dReticle_->worldTransform.matWorld_.m[3][2] };
+				object3dReticle_[0]->worldTransform.matWorld_.m[3][0], object3dReticle_[0]->worldTransform.matWorld_.m[3][1],
+				object3dReticle_[0]->worldTransform.matWorld_.m[3][2] };
 			velocity = worldReticlePos - worldPos;
 			velocity = Normalize(velocity);
 			velocity *= kBulletSpeed;
@@ -373,25 +421,39 @@ void Player::DecrementHP() {
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset{ 0, 0, kDistanceObject };
-	
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate);
 	// 自機のワールド行列の回転を反映する
 	offset = TransformNormal(offset, rotateMatrix);
-
 	// 3Dレティクルの座標を設定
-	object3dReticle_->worldTransform.translate = GetWorldPosition() + offset;
+	object3dReticle_[0]->worldTransform.translate = GetWorldPosition() + offset;
+	object3dReticle_[0]->worldTransform.UpdateMatrix();
 
-	object3dReticle_->worldTransform.UpdateMatrix();
+	// 自機から3Dレティクルへのオフセット(Z+向き)
+	offset = { 0, 0, kDistanceObject / 3 * 2 };
+	// 自機のワールド行列の回転を反映する
+	offset = TransformNormal(offset, rotateMatrix);
+	// 真ん中の3Dレティクルの座標を設定
+	object3dReticle_[1]->worldTransform.translate = GetWorldPosition() + offset;
+	object3dReticle_[1]->worldTransform.UpdateMatrix();
 
-	// ロックオンしてないときの3Dレティクル座標を設定
-	aimAssist_->Set3DReticle(GetWorld3DReticlePosition());
+	// 自機から3Dレティクルへのオフセット(Z+向き)
+	offset = { 0, 0, kDistanceObject };
+	// 自機のワールド行列の回転を反映する
+	offset = TransformNormal(offset, rotateMatrix);
+	// 真ん中の3Dレティクルの座標を設定
+	default3dReticle_.translate = GetWorldPosition() + offset;
+	default3dReticle_.UpdateMatrix();
 }
 
 void Player::Deploy2DReticle() {
-	// 3Dレティクルのワールド座標を取得
-	Vector3 positionReticle = GetWorld3DReticlePosition();//object3dReticle_->worldTransform.translate;
+	// レティクルの座標を更新
+	for (int i = 0; i < 2; i++) {
+		object3dReticle_[i]->worldTransform.UpdateMatrix();
+	}
 
+	// 3Dレティクルのワールド座標を取得
+	Vector3 positionReticle = GetWorld3DReticlePosition(0);
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
@@ -401,60 +463,47 @@ void Player::Deploy2DReticle() {
 	// ワールド→スクリーン座標変換
 	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
 	// スプライトのレティクルに座標設定
-	sprite2DReticle_->SetPos(Vector2(positionReticle.x, positionReticle.y));
+	sprite2DReticle_[0]->SetPos(Vector2(positionReticle.x, positionReticle.y));
+
+	// 真ん中のレティクル
+	// ワールド→スクリーン座標変換
+	positionReticle = GetWorld3DReticlePosition(1);
+	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
+	// スプライトのレティクルに座標設定
+	sprite2DReticle_[1]->SetPos(Vector2(positionReticle.x, positionReticle.y));
 
 #pragma region 画面端の処理
 	isHorizontal_ = false;
 	isVertical_ = false;
 
-	Vector3 toReticle{};
 	// 左右
-	if (sprite2DReticle_->GetPos().x > WinApp::kClientWidth_ + 1.0f || sprite2DReticle_->GetPos().x < 0.0f - 1.0f) {
-		// 左右どちらかの画面端にいる
-		isHorizontal_ = true;
-		// 左右どちらの画面端にいるかを検出し、レティクル座標を合わせる
-		// 右
-		if (sprite2DReticle_->GetPos().x > (float)WinApp::kClientWidth_ + 1.0f) {
-			sprite2DReticle_->SetPosX((float)WinApp::kClientWidth_);
-		}
-		// 左
-		else if (sprite2DReticle_->GetPos().x < 0.0f - 1.0f) {
-			sprite2DReticle_->SetPosX(0.0f);
-		}
+	if (sprite2DReticle_[0]->GetPos().x > WinApp::kClientWidth_ + 1.0f || sprite2DReticle_[0]->GetPos().x < 0.0f - 1.0f) {
+		//// 左右どちらかの画面端にいる
+		//isHorizontal_ = true;
+		//// 左右どちらの画面端にいるかを検出し、レティクル座標を合わせる
+		//// 右
+		//if (sprite2DReticle_[0]->GetPos().x > (float)WinApp::kClientWidth_ + 1.0f) {
+		//	sprite2DReticle_[0]->SetPosX((float)WinApp::kClientWidth_);
+		//}
+		//// 左
+		//else if (sprite2DReticle_[0]->GetPos().x < 0.0f - 1.0f) {
+		//	sprite2DReticle_[0]->SetPosX(0.0f);
+		//}
 
-		// 合成行列の逆行列を計算する
-		Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-		// スクリーン座標
-		Vector3 posNear = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 0);
-		Vector3 posFar = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 1);
-		// スクリーン座標系からワールド座標系へ
-		posNear = Transforms(posNear, matInverseVPV);
-		posFar = Transforms(posFar, matInverseVPV);
-		// マウスレイの方向
-		Vector3 mouseDirection = Subtract(posFar, posNear);
-		mouseDirection = Normalize(mouseDirection);
-		// 3Dレティクルを2Dカーソルに配置
-		object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
-		object3dReticle_->worldTransform.UpdateMatrix();
-
-
-
-		//Vector3 offset{ 0, 0, 1.0f };
-		//// 自機のワールド行列の回転を反映する
-		//Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate + object3d_->worldTransform.parent_->rotate);
-		//offset = TransformNormal(offset, rotateMatrix);
-		//offset = Normalize(offset);
-		//// ベクトルの長さを整える
-		//offset *= kDistanceObject;
-		////offset += object3d_->worldTransform.parent_->translate;
-
-
-
-		//toReticle = (GetWorld3DReticlePosition()-GetWorldPosition());
-		//Vector3 r = CalculateAndPrintAngles(offset, toReticle);
-		//float a = std::atan2(toReticle.z, toReticle.x);
-		//// Y軸周り角度(θy)
-		//object3d_->worldTransform.rotate.y = r.y;
+		//// 合成行列の逆行列を計算する
+		//Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
+		//// スクリーン座標
+		//Vector3 posNear = Vector3((float)sprite2DReticle_[0]->GetPos().x, (float)sprite2DReticle_[0]->GetPos().y, 0);
+		//Vector3 posFar = Vector3((float)sprite2DReticle_[0]->GetPos().x, (float)sprite2DReticle_[0]->GetPos().y, 1);
+		//// スクリーン座標系からワールド座標系へ
+		//posNear = Transforms(posNear, matInverseVPV);
+		//posFar = Transforms(posFar, matInverseVPV);
+		//// マウスレイの方向
+		//Vector3 mouseDirection = Subtract(posFar, posNear);
+		//mouseDirection = Normalize(mouseDirection);
+		//// 3Dレティクルを2Dカーソルに配置
+		//object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
+		//object3dReticle_->worldTransform.UpdateMatrix();
 	}
 	// 上下
 	//if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f || sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
@@ -468,24 +517,6 @@ void Player::Deploy2DReticle() {
 	//	else if (sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
 	//		sprite2DReticle_->SetPosY(0.0f);
 	//	}
-
-	//	// 合成行列の逆行列を計算する
-	//	Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-	//	// スクリーン座標
-	//	Vector3 posNear = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 0);
-	//	Vector3 posFar = Vector3((float)sprite2DReticle_->GetPos().x, (float)sprite2DReticle_->GetPos().y, 1);
-	//	// スクリーン座標系からワールド座標系へ
-	//	posNear = Transforms(posNear, matInverseVPV);
-	//	posFar = Transforms(posFar, matInverseVPV);
-	//	// マウスレイの方向
-	//	Vector3 mouseDirection = Subtract(posFar, posNear);
-	//	mouseDirection = Normalize(mouseDirection);
-	//	// 3Dレティクルを2Dカーソルに配置
-	//	object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
-	//	object3dReticle_->worldTransform.UpdateMatrix();
-
-	//	//toReticle = (GetWorldPosition() - GetWorld3DReticlePosition());
-	//	//object3d_->worldTransform.rotate.x = object3d_->worldTransform.parent_->rotate.x - std::atan2(toReticle.z, toReticle.y);
 	//}
 #pragma endregion
 }

@@ -48,8 +48,6 @@ void PlayerBullet::Update() {
 	// 座標を移動させる
 	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity_);
 
-	//object3d_->worldTransform.translate.z += 0.1f;
-
 	// 行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 

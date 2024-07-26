@@ -2,10 +2,6 @@
     "name": "scene",
     "objects": [
         {
-            "type": "LIGHT",
-            "name": "Light"
-        },
-        {
             "type": "CAMERA",
             "name": "Camera"
         },
@@ -4169,7 +4165,7 @@
             "name": "立方体.186",
             "transform": {
                 "translation": [
-                    -4.264535427093506,
+                    -4.78626823425293,
                     42.31687927246094,
                     10.0
                 ],
@@ -4392,7 +4388,7 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point",
+            "name": "enemy_point.021",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
@@ -4789,6 +4785,72 @@
                     ]
                 }
             ]
+        },
+        {
+            "type": "MESH",
+            "name": "球",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    90.00000762939453,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    300.0,
+                    300.0,
+                    300.0
+                ]
+            },
+            "file_name": "skydome.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体.189",
+            "transform": {
+                "translation": [
+                    0.0,
+                    29.375381469726562,
+                    2.5574402809143066
+                ],
+                "rotation": [
+                    44.999996185302734,
+                    45.0,
+                    44.999996185302734
+                ],
+                "scaling": [
+                    0.9999999403953552,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "cube.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体.190",
+            "transform": {
+                "translation": [
+                    0.0,
+                    29.16819190979004,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "file_name": "cube.obj"
         }
     ]
 }

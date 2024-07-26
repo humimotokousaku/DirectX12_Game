@@ -66,6 +66,8 @@ public:
 	// 何も入力されてないならtrue
 	bool DetectThumbInput(SHORT sThumbX, SHORT sThumbY);
 
+	void GamePadVibration(int userIndex, WORD leftMotorSpeed, WORD rightMotorSpeed);
+
 private:
 	/// 
 	/// Keyboard

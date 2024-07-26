@@ -43,32 +43,48 @@ Vector2 AimAssist::ConvertWorld2Screen(Vector3 worldPos) {
 
 void AimAssist::LockOn(Vector2 reticlePos) {
 	bool isLockOn = false;
+	int enemyId = -1;
+
 	for (Enemy* enemy : enemys_) {
-		// カメラの後ろ側ではないかを算出
-		if (!IsEnemyBehindCamera(camera_->GetTranslate(), *cameraDirVel_, enemy->GetWorldPosition())) {
-			// 自機との距離を調べる
-			Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
-			// レティクルと自機の距離内にいるならロックオン対象
-			if (100.0f >= Length(p2e)) {
-				// 敵がレティクルの一定範囲にいるならロックオン(判定はスクリーン座標で行う)
-				Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
-				// ロックオンしていないときの3Dレティクルをスクリーン座標に変換
-				Vector2 reticle2DPos = ConvertWorld2Screen(reticle3DPos_);
-				// 2Dレティクルと敵がロックオン範囲内かをスクリーン座標で調べる
-				Vector2 r2e = enemyPos - reticle2DPos;
-				// ロックオンされてないときの2Dレティクルがある座標とロックオン時の2Dレティクルの座標の距離
-				Vector2 r2r = reticlePos - reticle2DPos;
-				// 範囲内ならロックオン
-				if (96.0f >= Length(Vector3{ r2r.x, r2r.y,0 })) {
-					if (96.0f >= Length(Vector3{ r2e.x, r2e.y,0 })) {
-						Vector2 e = ConvertWorld2Screen(enemy->GetWorldPosition());
-						isLockOn = true;
-						player_->SetReticle3DPos(enemy->GetWorldPosition());
+		// 前のフレームでロックオンしている敵がいるorロックオンしていない状態
+		if (enemy->GetId() == enemyId_ || enemyId_ <= -1) {
+			// カメラの後ろ側ではないかを算出
+			if (!IsEnemyBehindCamera(camera_->GetTranslate(), *cameraDirVel_, enemy->GetWorldPosition())) {
+				// 自機との距離を調べる
+				Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
+				// レティクルと自機の距離内にいるならロックオン対象
+				if (100.0f >= Length(p2e)) {
+					// 敵がレティクルの一定範囲にいるならロックオン(判定はスクリーン座標で行う)
+					Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
+					// ロックオンしていないときの3Dレティクルをスクリーン座標に変換
+					Vector2 reticle2DPos = ConvertWorld2Screen(player_->GetDefault3DReticlePosition());
+					// 2Dレティクルと敵がロックオン範囲内かをスクリーン座標で調べる
+					Vector2 r2e = enemyPos - reticle2DPos;
+					// ロックオンされてないときの2Dレティクルがある座標とロックオン時の2Dレティクルの座標の距離
+					Vector2 r2r = reticlePos - reticle2DPos;
+					// 範囲内ならロックオン
+					if (96.0f >= Length(Vector3{ r2r.x, r2r.y,0 })) {
+						if (96.0f >= Length(Vector3{ r2e.x, r2e.y,0 })) {
+							Vector2 e = ConvertWorld2Screen(enemy->GetWorldPosition());
+							enemyId = enemy->GetId();
+							isLockOn = true;
+							// レティクルの補間
+							vel_ = Lerps::ExponentialInterpolate(vel_, enemy->GetWorldPosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
+							player_->SetReticle3DPos(player_->GetWorld3DReticlePosition(0) + vel_);
+						}
 					}
 				}
 			}
 		}
 	}
+	// ロックオンが外れた時のレティクルの補間
+	if (enemyId <= -1 && !isLockOn) {
+		vel_ = Lerps::ExponentialInterpolate(vel_, player_->GetDefault3DReticlePosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
+		player_->SetReticle3DPos(player_->GetWorld3DReticlePosition(0) + vel_);
+	}
+
 	// ロックオンフラグに代入
 	isLockOn_ = isLockOn;
+	// ロックオンした敵の管理番号を代入
+	enemyId_ = enemyId;
 }

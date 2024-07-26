@@ -55,12 +55,6 @@ public:
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
 	/// <summary>
-	/// ロックオンしてないときの3Dレティクル座標を設定
-	/// </summary>
-	/// <param name="reticlePos">3Dレティクル座標</param>
-	void Set3DReticle(Vector3 reticlePos) { reticle3DPos_ = reticlePos; }
-
-	/// <summary>
 	/// カメラの方向ベクトルを設定
 	/// </summary>
 	/// <param name="dirVel"></param>
@@ -68,9 +62,11 @@ public:
 #pragma endregion
 
 #pragma region Getter
-
+	// ロックオンかを取得
+	bool* GetIsLockOn() { return &isLockOn_; }
 #pragma endregion
 
+	Vector3 reticlePos_;
 public:// 定数
 	// ロックオンを開始する範囲(スクリーン座標基準)
 	const float kLockOnRange = 96.0f;
@@ -81,12 +77,14 @@ private:
 	std::list<Enemy*> enemys_;
 	Player* player_;
 
-	// ロックオンしてないときの3Dレティクル座標を保存
-	Vector3 reticle3DPos_;
-
 	// カメラの方向ベクトル
 	Vector3* cameraDirVel_;
 
 	// ロックオン中か
 	bool isLockOn_;
+
+	Vector3 vel_;
+
+	// ロックオンした敵の管理番号
+	int enemyId_;
 };

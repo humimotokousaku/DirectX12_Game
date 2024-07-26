@@ -56,16 +56,16 @@ private:// プライベートなメンバ変数
 
 	// カメラ
 	std::unique_ptr<Camera> camera_;
-
 	// 自機
 	std::unique_ptr<Player> player_;
 	// 自弾
 	std::list<PlayerBullet*> playerBullets_;
+	// ロックオン機能
 	AimAssist* aimAssist_;
-	// 衝突マネージャー
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 	// エネミーマネージャ
 	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	// 衝突マネージャー
+	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
 	// カメラレール
 	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 	// 追従カメラ

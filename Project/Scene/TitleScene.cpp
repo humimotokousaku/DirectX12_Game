@@ -55,7 +55,7 @@ void TitleScene::Initialize() {
 	}
 
 	// Blender
-	//LoadJSONFile("sample_map.json");
+	LoadJSONFile("GameMap_00.json");
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(camera_.get());
 		object->SetIsLighting(false);

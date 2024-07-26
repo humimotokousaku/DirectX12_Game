@@ -18,9 +18,9 @@ public:
 	/// 
 
 	// コンストラクタ
-	EnemyManager();
+	EnemyManager() = default;
 	// デストラクタ
-	~EnemyManager();
+	~EnemyManager() = default;
 
 	/// <summary>
 	/// 初期化
@@ -142,4 +142,7 @@ private:// プライベートなメンバ変数
 
 	// レールカメラの進行度
 	float* railCameraProgress_;
+
+	// 敵の管理番号を与える
+	int id_;
 };

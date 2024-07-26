@@ -49,7 +49,9 @@ public:
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 3Dレティクルの座標
-	Vector3 GetWorld3DReticlePosition();
+	Vector3 GetWorld3DReticlePosition(int index);
+	// ロックオンされてない3Dレティクルの座標
+	Vector3 GetDefault3DReticlePosition();
 	// カメラの移動幅
 	Vector3* GetCameraOffset() { return &cameraOffset_; }
 	// カメラの回転幅
@@ -71,8 +73,10 @@ public:
 	// 衝突マネージャのアドレスを設定
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
+	void SetIsLockOn(bool* isLockOn) { isLockOn_ = isLockOn; }
+
 	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
-	void SetReticle3DPos(Vector3 pos) { object3dReticle_->worldTransform.translate = pos; }
+	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
 
 	/// <summary>
 	/// 親となるワールドトランスフォームを設定
@@ -167,11 +171,12 @@ private:// プライベートなメンバ変数
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
 	// 3Dレティクルの座標
-	std::unique_ptr<Object3D> object3dReticle_;
+	std::array<std::unique_ptr<Object3D>,2> object3dReticle_;
+	WorldTransform default3dReticle_;
 	// 使用するモデル
 	std::vector<Model*> models_;
 	// 2Dレティクル用のスプライト
-	Sprite* sprite2DReticle_ = nullptr;
+	std::array<Sprite*,2> sprite2DReticle_;
 	// HP用のスプライト
 	Sprite* hpSprite_ = nullptr;
 	// 自機の軌道パーティクル
@@ -229,4 +234,6 @@ private:// プライベートなメンバ変数
 
 	// 加速モード
 	bool isBoost_;
+	// ロックオン
+	bool* isLockOn_;
 };

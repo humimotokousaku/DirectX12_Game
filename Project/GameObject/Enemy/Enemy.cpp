@@ -9,12 +9,12 @@ Enemy::Enemy() {
 Enemy::~Enemy() {
 	collisionManager_->ClearColliderList(this);
 	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
+		//delete bullet;
 	}
 	models_.clear();
 }
 
-void Enemy::Initialize(Vector3 pos, Vector3 rotate) {
+void Enemy::Initialize(Vector3 pos, Vector3 rotate,int id) {
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributeEnemy);
@@ -33,6 +33,9 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate) {
 
 	// 状態遷移
 	state_->Initialize(this);
+
+	// 管理番号
+	id_ = id;
 }
 
 void Enemy::Update() {

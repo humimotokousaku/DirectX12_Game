@@ -79,6 +79,7 @@ void GameScene::Initialize() {
 	aimAssist_ = AimAssist::GetInstance();
 	aimAssist_->SetCamera(followCamera_->GetCamera());
 	aimAssist_->SetPlayer(player_.get());
+	player_->SetIsLockOn(aimAssist_->GetIsLockOn());
 
 	// カメラの方向ベクトルをアドレスで渡す
 	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
@@ -125,7 +126,6 @@ void GameScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_3)) {
 		sceneNum = GAMECLEAR_SCENE;
 	}
-
 
 	enemyManager_->Update();
 	aimAssist_->SetEnemyList(enemyManager_->GetEnemyList());
@@ -194,6 +194,8 @@ void GameScene::Finalize() {
 	// リストのクリア
 	// 自機の弾
 	playerBullets_.clear();
+	// 敵に関するすべて(デストラクタでやるとメンバ変数の書く場所によってバグるから解放処理を作成)
+	enemyManager_->Finalize();
 
 	// 基底クラスの解放
 	IScene::Finalize();
