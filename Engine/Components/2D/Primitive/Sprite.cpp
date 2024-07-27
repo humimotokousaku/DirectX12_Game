@@ -49,6 +49,8 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	if (textureIndex_ != UINT32_MAX) {
 		AdjustTextureSize(directoryPath, textureFilePath);
 		size_ = textureSize_;
+		// 初期のテクスチャの大きさ
+		startingSize_ = textureSize_;
 	}
 
 	// アンカーポイントから見た頂点座標

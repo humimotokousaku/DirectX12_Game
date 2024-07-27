@@ -110,6 +110,10 @@ private:// プライベートなメンバ関数
 	/// 2Dレティクルの配置
 	/// </summary>
 	void Deploy2DReticle();
+	/// <summary>
+	/// ロックオン時のレティクルの配置
+	/// </summary>
+	void DeployLockOnReticle();
 
 #pragma region 入力処理
 	/// <summary>
@@ -172,13 +176,14 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Object3D> object3d_;
 	// 3Dレティクルの座標
 	std::array<std::unique_ptr<Object3D>,2> object3dReticle_;
+	// ロックオンしていないときのレティクル座標
 	WorldTransform default3dReticle_;
 	// 使用するモデル
 	std::vector<Model*> models_;
 	// 2Dレティクル用のスプライト
-	std::array<Sprite*,2> sprite2DReticle_;
+	std::array<Sprite,3> sprite2DReticle_;
 	// HP用のスプライト
-	Sprite* hpSprite_ = nullptr;
+	Sprite hpSprite_;
 	// 自機の軌道パーティクル
 	std::unique_ptr<Particles> particle_;
 	// 弾
@@ -186,6 +191,8 @@ private:// プライベートなメンバ変数
 
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
+	// ロックオン時のレティクル
+	uint32_t lockOnReticleTexture_ = 0u;
 	// 自機のスプライト
 	uint32_t playerTexture_ = 0u;
 	// パーティクルテクスチャ
@@ -217,10 +224,6 @@ private:// プライベートなメンバ変数
 	Vector3 cameraRotateOffset_;
 #pragma endregion
 
-	// 横方向
-	bool isVertical_;
-	bool isHorizontal_;
-
 	// 弾の発射間隔
 	int bulletInterval_;
 
@@ -236,4 +239,6 @@ private:// プライベートなメンバ変数
 	bool isBoost_;
 	// ロックオン
 	bool* isLockOn_;
+
+	int currentFrame_;
 };

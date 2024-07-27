@@ -11,10 +11,6 @@
 Player::Player() {}
 Player::~Player() {
 	models_.clear();
-	for (Sprite* sprite : sprite2DReticle_) {
-		delete sprite;
-	}
-	delete hpSprite_;
 }
 
 void Player::Initialize() {
@@ -45,21 +41,23 @@ void Player::Initialize() {
 
 	// 2Dレティクル作成
 	for (int i = 0; i < 2; i++) {
-		sprite2DReticle_[i] = new Sprite();
-		sprite2DReticle_[i]->Initialize("", "reticle.png");
-		sprite2DReticle_[i]->SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+		//sprite2DReticle_[i] = new Sprite();
+		sprite2DReticle_[i].Initialize("", "reticle.png");
+		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
 	}
-	sprite2DReticle_[0]->SetSize(Vector2{ 50.0f,50.0f });
+	sprite2DReticle_[0].SetSize(Vector2{ 50.0f,50.0f });
+	// ロックオン時のレティクル作成
+	sprite2DReticle_[2].Initialize("", "lockOnReticle.png");
+	sprite2DReticle_[2].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
 
 	// HP作成
 	hpSize_ = kMaxHPSize;
-	hpSprite_ = new Sprite();
-	hpSprite_->Initialize("DefaultTexture", "white.png");
-	hpSprite_->SetSize(hpSize_);
-	hpSprite_->SetAnchorPoint(Vector2{ 0.0f,0.5f });
-	hpSprite_->SetPos(Vector2(64.0f, 64.0f));
+	hpSprite_.Initialize("DefaultTexture", "white.png");
+	hpSprite_.SetSize(hpSize_);
+	hpSprite_.SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	hpSprite_.SetPos(Vector2(64.0f, 64.0f));
 	// 緑色にする
-	hpSprite_->SetColor(Vector4{ 0,1,0,1 });
+	hpSprite_.SetColor(Vector4{ 0,1,0,1 });
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
@@ -151,12 +149,16 @@ void Player::Draw() {
 
 void Player::DrawUI() {
 	// レティクル
-	for (Sprite* sprite : sprite2DReticle_) {
-		sprite->Draw();
+	for (int i = 0; i < 2; i++) {
+		sprite2DReticle_[i].Draw();
+	}
+	// ロックオン時のレティクル
+	if (*isLockOn_) {
+		sprite2DReticle_[2].Draw();
 	}
 
 	// HPバー
-	hpSprite_->Draw();
+	hpSprite_.Draw();
 
 	// 軌道
 	particle_->Draw(defaultTexture);
@@ -278,10 +280,7 @@ void Player::Move() {
 	else {
 		// 徐々に速度を上げる
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.05f).y;
-		// レティクルが画面端でなければ回転
-		if (!isVertical_) {
-			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;		
-		}
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;		
 		// カメラ演出
 		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;
 	}
@@ -299,11 +298,8 @@ void Player::Move() {
 	else {
 		// 徐々に速度を上げる
 		moveVel_.x = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.x, 0.05f).x;
-		// レティクルが画面端でなければ回転
-		if (!isHorizontal_) {
-			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
-			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
-		}
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
 		// カメラ演出
 		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.y, 0.1f).y;
 		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.z, 0.1f).z;
@@ -355,17 +351,22 @@ void Player::Aim() {
 	Deploy3DReticle();
 
 	// ロックオン処理(必ず3Dレティクル配置と2Dレティクル配置の間に書く)
-	aimAssist_->LockOn(sprite2DReticle_[0]->GetPos());
+	aimAssist_->LockOn(sprite2DReticle_[0].GetPos());
 
 	// 2Dレティクル配置
 	Deploy2DReticle();
 
 	// ロックオンしたら赤くなる
-	if (*isLockOn_) {
-		sprite2DReticle_[0]->SetColor(Vector4{ 1,0,0,1 });
+	if (*isLockOn_) {	
+		sprite2DReticle_[0].SetColor(Vector4{ 1,0,0,1 });
+		// ロックオンレティクルの配置と挙動
+		DeployLockOnReticle();
 	}
 	else {
-		sprite2DReticle_[0]->SetColor(Vector4{ 1,1,1,1 });
+		sprite2DReticle_[0].SetColor(Vector4{ 1,1,1,1 });
+		sprite2DReticle_[2].SetSize(sprite2DReticle_[2].GetStartingSize());
+		sprite2DReticle_[2].SetRotate(Vector3{ 0,0,0 });
+		currentFrame_ = 0;
 	}
 }
 
@@ -410,7 +411,7 @@ void Player::DecrementHP() {
 	if (!isInvinsible_) {
 		if (PressOnCollision()) {
 			hpSize_.x -= kMaxHPSize.x / 3;
-			hpSprite_->SetSize(hpSize_);
+			hpSprite_.SetSize(hpSize_);
 			// 1秒無敵
 			invinsibleFrame_ = kMaxInvinsibleFrame;
 			isInvinsible_ = true;
@@ -462,61 +463,32 @@ void Player::Deploy2DReticle() {
 		Multiply(camera_->GetViewProjection().matView, Multiply(camera_->GetViewProjection().matProjection, matViewport));
 	// ワールド→スクリーン座標変換
 	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
-	// スプライトのレティクルに座標設定
-	sprite2DReticle_[0]->SetPos(Vector2(positionReticle.x, positionReticle.y));
+	// スプライトのレティクルに座標を設定
+	sprite2DReticle_[0].SetPos(Vector2(positionReticle.x, positionReticle.y));
 
 	// 真ん中のレティクル
 	// ワールド→スクリーン座標変換
 	positionReticle = GetWorld3DReticlePosition(1);
 	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
 	// スプライトのレティクルに座標設定
-	sprite2DReticle_[1]->SetPos(Vector2(positionReticle.x, positionReticle.y));
+	sprite2DReticle_[1].SetPos(Vector2(positionReticle.x, positionReticle.y));
+}
 
-#pragma region 画面端の処理
-	isHorizontal_ = false;
-	isVertical_ = false;
+void Player::DeployLockOnReticle() {
+	// ロックオン時のレティクルの座標を設定
+	sprite2DReticle_[2].SetPos(sprite2DReticle_[0].GetPos());
 
-	// 左右
-	if (sprite2DReticle_[0]->GetPos().x > WinApp::kClientWidth_ + 1.0f || sprite2DReticle_[0]->GetPos().x < 0.0f - 1.0f) {
-		//// 左右どちらかの画面端にいる
-		//isHorizontal_ = true;
-		//// 左右どちらの画面端にいるかを検出し、レティクル座標を合わせる
-		//// 右
-		//if (sprite2DReticle_[0]->GetPos().x > (float)WinApp::kClientWidth_ + 1.0f) {
-		//	sprite2DReticle_[0]->SetPosX((float)WinApp::kClientWidth_);
-		//}
-		//// 左
-		//else if (sprite2DReticle_[0]->GetPos().x < 0.0f - 1.0f) {
-		//	sprite2DReticle_[0]->SetPosX(0.0f);
-		//}
+	// 回転させる
+	Vector3 rotate = {
+		0.0f,0.0f,0.03f
+	};
+	sprite2DReticle_[2].SetRotate(sprite2DReticle_[2].GetRotate() + rotate);
 
-		//// 合成行列の逆行列を計算する
-		//Matrix4x4 matInverseVPV = Inverse(matViewProjectionViewport);
-		//// スクリーン座標
-		//Vector3 posNear = Vector3((float)sprite2DReticle_[0]->GetPos().x, (float)sprite2DReticle_[0]->GetPos().y, 0);
-		//Vector3 posFar = Vector3((float)sprite2DReticle_[0]->GetPos().x, (float)sprite2DReticle_[0]->GetPos().y, 1);
-		//// スクリーン座標系からワールド座標系へ
-		//posNear = Transforms(posNear, matInverseVPV);
-		//posFar = Transforms(posFar, matInverseVPV);
-		//// マウスレイの方向
-		//Vector3 mouseDirection = Subtract(posFar, posNear);
-		//mouseDirection = Normalize(mouseDirection);
-		//// 3Dレティクルを2Dカーソルに配置
-		//object3dReticle_->worldTransform.translate = posNear - mouseDirection * kDistanceObject;
-		//object3dReticle_->worldTransform.UpdateMatrix();
-	}
-	// 上下
-	//if (sprite2DReticle_->GetPos().y > WinApp::kClientHeight_ + 1.0f || sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
-	//	isVertical_ = true;
-	//	// 上下どちらの画面端にいるかを検出し、レティクル座標を合わせる
-	//	// 下
-	//	if (sprite2DReticle_->GetPos().y > (float)WinApp::kClientHeight_ + 1.0f) {
-	//		sprite2DReticle_->SetPosY((float)WinApp::kClientHeight_);
-	//	}
-	//	// 上
-	//	else if (sprite2DReticle_->GetPos().y < 0.0f - 1.0f) {
-	//		sprite2DReticle_->SetPosY(0.0f);
-	//	}
-	//}
-#pragma endregion
+	// サイズの変更
+	Vector2 size{};
+	size.x = cosf(currentFrame_ * std::numbers::pi / 30) * 12.0f;
+	size.y = cosf(currentFrame_ * std::numbers::pi / 30) * 12.0f;
+	sprite2DReticle_[2].SetSize(sprite2DReticle_[2].GetStartingSize() + size);
+
+	currentFrame_++;
 }

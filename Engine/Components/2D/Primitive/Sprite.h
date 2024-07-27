@@ -44,8 +44,12 @@ public:
 	/// Getter
 	// 縦幅、横幅
 	Vector2 GetSize() { return size_; }
+	// 読みこんだ時のテクスチャの大きさ
+	Vector2 GetStartingSize() { return startingSize_; }
 	// 座標
 	Vector2 GetPos() { return { worldTransform_.translate.x, worldTransform_.translate.y }; }
+	// 回転角
+	Vector3 GetRotate() { return worldTransform_.rotate; }
 	// Spriteのアンカーポイント
 	Vector2 GetAnchorPoint() { return anchorPoint_; }
 	// 画像の切り出しサイズ
@@ -65,6 +69,8 @@ public:
 	void SetPosY(float y) {
 		worldTransform_.translate.y = y;
 	}
+	// 回転角度を設定
+	void SetRotate(Vector3 rotate) { worldTransform_.rotate = rotate; }
 	// Spriteのアンカーポイント
 	void SetAnchorPoint(Vector2 anchorPoint) { anchorPoint_ = anchorPoint; }
 	// 画像の切り出しサイズ
@@ -126,6 +132,8 @@ protected:
 
 	// スプライトの縦幅、横幅
 	Vector2 size_;
+	// 読みこんだテクスチャの初期の大きさ
+	Vector2 startingSize_;
 
 	// 画像の左上の座標
 	Vector2 textureLeftTop_ = { 0.0f,0.0f };
