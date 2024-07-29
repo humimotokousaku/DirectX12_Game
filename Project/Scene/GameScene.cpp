@@ -220,7 +220,7 @@ void GameScene::Finalize() {
 	// 自機の弾
 	playerBullets_.clear();
 	// 敵に関するすべて(デストラクタでやるとメンバ変数の書く場所によってバグるから解放処理を作成)
-	enemyManager_->Finalize();
+	//enemyManager_->Finalize();
 
 	// 基底クラスの解放
 	IScene::Finalize();

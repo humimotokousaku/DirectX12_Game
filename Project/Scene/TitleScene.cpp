@@ -152,7 +152,6 @@ void TitleScene::Initialize() {
 }
 
 void TitleScene::Update() {
-	ImGui::ShowDemoWindow();
 #pragma region カメラ
 	camera_->Update();
 	// 座標移動

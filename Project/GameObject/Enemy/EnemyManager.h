@@ -20,7 +20,7 @@ public:
 	// コンストラクタ
 	EnemyManager() = default;
 	// デストラクタ
-	~EnemyManager() = default;
+	~EnemyManager();
 
 	/// <summary>
 	/// 初期化
@@ -36,11 +36,6 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
-
-	/// <summary>
-	/// 解放処理
-	/// </summary>
-	void Finalize();
 
 	///
 	/// User Method

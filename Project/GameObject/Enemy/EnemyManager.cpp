@@ -1,5 +1,24 @@
 #include "EnemyManager.h"
 
+EnemyManager::~EnemyManager() {
+	// 通常敵
+	for (Enemy* enemy : enemy_) {
+		delete enemy;
+	}
+	enemy_.clear();
+	// 通常敵の弾
+	for (EnemyBullet* bullet : enemyBullets_) {
+		delete bullet;
+	}
+	enemyBullets_.clear();
+	// 出現時のパーティクル
+	for (Particles* particle : spawnParticles_) {
+		delete particle;
+	}
+	spawnParticles_.clear();
+	models_.clear();
+}
+
 void EnemyManager::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->LoadTexture("DefaultTexture", "white.png");
@@ -54,25 +73,6 @@ void EnemyManager::Draw() {
 	for (Particles* particle : spawnParticles_) {
 		particle->Draw(spawnParticleTex_);
 	}
-}
-
-void EnemyManager::Finalize() {
-	// 通常敵
-	for (Enemy* enemy : enemy_) {
-		delete enemy;
-	}
-	enemy_.clear();
-	// 通常敵の弾
-	for (EnemyBullet* bullet : enemyBullets_) {
-		delete bullet;
-	}
-	enemyBullets_.clear();
-	// 出現時のパーティクル
-	for (Particles* particle : spawnParticles_) {
-		delete particle;
-	}
-	spawnParticles_.clear();
-	models_.clear();
 }
 
 void EnemyManager::CheckSpawn() {
