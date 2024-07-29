@@ -108,7 +108,6 @@ void Player::Update() {
 	// 全ての処理が終わってからz軸を代入
 	// 現状、オイラー角を使用しているのでジンバルロックを回避できない。なのでレティクルの挙動をマシにするために最後に入れている
 	object3d_->worldTransform.rotate.z = rotateVel_.z;
-
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -131,7 +130,6 @@ void Player::Update() {
 
 	// HPバーの長さ計算
 	// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-	// 最大HPが変われば今のHPの長さも変わる
 	hpSprite_.SetSizeX(kMaxHPSize.x * (hp_ / kMaxHp));
 
 	// 自機の軌道パーティクル
