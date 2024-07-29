@@ -66,6 +66,8 @@ public:
 	/// Setter
 	// 縦幅、横幅
 	void SetSize(Vector2 size) { size_ = size; }
+	void SetSizeX(float sizeX) { size_.x = sizeX; }
+	void SetSizeY(float sizeY) { size_.y = sizeY; }
 	// 座標
 	void SetPos(Vector2 pos) {
 		worldTransform_.translate.x = pos.x;

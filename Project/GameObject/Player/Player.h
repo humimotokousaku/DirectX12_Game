@@ -167,6 +167,8 @@ public:// 定数
 
 	// HPスプライトの最大サイズ
 	const Vector2 kMaxHPSize = { 300.0f, 32.0f };
+	// HPの最大値
+	const float kMaxHp = 100;
 
 	// 無敵時間
 	const int kMaxInvinsibleFrame = 60;
@@ -233,6 +235,8 @@ private:// プライベートなメンバ変数
 
 	// HPテクスチャのサイズ
 	Vector2 hpSize_;
+	// HP
+	float hp_;
 
 	// 無敵時間
 	int invinsibleFrame_;

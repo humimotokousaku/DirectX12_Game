@@ -58,9 +58,6 @@ void Player::Initialize() {
 	hpSprite_.SetPos(Vector2(64.0f, 64.0f));
 	// 緑色にする
 	hpSprite_.SetColor(Vector4{ 0,1,0,1 });
-	isInvinsible_ = false;
-	// 無敵時間
-	invinsibleFrame_ = kMaxInvinsibleFrame;
 
 	// 自機の軌道パーティクルの作成
 	particle_ = std::make_unique<Particles>();
@@ -80,12 +77,19 @@ void Player::Initialize() {
 	SetCollisionMask(~kCollisionAttributePlayer);
 	collisionManager_->SetColliderList(this);
 
+	// エイムアシスト作成
 	aimAssist_ = AimAssist::GetInstance();
 
 	// ロックオン時のレティクルのアニメーション
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 
 	isDead_ = false;
+	// HP
+	hp_ = kMaxHp;
+
+	isInvinsible_ = false;
+	// 無敵時間
+	invinsibleFrame_ = kMaxInvinsibleFrame;
 }
 
 void Player::Update() {
@@ -125,6 +129,11 @@ void Player::Update() {
 		}
 	}
 
+	// HPバーの長さ計算
+	// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
+	// 最大HPが変われば今のHPの長さも変わる
+	hpSprite_.SetSizeX(kMaxHPSize.x * (hp_ / kMaxHp));
+
 	// 自機の軌道パーティクル
 	particle_->SetEmitterPos(GetWorldPosition());
 	particle_->Update();
@@ -138,6 +147,7 @@ void Player::Update() {
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
+	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
 #endif
 }
 
@@ -419,12 +429,14 @@ void Player::DecrementHP() {
 	// 今無敵か
 	if (!isInvinsible_) {
 		if (PressOnCollision()) {
-			hpSize_.x -= kMaxHPSize.x / 3;
-			hpSprite_.SetSize(hpSize_);
+			// とりあえず固定で30ダメ食らう
+			hp_ -= 30;
 			// 死んでいる
-			if (hpSize_.x <= 0.0f) {
+			if (hp_ <= 0.0f) {
+				hp_ = 0.0f;
 				isDead_ = true;
 			}
+
 			// 1秒無敵
 			invinsibleFrame_ = kMaxInvinsibleFrame;
 			isInvinsible_ = true;
