@@ -64,6 +64,8 @@ public:
 #pragma region Getter
 	// ロックオンかを取得
 	bool* GetIsLockOn() { return &isLockOn_; }
+	// ロックオン時のレティクルの補間量を取得
+	Vector3* GetLockOnReticleOffset() { return &lockOnReticleOffset_; }
 #pragma endregion
 
 	Vector3 reticlePos_;
@@ -83,7 +85,8 @@ private:
 	// ロックオン中か
 	bool isLockOn_;
 
-	Vector3 vel_;
+	// ロックオン時のレティクルの補間量
+	Vector3 lockOnReticleOffset_;
 
 	// ロックオンした敵の管理番号
 	int enemyId_;

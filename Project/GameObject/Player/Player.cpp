@@ -81,6 +81,11 @@ void Player::Initialize() {
 	collisionManager_->SetColliderList(this);
 
 	aimAssist_ = AimAssist::GetInstance();
+
+	// ロックオン時のレティクルのアニメーション
+	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+
+	isDead_ = false;
 }
 
 void Player::Update() {
@@ -353,21 +358,25 @@ void Player::Aim() {
 	// ロックオン処理(必ず3Dレティクル配置と2Dレティクル配置の間に書く)
 	aimAssist_->LockOn(sprite2DReticle_[0].GetPos());
 
-	// 2Dレティクル配置
-	Deploy2DReticle();
-
 	// ロックオンしたら赤くなる
 	if (*isLockOn_) {	
+		// 補間量を足す
+		object3dReticle_[0]->worldTransform.translate += *lockOnReticleOffset_;
 		sprite2DReticle_[0].SetColor(Vector4{ 1,0,0,1 });
 		// ロックオンレティクルの配置と挙動
 		DeployLockOnReticle();
 	}
 	else {
+		object3dReticle_[0]->worldTransform.translate += *lockOnReticleOffset_;
 		sprite2DReticle_[0].SetColor(Vector4{ 1,1,1,1 });
 		sprite2DReticle_[2].SetSize(sprite2DReticle_[2].GetStartingSize());
 		sprite2DReticle_[2].SetRotate(Vector3{ 0,0,0 });
-		currentFrame_ = 0;
+		reticleAnim_.SetIsStart(false);
 	}
+	reticleAnim_.Update();
+
+	// 2Dレティクル配置
+	Deploy2DReticle();
 }
 
 void Player::Attack() {
@@ -412,6 +421,10 @@ void Player::DecrementHP() {
 		if (PressOnCollision()) {
 			hpSize_.x -= kMaxHPSize.x / 3;
 			hpSprite_.SetSize(hpSize_);
+			// 死んでいる
+			if (hpSize_.x <= 0.0f) {
+				isDead_ = true;
+			}
 			// 1秒無敵
 			invinsibleFrame_ = kMaxInvinsibleFrame;
 			isInvinsible_ = true;
@@ -484,11 +497,5 @@ void Player::DeployLockOnReticle() {
 	};
 	sprite2DReticle_[2].SetRotate(sprite2DReticle_[2].GetRotate() + rotate);
 
-	// サイズの変更
-	Vector2 size{};
-	size.x = cosf(currentFrame_ * std::numbers::pi / 30) * 12.0f;
-	size.y = cosf(currentFrame_ * std::numbers::pi / 30) * 12.0f;
-	sprite2DReticle_[2].SetSize(sprite2DReticle_[2].GetStartingSize() + size);
-
-	currentFrame_++;
+	reticleAnim_.SetIsStart(true);
 }

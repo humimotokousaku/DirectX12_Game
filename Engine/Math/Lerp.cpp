@@ -13,6 +13,12 @@ namespace Lerps {
 
 		return Vector3(newX, newY, newZ);
 	}
+	Vector2 Lerp(const Vector2& start, const Vector2& end, float t) {
+		float newX = (1.0f - t) * start.x + t * end.x;
+		float newY = (1.0f - t) * start.y + t * end.y;
+
+		return Vector2(newX, newY);
+	}
 	float Lerp(const float& start, const float& end, float t) {
 		float result = (1.0f - t) * start + t * end;
 

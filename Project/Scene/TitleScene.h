@@ -52,7 +52,7 @@ private:
 	// skybox
 	std::unique_ptr<Cube> cube_;
 	// UI
-	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+	std::array<std::unique_ptr<Sprite>, 3> guideUI_;
 	// カメラ
 	std::unique_ptr<Camera> camera_;
 	// レールカメラ

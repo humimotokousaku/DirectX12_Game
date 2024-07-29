@@ -8,6 +8,7 @@
 #include "Particles.h"
 #include "Input.h"
 #include "PlayerBullet.h"
+#include "Animation.h"
 
 class AimAssist;
 class GameScene;
@@ -60,6 +61,8 @@ public:
 	bool* GetIsBoost() { return &isBoost_; }
 	// 体のワールドトランスフォームを取得
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
+	// 死亡フラグを取得
+	bool GetIsDead() { return isDead_; }
 #pragma endregion
 
 #pragma region Setter
@@ -72,17 +75,23 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 	// 衝突マネージャのアドレスを設定
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
-
+	// ロックオンフラグのアドレス取得
 	void SetIsLockOn(bool* isLockOn) { isLockOn_ = isLockOn; }
-
-	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
-	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
+	/// <summary>
+	/// ロックオン時のレティクルの補間量のアドレスを設定
+	/// </summary>
+	/// <param name="offset"></param>
+	void SetLockOnReticleOffset(Vector3* offset) { lockOnReticleOffset_ = offset; }
 
 	/// <summary>
 	/// 親となるワールドトランスフォームを設定
 	/// </summary>
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
+
+	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
+
 #pragma endregion
 
 	///
@@ -120,10 +129,6 @@ private:// プライベートなメンバ関数
 	/// 移動処理
 	/// </summary>
 	void Move();
-	/// <summary>
-	/// 自機の回転処理
-	/// </summary>
-	//void Rotate();
 	/// <summary>
 	/// レティクルの配置、移動の処理
 	/// </summary>
@@ -188,6 +193,8 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Particles> particle_;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+	// ロックオン時のアニメーション
+	Animation reticleAnim_;
 
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
@@ -207,16 +214,16 @@ private:// プライベートなメンバ変数
 	// 衝突マネージャのアドレス
 	CollisionManager* collisionManager_;
 
-	bool isDead_ = true;
-	float gameSpeed_;
-
 	// 自機の移動速度
 	Vector3 moveVel_;
 	// レティクルの移動速度
 	Vector3 reticleMoveVel_;
 	//自機の回転速度
 	Vector3 rotateVel_;
+	float gameSpeed_;
 
+	// ロックオン時のレティクルの補間量
+	Vector3* lockOnReticleOffset_;
 #pragma region カメラ演出
 	// カメラの移動
 	Vector3 cameraOffset_;
@@ -224,21 +231,24 @@ private:// プライベートなメンバ変数
 	Vector3 cameraRotateOffset_;
 #pragma endregion
 
-	// 弾の発射間隔
-	int bulletInterval_;
-
 	// HPテクスチャのサイズ
 	Vector2 hpSize_;
 
-	// 無敵中か
-	bool isInvinsible_;
 	// 無敵時間
 	int invinsibleFrame_;
+	// ロックオン時のレティクルのサイズ変更に使用するframe
+	int currentFrame_;
+	// 弾の発射間隔
+	int bulletInterval_;
 
+	// 無敵中か
+	bool isInvinsible_;
 	// 加速モード
 	bool isBoost_;
 	// ロックオン
 	bool* isLockOn_;
+	// 死亡フラグ
+	bool isDead_ = true;
 
-	int currentFrame_;
+	Vector2* reticleSize_;
 };

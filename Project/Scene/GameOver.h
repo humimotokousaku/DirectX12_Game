@@ -20,6 +20,6 @@ public:
 	void Finalize()override;
 private:
 	// UI
-	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+	std::array<std::unique_ptr<Sprite>, 3> guideUI_;
 };
 

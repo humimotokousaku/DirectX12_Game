@@ -3,21 +3,22 @@
 #include <list>
 #include <assert.h>
 #include <functional>
+#include <variant>
 
 class Animation {
 public: // 構造体
 	// アニメーションを行うときのパラメータ
 	struct AnimData {
-		Vector3* target;       // アニメーションの対象
-		uint32_t currentFrame; // 現在のフレーム
-		uint32_t endFrame;	   // アニメーション終了フレーム
-		float t;			   // 変化量
-		Vector3 start;		   // 始めの値
-		Vector3 end;		   // 終了時の値
-		bool isActive;  	   // アニメーションをしているか
-		const char* name;	   // アニメーションの名前
-		uint32_t id;		   // アニメーションの番号
-		std::function<float(float)> easeFunc; // 使用するイージング関数
+		std::variant<Vector3*, Vector2*, float*, int*> target; // アニメーションの対象
+		uint32_t currentFrame;								   // 現在のフレーム
+		uint32_t endFrame;									   // アニメーション終了フレーム
+		float t;											   // 変化量
+		std::variant<Vector3, Vector2, float, int> start;	   // 始めの値
+		std::variant<Vector3, Vector2, float, int> end;		   // 終了時の値
+		bool isActive;  									   // アニメーションをしているか
+		const char* name;									   // アニメーションの名前
+		uint32_t id;										   // アニメーションの番号
+		std::function<float(float)> easeFunc;                  //使用するイージング関数
 	};
 
 public: // メンバ関数
@@ -55,7 +56,18 @@ public: // メンバ関数
 
 	/// Setter
 	// アニメーションを始めるかを設定
-	void SetIsStart(bool isStart) { isStart_ = isStart; }
+	void SetIsStart(bool isStart) { 
+		if (isStart_ != isStart) {
+			for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {
+				// 最初のアニメーションを起動
+				if (it->id == 0) {
+					it->isActive = isStart;
+					break;
+				}
+			}
+		}
+		isStart_ = isStart;
+	}
 
 	/// <summary>
 	///  アニメーションに必要なパラメータをリストに登録
@@ -66,8 +78,8 @@ public: // メンバ関数
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="name">アニメーションの名前</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void SetAnimData(Vector3* target, Vector3 start, Vector3 end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
-
+	void SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
+	
 private: // メンバ変数
 	std::list<AnimData> animData_;
 	// アニメーションの順番

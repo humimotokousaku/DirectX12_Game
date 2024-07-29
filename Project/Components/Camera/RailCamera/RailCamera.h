@@ -32,6 +32,8 @@ public:
 	Vector3* GetDirectionVelocity() { return &velocity_; }
 	// Fov
 	float* GetFov() { return &camera_->viewProjection_.fovAngleY; }
+	// レールカメラが終点についたかを取得
+	bool GetIsGameClear() { return isGameClear_; }
 #pragma endregion
 
 #pragma region Setter
@@ -66,6 +68,8 @@ private:
 
 	// 速度
 	Vector3 velocity_;
+	// 加速時の速度変化量
+	float boostVel_;
 
 	// 現在のフレーム
 	float currentFrame_;
@@ -74,7 +78,6 @@ private:
 	Vector3 target_;
 	// 凝視座標の進行度
 	float targetT_;
-
 	// カメラ本体の進行度
 	float t_;
 
@@ -82,7 +85,6 @@ private:
 	bool isMove_;
 	// 加速モード
 	bool* isBoost_;
-
-	// 加速時の速度変化量
-	float boostVel_;
+	// ゲームクリア
+	bool isGameClear_;
 };

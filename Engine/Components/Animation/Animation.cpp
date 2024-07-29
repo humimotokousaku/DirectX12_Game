@@ -11,16 +11,9 @@ void Animation::Update() {
 	if (isStart_) {
 		for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {
 			if (it->isActive) {
-				it->currentFrame++;
-				// アニメーション
-				it->t = it->easeFunc((float)it->currentFrame / it->endFrame);
-				*it->target = Lerps::Lerp(it->start, it->end, it->t);
-
 				// アニメーション終了
-				if (it->t > 1.0f) {
+				if (it->currentFrame > it->endFrame) {
 					it->isActive = false;
-					it->t = 0;
-					it->currentFrame = 0;
 					// 次のアニメーションがあるか
 					if (std::next(it) != animData_.end()) {
 						// 次のアニメーションを起動
@@ -28,22 +21,47 @@ void Animation::Update() {
 					}
 					else if (std::next(it) == animData_.end()) {
 						isStart_ = false;
+						break;
 					}
 				}
+				else {
+					// アニメーション
+					it->t = it->easeFunc((float)it->currentFrame / it->endFrame);
+
+					// イージング処理
+					std::visit([&](auto&& targetPtr) {
+						// 引き数の型を取得して同じ型の変数を作成
+						using T = std::decay_t<decltype(*targetPtr)>;
+						// 同じ型かを検出
+						if constexpr (std::is_same_v<T, Vector3>) {
+							*targetPtr = Lerps::Lerp(std::get<Vector3>(it->start), std::get<Vector3>(it->end), it->t);
+						}
+						else if constexpr (std::is_same_v<T, Vector2>) {
+							*targetPtr = Lerps::Lerp(std::get<Vector2>(it->start), std::get<Vector2>(it->end), it->t);
+						}
+						else if constexpr (std::is_same_v<T, float>) {
+							*targetPtr = Lerps::Lerp(std::get<float>(it->start), std::get<float>(it->end), it->t);
+						}
+						else if constexpr (std::is_same_v<T, int>) {
+							*targetPtr = Lerps::Lerp(std::get<int>(it->start), std::get<int>(it->end), it->t);
+						}
+						}, (*it).target);		
+					it->currentFrame++;
+				}	
 			}
 		}
 	}
-	else {
-		for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {
-			// 最初のアニメーションを常に起動させておく
-			if (it->id == 0) {
-				it->isActive = true;
-			}
+	else if(!isStart_) {
+		// 全てのデータを初期化
+		for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {		
+			it->t = 0;
+			it->currentFrame = 0;
+			it->isActive = false;
 		}
 	}
 }
 
-void Animation::SetAnimData(Vector3* target, Vector3 start, Vector3 end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 		target,
 		0,
@@ -61,21 +79,8 @@ void Animation::SetAnimData(Vector3* target, Vector3 start, Vector3 end, uint32_
 		animData.isActive = true;
 	}
 
-	//for (AnimData& anim : animData_) {
-	//	// 同じ名前が入力されたらassert
-	//	if (anim.name == animData.name) {
-	//		WinApp::Log("\nduplicate animation name!!\n\n");
-	//		assert(false);
-	//	}
-	//	else {
-	//		animData_.push_back(animData);
-	//	}
-	//}
-
-	//// リストが空なら登録
-	//if (animData_.empty()) {
-		animData_.push_back(animData);
-	//}
+	// リストが空なら登録
+	animData_.push_back(animData);
 
 	// アニメーションのIDをインクリメント
 	animId_++;

@@ -139,12 +139,16 @@ void TitleScene::Initialize() {
 
 	// UIのスプライトを作成
 	guideUI_[0] = std::make_unique<Sprite>();
-	guideUI_[0]->Initialize("Textures/UI", "titleName.png");
-	guideUI_[0]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 });
+	guideUI_[0]->Initialize("Level", "gray.png");
+	guideUI_[0]->SetSize(Vector2{ 1280,720 });
+	guideUI_[0]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 2 });
 	guideUI_[1] = std::make_unique<Sprite>();
-	guideUI_[1]->Initialize("Textures/UI", "guide_pad_A.png");
-	guideUI_[1]->SetSize(Vector2{ 64,64 });
-	guideUI_[1]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 * 3 });
+	guideUI_[1]->Initialize("Textures/UI", "titleName.png");
+	guideUI_[1]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 });
+	guideUI_[2] = std::make_unique<Sprite>();
+	guideUI_[2]->Initialize("Textures/UI", "guide_pad_A.png");
+	guideUI_[2]->SetSize(Vector2{ 64,64 });
+	guideUI_[2]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 * 3 });
 }
 
 void TitleScene::Update() {
@@ -217,13 +221,13 @@ void TitleScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		object->Draw();
+		//object->Draw();
 	}
 	//railCamera_->MoveRouteDraw();
 	//cube_->Draw(ddsTexture_);
 
 	// UI
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 3; i++) {
 		guideUI_[i]->Draw();
 	}
 }

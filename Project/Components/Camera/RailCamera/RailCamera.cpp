@@ -59,6 +59,7 @@ void RailCamera::Update() {
 		if (targetT_ >= 1.0f) {
 			currentFrame_ = 0;
 			isMove_ = false;
+			isGameClear_ = true;
 		}
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);

@@ -44,16 +44,24 @@ public:
 	/// Getter
 	// 縦幅、横幅
 	Vector2 GetSize() { return size_; }
+	// アドレス渡し
+	Vector2* GetSizeP() { return &size_; }
 	// 読みこんだ時のテクスチャの大きさ
 	Vector2 GetStartingSize() { return startingSize_; }
 	// 座標
 	Vector2 GetPos() { return { worldTransform_.translate.x, worldTransform_.translate.y }; }
 	// 回転角
 	Vector3 GetRotate() { return worldTransform_.rotate; }
+	// アドレス渡し
+	Vector3* GetRotateP() { return &worldTransform_.rotate; }
 	// Spriteのアンカーポイント
 	Vector2 GetAnchorPoint() { return anchorPoint_; }
+	// アドレス渡し
+	Vector2* GetAnchorPointP() { return &anchorPoint_; }
 	// 画像の切り出しサイズ
 	Vector2 GetTextureSize() { return textureSize_; }
+	// アドレス渡し
+	Vector2* GetTextureSizeP() { return &textureSize_; }
 
 	/// Setter
 	// 縦幅、横幅
@@ -101,7 +109,7 @@ protected:
 
 	void CreateMaterialResource();
 
-protected:
+private:
 	TextureManager* textureManager_;
 	PipelineManager* psoManager_;
 

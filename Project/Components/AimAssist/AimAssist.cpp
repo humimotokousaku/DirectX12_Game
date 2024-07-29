@@ -61,7 +61,8 @@ void AimAssist::LockOn(Vector2 reticlePos) {
 					// 2Dレティクルと敵がロックオン範囲内かをスクリーン座標で調べる
 					Vector2 r2e = enemyPos - reticle2DPos;
 					// ロックオンされてないときの2Dレティクルがある座標とロックオン時の2Dレティクルの座標の距離
-					Vector2 r2r = reticlePos - reticle2DPos;
+					//Vector2 r2r = reticlePos - reticle2DPos;
+					Vector2 r2r = ConvertWorld2Screen(player_->GetWorld3DReticlePosition(0)) - reticle2DPos;
 					// 範囲内ならロックオン
 					if (96.0f >= Length(Vector3{ r2r.x, r2r.y,0 })) {
 						if (96.0f >= Length(Vector3{ r2e.x, r2e.y,0 })) {
@@ -69,8 +70,8 @@ void AimAssist::LockOn(Vector2 reticlePos) {
 							enemyId = enemy->GetId();
 							isLockOn = true;
 							// レティクルの補間
-							vel_ = Lerps::ExponentialInterpolate(vel_, enemy->GetWorldPosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
-							player_->SetReticle3DPos(player_->GetWorld3DReticlePosition(0) + vel_);
+							lockOnReticleOffset_ = Lerps::ExponentialInterpolate(lockOnReticleOffset_, enemy->GetWorldPosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
+							break;
 						}
 					}
 				}
@@ -79,8 +80,7 @@ void AimAssist::LockOn(Vector2 reticlePos) {
 	}
 	// ロックオンが外れた時のレティクルの補間
 	if (enemyId <= -1 && !isLockOn) {
-		vel_ = Lerps::ExponentialInterpolate(vel_, player_->GetDefault3DReticlePosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
-		player_->SetReticle3DPos(player_->GetWorld3DReticlePosition(0) + vel_);
+		lockOnReticleOffset_ = Lerps::ExponentialInterpolate(lockOnReticleOffset_, player_->GetDefault3DReticlePosition() - player_->GetWorld3DReticlePosition(0), 1.0f, 0.5f);
 	}
 
 	// ロックオンフラグに代入

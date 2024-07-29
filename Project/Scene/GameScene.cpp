@@ -80,6 +80,7 @@ void GameScene::Initialize() {
 	aimAssist_->SetCamera(followCamera_->GetCamera());
 	aimAssist_->SetPlayer(player_.get());
 	player_->SetIsLockOn(aimAssist_->GetIsLockOn());
+	player_->SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
 
 	// カメラの方向ベクトルをアドレスで渡す
 	aimAssist_->SetCameraDirectionVelocity(railCamera_->GetDirectionVelocity());
@@ -126,8 +127,19 @@ void GameScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_3)) {
 		sceneNum = GAMECLEAR_SCENE;
 	}
+	// シーン切り替え
+	// クリア条件
+	if (railCamera_->GetIsGameClear()) {
+		sceneNum = GAMECLEAR_SCENE;
+	}
+	// ゲームオーバ条件
+	if (player_->GetIsDead()) {
+		sceneNum = GAMEOVER_SCENE;
+	}
 
+	// エネミーマネージャ
 	enemyManager_->Update();
+	// 敵のリストを保存
 	aimAssist_->SetEnemyList(enemyManager_->GetEnemyList());
 
 	// 自キャラの更新
@@ -147,7 +159,6 @@ void GameScene::Update() {
 
 	// デバッグカメラの更新
 	railCamera_->Update();
-	//followCamera_->SetPlayerPos(player_->GetWorldPosition());
 	followCamera_->SetPlayerPos(railCamera_->GetWorldTransform().translate);
 	followCamera_->Update();
 
@@ -186,6 +197,8 @@ void GameScene::Draw() {
 }
 
 void GameScene::Finalize() {
+	// ゲームパッドの振動を消す
+	Input::GetInstance()->GamePadVibration(0, 0, 0);
 	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
