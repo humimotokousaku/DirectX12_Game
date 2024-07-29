@@ -73,6 +73,6 @@ private:// プライベートなメンバ変数
 	// skybox
 	std::unique_ptr<Cube> cube_;
 	// UI
-	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+	std::array<std::unique_ptr<Sprite>, 4> guideUI_;
 };
 

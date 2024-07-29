@@ -115,9 +115,19 @@ void GameScene::Initialize() {
 	guideUI_[1]->Initialize("Textures/UI", "guide_pad_RB.png");
 	guideUI_[1]->SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[1]->SetPos(Vector2{ 1132.0f, 64.0f });
+	guideUI_[2] = std::make_unique<Sprite>();
+	guideUI_[2]->Initialize("Textures/UI", "guide_Boost.png");
+	guideUI_[2]->SetAnchorPoint(Vector2{ 0.5f, 0.5f });
+	guideUI_[2]->SetPos(Vector2{ 1200.0f, 128.0f });
+	guideUI_[2]->SetSize(Vector2{ 64.0f, 64.0f });
+	guideUI_[3] = std::make_unique<Sprite>();
+	guideUI_[3]->Initialize("Textures/UI", "guide_pad_X.png");
+	guideUI_[3]->SetSize(Vector2{ 32,32 });
+	guideUI_[3]->SetPos(Vector2{ 1132.0f, 128.0f });
 }
 
 void GameScene::Update() {
+#ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_1)) {
 		sceneNum = TITLE_SCENE;
 	}
@@ -127,6 +137,8 @@ void GameScene::Update() {
 	if (Input::GetInstance()->TriggerKey(DIK_3)) {
 		sceneNum = GAMECLEAR_SCENE;
 	}
+#endif // _DEBUG
+
 	// シーン切り替え
 	// クリア条件
 	if (railCamera_->GetIsGameClear()) {
@@ -188,7 +200,7 @@ void GameScene::Draw() {
 	player_->DrawUI();
 
 	// UI
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < 4; i++) {
 		guideUI_[i]->Draw();
 	}
 
