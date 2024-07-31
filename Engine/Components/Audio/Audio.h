@@ -60,10 +60,11 @@ public:
 	/// 音声再生
 	/// </summary>
 	/// <param name="soundData"></param>
+	/// <param name="isLoop">ループ再生にするか</param>
 	/// <param name="volume">音量</param>
 	/// <param name="Semitones">音階</param>
 	/// <param name="muffled">音のこもり具合(1がデフォルト)</param>
-	void SoundPlayWave(uint32_t soundIndex, float volume = 1.0f, float Semitones = 1.0f, float muffled = 1.0f);
+	void SoundPlayWave(uint32_t soundIndex, bool isLoop = false, float volume = 1.0f, float Semitones = 1.0f, float muffled = 1.0f);
 
 	void CreateSourceVoice(uint32_t soundIndex);
 

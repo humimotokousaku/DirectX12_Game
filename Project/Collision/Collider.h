@@ -17,6 +17,9 @@ public:
 	/// Getter
 	/// 
 
+	// ダメージを取得
+	float GetDamage() { return damage_; }
+
 	// 半径の取得
 	float GetRadius() { return radius_; }
 	// OBBの取得
@@ -37,6 +40,9 @@ public:
 	///
 	/// Setter
 	///
+
+	// ダメージを設定
+	void SetDamage(float damage) { damage_ = damage; }
 
 	// 半径の設定
 	void SetRadius(float radius) { radius_ = radius; }
@@ -72,6 +78,9 @@ public:
 	virtual Vector3 GetRotation() = 0;
 
 private:
+	// ダメージ
+	float damage_;
+
 	// 衝突半径
 	float radius_ = 1.0f;
 	// OBB

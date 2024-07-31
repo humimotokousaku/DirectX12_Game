@@ -1,10 +1,11 @@
 #include "Enemy.h"
 #include "EnemyStateWait.h"
+#include "EnemyStateApproach.h"
 #include "CollisionConfig.h"
 #include "EnemyManager.h" 
 
 Enemy::Enemy() {
-	state_ = new EnemyStateWait();
+	state_ = new EnemyStateApproach();
 }
 Enemy::~Enemy() {
 	collisionManager_->ClearColliderList(this);
@@ -49,7 +50,12 @@ void Enemy::Draw() {
 }
 
 void Enemy::OnCollision(Collider* collider) {
-	isDead_ = true;
+	if (hp_ <= 0.0f) {
+		isDead_ = true;
+	}
+	else {
+		hp_ = hp_ - collider->GetDamage();
+	}
 }
 
 void Enemy::ChangeState(IEnemyState* pState) {
@@ -58,7 +64,10 @@ void Enemy::ChangeState(IEnemyState* pState) {
 }
 
 void Enemy::Move(const Vector3 velocity) {
-	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity);
+	Vector3 dirVel = TargetOffset(velocity, object3d_->worldTransform.rotate);
+	object3d_->worldTransform.translate = object3d_->worldTransform.translate + dirVel;
+	//object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity);
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void Enemy::Fire() {

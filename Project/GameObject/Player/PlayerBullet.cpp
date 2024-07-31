@@ -15,6 +15,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->SetCamera(camera_);
 
 	// colliderの設定
+	SetDamage(40);
 	SetCollisionPrimitive(kCollisionOBB);
 	SetCollisionAttribute(kCollisionAttributePlayer);
 	SetCollisionMask(~kCollisionAttributePlayer);

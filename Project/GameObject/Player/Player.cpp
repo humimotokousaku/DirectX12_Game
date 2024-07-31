@@ -16,6 +16,9 @@ Player::~Player() {
 void Player::Initialize() {
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+	// 射撃SEの読み込み
+	shotSE_ = audio_->SoundLoadWave("engine/resources/Audio/shot.wav");
 
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
@@ -131,6 +134,16 @@ void Player::Update() {
 	// HPバーの長さ計算
 	// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
 	hpSprite_.SetSizeX(kMaxHPSize.x * (hp_ / kMaxHp));
+
+	// 30%未満なら赤色にする
+	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
+		// 赤色にする
+		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
+	}
+	else {
+		// 緑色にする
+		hpSprite_.SetColor(Vector4{ 0,1,0,1 });
+	}
 
 	// 自機の軌道パーティクル
 	particle_->SetEmitterPos(GetWorldPosition());
@@ -353,7 +366,6 @@ void Player::Move() {
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);
 	cameraOffset_.z = 0.0f;
-	//cameraOffset_.z = std::clamp<float>(cameraOffset_.z, -3.5f, 3.5f);
 
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
@@ -415,6 +427,9 @@ void Player::Attack() {
 
 			// 弾の発射間隔リセット
 			bulletInterval_ = kBulletInterval;
+
+			// 音の再生
+			audio_->SoundPlayWave(shotSE_, false, 0.25f);
 		}
 	}
 

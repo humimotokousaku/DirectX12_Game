@@ -49,6 +49,9 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 // 座標変換
 Vector3 Transforms(const Vector3& vector, const Matrix4x4& matrix);
 
+// 回転からOffsetを算出
+Vector3 TargetOffset(Vector3 offset, Vector3 rotate);
+
 #pragma region カメラ計算
 
 // 透視投影行列

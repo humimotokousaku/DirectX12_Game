@@ -21,8 +21,14 @@ EnemyManager::~EnemyManager() {
 
 void EnemyManager::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
+	audio_ = Audio::GetInstance();
+
+	// テクスチャの読み込み
 	textureManager_->LoadTexture("DefaultTexture", "white.png");
 	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
+
+	// 死亡SEの読み込み
+	deadSE_ = audio_->SoundLoadWave("engine/resources/Audio/dead.wav");
 }
 
 void EnemyManager::Update() {
@@ -30,17 +36,19 @@ void EnemyManager::Update() {
 	CheckSpawn();
 
 	// 敵の削除
-	enemy_.remove_if([](Enemy* enemy) {
+	enemy_.remove_if([&](Enemy* enemy) {
 		if (enemy->IsDead()) {
+			// 死亡SEを再生
+			audio_->SoundPlayWave(deadSE_, false, 0.3f);
 			delete enemy;
 			return true;
 		}
 		return false;
 		});
 	// enemyの更新
-	//for (Enemy* enemy : enemy_) {
-		//enemy->Update();
-	//}
+	for (Enemy* enemy : enemy_) {
+		enemy->Update();
+	}
 	// 弾の更新
 	//for (EnemyBullet* bullet : enemyBullets_) {
 		//bullet->Update();

@@ -21,13 +21,13 @@ void EnemyStateApproach::FireAndResetTimer() {
 
 void EnemyStateApproach::Initialize(Enemy* enemy) {
 	enemy_ = enemy;
-	FireAndResetTimer();
+	//FireAndResetTimer();
 	animCount_ = 0;
 }
 
 void EnemyStateApproach::Update(Enemy* enemy) {
 	// 移動速度
-	const Vector3 kMoveSpeed = { 0, 0, -0.10f };
+	const Vector3 kMoveSpeed = { 0, 0, 0.2f };
 
 	// 移動処理
 	enemy->Move(kMoveSpeed);
@@ -46,14 +46,14 @@ void EnemyStateApproach::Update(Enemy* enemy) {
 	}
 
 	// 既定の位置に到達したら離脱
-	if (enemy->GetEnemyPos().z < 60.0f) {
-		isAnimation_ = false;
-		t_ = 0;
-		animCount_ = 0;
-		//enemy->SetScale(Vector3{ 1,1,1 });
-		timedCalls_.clear();
-		enemy->ChangeState(new EnemyStateLeave());
-	}
+	//if (enemy->GetEnemyPos().z < 60.0f) {
+	//	isAnimation_ = false;
+	//	t_ = 0;
+	//	animCount_ = 0;
+	//	//enemy->SetScale(Vector3{ 1,1,1 });
+	//	timedCalls_.clear();
+	//	enemy->ChangeState(new EnemyStateLeave());
+	//}
 }
 
 float EnemyStateApproach::EaseOutBack(float x) {

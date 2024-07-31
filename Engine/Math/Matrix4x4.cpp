@@ -241,6 +241,18 @@ Vector3 Transforms(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 
+Vector3 TargetOffset(Vector3 offset, Vector3 rotate) {
+	// 対象からのオフセット
+	Vector3 dirVel = offset;
+	// 回転行列を合成
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+
+	// オフセットを回転
+	dirVel = TransformNormal(dirVel, rotateMatrix);
+
+	return dirVel;
+}
+
 Matrix4x4  MakeIdentity4x4() {
 	Matrix4x4 result = {
 		1.0f, 0.0f, 0.0f, 0.0f,

@@ -24,9 +24,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		// 球と球の交差判定
 		if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
 			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderA);
+			colliderA->OnCollision(colliderB);
 			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderB);
+			colliderB->OnCollision(colliderA);
 
 			// 今当たっている
 			colliderA->SetIsOnCollision(true);
@@ -51,9 +51,9 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderA->SetIsOnCollision(true);
 			colliderB->SetIsOnCollision(true);
 			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderA);
+			colliderA->OnCollision(colliderB);
 			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderB);
+			colliderB->OnCollision(colliderA);
 		}
 		else {
 			// 今は当たっていない

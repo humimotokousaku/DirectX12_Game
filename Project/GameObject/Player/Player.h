@@ -7,6 +7,7 @@
 #include "Object3D.h"
 #include "Particles.h"
 #include "Input.h"
+#include "Audio.h"
 #include "PlayerBullet.h"
 #include "Animation.h"
 
@@ -176,6 +177,8 @@ public:// 定数
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
+	// 音
+	Audio* audio_;
 	// ゲームパッド
 	XINPUT_STATE joyState_;
 
@@ -206,6 +209,9 @@ private:// プライベートなメンバ変数
 	uint32_t playerTexture_ = 0u;
 	// パーティクルテクスチャ
 	uint32_t defaultTexture = 0u;
+
+	// 射撃SE
+	uint32_t shotSE_;
 
 	// カメラのアドレス
 	Camera* camera_;
@@ -253,6 +259,4 @@ private:// プライベートなメンバ変数
 	bool* isLockOn_;
 	// 死亡フラグ
 	bool isDead_ = true;
-
-	Vector2* reticleSize_;
 };

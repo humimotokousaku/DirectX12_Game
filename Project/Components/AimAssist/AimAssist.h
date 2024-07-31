@@ -71,8 +71,9 @@ public:
 	Vector3 reticlePos_;
 public:// 定数
 	// ロックオンを開始する範囲(スクリーン座標基準)
-	const float kLockOnRange = 96.0f;
-
+	const float kLockOnRange = 64.0f;
+	// ロックオンを解除のに必要な距離(スクリーン座標基準)
+	const float kLockOnDisabledDist = 64.0f;
 private:
 	Camera* camera_;
 

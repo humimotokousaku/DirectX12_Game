@@ -30,7 +30,24 @@ void GameManager::Update() {
 	//シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
 		sceneArr_[preSceneNum_]->Finalize();
+		sceneArr_[preSceneNum_].reset();
 		sceneArr_[sceneNum_]->Initialize();
+
+		// 解放したシーンを作成しなおす
+		switch (preSceneNum_) {
+		case TITLE_SCENE:
+			sceneArr_[TITLE_SCENE] = std::make_unique<TitleScene>();
+			break;
+		case GAME_SCENE:
+			sceneArr_[GAME_SCENE] = std::make_unique<GameScene>();
+			break;
+		case GAMECLEAR_SCENE:
+			sceneArr_[GAMECLEAR_SCENE] = std::make_unique<GameClear>();
+			break;
+		case GAMEOVER_SCENE:
+			sceneArr_[GAMEOVER_SCENE] = std::make_unique<GameOver>();
+			break;
+		}
 	}
 
 	///

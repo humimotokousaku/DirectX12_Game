@@ -99,7 +99,7 @@ void Audio::SoundUnload() {
 	//}
 }
 
-void Audio::SoundPlayWave(uint32_t soundIndex, float volume, float Semitones, float muffled) {
+void Audio::SoundPlayWave(uint32_t soundIndex, bool isLoop, float volume, float Semitones, float muffled) {
 	HRESULT result;
 
 	// 一定の周波数以上の音を変更(今回はこもったような音になる)
@@ -109,7 +109,11 @@ void Audio::SoundPlayWave(uint32_t soundIndex, float volume, float Semitones, fl
 	XAUDIO2_BUFFER buf{};
 	buf.pAudioData = soundData_[soundIndex].pBuffer;
 	buf.AudioBytes = soundData_[soundIndex].bufferSize;
-	buf.Flags = XAUDIO2_END_OF_STREAM;
+	//buf.Flags = XAUDIO2_END_OF_STREAM;
+	if (isLoop) {
+		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
+	}
+	
 	// 音量の設定
 	result = soundData_[soundIndex].pSourceVoice_->SetVolume(volume);
 	// 音階の設定
@@ -117,6 +121,19 @@ void Audio::SoundPlayWave(uint32_t soundIndex, float volume, float Semitones, fl
 
 	// 波形データの再生
 	result = soundData_[soundIndex].pSourceVoice_->SubmitSourceBuffer(&buf);
+
+	XAUDIO2_VOICE_STATE state;
+	// 再生中なら音を停止して始めからやり直す
+	if (soundData_[soundIndex].pSourceVoice_) {
+		soundData_[soundIndex].pSourceVoice_->GetState(&state);
+		if (state.BuffersQueued > 0) {
+			soundData_[soundIndex].pSourceVoice_->Stop(0); // 再生を停止
+			soundData_[soundIndex].pSourceVoice_->FlushSourceBuffers(); // バッファをフラッシュ
+			buf.Flags = XAUDIO2_END_OF_STREAM; // バッファの終端を示すフラグを設定
+			soundData_[soundIndex].pSourceVoice_->SubmitSourceBuffer(&buf); // バッファを再度サブミット
+		}
+	}
+
 	// 再生開始
 	result = soundData_[soundIndex].pSourceVoice_->Start();
 }

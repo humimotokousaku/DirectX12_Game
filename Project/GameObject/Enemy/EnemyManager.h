@@ -1,4 +1,5 @@
 #pragma once
+#include "Audio.h"
 #include "Enemy.h"
 #include "EnemyBullet.h"
 #include "Player.h"
@@ -109,6 +110,8 @@ public:
 private:// プライベートなメンバ変数
 	// 基本機能
 	TextureManager* textureManager_;
+	// 音
+	Audio* audio_;
 
 	// カメラのアドレス
 	Camera* camera_;
@@ -129,6 +132,9 @@ private:// プライベートなメンバ変数
 
 	// 出現時のパーティクルのテクスチャ
 	uint32_t spawnParticleTex_;
+
+	// 死亡SE
+	uint32_t deadSE_;
 
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;

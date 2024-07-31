@@ -19,7 +19,7 @@ public:
 	/// Default Method
 	/// 
 
-	GameScene();
+	GameScene() = default;
 	~GameScene()override = default;
 
 	/// <summary>
@@ -55,24 +55,24 @@ private:// プライベートなメンバ変数
 	ModelManager* modelManager_;
 
 	// カメラ
-	std::unique_ptr<Camera> camera_;
+	Camera camera_;
 	// 自機
-	std::unique_ptr<Player> player_;
+	Player player_;
 	// 自弾
 	std::list<PlayerBullet*> playerBullets_;
 	// ロックオン機能
 	AimAssist* aimAssist_;
 	// 衝突マネージャー
-	std::unique_ptr<CollisionManager> collisionManager_ = nullptr;
+	CollisionManager collisionManager_;
 	// エネミーマネージャ
-	std::unique_ptr<EnemyManager> enemyManager_ = nullptr;
+	EnemyManager enemyManager_;
 	// カメラレール
-	std::unique_ptr<RailCamera> railCamera_ = nullptr;
+	RailCamera railCamera_;
 	// 追従カメラ
-	std::unique_ptr<FollowCamera> followCamera_ = nullptr;
+	FollowCamera followCamera_;
 	// skybox
-	std::unique_ptr<Cube> cube_;
+	//std::unique_ptr<Cube> cube_;
 	// UI
-	std::array<std::unique_ptr<Sprite>, 4> guideUI_;
+	std::array<Sprite, 4> guideUI_;
 };
 

@@ -8,7 +8,6 @@
 #include <vector>
 
 class Player;
-//class GameScene;
 class EnemyManager;
 class Enemy : public Collider
 {
@@ -115,6 +114,7 @@ private:
 
 	// 死亡フラグ
 	bool isDead_ = false;
+	float hp_ = 100;
 
 	// 管理番号
 	int id_;
