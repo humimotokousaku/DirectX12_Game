@@ -61,10 +61,11 @@ void Animation::Update() {
 	}
 }
 
-void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 		target,
 		0,
+		startFrame,
 		endFrame,
 		0,
 		start,

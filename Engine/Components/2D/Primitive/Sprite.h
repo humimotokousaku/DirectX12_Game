@@ -111,6 +111,10 @@ protected:
 
 	void CreateMaterialResource();
 
+public:
+	// Sprite
+	WorldTransform worldTransform_;
+
 private:
 	TextureManager* textureManager_;
 	PipelineManager* psoManager_;
@@ -133,8 +137,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_;
 	uint32_t* indexData_ = nullptr;
-	// Sprite
-	WorldTransform worldTransform_;
+
 	ViewProjection viewProjection_;
 
 	// 画像の中心点

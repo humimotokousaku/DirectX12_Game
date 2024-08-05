@@ -41,7 +41,7 @@ Vector2 AimAssist::ConvertWorld2Screen(Vector3 worldPos) {
 	return Vector2(result.x, result.y);
 }
 
-void AimAssist::LockOn(Vector2 reticlePos) {
+void AimAssist::LockOn() {
 	bool isLockOn = false;
 	int enemyId = -1;
 

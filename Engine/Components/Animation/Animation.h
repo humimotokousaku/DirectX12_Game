@@ -11,6 +11,7 @@ public: // 構造体
 	struct AnimData {
 		std::variant<Vector3*, Vector2*, float*, int*> target; // アニメーションの対象
 		uint32_t currentFrame;								   // 現在のフレーム
+		uint32_t startFrame;								   // アニメーション開始フレーム
 		uint32_t endFrame;									   // アニメーション終了フレーム
 		float t;											   // 変化量
 		std::variant<Vector3, Vector2, float, int> start;	   // 始めの値
@@ -78,7 +79,7 @@ public: // メンバ関数
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="name">アニメーションの名前</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
+	void SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
 	
 private: // メンバ変数
 	std::list<AnimData> animData_;

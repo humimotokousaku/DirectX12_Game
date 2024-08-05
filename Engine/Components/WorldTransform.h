@@ -21,6 +21,7 @@ struct WorldTransform {
 	ConstBufferDataWorldTransform* constMap = nullptr;
 
 	Vector3 translate;
+	Vector2 translate2d;
 	Vector3 rotate;
 	Vector3 scale = { 1,1,1 };
 

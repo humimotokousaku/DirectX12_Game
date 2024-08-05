@@ -19,7 +19,7 @@ void Bloom::Initialize() {
 	bloomResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&bloomData_));
 #pragma endregion
 
-	bloomData_->isActive = false;
+	bloomData_->isActive = true;
 	bloomData_->strength = 1.0f;
 	bloomData_->threshold = 0.3f;
 	isActive_ = bloomData_->isActive;

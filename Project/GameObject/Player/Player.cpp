@@ -18,7 +18,15 @@ void Player::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	// 射撃SEの読み込み
-	shotSE_ = audio_->SoundLoadWave("engine/resources/Audio/shot.wav");
+	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
+
+	//dyingSE_[0] = audio_->SoundLoadWave("Audio/dying_00.wav");
+	//dyingSE_[1] = audio_->SoundLoadWave("Audio/dying_01.wav");
+	//dyingSE_[2] = audio_->SoundLoadWave("Audio/dying_02.wav");
+	//for (int i = 0; i < 3; i++) {
+	//	audio_->SoundPlayWave(dyingSE_[i], true, 0.1f);
+	//	audio_->SoundStop(dyingSE_[i]);
+	//}
 
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
@@ -84,7 +92,7 @@ void Player::Initialize() {
 	aimAssist_ = AimAssist::GetInstance();
 
 	// ロックオン時のレティクルのアニメーション
-	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 0, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 
 	isDead_ = false;
 	// HP
@@ -139,16 +147,20 @@ void Player::Update() {
 	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
 		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
+
+		audio_->soundMuffleValue = -0.9f;
 	}
 	else {
 		// 緑色にする
 		hpSprite_.SetColor(Vector4{ 0,1,0,1 });
+		audio_->soundMuffleValue = 0.0f;
 	}
 
 	// 自機の軌道パーティクル
 	particle_->SetEmitterPos(GetWorldPosition());
 	particle_->Update();
 
+	audio_->SetMuffle(shotSE_, 1.0f);
 #ifdef _DEBUG
 	// ImGui
 	object3d_->ImGuiParameter("Player");
@@ -158,8 +170,9 @@ void Player::Update() {
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
-	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
+
 #endif
+	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
 }
 
 void Player::Draw() {
@@ -376,7 +389,7 @@ void Player::Aim() {
 	Deploy3DReticle();
 
 	// ロックオン処理(必ず3Dレティクル配置と2Dレティクル配置の間に書く)
-	aimAssist_->LockOn(sprite2DReticle_[0].GetPos());
+	aimAssist_->LockOn();
 
 	// ロックオンしたら赤くなる
 	if (*isLockOn_) {	

@@ -53,6 +53,10 @@ private:// プライベートなメンバ変数
 	// 基本機能
 	TextureManager* textureManager_;
 	ModelManager* modelManager_;
+	Audio* audio_;
+
+	// BGM
+	uint32_t BGM_;
 
 	// カメラ
 	Camera camera_;

@@ -44,7 +44,7 @@ public:
 	/// ロックオン
 	/// </summary>
 	/// <param name="reticlePos">レティクルのスクリーン座標</param>
-	void LockOn(Vector2 reticlePos);
+	void LockOn();
 
 #pragma region Setter
 	// 全敵のアドレスを設定

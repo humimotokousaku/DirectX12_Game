@@ -56,6 +56,18 @@ public:
 	// 音声データ解放
 	void SoundUnload();
 
+	// 登録されたすべての音を止める
+	void AllSoundStop();
+
+	void SoundStop(uint32_t soundIndex);
+
+	void SetMuffle(uint32_t soundIndex,float muffled) {
+		// 一定の周波数以上の音を変更(今回はこもったような音になる)
+		XAUDIO2_FILTER_PARAMETERS FilterParameters = { LowPassFilter, muffled + soundMuffleValue,muffled + soundMuffleValue };
+		soundData_[soundIndex].pSubmixVoice_->SetFilterParameters(&FilterParameters);
+		soundData_[soundIndex].pSourceVoice_->Start();
+	}
+
 	/// <summary>
 	/// 音声再生
 	/// </summary>
@@ -67,6 +79,10 @@ public:
 	void SoundPlayWave(uint32_t soundIndex, bool isLoop = false, float volume = 1.0f, float Semitones = 1.0f, float muffled = 1.0f);
 
 	void CreateSourceVoice(uint32_t soundIndex);
+
+public:
+	// 音のこもり具合の変化量
+	float soundMuffleValue = 0.0f;
 
 private:
 	IXAudio2MasteringVoice* masterVoice_;

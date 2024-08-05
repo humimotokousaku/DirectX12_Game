@@ -303,7 +303,7 @@
     <ClCompile Include="Project\GameObject\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\Enemy.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\Enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="engine\PostProcess\PostEffectManager.cpp">
@@ -381,13 +381,13 @@
     <ClCompile Include="Project\GameObject\Enemy\EnemyBullet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\EnemyStateApproach.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\EnemyStateLeave.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\IEnemyState.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\IEnemyState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Utility\TimedCall.cpp">
@@ -405,10 +405,28 @@
     <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\EnemyStateWait.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Project\Components\Camera\FollowCamera\FollowCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Components\SceneTransition\SceneTransition.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\IEnemy.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -578,7 +596,7 @@
     <ClInclude Include="Project\GameObject\Player\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\Enemy.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\Enemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="engine\PostProcess\PostEffectManager.h">
@@ -656,13 +674,13 @@
     <ClInclude Include="Project\GameObject\Enemy\EnemyBullet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\EnemyStateApproach.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\EnemyStateLeave.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\IEnemyState.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\IEnemyState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Utility\TimedCall.h">
@@ -680,10 +698,28 @@
     <ClInclude Include="Project\Components\AimAssist\AimAssist.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\EnemyStateWait.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Project\Components\Camera\FollowCamera\FollowCamera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\IEnemy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

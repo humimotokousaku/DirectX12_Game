@@ -28,7 +28,7 @@ void EnemyManager::Initialize() {
 	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
 
 	// 死亡SEの読み込み
-	deadSE_ = audio_->SoundLoadWave("engine/resources/Audio/dead.wav");
+	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 }
 
 void EnemyManager::Update() {

@@ -23,8 +23,10 @@ void Audio::Finalize() {
 uint32_t Audio::SoundLoadWave(const char* filename) {
 	// .wavファイルを開く
 	std::ifstream file;
+	std::string filePath = filename;
+	filePath = "engine/resources/" + filePath;
 	// .wavファイルをバイナリモードで開く
-	file.open(filename, std::ios_base::binary);
+	file.open(filePath, std::ios_base::binary);
 	// ファイルオープン失敗を検出する
 	assert(file.is_open());
 
@@ -89,14 +91,30 @@ uint32_t Audio::SoundLoadWave(const char* filename) {
 }
 
 void Audio::SoundUnload() {
-	//for (SoundData& soundData : soundData_) {
-	//	// バッファのメモリを解放
-	//	delete[] soundData.pBuffer;
+	for (SoundData& soundData : soundData_) {
+		soundData.pSourceVoice_->Stop(0); // 再生を停止
+		soundData.pSourceVoice_->FlushSourceBuffers(); // バッファをフラッシュ
+		// バッファのメモリを解放
+		delete[] soundData.pBuffer;
+		soundData.pBuffer = 0;
+		soundData.bufferSize = 0;
+		soundData.wfex = {};
+	}
+	soundMuffleValue = 0.0f;
+	index_ = 0;
+	soundData_.clear();
+}
 
-	//	soundData.pBuffer = 0;
-	//	soundData.bufferSize = 0;
-	//	soundData.wfex = {};
-	//}
+void Audio::AllSoundStop() {
+	for (SoundData& soundData : soundData_) {
+		soundData.pSourceVoice_->Stop(0); // 再生を停止
+		soundData.pSourceVoice_->FlushSourceBuffers(); // バッファをフラッシュ
+	}
+}
+
+void Audio::SoundStop(uint32_t soundIndex){ 
+	soundData_[soundIndex].pSourceVoice_->Stop(0); // 再生を停止
+	soundData_[soundIndex].pSourceVoice_->FlushSourceBuffers(); // バッファをフラッシュ
 }
 
 void Audio::SoundPlayWave(uint32_t soundIndex, bool isLoop, float volume, float Semitones, float muffled) {
@@ -109,7 +127,7 @@ void Audio::SoundPlayWave(uint32_t soundIndex, bool isLoop, float volume, float 
 	XAUDIO2_BUFFER buf{};
 	buf.pAudioData = soundData_[soundIndex].pBuffer;
 	buf.AudioBytes = soundData_[soundIndex].bufferSize;
-	//buf.Flags = XAUDIO2_END_OF_STREAM;
+	buf.Flags = XAUDIO2_END_OF_STREAM;
 	if (isLoop) {
 		buf.LoopCount = XAUDIO2_LOOP_INFINITE;
 	}

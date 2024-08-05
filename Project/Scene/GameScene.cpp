@@ -5,11 +5,16 @@ void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
 	textureManager_ = TextureManager::GetInstance();
 	modelManager_ = ModelManager::GetInstance();
+	audio_ = Audio::GetInstance();
 
 #pragma region 読み込み
+	// テクスチャの読み込み
 	textureManager_->LoadTexture("", "reticle.png");
 	textureManager_->LoadTexture("Textures", "Bob_Red.png");
 	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
+	// BGMの読み込み
+	BGM_ = audio_->SoundLoadWave("Audio/gameBGM_Noesis.wav");
+	audio_->SoundPlayWave(BGM_, true, 0.1f);
 	// 使用するモデルの読み込み
 	modelManager_->LoadModel("", "block.obj");
 	modelManager_->LoadModel("", "Bob.obj");
@@ -173,6 +178,8 @@ void GameScene::Update() {
 
 	// 衝突マネージャー(当たり判定)
 	collisionManager_.CheckAllCollisions();
+
+	audio_->SetMuffle(BGM_, 1.0f);
 }
 
 void GameScene::Draw() {

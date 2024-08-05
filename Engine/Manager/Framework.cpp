@@ -113,6 +113,7 @@ void Framework::Run() {
 			directXCommon_->PreDraw();
 			// 最後のパスを描画
 			postEffectManager_->Draw();
+
 			// 描画後の処理
 			EndFrame();
 		}
@@ -122,8 +123,6 @@ void Framework::Run() {
 }
 
 void Framework::Finalize() {
-	audio_->Finalize();
-	//audio_->SoundUnload(&soundData1_);
 	ModelManager::GetInstance()->Finalize();
 	// ImGui
 	imGuiManager_->Finalize();

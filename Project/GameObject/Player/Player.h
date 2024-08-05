@@ -213,6 +213,8 @@ private:// プライベートなメンバ変数
 	// 射撃SE
 	uint32_t shotSE_;
 
+	std::array<uint32_t, 3> dyingSE_;
+
 	// カメラのアドレス
 	Camera* camera_;
 	// ゲームシーンのアドレス

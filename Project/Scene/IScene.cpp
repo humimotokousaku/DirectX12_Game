@@ -1,5 +1,6 @@
 #include "IScene.h"
 #include "Object3D.h"
+#include "Audio.h"
 #include "../../externals/nlohmann/json.hpp"
 
 int IScene::sceneNum;
@@ -15,6 +16,7 @@ void IScene::Finalize() {
 	levelObjects_.clear();
 	enemyPoints_.clear();
 	models_.clear();
+	Audio::GetInstance()->SoundUnload();
 }
 
 void IScene::LoadJSONFile(const std::string fileName) {
