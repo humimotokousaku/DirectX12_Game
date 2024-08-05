@@ -59,11 +59,11 @@ void Player::Update() {
 	}
 
 	// ImGui
-	object3d_->ImGuiParameter("Player");
+	//object3d_->ImGuiParameter("Player");
 
-	ImGui::Begin("gameSpeed");
-	ImGui::DragFloat("gameSpeed", &gameSpeed_, 0.01f, 0, 10);
-	ImGui::End();
+	//ImGui::Begin("gameSpeed");
+	//ImGui::DragFloat("gameSpeed", &gameSpeed_, 0.01f, 0, 10);
+	//ImGui::End();
 }
 
 void Player::Draw(uint32_t textureHandle) {

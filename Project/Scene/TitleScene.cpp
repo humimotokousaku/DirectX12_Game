@@ -159,6 +159,11 @@ void TitleScene::Update() {
 	human_[0]->ImGuiParameter("Human");
 	//box_[0]->ImGuiParameter("AnimCube");
 #endif
+
+	ImGui::Begin("GamePad_Info");
+	ImGui::Text("Stick:Move");
+	ImGui::Text("RB:SneakMove");
+	ImGui::End();
 #pragma endregion
 }
 
@@ -178,7 +183,7 @@ void TitleScene::Draw() {
 	player_->Draw(particleTexture_);
 	cube_->Draw(ddsTexture_);
 
-	particle_->Draw(uvcheckerTexture_);
+	//particle_->Draw(uvcheckerTexture_);
 }
 
 void TitleScene::Finalize() {
