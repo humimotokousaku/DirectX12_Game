@@ -1,4 +1,5 @@
 #include "FixedTurret.h"
+#include "FixedTurretWaitState.h"
 #include "EnemyManager.h"
 
 FixedTurret::FixedTurret() {
@@ -26,6 +27,7 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
+	state_ = new FixedTurretWaitState(this, player_);
 	state_->Initialize(this, player_);
 
 	// 管理番号
@@ -69,15 +71,17 @@ Vector3 FixedTurret::GetWorldPosition() {
 
 void FixedTurret::Fire() {
 	assert(player_);
+	// 自キャラのワールド座標を取得する
+	player_->GetWorldPosition();
+	// 本体のワールド座標更新
+	object3d_->worldTransform.UpdateMatrix();
 
 	// 弾の速度(正の数だと敵の後ろから弾が飛ぶ)
 	const float kBulletSpeed = -0.5f;
 	Vector3 velocity{ 0, 0, kBulletSpeed };
 
-	// 自キャラのワールド座標を取得する
-	player_->GetWorldPosition();
-	// 本体のワールド座標更新
-	object3d_->worldTransform.UpdateMatrix();
+	// 速度ベクトルを自機の向きに合わせて回転させる
+	//velocity = TransformNormal(velocity, object3d_->worldTransform.matWorld_);
 
 	// 弾を生成し、初期化
 	EnemyBullet* newBullet = new EnemyBullet();

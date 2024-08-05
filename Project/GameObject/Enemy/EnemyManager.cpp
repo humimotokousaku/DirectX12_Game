@@ -2,7 +2,7 @@
 
 EnemyManager::~EnemyManager() {
 	// 通常敵
-	for (Enemy* enemy : enemy_) {
+	for (IEnemy* enemy : enemy_) {
 		delete enemy;
 	}
 	enemy_.clear();
@@ -36,7 +36,7 @@ void EnemyManager::Update() {
 	CheckSpawn();
 
 	// 敵の削除
-	enemy_.remove_if([&](Enemy* enemy) {
+	enemy_.remove_if([&](IEnemy* enemy) {
 		if (enemy->IsDead()) {
 			// 死亡SEを再生
 			audio_->SoundPlayWave(deadSE_, false, 0.3f);
@@ -46,13 +46,13 @@ void EnemyManager::Update() {
 		return false;
 		});
 	// enemyの更新
-	for (Enemy* enemy : enemy_) {
+	for (IEnemy* enemy : enemy_) {
 		enemy->Update();
 	}
 	// 弾の更新
-	//for (EnemyBullet* bullet : enemyBullets_) {
-		//bullet->Update();
-	//}
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Update();
+	}
 	// 終了した弾を削除
 	enemyBullets_.remove_if([](EnemyBullet* bullet) {
 		if (bullet->isDead()) {
@@ -69,8 +69,8 @@ void EnemyManager::Update() {
 }
 
 void EnemyManager::Draw() {
-	// 通常敵
-	for (Enemy* enemy : enemy_) {
+	// 敵
+	for (IEnemy* enemy : enemy_) {
 		enemy->Draw();
 	}
 	// 通常敵の弾
@@ -112,6 +112,40 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
 
 	// 初期化
 	enemy->Initialize(pos, rotate,id_);
+	// リストに登録
+	enemy_.push_back(enemy);
+
+	// 管理番号更新
+	id_++;
+
+	// 出現時のパーティクルを生成
+	Particles* particle = new Particles();
+	particle->Initialize();
+	particle->SetCamera(camera_);
+	particle->SetEmitterPos(pos);
+	particle->SetEmitterFrequency(1);
+	particle->SetEmitterCount(40);
+	particle->SetEmitterSpawnCount(1);
+	particle->SetRandomPerticle(true);
+
+	spawnParticles_.push_back(particle);
+}
+
+void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
+	FixedTurret* enemy = new FixedTurret();
+
+	// 敵モデルを追加
+	enemy->AddModel(models_[0]);
+	// 弾のモデルを追加
+	enemy->AddModel(models_[1]);
+	// 必要なアドレスを設定
+	enemy->SetPlayer(player_);
+	enemy->SetCamera(camera_);
+	enemy->SetCollisionManager(collisionManager_);
+	enemy->SetEnemyManager(this);
+
+	// 初期化
+	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
 	enemy_.push_back(enemy);
 

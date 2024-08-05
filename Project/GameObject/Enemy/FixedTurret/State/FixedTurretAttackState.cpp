@@ -2,10 +2,14 @@
 #include "FixedTurretWaitState.h"
 #include "FixedTurret.h"
 
+FixedTurretAttackState::FixedTurretAttackState(FixedTurret* enemy, Player* player) {
+	Initialize(enemy, player);
+}
 FixedTurretAttackState::~FixedTurretAttackState() {
 	for (TimedCall* timedCall : timedCalls_) {
 		delete timedCall;
 	}
+	timedCalls_.clear();
 }
 
 void FixedTurretAttackState::FireAndResetTimer() {
@@ -23,6 +27,7 @@ void FixedTurretAttackState::Initialize(FixedTurret* enemy, Player* player) {
 	enemy_ = enemy;
 	player_ = player;
 	shotCoolTime_ = 0.0f;
+	shotCount_ = 0;
 	FireAndResetTimer();
 }
 
@@ -35,25 +40,13 @@ void FixedTurretAttackState::Update(FixedTurret* enemy) {
 		}
 		return false;
 		});
-	// 
-	if (shotCount_ < kLimitShot && shotCoolTime_ <= 0.0f) {
-		for (TimedCall* timedCall : timedCalls_) {
-			timedCall->Update();
-		}
-
-		// 最大射撃数までいったらクールタイム発生
-		if (shotCount_ >= kLimitShot) {
-			shotCoolTime_ = kShotCoolTime;
-		}
+	// 発射インターバル更新
+	for (TimedCall* timedCall : timedCalls_) {
+		timedCall->Update();
 	}
 
 	// 既定の回数撃ったらクールタイム状態に移行
 	if (shotCount_ >= kLimitShot) {
-		shotCoolTime_--;
-		// クールタイム終了
-		if (shotCoolTime_ <= 0.0f) {
-			shotCount_ = 0;
-			timedCalls_.clear();
-		}
+		enemy->ChangeState(new FixedTurretWaitState(enemy, player_));
 	}
 }

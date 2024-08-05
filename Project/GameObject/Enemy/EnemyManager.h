@@ -1,6 +1,7 @@
 #pragma once
 #include "Audio.h"
 #include "Enemy.h"
+#include "FixedTurret.h"
 #include "EnemyBullet.h"
 #include "Player.h"
 #include "Camera.h"
@@ -50,6 +51,11 @@ public:
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
 	void SpawnEnemy(Vector3 pos, Vector3 rotate);
+	/// <summary>
+	///	固定砲台の発生
+	/// </summary>
+	/// <param name="pos">発生する座標</param>
+	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
 
 	/// <summary>
 	/// 弾のアドレスを登録
@@ -68,7 +74,7 @@ public:
 	/// 全敵のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	std::list<Enemy*> GetEnemyList() { return enemy_; }
+	std::list<IEnemy*> GetEnemyList() { return enemy_; }
 
 	///
 	/// Setter
@@ -121,7 +127,7 @@ private:// プライベートなメンバ変数
 	Player* player_;
 
 	// 敵
-	std::list<Enemy*> enemy_;
+	std::list<IEnemy*> enemy_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
 	// 出現時のパーティクル

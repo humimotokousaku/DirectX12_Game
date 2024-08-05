@@ -9,6 +9,7 @@ class FixedTurret; // 前方宣言
 /// </summary>
 class FixedTurretAttackState : public IFixedTurretState {
 public:
+	FixedTurretAttackState(FixedTurret* enemy, Player* player);
 	~FixedTurretAttackState();
 
 	/// <summary>
@@ -38,5 +39,4 @@ public:
 	int shotCount_;
 	// 射撃のクールタイム
 	float shotCoolTime_;
-
 };

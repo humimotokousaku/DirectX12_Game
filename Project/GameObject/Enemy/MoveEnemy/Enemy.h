@@ -56,11 +56,6 @@ public:
 	/// </summary>
 	void Fire();
 
-	// 敵モデルを追加
-	void AddModel(Model* model) {
-		models_.push_back(model);
-	}
-
 #pragma region Getter
 	// 座標を取得
 	Vector3 GetEnemyPos() { return object3d_->worldTransform.translate; }

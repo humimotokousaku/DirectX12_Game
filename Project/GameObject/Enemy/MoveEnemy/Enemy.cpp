@@ -5,7 +5,7 @@
 #include "EnemyManager.h" 
 
 Enemy::Enemy() {
-	state_ = new EnemyStateApproach();
+	
 }
 Enemy::~Enemy() {
 	collisionManager_->ClearColliderList(this);
@@ -30,6 +30,7 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate,int id) {
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
 	// 状態遷移
+	state_ = new EnemyStateApproach();
 	state_->Initialize(this, player_);
 
 	// 管理番号
@@ -63,7 +64,6 @@ void Enemy::ChangeState(IEnemyState* pState) {
 void Enemy::Move(const Vector3 velocity) {
 	Vector3 dirVel = TargetOffset(velocity, object3d_->worldTransform.rotate);
 	object3d_->worldTransform.translate = object3d_->worldTransform.translate + dirVel;
-	//object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity);
 	object3d_->worldTransform.UpdateMatrix();
 }
 

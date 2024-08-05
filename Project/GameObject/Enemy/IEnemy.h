@@ -22,10 +22,26 @@ public:
 	/// </summary>
 	virtual void Draw() = 0;
 
+	// 敵モデルを追加
+	void AddModel(Model* model) {
+		models_.push_back(model);
+	}
+
 	// 管理番号の取得
 	int GetId() { return id_; }
 	// 完了ならtrueを返す
 	bool IsDead() const { return isDead_; }
+
+	Vector3 GetWorldPosition() {
+		// ワールド座標を入れる変数
+		Vector3 worldPos{};
+		// ワールド行列の平行移動成分を取得
+		worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
+		worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
+		worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
+
+		return worldPos;
+	}
 
 	/// <summary>
 	/// 自機のアドレスを設定
@@ -61,4 +77,7 @@ protected:
 
 	// 管理番号
 	int id_;
+
+	// 敵のタイプ
+	std::string type_;
 };

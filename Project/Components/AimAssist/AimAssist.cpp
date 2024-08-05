@@ -45,7 +45,7 @@ void AimAssist::LockOn() {
 	bool isLockOn = false;
 	int enemyId = -1;
 
-	for (Enemy* enemy : enemys_) {
+	for (IEnemy* enemy : enemys_) {
 		// 前のフレームでロックオンしている敵がいるorロックオンしていない状態
 		if (enemy->GetId() == enemyId_ || enemyId_ <= -1) {
 			// カメラの後ろ側ではないかを算出

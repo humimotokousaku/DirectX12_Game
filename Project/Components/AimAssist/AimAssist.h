@@ -48,7 +48,7 @@ public:
 
 #pragma region Setter
 	// 全敵のアドレスを設定
-	void SetEnemyList(std::list<Enemy*> enemys) { enemys_ = enemys; }
+	void SetEnemyList(std::list<IEnemy*> enemys) { enemys_ = enemys; }
 	// 自機のアドレスを設定
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
@@ -77,7 +77,7 @@ public:// 定数
 private:
 	Camera* camera_;
 
-	std::list<Enemy*> enemys_;
+	std::list<IEnemy*> enemys_;
 	Player* player_;
 
 	// カメラの方向ベクトル

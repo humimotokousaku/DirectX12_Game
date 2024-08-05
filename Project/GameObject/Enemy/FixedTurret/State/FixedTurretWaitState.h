@@ -1,10 +1,13 @@
 #pragma once
 #include "IFixedTurretState.h"
 #include "TimedCall.h"
+#include <algorithm>
 
 class FixedTurret;
 class FixedTurretWaitState : public IFixedTurretState {
 public:
+	FixedTurretWaitState(FixedTurret* enemy, Player* player);
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -20,7 +23,11 @@ public:
 private:// 定数
 	// 射撃状態になる範囲
 	const float kShotModeRange = 100.0f;
+	// 射撃のクールタイム
+	const float kShotCoolTime = 90.0f;
 
 public:
 	FixedTurret* enemy_;
+	// 射撃のクールタイム
+	float shotCoolTime_;
 };
