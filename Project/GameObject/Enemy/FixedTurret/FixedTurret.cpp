@@ -35,8 +35,6 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 void FixedTurret::Update() {
 	// 状態遷移
 	state_->Update(this);
-	
-
 }
 
 void FixedTurret::Draw() {

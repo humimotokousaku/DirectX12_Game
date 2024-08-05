@@ -35,16 +35,29 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 }
 
 void EnemyBullet::Update() {
-	Vector3 toPlayer = Subtract(player_->GetWorldPosition(), object3d_->worldTransform.translate);
-	toPlayer = Normalize(toPlayer);
-	velocity_ = Normalize(velocity_);
-	// 球面線形保管により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
-	velocity_ = Lerps::Slerp(velocity_, toPlayer, 0.1f);
-	velocity_.x *= 0.5f;
-	velocity_.y *= 0.5f;
-	velocity_.z *= 0.5f;
-
-#pragma region 弾の角度
+//	Vector3 toPlayer = Subtract(player_->GetWorldPosition(), object3d_->worldTransform.translate);
+//	toPlayer = Normalize(toPlayer);
+//	velocity_ = Normalize(velocity_);
+//	// 球面線形保管により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
+//	velocity_ = Lerps::Slerp(velocity_, toPlayer, 0.1f);
+//	velocity_.x *= 0.5f;
+//	velocity_.y *= 0.5f;
+//	velocity_.z *= 0.5f;
+//
+//#pragma region 弾の角度
+//
+//	// Y軸周り角度(θy)
+//	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
+//	// 横軸方向の長さを求める
+//	float velocityXZ;
+//	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
+//	// X軸周りの角度(θx)
+//	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ);
+//
+//#pragma endregion
+//
+//	// 座標を移動させる
+//	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity_);
 
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
@@ -54,10 +67,11 @@ void EnemyBullet::Update() {
 	// X軸周りの角度(θx)
 	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 
-#pragma endregion
-
 	// 座標を移動させる
 	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity_);
+
+	// 行列を更新
+	object3d_->worldTransform.UpdateMatrix();
 
 	// 時間経過で死ぬ
 	if (--deathTimer_ <= 0) {
