@@ -25,13 +25,13 @@ public:
 	/// 
 
 	/// <summary>
-	/// カメラの後ろ側に敵がいるか
+	/// 自機の後ろ側に敵がいるか
 	/// </summary>
 	/// <param name="cameraPosition">カメラの座標</param>
 	/// <param name="cameraDirection">カメラの方向ベクトル</param>
 	/// <param name="enemyPosition">敵の座標</param>
-	/// <returns>カメラの後ろ側ならtrue</returns>
-	bool IsEnemyBehindCamera(const Vector3& cameraPosition, const Vector3& cameraDirection, const Vector3& enemyPosition);
+	/// <returns>自機の後ろ側ならtrue</returns>
+	bool IsEnemyBehindPlayer(const Vector3& playerPosition, const Vector3& cameraDirection, const Vector3& enemyPosition);
 
 	/// <summary>
 	/// ワールド座標からスクリーン座標に変換

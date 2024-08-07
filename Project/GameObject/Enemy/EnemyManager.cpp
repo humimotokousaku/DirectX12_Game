@@ -91,7 +91,7 @@ void EnemyManager::CheckSpawn() {
 			}
 
 			if (spawnPointDatas_[i].isActive) {
-				SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate);
+				SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
 			}
 		}
 	}

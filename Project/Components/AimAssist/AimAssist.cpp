@@ -13,8 +13,8 @@ void AimAssist::Update() {
 
 }
 
-bool AimAssist::IsEnemyBehindCamera(const Vector3& cameraPosition, const Vector3& cameraDirection, const Vector3& enemyPosition) {
-	Vector3 toObject = enemyPosition - cameraPosition;
+bool AimAssist::IsEnemyBehindPlayer(const Vector3& playerPosition, const Vector3& cameraDirection, const Vector3& enemyPosition) {
+	Vector3 toObject = enemyPosition - playerPosition;
 	Vector3 toObjectNormalized = Normalize(toObject);
 	float dot = Dot(cameraDirection, toObjectNormalized);
 	// 後ろ側ならtrue
@@ -49,7 +49,7 @@ void AimAssist::LockOn() {
 		// 前のフレームでロックオンしている敵がいるorロックオンしていない状態
 		if (enemy->GetId() == enemyId_ || enemyId_ <= -1) {
 			// カメラの後ろ側ではないかを算出
-			if (!IsEnemyBehindCamera(camera_->GetTranslate(), *cameraDirVel_, enemy->GetWorldPosition())) {
+			if (!IsEnemyBehindPlayer(player_->GetWorldPosition(), *cameraDirVel_, enemy->GetWorldPosition())) {
 				// 自機との距離を調べる
 				Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
 				// レティクルと自機の距離内にいるならロックオン対象

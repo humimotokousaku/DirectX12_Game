@@ -27,6 +27,12 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 		line_[i]->endPos_ = pointsDrawing_[i + 1];
 	}
 
+	// 注視点
+	sphere_.Initialize();
+	sphere_.SetCamera(camera_.get());
+	sphere_.worldTransform.scale = { 0.5f,0.5f,0.5f };
+	sphere_.worldTransform.UpdateMatrix();
+
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
 	isMove_ = true;
@@ -68,7 +74,7 @@ void RailCamera::Update() {
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
 	cameraPosition.y += 0.3f;
-	camera_->worldTransform_.translate = cameraPosition;
+	camera_->worldTransform_.translate = cameraPosition + debugVel_;
 
 	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
 	// Y軸周り角度(θy)
@@ -85,18 +91,26 @@ void RailCamera::Update() {
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
 #ifdef _DEBUG
-	static float fov = camera_->viewProjection_.fovAngleY;
+
+#endif // _DEBUG
 	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0,200);
+	ImGui::Checkbox("isMove", &isMove_);
+	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100,100);
 	ImGui::End();
 
-#endif // _DEBUG
+	sphere_.worldTransform.translate = target_;
+	sphere_.worldTransform.UpdateMatrix();
 }
 
 void RailCamera::MoveRouteDraw() {
+
+#ifdef _DEBUG
 	for (int i = 0; i < segmentCount; i++) {
 		line_[i]->Draw();
 	}
+	sphere_.Draw(kFillModeWireFrame);
+#endif // _DEBUG
 }

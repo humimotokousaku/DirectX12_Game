@@ -169,10 +169,10 @@ void Player::Update() {
 	ImGui::DragFloat3("moveVel", &moveVel_.x, 0);
 	ImGui::DragFloat3("rotateVel", &rotateVel_.x, 0);
 	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
-	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
-
-#endif
 	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
+	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
+#endif
+	
 }
 
 void Player::Draw() {

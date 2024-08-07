@@ -3,6 +3,7 @@
 #include "WorldTransform.h"
 #include "Camera.h"
 #include "Vector3.h"
+#include "Sphere.h"
 
 class RailCamera {
 public:
@@ -51,7 +52,7 @@ public:
 
 public:// パブリックなメンバ変数
 	// 線分の数
-	static const size_t segmentCount = 7;
+	static const size_t segmentCount = 500;
 
 	// レールカメラが終点に着くまでにかかる時間
 	const float kTimeToEndPoint = 2000;
@@ -65,6 +66,8 @@ private:
 	std::vector<Vector3> pointsDrawing_;
 	// 移動ルートの線(デバッグ用)
 	std::array<std::unique_ptr<Line>, segmentCount> line_;
+	// 注視点
+	Sphere sphere_;
 
 	// 速度
 	Vector3 velocity_;
@@ -87,4 +90,6 @@ private:
 	bool* isBoost_;
 	// ゲームクリア
 	bool isGameClear_;
+
+	Vector3 debugVel_;
 };

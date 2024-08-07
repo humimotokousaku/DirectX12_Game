@@ -184,7 +184,7 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 	// レールカメラの移動ルート表示
-	//railCamera_->MoveRouteDraw();
+	//railCamera_.MoveRouteDraw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();
