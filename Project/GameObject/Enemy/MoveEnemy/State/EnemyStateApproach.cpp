@@ -29,7 +29,7 @@ void EnemyStateApproach::Update(Enemy* enemy) {
 	const Vector3 kMoveSpeed = { 0, 0, 0.2f };
 
 	// 移動処理
-	enemy->Move(kMoveSpeed);
+	enemy->Move(enemy->GetMoveSpeed());
 
 	// 終了したタイマーを削除
 	timedCalls_.remove_if([](TimedCall* timedCall) {
@@ -43,16 +43,6 @@ void EnemyStateApproach::Update(Enemy* enemy) {
 	for (TimedCall* timedCall : timedCalls_) {
 		timedCall->Update();
 	}
-
-	// 既定の位置に到達したら離脱
-	//if (enemy->GetEnemyPos().z < 60.0f) {
-	//	isAnimation_ = false;
-	//	t_ = 0;
-	//	animCount_ = 0;
-	//	//enemy->SetScale(Vector3{ 1,1,1 });
-	//	timedCalls_.clear();
-	//	enemy->ChangeState(new EnemyStateLeave());
-	//}
 }
 
 float EnemyStateApproach::EaseOutBack(float x) {

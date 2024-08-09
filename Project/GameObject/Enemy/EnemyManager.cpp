@@ -91,14 +91,18 @@ void EnemyManager::CheckSpawn() {
 			}
 
 			if (spawnPointDatas_[i].isActive) {
-				SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
-				//SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate);
+				if (spawnPoints_[i].type == "normal") {
+					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity);
+				}
+				else if(spawnPoints_[i].type == "turret"){
+					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
+				}
 			}
 		}
 	}
 }
 
-void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
+void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate,Vector3 moveSpeed) {
 	Enemy* enemy = new Enemy();
 
 	// 敵モデルを追加
@@ -110,6 +114,8 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate) {
 	enemy->SetCamera(camera_);
 	enemy->SetCollisionManager(collisionManager_);
 	enemy->SetEnemyManager(this);
+	// Blenderで設定した移動速度を代入
+	enemy->SetMoveSpeed(moveSpeed);
 
 	// 初期化
 	enemy->Initialize(pos, rotate,id_);

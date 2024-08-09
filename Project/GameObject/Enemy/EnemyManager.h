@@ -50,7 +50,7 @@ public:
 	/// 敵の発生
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
-	void SpawnEnemy(Vector3 pos, Vector3 rotate);
+	void SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed);
 	/// <summary>
 	///	固定砲台の発生
 	/// </summary>

@@ -4336,7 +4336,7 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyType": "normal",
+                    "enemyType": "turret",
                     "percentage": 7,
                     "velocity": [
                         0.0,

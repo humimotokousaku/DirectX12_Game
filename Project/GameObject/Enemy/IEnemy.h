@@ -29,6 +29,8 @@ public:
 
 	// 管理番号の取得
 	int GetId() { return id_; }
+	// 移動速度を取得
+	Vector3 GetMoveSpeed() { return moveSpeed_; }
 	// 完了ならtrueを返す
 	bool IsDead() const { return isDead_; }
 
@@ -54,6 +56,8 @@ public:
 	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	// エネミーマネージャのアドレスを設定
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+	// 移動速度を設定
+	void SetMoveSpeed(Vector3 speed) { moveSpeed_ = speed; }
 	// 死亡フラグを設定
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
 
@@ -80,4 +84,6 @@ protected:
 
 	// 敵のタイプ
 	std::string type_;
+	// 移動速度
+	Vector3 moveSpeed_;
 };
