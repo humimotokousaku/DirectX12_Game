@@ -66,6 +66,10 @@ void EnemyManager::Update() {
 	for (Particles* particle : spawnParticles_) {
 		particle->Update();
 	}
+	// 被弾時のパーティクル
+	for (Particles* particle : hitParticles_) {
+		particle->Update();
+	}
 }
 
 void EnemyManager::Draw() {
@@ -77,8 +81,15 @@ void EnemyManager::Draw() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw();
 	}
+}
+
+void EnemyManager::DrawParticle() {
 	// 出現時のパーティクル
 	for (Particles* particle : spawnParticles_) {
+		particle->Draw(spawnParticleTex_);
+	}
+	// 被弾時のパーティクル
+	for (Particles* particle : hitParticles_) {
 		particle->Draw(spawnParticleTex_);
 	}
 }

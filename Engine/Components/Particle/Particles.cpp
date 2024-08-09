@@ -191,7 +191,8 @@ Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& t
 	randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
 	particle.transform.translate = Add(translate, randomTranslate);
 	particle.vel = { distribution(randomEngine) ,distribution(randomEngine) ,distribution(randomEngine) };
-	particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
+	//particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
+	particle.color = { 1.0f,0.0f,0.0f,1.0f };
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
 	return particle;
@@ -216,7 +217,7 @@ std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& ra
 	if (emitter.isRandom) {
 		for (uint32_t count = 0; count < emitter.count; ++count) {
 			particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
-			
+
 		}
 		return particles;
 	}

@@ -38,6 +38,10 @@ public:
 	/// 描画
 	/// </summary>
 	void Draw();
+	/// <summary>
+	/// パーティクルの描画
+	/// </summary>
+	void DrawParticle();
 
 	///
 	/// User Method
@@ -111,6 +115,14 @@ public:
 		spawnPointDatas_.resize(spawnPoints_.size());
 	}
 
+	/// <summary>
+	/// 作成した被弾パーティクルをプッシュする
+	/// </summary>
+	/// <param name="particle"></param>
+	void SetHitParticle(Particles* particle) { 
+		hitParticles_.push_back(particle);
+	}
+
 	void SetRailCameraProgress(float* percentage) { railCameraProgress_ = percentage; }
 
 private:// プライベートなメンバ変数
@@ -132,6 +144,8 @@ private:// プライベートなメンバ変数
 	std::list<EnemyBullet*> enemyBullets_;
 	// 出現時のパーティクル
 	std::vector<Particles*> spawnParticles_;
+	// 被弾時時のパーティクル
+	std::vector<Particles*> hitParticles_;
 
 	// 使用するモデル
 	std::vector<Model*> models_;

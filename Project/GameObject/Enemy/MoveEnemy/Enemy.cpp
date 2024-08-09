@@ -52,7 +52,24 @@ void Enemy::OnCollision(Collider* collider) {
 		isDead_ = true;
 	}
 	else {
-		hp_ = hp_ - collider->GetDamage();
+		// 自機陣営に当たった場合のみダメージを受ける
+		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+			// HPを減らす
+			hp_ = hp_ - collider->GetDamage();
+
+			// 被弾時のパーティクルを生成
+			Particles* particle = new Particles();
+			particle->Initialize();
+			particle->SetCamera(camera_);
+			particle->SetEmitterPos(GetWorldPosition());
+			particle->SetEmitterFrequency(1);
+			particle->SetEmitterCount(40);
+			particle->SetEmitterSpawnCount(1);
+			particle->SetRandomPerticle(true);
+
+			enemyManager_->SetHitParticle(particle);
+			//hitParticles_.push_back(particle);
+		}
 	}
 }
 

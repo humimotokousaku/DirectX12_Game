@@ -74,6 +74,8 @@ protected:
 	CollisionManager* collisionManager_ = nullptr;
 	// エネミーマネージャ
 	EnemyManager* enemyManager_ = nullptr;
+	// 被弾時時のパーティクル
+	//std::vector<Particles*> hitParticles_;
 
 	// 死亡フラグ
 	bool isDead_ = false;

@@ -208,6 +208,9 @@ void GameScene::Draw() {
 		guideUI_[i].Draw();
 	}
 
+	// 敵に関するパーティクル
+	enemyManager_.DrawParticle();
+
 	// skybox
 	//cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
 }
