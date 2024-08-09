@@ -21,6 +21,8 @@ public:
 		Vector3 point;		// 座標
 		Vector3 rotate;		// 向き
 		float percentage;	// 出現条件:カーブの割合
+		std::string type;	// 種類
+		Vector3 velocity;	// 初速度(移動ベクトル)
 	};
 	std::vector<Transform> transform_;
 	std::vector<std::string> type_;

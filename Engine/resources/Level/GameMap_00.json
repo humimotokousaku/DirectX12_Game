@@ -4232,7 +4232,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 2,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.068084716796875,
                         17.9566650390625,
@@ -4252,7 +4258,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 2,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.068084716796875,
                         17.9566650390625,
@@ -4272,7 +4284,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 2,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         12.90070915222168,
                         17.9566650390625,
@@ -4292,7 +4310,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 2,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         12.90070915222168,
                         17.9566650390625,
@@ -4312,7 +4336,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         55.02421188354492,
                         56.89772033691406,
@@ -4332,7 +4362,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         55.02421188354492,
                         56.89772033691406,
@@ -4352,7 +4388,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         55.02421188354492,
                         56.89772033691406,
@@ -4372,7 +4414,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         55.02421188354492,
                         56.89772033691406,
@@ -4392,7 +4440,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         8.491025924682617,
                         85.4535903930664,
@@ -4412,7 +4466,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         8.491025924682617,
                         85.4535903930664,
@@ -4432,7 +4492,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         8.491025924682617,
                         85.4535903930664,
@@ -4452,7 +4518,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         8.491025924682617,
                         85.4535903930664,
@@ -4472,7 +4544,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 30,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -20.181888580322266,
                         97.01862335205078,
@@ -4492,7 +4570,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 30,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -20.181888580322266,
                         97.01862335205078,
@@ -4512,7 +4596,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 30,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -20.181888580322266,
                         97.01862335205078,
@@ -4532,7 +4622,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 30,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -20.181888580322266,
                         97.01862335205078,
@@ -4552,7 +4648,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 50,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         9.313782691955566,
                         139.510009765625,
@@ -4572,7 +4674,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 50,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         9.313782691955566,
                         139.510009765625,
@@ -4592,7 +4700,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 50,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         9.313782691955566,
                         139.510009765625,
@@ -4612,7 +4726,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 50,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         9.313782691955566,
                         139.510009765625,
@@ -4632,7 +4752,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 60,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         53.214595794677734,
                         139.510009765625,
@@ -4652,7 +4778,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 60,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         53.214595794677734,
                         139.510009765625,
@@ -4672,7 +4804,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 60,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         53.214595794677734,
                         139.510009765625,
@@ -4692,7 +4830,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 50,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         53.214595794677734,
                         139.510009765625,
@@ -4712,7 +4856,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.598236083984375,
                         206.70272827148438,
@@ -4732,7 +4882,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.598236083984375,
                         206.70272827148438,
@@ -4752,7 +4908,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.598236083984375,
                         206.70272827148438,
@@ -4772,7 +4934,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         34.598236083984375,
                         206.70272827148438,
@@ -4814,7 +4982,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         42.181400299072266,
                         72.26406860351562,
@@ -4834,7 +5008,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         42.181400299072266,
                         72.26406860351562,
@@ -4854,7 +5034,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         42.181400299072266,
                         72.26406860351562,
@@ -4874,7 +5060,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 7,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         42.181400299072266,
                         72.26406860351562,
@@ -4894,7 +5086,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -1.7549028396606445,
                         59.69247055053711,
@@ -4914,7 +5112,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         2.1520485877990723,
                         65.21417236328125,
@@ -4934,7 +5138,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         6.588563919067383,
                         71.45722961425781,
@@ -4954,7 +5164,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         11.144734382629395,
                         76.28857421875,
@@ -4974,7 +5190,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         11.144734382629395,
                         76.28857421875,
@@ -4994,7 +5216,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         6.588563919067383,
                         71.45722961425781,
@@ -5014,7 +5242,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         2.1520485877990723,
                         65.21417236328125,
@@ -5034,7 +5268,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -1.7549028396606445,
                         59.69247055053711,
@@ -5054,7 +5294,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         -1.7549028396606445,
                         59.69247055053711,
@@ -5074,7 +5320,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         2.1520485877990723,
                         65.21417236328125,
@@ -5094,7 +5346,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         6.588563919067383,
                         71.45722961425781,
@@ -5114,7 +5372,13 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 25,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
                         11.144734382629395,
                         76.28857421875,
@@ -5134,9 +5398,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.750972747802734,
+                        50.6952018737793,
                         146.5524444580078,
                         4.101350784301758
                     ],
@@ -5154,9 +5424,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        32.76043701171875,
+                        46.70466613769531,
                         149.81597900390625,
                         4.101350784301758
                     ],
@@ -5174,9 +5450,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        26.16465950012207,
+                        40.10888671875,
                         151.4291534423828,
                         4.101350784301758
                     ],
@@ -5194,9 +5476,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        19.429637908935547,
+                        33.373863220214844,
                         150.8732147216797,
                         4.101350784301758
                     ],
@@ -5214,9 +5502,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        19.429637908935547,
+                        33.373863220214844,
                         150.8732147216797,
                         9.642210006713867
                     ],
@@ -5234,9 +5528,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        26.16465950012207,
+                        40.10888671875,
                         151.4291534423828,
                         9.642210006713867
                     ],
@@ -5254,9 +5554,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        32.76043701171875,
+                        46.70466613769531,
                         149.81597900390625,
                         9.642210006713867
                     ],
@@ -5274,9 +5580,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.750972747802734,
+                        50.6952018737793,
                         146.5524444580078,
                         9.642210006713867
                     ],
@@ -5294,9 +5606,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.750972747802734,
+                        50.6952018737793,
                         146.5524444580078,
                         6.757218360900879
                     ],
@@ -5314,9 +5632,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        32.76043701171875,
+                        46.70466613769531,
                         149.81597900390625,
                         6.757218360900879
                     ],
@@ -5334,9 +5658,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        26.16465950012207,
+                        40.10888671875,
                         151.4291534423828,
                         6.757218360900879
                     ],
@@ -5354,9 +5684,15 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 70,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        19.429637908935547,
+                        33.373863220214844,
                         150.8732147216797,
                         6.757218360900879
                     ],
@@ -5374,10 +5710,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        43.39346694946289,
-                        182.90821838378906,
+                        53.17461395263672,
+                        176.7334442138672,
                         4.101350784301758
                     ],
                     "rotation": [
@@ -5394,10 +5736,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        43.39346694946289,
-                        182.90821838378906,
+                        53.17461395263672,
+                        176.7334442138672,
                         9.642210006713867
                     ],
                     "rotation": [
@@ -5414,10 +5762,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        43.39346694946289,
-                        182.90821838378906,
+                        53.17461395263672,
+                        176.7334442138672,
                         6.757218360900879
                     ],
                     "rotation": [
@@ -5434,10 +5788,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        40.47615432739258,
-                        182.90821838378906,
+                        50.257301330566406,
+                        176.7334442138672,
                         6.757218360900879
                     ],
                     "rotation": [
@@ -5454,10 +5814,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        40.47615432739258,
-                        182.90821838378906,
+                        50.257301330566406,
+                        176.7334442138672,
                         9.642210006713867
                     ],
                     "rotation": [
@@ -5474,10 +5840,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        40.47615432739258,
-                        182.90821838378906,
+                        50.257301330566406,
+                        176.7334442138672,
                         4.101350784301758
                     ],
                     "rotation": [
@@ -5494,10 +5866,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.813724517822266,
-                        182.90821838378906,
+                        46.594871520996094,
+                        176.7334442138672,
                         4.101350784301758
                     ],
                     "rotation": [
@@ -5514,10 +5892,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.813724517822266,
-                        182.90821838378906,
+                        46.594871520996094,
+                        176.7334442138672,
                         9.642210006713867
                     ],
                     "rotation": [
@@ -5534,10 +5918,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        36.813724517822266,
-                        182.90821838378906,
+                        46.594871520996094,
+                        176.7334442138672,
                         6.757218360900879
                     ],
                     "rotation": [
@@ -5554,10 +5944,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        33.3469352722168,
-                        182.90821838378906,
+                        43.128082275390625,
+                        176.7334442138672,
                         6.757218360900879
                     ],
                     "rotation": [
@@ -5574,10 +5970,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        33.3469352722168,
-                        182.90821838378906,
+                        43.128082275390625,
+                        176.7334442138672,
                         9.642210006713867
                     ],
                     "rotation": [
@@ -5594,10 +5996,16 @@
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
+                    "enemyType": "normal",
                     "percentage": 80,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.10000000149011612
+                    ],
                     "point": [
-                        33.3469352722168,
-                        182.90821838378906,
+                        43.128082275390625,
+                        176.7334442138672,
                         4.101350784301758
                     ],
                     "rotation": [

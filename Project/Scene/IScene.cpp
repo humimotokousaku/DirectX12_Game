@@ -97,12 +97,21 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 追加した要素の参照を取得
 				LevelData::EnemyPoint& enemyPoint = levelData->enemyPoints_.back();
 				nlohmann::json& spawnData = object["spawn_data"][0];
+
 				enemyPoint.point.x = (float)spawnData["point"][0];
 				enemyPoint.point.y = (float)spawnData["point"][2];
 				enemyPoint.point.z = (float)spawnData["point"][1];
+
 				Vector3 rotate = { Degree2Radian(-(float)spawnData["rotation"][0]) ,Degree2Radian(-(float)spawnData["rotation"][2]),Degree2Radian(-(float)spawnData["rotation"][1]) };
 				enemyPoint.rotate = rotate;
+
 				enemyPoint.percentage = (float)spawnData["percentage"];
+
+				enemyPoint.type = spawnData["enemyType"].get<std::string>();
+
+				enemyPoint.velocity.x = (float)spawnData["velocity"][0];
+				enemyPoint.velocity.y = (float)spawnData["velocity"][1];
+				enemyPoint.velocity.z = (float)spawnData["velocity"][2];
 
 				enemyPoints_.push_back(enemyPoint);
 			}
