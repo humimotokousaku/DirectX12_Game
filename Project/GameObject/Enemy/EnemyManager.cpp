@@ -11,11 +11,18 @@ EnemyManager::~EnemyManager() {
 		delete bullet;
 	}
 	enemyBullets_.clear();
+
 	// 出現時のパーティクル
 	for (Particles* particle : spawnParticles_) {
 		delete particle;
 	}
 	spawnParticles_.clear();
+	// 被弾時のパーティクル
+	for (Particles* particle : hitParticles_) {
+		delete particle;
+	}	
+	hitParticles_.clear();
+
 	models_.clear();
 }
 
@@ -138,13 +145,12 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate,Vector3 moveSpeed) {
 
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();
-	particle->Initialize();
+	particle->Initialize(pos);
 	particle->SetCamera(camera_);
-	particle->SetEmitterPos(pos);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(40);
 	particle->SetEmitterSpawnCount(1);
-	particle->SetRandomPerticle(true);
+	particle->randomScaleLimit = { 0.3f, 0.4f };
 
 	spawnParticles_.push_back(particle);
 }
@@ -172,13 +178,12 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();
-	particle->Initialize();
+	particle->Initialize(pos);
 	particle->SetCamera(camera_);
-	particle->SetEmitterPos(pos);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(40);
 	particle->SetEmitterSpawnCount(1);
-	particle->SetRandomPerticle(true);
+	particle->randomScaleLimit = { 0.3f, 0.4f };
 
 	spawnParticles_.push_back(particle);
 }

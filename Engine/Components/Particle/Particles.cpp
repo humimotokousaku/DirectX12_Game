@@ -13,7 +13,7 @@ Particles::~Particles() {
 	//viewProjection_.constBuff_.ReleaseAndGetAddressOf();
 }
 
-void Particles::Initialize() {
+void Particles::Initialize(Vector3 emitterPos) {
 	// 頂点の座標
 	modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} }); // 左上
 	modelData_.vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f},.normal = {0.0f,0.0f,1.0f} }); // 右上
@@ -58,12 +58,15 @@ void Particles::Initialize() {
 	emitter_.count = 10;
 	emitter_.frequency = 1;
 	emitter_.frequencyTime = 0.0f;
+	emitter_.transform.translate = emitterPos;
 
 	// フィールド(疑似風を作成)
 	accField_.acc = { 15,0,0 };
 	accField_.area.min = { -10,-10,-10 };
 	accField_.area.max = { 10,10,10 };
 	accField_.isActive = true;
+
+	particle_ = MakeNewParticle(emitter_.transform.translate);
 }
 
 void Particles::Update() {
@@ -174,58 +177,61 @@ bool Particles::IsCollision(const AABB& aabb, const Vector3& point) {
 }
 
 Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
+	Particle particle{};
 	// 座標
-	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> distribution(randomTranslateLimit.min, randomTranslateLimit.max);
+	Vector3 randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
+	particle.transform.translate = translate + randomTranslate;
 	// 速度
-	std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
+	std::uniform_real_distribution<float> distVel(randomVelLimit.min, randomVelLimit.max);
+	particle.vel = { distVel(randomEngine) ,distVel(randomEngine) ,distVel(randomEngine) };
+	particle.vel += particle_.vel;
+	// 大きさ
+	std::uniform_real_distribution<float> distScale(randomScaleLimit.min, randomScaleLimit.max);
+	particle.transform.scale = { distScale(randomEngine),distScale(randomEngine) ,distScale(randomEngine) };
+	particle.transform.scale += particle_.transform.scale;
 	// 色
-	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
+	std::uniform_real_distribution<float> distColor(randomColorLimit.min, randomColorLimit.max);
+	particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
+	particle.color.x += particle_.color.x;
+	particle.color.y += particle_.color.y;
+	particle.color.z += particle_.color.z;
 	// 生存可能時間
-	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
-
-	Particle particle;
-	particle.transform.scale = { 0.3f,0.3f,0.3f };
-	particle.transform.rotate = { 0,0,0 };
-
-	Vector3 randomTranslate;
-	randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
-	particle.transform.translate = Add(translate, randomTranslate);
-	particle.vel = { distribution(randomEngine) ,distribution(randomEngine) ,distribution(randomEngine) };
-	//particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
-	particle.color = { 1.0f,0.0f,0.0f,1.0f };
+	std::uniform_real_distribution<float> distTime(randomLifeTimeLimit.min, randomLifeTimeLimit.max);
 	particle.lifeTime = distTime(randomEngine);
+	particle.lifeTime += particle_.lifeTime;
+
+	particle.transform.rotate = { 0,0,0 };
 	particle.currentTime = 0;
+
 	return particle;
 }
 
 Particle Particles::MakeNewParticle(const Vector3& translate) {
-	Particle particle;
-	particle.transform.scale = { 0.1f,0.1f,0.1f };
-	particle.transform.rotate = { 0,0,0 };
-
-	particle.transform.translate = translate;
-	particle.vel = { 0,0,0 };
-	particle.color = { 1.0f,1.0f,1.0f,1.0f };
+	Particle particle{};
+	particle.color.w = 1.0f;
 	particle.lifeTime = 1;
 	particle.currentTime = 0;
+	particle.transform.translate = translate;
+
 	return particle;
 }
 
 std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
 	// ランダムの場合
-	if (emitter.isRandom) {
-		for (uint32_t count = 0; count < emitter.count; ++count) {
-			particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
-
-		}
-		return particles;
-	}
-
+	//if (emitter.isRandom) {
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(emitter_.transform.translate));
+		particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
 	}
 	return particles;
+	//}
+
+	/*for (uint32_t count = 0; count < emitter.count; ++count) {
+		particle_.transform.translate = emitter_.transform.translate;
+		particles.push_back(particle_);
+	}*/
+	//return particles;
 }
 
 Vector3 Particles::KelvinToRGB(int kelvin) {

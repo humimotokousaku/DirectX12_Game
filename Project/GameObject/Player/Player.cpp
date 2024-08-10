@@ -34,6 +34,7 @@ void Player::Initialize() {
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
+	object3d_->worldTransform.UpdateMatrix();
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 
@@ -72,13 +73,21 @@ void Player::Initialize() {
 
 	// 自機の軌道パーティクルの作成
 	particle_ = std::make_unique<Particles>();
-	particle_->Initialize();
+	particle_->Initialize(GetWorldPosition());
 	particle_->SetCamera(camera_);
 	// 発生頻度
 	particle_->SetEmitterFrequency(1.0f / 60.0f);
 	// 一度に発生する個数
 	particle_->SetEmitterCount(1);
-	particle_->SetRandomPerticle(false);
+	// ランダムを切る
+	particle_->OffRandom();
+	// パーティクル一粒の詳細設定
+	particle_->particle_.color = { 1,1,1,1 };
+	particle_->particle_.lifeTime = 1.0f;
+	particle_->particle_.transform.translate = { 0.0f,0.0f,0.0f };
+	particle_->particle_.transform.scale = { 0.1f,0.1f,0.1f };
+	particle_->particle_.vel = { 0.0f,0.0f,0.0f };
+
 	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
 	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
 

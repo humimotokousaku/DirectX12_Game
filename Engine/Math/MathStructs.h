@@ -6,3 +6,8 @@
 #include "Vector4.h"
 #include "Quaternion.h"
 #include "Lerp.h"
+
+struct Limit {
+	float min;
+	float max;
+};

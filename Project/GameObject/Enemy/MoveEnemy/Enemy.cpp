@@ -58,17 +58,20 @@ void Enemy::OnCollision(Collider* collider) {
 			hp_ = hp_ - collider->GetDamage();
 
 			// 被弾時のパーティクルを生成
-			Particles* particle = new Particles();
-			particle->Initialize();
-			particle->SetCamera(camera_);
-			particle->SetEmitterPos(GetWorldPosition());
-			particle->SetEmitterFrequency(1);
-			particle->SetEmitterCount(40);
-			particle->SetEmitterSpawnCount(1);
-			particle->SetRandomPerticle(true);
+			Particles* particles = new Particles();
+			particles->Initialize(GetWorldPosition());
+			particles->SetCamera(camera_);
+			particles->SetEmitterFrequency(1);
+			particles->SetEmitterCount(40);
+			particles->SetEmitterSpawnCount(1);
+			particles->randomScaleLimit = { 0.2f,0.4f };
+			particles->randomVelLimit = { -1.0f,1.0f };
+			particles->randomColorLimit = { 0.0f,0.0f };
+			particles->randomLifeTimeLimit = { 0.1f,0.2f };
+			particles->particle_.color = { 1.0f,0.0f,0.0f,1.0f };
+			particles->particle_.lifeTime = 0.0f;
 
-			enemyManager_->SetHitParticle(particle);
-			//hitParticles_.push_back(particle);
+			enemyManager_->SetHitParticle(particles);
 		}
 	}
 }

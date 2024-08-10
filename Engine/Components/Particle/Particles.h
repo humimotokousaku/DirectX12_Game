@@ -1,8 +1,8 @@
 #pragma once
 #include "MathStructs.h"
 #include "ModelStructs.h"
-#include "Collision/CollisionConfig.h"
 #include "Model.h"
+#include "CollisionConfig.h"
 #include "Camera.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -11,12 +11,13 @@
 #include <list>
 #include <random>
 
+
 struct Particle {
 	Transform transform;
 	Vector3 vel;
 	Vector4 color;
 	float lifeTime;
-	float currentTime;
+	float currentTime = 0;
 };
 
 // GPUに送る
@@ -34,7 +35,6 @@ struct Emitter {
 	uint32_t spawnLeft = 1;	// 発生の残り回数 
 	float frequency;
 	float frequencyTime;
-	bool isRandom;
 };
 
 struct AABB {
@@ -59,7 +59,7 @@ public:
 	~Particles();
 
 	// 初期化
-	void Initialize();
+	void Initialize(Vector3 emitterPos);
 
 	// 更新処理
 	void Update();
@@ -100,15 +100,15 @@ public:
 		emitter_.frequencyTime = frequency;
 	}
 	/// <summary>
-	/// パーティクルの座標,速度,色,消えるまでの時間をランダム生成するか
+	/// ランダムの上限下限値をすべて0にする
 	/// </summary>
-	/// <param name="isActive">ランダムにするか</param>
-	void SetRandomPerticle(bool isActive) { emitter_.isRandom = isActive; }
-
-	//void SetParticle(Vector3 scale){}
-
-	// ImGuiでパラメータをまとめたもの
-	//void ImGuiAdjustParameter();
+	void OffRandom() { 
+		randomTranslateLimit = Limit{ 0.0f,0.0f };
+		randomScaleLimit = Limit{ 0.0f,0.0f };
+		randomVelLimit = Limit{ 0.0f,0.0f };
+		randomLifeTimeLimit = Limit{ 0.0f, 0.0f };
+		randomColorLimit = Limit{ 0.0f,0.0f };
+	}
 
 private:
 	// particleの座標と速度のランダム生成
@@ -133,6 +133,21 @@ private:
 	void CreateVertexBufferView();
 
 	void CreateMaterialResource();
+
+public:
+	// ランダム座標の上限下限
+	Limit randomTranslateLimit = { -1.0f, 1.0f };
+	// ランダムスケールの上限下限
+	Limit randomScaleLimit = { 0.3f, 0.5f };
+	// ランダム速度の上限下限
+	Limit randomVelLimit = { -1.0f, 1.0f };
+	// ランダム生存時間の下限上限
+	Limit randomLifeTimeLimit = { 1.0f, 3.0f };
+	// ランダムカラーの上限下限
+	Limit randomColorLimit = { 0.0f, 1.0f };
+	// パーティクル一粒の詳細設定
+	// 座標と速度は自動的にランダムが適応されている
+	Particle particle_;
 
 private:// 定数
 	// 1フレームで進む時間
