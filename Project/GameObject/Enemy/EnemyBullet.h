@@ -36,11 +36,6 @@ public:// パブリックなメンバ関数
 	/// User Method
 	/// 
 
-	/// <summary>
-	/// 形状を設定
-	/// </summary>
-	void SettingScale();
-
 	///
 	/// Getter
 	/// 

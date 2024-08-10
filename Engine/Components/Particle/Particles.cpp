@@ -10,7 +10,7 @@
 #include <vector>
 
 Particles::~Particles() {
-	//viewProjection_.constBuff_.ReleaseAndGetAddressOf();
+
 }
 
 void Particles::Initialize(Vector3 emitterPos) {

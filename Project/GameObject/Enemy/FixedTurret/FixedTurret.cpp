@@ -37,6 +37,19 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 void FixedTurret::Update() {
 	// 状態遷移
 	state_->Update(this);
+
+	// 自機の方向を向く
+	// 自機との方向ベクトル
+	Vector3 velocity = player_->GetWorldPosition() - GetWorldPosition();
+	// Y軸周り角度(θy)
+	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
+	// 横軸方向の長さを求める
+	float velocityXZ;
+	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+	// X軸周りの角度(θx)
+	object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
+
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void FixedTurret::Draw() {
@@ -77,7 +90,7 @@ void FixedTurret::Fire() {
 	object3d_->worldTransform.UpdateMatrix();
 
 	// 弾の速度
-	const float kBulletSpeed = 0.5f;
+	const float kBulletSpeed = 1.0f;
 	Vector3 velocity{ 0, 0, kBulletSpeed };
 
 	// 速度ベクトルを自機の向きに合わせて回転させる

@@ -20,9 +20,12 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(model);
 	object3d_->worldTransform.translate = pos;
-
 	// 形状を設定
-	SettingScale();
+	object3d_->worldTransform.scale = {
+		0.25f,0.25f,0.8f
+	};
+	// 色を赤色にする
+	object3d_->SetColor(Vector4{ 1.0f,0.0f,0.0f,1.0f });
 
 	// colliderの設定
 	SetCollisionPrimitive(kCollisionOBB);
@@ -35,30 +38,6 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 }
 
 void EnemyBullet::Update() {
-//	Vector3 toPlayer = Subtract(player_->GetWorldPosition(), object3d_->worldTransform.translate);
-//	toPlayer = Normalize(toPlayer);
-//	velocity_ = Normalize(velocity_);
-//	// 球面線形保管により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
-//	velocity_ = Lerps::Slerp(velocity_, toPlayer, 0.1f);
-//	velocity_.x *= 0.5f;
-//	velocity_.y *= 0.5f;
-//	velocity_.z *= 0.5f;
-//
-//#pragma region 弾の角度
-//
-//	// Y軸周り角度(θy)
-//	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
-//	// 横軸方向の長さを求める
-//	float velocityXZ;
-//	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
-//	// X軸周りの角度(θx)
-//	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ);
-//
-//#pragma endregion
-//
-//	// 座標を移動させる
-//	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity_);
-
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
 	// 横軸方向の長さを求める
@@ -82,12 +61,6 @@ void EnemyBullet::Update() {
 void EnemyBullet::Draw() {
 	// モデルの描画
 	object3d_->Draw();
-}
-
-void EnemyBullet::SettingScale() {
-	object3d_->worldTransform.scale.x = 1.0f;
-	object3d_->worldTransform.scale.y = 1.0f;
-	object3d_->worldTransform.scale.z = 1.0f;
 }
 
 void EnemyBullet::OnCollision(Collider* collider) { 
