@@ -66,7 +66,11 @@ void Particles::Initialize(Vector3 emitterPos) {
 	accField_.area.max = { 10,10,10 };
 	accField_.isActive = true;
 
+	// パーティクルの詳細設定
 	particle_ = MakeNewParticle(emitter_.transform.translate);
+
+	// パーティクルの消え方
+	easeFunc_ = Easings::EaseInCubic;
 }
 
 void Particles::Update() {
@@ -79,17 +83,11 @@ void Particles::Update() {
 		}
 
 		if (numInstance < kNumMaxInstance) {
-			//// fieldの範囲内のparticleには加速度を適用
-			//if (accField_.isActive) {
-			//	if (IsCollision(accField_.area, (*particleIterator).transform.translate)) {
-			//		(*particleIterator).vel = Add((*particleIterator).vel, Multiply(kDeltaTime, accField_.acc));
-			//	}
-			//}
 			// 移動処理
 			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, Multiply(kDeltaTime, (*particleIterator).vel));
 
 			// 指定した時間に透明になる
-			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+			float alpha = 1.0f - easeFunc_((*particleIterator).currentTime / (*particleIterator).lifeTime);
 			(*particleIterator).color.w = alpha;
 			instancingData_[numInstance].color = (*particleIterator).color;
 			++numInstance;

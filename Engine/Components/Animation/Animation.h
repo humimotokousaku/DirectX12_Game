@@ -19,7 +19,7 @@ public: // 構造体
 		bool isActive;  									   // アニメーションをしているか
 		const char* name;									   // アニメーションの名前
 		uint32_t id;										   // アニメーションの番号
-		std::function<float(float)> easeFunc;                  //使用するイージング関数
+		std::function<float(float)> easeFunc;                  // 使用するイージング関数
 	};
 
 public: // メンバ関数

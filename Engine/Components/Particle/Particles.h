@@ -10,7 +10,7 @@
 #include "SrvManager.h"
 #include <list>
 #include <random>
-
+#include <functional>
 
 struct Particle {
 	Transform transform;
@@ -100,6 +100,12 @@ public:
 		emitter_.frequencyTime = frequency;
 	}
 	/// <summary>
+	/// パーティクルの消え方をイージング関数で設定
+	/// </summary>
+	/// <param name="easeFunc"></param>
+	void SetParticleFade(std::function<float(float)> easeFunc) { easeFunc_ = easeFunc; }
+
+	/// <summary>
 	/// ランダムの上限下限値をすべて0にする
 	/// </summary>
 	void OffRandom() { 
@@ -158,6 +164,9 @@ private:// 定数
 private:
 	// パーティクル
 	std::list<Particle> particles_;
+
+	// パーティクルの消え方で使用するイージング
+	std::function<float(float)> easeFunc_;
 
 	// エミッタ
 	Emitter emitter_;
