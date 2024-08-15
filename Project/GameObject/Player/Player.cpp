@@ -6,6 +6,7 @@
 #include "AimAssist/AimAssist.h"
 #include "ImGuiManager.h"
 #include "Input.h"
+#include "PostEffectManager.h"
 #include <numbers>
 
 Player::Player() {}
@@ -52,15 +53,15 @@ void Player::Initialize() {
 	gameSpeed_ = 1.0f;
 
 	// 2Dレティクル作成
-	for (int i = 0; i < 2; i++) {
-		//sprite2DReticle_[i] = new Sprite();
-		sprite2DReticle_[i].Initialize("", "reticle.png");
-		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
-	}
+	sprite2DReticle_[0].Initialize("", "reticle.png");
 	sprite2DReticle_[0].SetSize(Vector2{ 50.0f,50.0f });
+	sprite2DReticle_[1].Initialize("", "reticle.png");
 	// ロックオン時のレティクル作成
 	sprite2DReticle_[2].Initialize("", "lockOnReticle.png");
-	sprite2DReticle_[2].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+	for (int i = 0; i < 3; i++) {
+		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
+		PostEffectManager::GetInstance()->AddSpriteList(&sprite2DReticle_[i]);
+	}
 
 	// HP作成
 	hpSize_ = kMaxHPSize;
@@ -70,6 +71,7 @@ void Player::Initialize() {
 	hpSprite_.SetPos(Vector2(64.0f, 64.0f));
 	// 緑色にする
 	hpSprite_.SetColor(Vector4{ 0,1,0,1 });
+	PostEffectManager::GetInstance()->AddSpriteList(&hpSprite_);
 
 	// 自機の軌道パーティクルの作成
 	particle_ = std::make_unique<Particles>();
@@ -156,8 +158,7 @@ void Player::Update() {
 	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
 		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
-
-		audio_->soundMuffleValue = -0.9f;
+		audio_->soundMuffleValue = -0.9f;		
 	}
 	else {
 		// 緑色にする
@@ -198,7 +199,7 @@ void Player::Draw() {
 void Player::DrawUI() {
 	// レティクル
 	for (int i = 0; i < 2; i++) {
-		sprite2DReticle_[i].Draw();
+		//sprite2DReticle_[i].Draw();
 	}
 	// ロックオン時のレティクル
 	if (*isLockOn_) {
@@ -206,7 +207,7 @@ void Player::DrawUI() {
 	}
 
 	// HPバー
-	hpSprite_.Draw();
+	//hpSprite_.Draw();
 
 	// 軌道
 	particle_->Draw(defaultTexture);
@@ -415,6 +416,7 @@ void Player::Aim() {
 		sprite2DReticle_[2].SetRotate(Vector3{ 0,0,0 });
 		reticleAnim_.SetIsStart(false);
 	}
+	sprite2DReticle_[2].isActive_ = *isLockOn_;
 	reticleAnim_.Update();
 
 	// 2Dレティクル配置

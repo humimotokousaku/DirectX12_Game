@@ -16,7 +16,7 @@ void IScene::Finalize() {
 	levelObjects_.clear();
 	enemyPoints_.clear();
 	models_.clear();
-	Audio::GetInstance()->SoundUnload();
+	Audio::GetInstance()->SoundUnload();	
 }
 
 void IScene::LoadJSONFile(const std::string fileName) {

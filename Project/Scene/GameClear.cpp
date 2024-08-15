@@ -16,6 +16,9 @@ void GameClear::Initialize() {
 	guideUI_[2]->Initialize("Textures/UI", "guide_pad_A.png");
 	guideUI_[2]->SetSize(Vector2{ 64,64 });
 	guideUI_[2]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 * 3 });
+	for (int i = 0; i < 3; i++) {
+		PostEffectManager::GetInstance()->AddSpriteList(guideUI_[i].get());
+	}
 }
 
 void GameClear::Update() {

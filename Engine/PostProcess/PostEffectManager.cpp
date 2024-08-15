@@ -6,6 +6,11 @@
 #include "Dissolve.h"
 #include "Outline.h"
 
+PostEffectManager* PostEffectManager::GetInstance() {
+	static PostEffectManager instance;
+	return &instance;
+}
+
 PostEffectManager::~PostEffectManager() {
 	for (IPostEffect* postEffect : postEffect_) {
 		delete postEffect;
@@ -47,11 +52,6 @@ void PostEffectManager::Initialize() {
 	bloom->Initialize();
 	renderTexture_.push_back(bloom->GetRenderTexture());
 	postEffect_.push_back(bloom);
-
-	//object_ = std::make_unique<Object3D>();
-	//object_->Initialize();
-	//object_->SetModel("", "block.obj");
-	//object_->SetCamera(camera_.get());
 }
 
 void PostEffectManager::PreDraw() {
@@ -62,16 +62,17 @@ void PostEffectManager::PostDraw() {
 	postEffect_[NORMAL]->PostDrawScene();
 
 	for (int i = 0; i < COUNT - 1; i++) {
-		//if (postEffect_[i]->GetIsActive()) {
-			postEffect_[i + 1]->PreDrawScene();
-			postEffect_[i]->Draw(i);
-			postEffect_[i + 1]->PostDrawScene();
-		//}
+		postEffect_[i + 1]->PreDrawScene();
+		postEffect_[i]->Draw(i);
+		postEffect_[i + 1]->PostDrawScene();
 	}
-
-	//object_->Draw(renderTexture_[0]);
 }
 
 void PostEffectManager::Draw() {
 	postEffect_[COUNT - 1]->Draw(COUNT - 1);
+
+	// ポストエフェクトを使用しないスプライト
+	for (Sprite* sprite : sprites_) {
+		sprite->Draw();
+	}
 }

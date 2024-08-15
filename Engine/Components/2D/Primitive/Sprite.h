@@ -115,6 +115,8 @@ public:
 	// Sprite
 	WorldTransform worldTransform_;
 
+	// 描画をするか
+	bool isActive_ = true;
 private:
 	TextureManager* textureManager_;
 	PipelineManager* psoManager_;
@@ -137,8 +139,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_;
 	uint32_t* indexData_ = nullptr;
-
-	ViewProjection viewProjection_;
 
 	// 画像の中心点
 	Vector2 anchorPoint_ = { 0.5f,0.5f };

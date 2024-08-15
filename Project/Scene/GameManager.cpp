@@ -29,6 +29,7 @@ void GameManager::Update() {
 
 	//シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		postEffectManager_->ClearSpriteList();
 		sceneArr_[preSceneNum_]->Finalize();
 		sceneArr_[preSceneNum_].reset();
 		sceneArr_[sceneNum_]->Initialize();

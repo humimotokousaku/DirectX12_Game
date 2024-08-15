@@ -113,19 +113,20 @@ void GameScene::Initialize() {
 	guideUI_[0].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[0].SetPos(Vector2{ 1200.0f, 64.0f });
 	guideUI_[0].SetSize(Vector2{ 64.0f, 64.0f });
-	//guideUI_[1] = std::make_unique<Sprite>();
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[0]);
 	guideUI_[1].Initialize("Textures/UI", "guide_pad_RB.png");
 	guideUI_[1].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[1].SetPos(Vector2{ 1132.0f, 64.0f });
-	//guideUI_[2] = std::make_unique<Sprite>();
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[1]);
 	guideUI_[2].Initialize("Textures/UI", "guide_Boost.png");
 	guideUI_[2].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[2].SetPos(Vector2{ 1200.0f, 128.0f });
 	guideUI_[2].SetSize(Vector2{ 64.0f, 64.0f });
-	//guideUI_[3] = std::make_unique<Sprite>();
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[2]);
 	guideUI_[3].Initialize("Textures/UI", "guide_pad_X.png");
 	guideUI_[3].SetSize(Vector2{ 32,32 });
 	guideUI_[3].SetPos(Vector2{ 1132.0f, 128.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
 }
 
 void GameScene::Update() {
@@ -205,7 +206,7 @@ void GameScene::Draw() {
 
 	// UI
 	for (int i = 0; i < 4; i++) {
-		guideUI_[i].Draw();
+		//guideUI_[i].Draw();
 	}
 
 	// 敵に関するパーティクル

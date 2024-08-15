@@ -104,6 +104,9 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 }
 
 void Sprite::Draw() {
+	// 描画しないなら早期リターン
+	if (!isActive_) { return; }
+
 #pragma region スプライトの大きさを決める 
 	// アンカーポイントから見た頂点座標
 	float left = (0.0f - anchorPoint_.x) * size_.x;

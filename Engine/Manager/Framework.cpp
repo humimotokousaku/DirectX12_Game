@@ -39,13 +39,9 @@ void Framework::Initialize() {
 	// PSOの初期化
 	pipelineManager_ = PipelineManager::GetInstance();
 	pipelineManager_->Initialize();
-	// 線のPSO
 
-	// ポストエフェクトのPSO
-	//postEffectPSO_ = PostEffectPSO::GetInstance();
-	//postEffectPSO_->Initialize();
 	// ポストエフェクト
-	postEffectManager_ = new PostEffectManager();
+	postEffectManager_ = PostEffectManager::GetInstance();
 	postEffectManager_->Initialize();
 
 	/// Components
@@ -126,9 +122,7 @@ void Framework::Finalize() {
 	ModelManager::GetInstance()->Finalize();
 	// ImGui
 	imGuiManager_->Finalize();
-	delete postEffectManager_;
 	textureManager_->Finalize();
-	//delete srvManager_;
 	directXCommon_->Finalize();
 	CloseWindow(winApp_->GetHwnd());
 	// Textureのゲーム終了処理
