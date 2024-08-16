@@ -127,6 +127,8 @@ void GameScene::Initialize() {
 	guideUI_[3].SetSize(Vector2{ 32,32 });
 	guideUI_[3].SetPos(Vector2{ 1132.0f, 128.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
+
+	PostEffectManager::GetInstance()->bloomData_.isActive = false;
 }
 
 void GameScene::Update() {

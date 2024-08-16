@@ -1,10 +1,4 @@
 #include "PostEffectManager.h"
-#include "PostEffect.h"
-#include "RadialBlur.h"
-#include "Bloom.h"
-#include "Gauss.h"
-#include "Dissolve.h"
-#include "Outline.h"
 
 PostEffectManager* PostEffectManager::GetInstance() {
 	static PostEffectManager instance;
@@ -19,48 +13,50 @@ PostEffectManager::~PostEffectManager() {
 }
 
 void PostEffectManager::Initialize() {
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
-	camera_->SetTranslate(Vector3{ 0,0,0 });
 	// 何もしない
-	PostEffect* normal = new PostEffect();
-	normal->Initialize();
-	renderTexture_.push_back(normal->GetRenderTexture());
-	postEffect_.push_back(normal);
-	// outline
-	//Outline* outline = new Outline();
-	//outline->Initialize();
-	//renderTexture_.push_back(outline->GetRenderTexture());
-	//postEffect_.push_back(outline);
+	normal_ = new PostEffect();
+	normal_->Initialize();
+	renderTexture_.push_back(normal_->GetRenderTexture());
+	postEffect_.push_back(normal_);
 	// RadialBlur
-	RadialBlur* radialBlur = new RadialBlur();
-	radialBlur->Initialize();
-	renderTexture_.push_back(radialBlur->GetRenderTexture());
-	postEffect_.push_back(radialBlur);
+	radialBlur_ = new RadialBlur();
+	radialBlur_->Initialize();
+	renderTexture_.push_back(radialBlur_->GetRenderTexture());
+	radialBlurData_.isActive = true;
+	radialBlurData_.blurWidth = 0.005f;
+	radialBlurData_.center = { 0.5f, 0.5f };
+	radialBlur_->SetRadialBlurData(radialBlurData_);
+	postEffect_.push_back(radialBlur_);
 	// Gauss
-	Gauss* gauss = new Gauss();
-	gauss->Initialize();
-	renderTexture_.push_back(gauss->GetRenderTexture());
-	postEffect_.push_back(gauss);
-	// Dissolve
-	//Dissolve* dissolve = new Dissolve();
-	//dissolve->Initialize();
-	//renderTexture_.push_back(normal->GetRenderTexture());
-	//postEffect_.push_back(dissolve);
+	gauss_ = new Gauss();
+	gauss_->Initialize();
+	renderTexture_.push_back(gauss_->GetRenderTexture());
+	gaussData_.isActive = false;
+	gaussData_.strength = 1.0f;
+	gauss_->SetGaussData(gaussData_);
+	postEffect_.push_back(gauss_);
 	// Bloom
-	Bloom* bloom = new Bloom();
-	bloom->Initialize();
-	renderTexture_.push_back(bloom->GetRenderTexture());
-	postEffect_.push_back(bloom);
+	bloom_ = new Bloom();
+	bloom_->Initialize();
+	renderTexture_.push_back(bloom_->GetRenderTexture());
+	bloomData_.isActive = true;
+	bloomData_.strength = 1.0f;
+	bloomData_.threshold = 0.3f;
+	bloom_->SetBloomData(bloomData_);
+	postEffect_.push_back(bloom_);
 }
 
 void PostEffectManager::PreDraw() {
 	postEffect_[NORMAL]->PreDrawScene();
+
 }
 
 void PostEffectManager::PostDraw() {
-	postEffect_[NORMAL]->PostDrawScene();
+	radialBlur_->SetRadialBlurData(radialBlurData_);
+	gauss_->SetGaussData(gaussData_);
+	bloom_->SetBloomData(bloomData_);
 
+	postEffect_[NORMAL]->PostDrawScene();
 	for (int i = 0; i < COUNT - 1; i++) {
 		postEffect_[i + 1]->PreDrawScene();
 		postEffect_[i]->Draw(i);

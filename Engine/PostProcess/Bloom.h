@@ -7,7 +7,7 @@
 #include <Windows.h>
 
 class Bloom : public IPostEffect {
-private:// 構造体
+public:// 構造体
 	struct BloomData {
 		bool isActive;	// 使用するか
 		float strength;	// ぼかしの強さ
@@ -37,16 +37,22 @@ public:
 	/// 描画処理
 	/// </summary>
 	void Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr)override;
-
 	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	void PreDrawScene()override;
-
 	/// <summary>
 	/// 描画後の処理
 	/// </summary>
 	void PostDrawScene()override;
+
+#pragma region Setter
+	/// <summary>
+	/// パラメータを設定
+	/// </summary>
+	/// <param name="radialBlurData">ブルームの数値</param>
+	void SetBloomData(BloomData bloomData) { *bloomData_ = bloomData; }
+#pragma endregion
 
 private:// プライベートなメンバ変数
 	BloomData* bloomData_;

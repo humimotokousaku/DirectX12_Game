@@ -6,7 +6,7 @@
 #include "IPostEffect.h"
 
 class RadialBlur : public IPostEffect {
-private:// 構造体
+public:// 構造体
 	// ブラー
 	struct RadialBlurData {
 		bool isActive;	 // 使用するか
@@ -37,16 +37,22 @@ public:
 	/// 描画処理
 	/// </summary>
 	void Draw(uint32_t psoNum, Microsoft::WRL::ComPtr<ID3D12Resource> resource)override;
-
 	/// <summary>
 	/// 描画前処理
 	/// </summary>
 	void PreDrawScene()override;
-
 	/// <summary>
 	/// 描画後の処理
 	/// </summary>
 	void PostDrawScene()override;
+
+#pragma region Setter
+	/// <summary>
+	/// パラメータを設定
+	/// </summary>
+	/// <param name="radialBlurData">ラジアルブラーの数値</param>
+	void SetRadialBlurData(RadialBlurData radialBlurData) { *radialBlurData_ = radialBlurData; }
+#pragma endregion
 
 private:
 	RadialBlurData* radialBlurData_;
