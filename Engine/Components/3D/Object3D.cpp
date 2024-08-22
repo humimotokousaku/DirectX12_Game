@@ -18,6 +18,8 @@ void Object3D::Initialize() {
 }
 
 void Object3D::Draw(uint32_t textureNum, int fillMode) {
+	if (!isActive_) { return; }
+
 	// カメラ
 	if (camera_) {
 		//camera_->Update();
@@ -78,6 +80,8 @@ void Object3D::Draw(uint32_t textureNum, int fillMode) {
 }
 
 void Object3D::Draw(int fillMode) {
+	if (!isActive_) { return; }
+
 	// カメラ
 	if (camera_) {
 		//camera_->Update();

@@ -85,6 +85,8 @@ public:
 	void SetAnchorPoint(Vector2 anchorPoint) { anchorPoint_ = anchorPoint; }
 	// 画像の切り出しサイズ
 	void SetTextureSize(Vector2 textureSize) { textureSize_ = textureSize; }
+	// 使用するテクスチャの変更
+	void SetTextureIndex(uint32_t textureIndex) { textureIndex_ = textureIndex; }
 
 	// 画像の切りだしサイズのリセット
 	void ResetTextureSize() { textureSize_ = { 512.0f,512.0f }; }

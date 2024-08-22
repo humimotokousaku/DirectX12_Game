@@ -10,6 +10,7 @@
 #include "FollowCamera.h"
 #include "Cube.h"
 #include "CollisionManager.h"
+#include "Score.h"
 
 class GameManager;
 class GameScene : public IScene
@@ -74,8 +75,9 @@ private:// プライベートなメンバ変数
 	RailCamera railCamera_;
 	// 追従カメラ
 	FollowCamera followCamera_;
-	// skybox
-	//std::unique_ptr<Cube> cube_;
+	// スコア
+	Score* score_;
+
 	// UI
 	std::array<Sprite, 4> guideUI_;
 };

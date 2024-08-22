@@ -33,8 +33,14 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate,int id) {
 	state_ = new EnemyStateApproach();
 	state_->Initialize(this, player_);
 
+	// HP
+	hp_ = 50;
+
 	// 管理番号
 	id_ = id;
+
+	// スコア
+	score_ = 100;
 }
 
 void Enemy::Update() {
@@ -64,13 +70,11 @@ void Enemy::OnCollision(Collider* collider) {
 			particles->SetEmitterFrequency(1);
 			particles->SetEmitterCount(40);
 			particles->SetEmitterSpawnCount(1);
-			particles->randomScaleLimit = { 0.2f,0.4f };
+			particles->randomScaleLimit = { 0.01f,0.1f };
 			particles->randomVelLimit = { -1.0f,1.0f };
 			particles->randomColorLimit = { 0.0f,0.0f };
 			particles->randomLifeTimeLimit = { 0.1f,0.2f };
-			particles->particle_.color = { 1.0f,0.0f,0.0f,1.0f };
-			particles->particle_.lifeTime = 0.0f;
-
+			particles->particle_.color = { 1.0f,1.0f,1.0f,1.0f };
 			enemyManager_->SetHitParticle(particles);
 		}
 	}

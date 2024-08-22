@@ -180,10 +180,8 @@ public:
 			model_->animation_.isActive = false;
 		}
 	}
-
 	// アニメーションのループ設定
 	void SetIsAnimLoop(bool isActive) { model_->animation_.isLoop = isActive; }
-
 	/// <summary>
 	/// アニメーションの再生速度
 	/// 2:二倍速
@@ -191,16 +189,16 @@ public:
 	/// </summary>
 	/// <param name="speed">再生倍率</param>
 	void SetAnimSpeed(float speed) { model_->animation_.playBackSpeed = speed; }
-
 #pragma endregion
 
 	// ライティングの設定
 	void SetIsLighting(bool isActive) { model_->SetIsLighting(isActive); }
 	// 鏡面反射の輝度の設定
 	void SetShininess(float shininess) { model_->SetShininess(shininess); }
-
 	// 色の設定
 	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
+	// 描画をするかの設定
+	void SetIsActive(bool isActive) { isActive_ = isActive; }
 #pragma endregion
 
 public:// パブリックな変数
@@ -225,4 +223,7 @@ private:// プライベートな変数
 	bool isEditor_;
 	int selectVertex_ = -1;
 	//const char* verteciesName_[];
+
+	// 描画するか
+	bool isActive_ = true;
 };

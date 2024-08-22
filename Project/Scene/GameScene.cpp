@@ -36,20 +36,17 @@ void GameScene::Initialize() {
 #pragma endregion
 
 	// カメラの生成
-	//camera_ = std::make_unique<Camera>();
 	camera_.Initialize();
 	// カメラレールの生成
-	//railCamera_ = std::make_unique<RailCamera>();
 	railCamera_.Initialize(controlPoints_);
 	// 追従カメラの生成
-	//followCamera_ = std::make_unique<FollowCamera>();
 	followCamera_.Initialize();
 
-	// 衝突マネージャーの生成
-	//collisionManager_ = std::make_unique<CollisionManager>();
+	// スコア
+	score_ = Score::GetInstance();
+	score_->Initialize();
 
 	// 自キャラの生成
-	//player_ = std::make_unique<Player>();
 	// 自機モデル
 	player_.AddModel(models_[0]);
 	// 3Dレティクルモデル
@@ -65,17 +62,17 @@ void GameScene::Initialize() {
 	player_.SetParent(&railCamera_.GetWorldTransform());
 
 	// エネミーマネージャの生成
-	//enemyManager_ = std::make_unique<EnemyManager>();
+	enemyManager_.Initialize();
 	// 通常敵の体
 	enemyManager_.AddModel(models_[3]);
 	// 通常敵の弾
-	enemyManager_.Initialize();
 	enemyManager_.AddModel(models_[4]);
+	// アドレスを設定
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetCollisionManager(&collisionManager_);
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetSpawnPoints(enemyPoints_);
-
+	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
 
 	// 自機のロックオンクラス生成
 	aimAssist_ = AimAssist::GetInstance();
@@ -95,12 +92,6 @@ void GameScene::Initialize() {
 	followCamera_.SetFov(railCamera_.GetFov());
 	railCamera_.SetIsBoost(player_.GetIsBoost());
 
-	// Skybox
-	//cube_ = std::make_unique<Cube>();
-	//cube_->SetCamera(railCamera_->GetCamera());
-	//cube_->SetScale(Vector3{ 100,100,100 });
-	//cube_->SetPosition(Vector3{ 0,0,10 });
-
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(followCamera_.GetCamera());
@@ -108,7 +99,6 @@ void GameScene::Initialize() {
 	}
 
 	// UIのスプライトを作成
-	//guideUI_[0] = std::make_unique<Sprite>();
 	guideUI_[0].Initialize("Textures/UI", "guide_Attack.png");
 	guideUI_[0].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[0].SetPos(Vector2{ 1200.0f, 64.0f });
@@ -127,7 +117,6 @@ void GameScene::Initialize() {
 	guideUI_[3].SetSize(Vector2{ 32,32 });
 	guideUI_[3].SetPos(Vector2{ 1132.0f, 128.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
-
 	PostEffectManager::GetInstance()->bloomData_.isActive = false;
 }
 
@@ -182,6 +171,10 @@ void GameScene::Update() {
 	// 衝突マネージャー(当たり判定)
 	collisionManager_.CheckAllCollisions();
 
+	// スコア
+	score_->Update();
+
+	// ステージBGM
 	audio_->SetMuffle(BGM_, 1.0f);
 }
 
@@ -194,7 +187,7 @@ void GameScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		object->Draw();
+		//object->Draw();
 	}
 
 	// 自機
@@ -206,30 +199,19 @@ void GameScene::Draw() {
 	// 自機のレティクルとHP
 	player_.DrawUI();
 
-	// UI
-	for (int i = 0; i < 4; i++) {
-		//guideUI_[i].Draw();
-	}
-
 	// 敵に関するパーティクル
 	enemyManager_.DrawParticle();
-
-	// skybox
-	//cube_->Draw(TextureManager::GetInstance()->GetSrvIndex("rostock_laage_airport_4k.dds"));
 }
 
 void GameScene::Finalize() {
 	// ゲームパッドの振動を消す
 	Input::GetInstance()->GamePadVibration(0, 0, 0);
+
 	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
 	}
-
-	// リストのクリア
-	// 自機の弾
 	playerBullets_.clear();
-	// 敵に関するすべて(デストラクタでやるとメンバ変数の書く場所によってバグるから解放処理を作成)
 
 	// 基底クラスの解放
 	IScene::Finalize();

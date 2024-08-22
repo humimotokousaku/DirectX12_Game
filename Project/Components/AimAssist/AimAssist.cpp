@@ -14,9 +14,8 @@ void AimAssist::Update() {
 }
 
 bool AimAssist::IsEnemyBehindPlayer(const Vector3& playerPosition, const Vector3& cameraDirection, const Vector3& enemyPosition) {
-	Vector3 toObject = enemyPosition - playerPosition;
-	Vector3 toObjectNormalized = Normalize(toObject);
-	float dot = Dot(cameraDirection, toObjectNormalized);
+	Vector3 toObject = Normalize(enemyPosition - playerPosition);
+	float dot = Dot(Normalize(cameraDirection), toObject);
 	// 後ろ側ならtrue
 	if (dot < 0.0f) {
 		return true;

@@ -22,7 +22,7 @@ void PostEffectManager::Initialize() {
 	radialBlur_ = new RadialBlur();
 	radialBlur_->Initialize();
 	renderTexture_.push_back(radialBlur_->GetRenderTexture());
-	radialBlurData_.isActive = true;
+	radialBlurData_.isActive = false;
 	radialBlurData_.blurWidth = 0.005f;
 	radialBlurData_.center = { 0.5f, 0.5f };
 	radialBlur_->SetRadialBlurData(radialBlurData_);
@@ -39,7 +39,7 @@ void PostEffectManager::Initialize() {
 	bloom_ = new Bloom();
 	bloom_->Initialize();
 	renderTexture_.push_back(bloom_->GetRenderTexture());
-	bloomData_.isActive = true;
+	bloomData_.isActive = false;
 	bloomData_.strength = 1.0f;
 	bloomData_.threshold = 0.3f;
 	bloom_->SetBloomData(bloomData_);

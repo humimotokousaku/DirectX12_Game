@@ -32,8 +32,12 @@ public:
 	// Depth用
 	void CreateSRVforDepth(uint32_t srvIndex, ID3D12Resource* pResource);
 
-	//*** Getter ***//
+	/// <summary>
+	/// indexをリセット(ただし、ImGuiとデフォルトのテクスチャに使用しているものは除く)
+	/// </summary>
+	//void ResetSrvIndex() { useIndex_ = 2; }
 
+#pragma region Getter
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index) {
 		D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 		handleCPU.ptr += (descriptorSize_ * index);
@@ -54,10 +58,11 @@ public:
 		}
 		return true;
 	}
+#pragma endregion
 
-	//*** Setter ***//
-
+#pragma region Setter
 	void SetGraphicsRootDesctiptorTable(UINT rootParameterIndex, uint32_t srvIndex);
+#pragma endregion
 
 private:// 定数
 	// 最大SRV数

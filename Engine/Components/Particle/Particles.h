@@ -167,6 +167,8 @@ private:
 
 	// パーティクルの消え方で使用するイージング
 	std::function<float(float)> easeFunc_;
+	// 
+	std::function<void(Particle&)> updateFunc_;
 
 	// エミッタ
 	Emitter emitter_;

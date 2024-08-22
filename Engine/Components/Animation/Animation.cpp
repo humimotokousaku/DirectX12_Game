@@ -86,3 +86,30 @@ void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> targe
 	// アニメーションのIDをインクリメント
 	animId_++;
 }
+
+void Animation::SetFirstAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+	AnimData animData = {
+	target,
+	0,
+	startFrame,
+	endFrame,
+	0,
+	start,
+	end,
+	false,
+	name,
+	0,
+	easeFunc
+	};
+	// 最初のアニメーションは起動させておく
+	if (animData.id == 0) {
+		animData.isActive = true;
+	}
+
+	// リストが空なら登録
+ 	if (animData_.size() == 0) {
+		animData_.push_back(animData);
+		return;
+	}
+	animData_.front() = animData;
+}

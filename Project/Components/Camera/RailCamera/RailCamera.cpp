@@ -80,8 +80,7 @@ void RailCamera::Update() {
 	// Y軸周り角度(θy)
 	camera_->worldTransform_.rotate.y = std::atan2(velocity_.x, velocity_.z);
 	// 横軸方向の長さを求める
-	float velocityXZ;
-	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
+	float velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
 	// X軸周りの角度(θx)
 	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 

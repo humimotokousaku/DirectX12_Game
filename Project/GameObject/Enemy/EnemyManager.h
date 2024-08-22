@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "CollisionManager.h"
 #include "Particles.h"
+#include "Score.h"
 
 class EnemyManager {
 public:
@@ -46,10 +47,11 @@ public:
 	///
 	/// User Method
 	/// 
-
-	// 発生条件
+private:
+	/// <summary>
+	/// 発生条件
+	/// </summary>
 	void CheckSpawn();
-
 	/// <summary>
 	/// 敵の発生
 	/// </summary>
@@ -62,6 +64,20 @@ public:
 	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
 
 	/// <summary>
+	/// カメラの後ろに敵が行ったら機能停止
+	/// </summary>
+	/// <param name="cameraPosition">カメラの座標</param>
+	/// <param name="cameraDirection">カメラの移動方向</param>
+	/// <param name="enemyPosition">敵のワールド座標</param>
+	/// <returns></returns>
+	bool IsEnemyBehindCamera(const Vector3& cameraPosition, const Vector3& cameraDirection, const Vector3& enemyPosition);
+	/// <summary>
+	/// 全ての敵の活性化状態を調べる
+	/// </summary>
+	void CheckActiveState();
+
+public:
+	/// <summary>
 	/// 弾のアドレスを登録
 	/// </summary>
 	/// <param name="enemyBullet">弾</param>
@@ -70,20 +86,15 @@ public:
 		enemyBullets_.push_back(enemyBullet);
 	}
 
-	///
-	/// Getter
-	/// 
-
+#pragma region Getter
 	/// <summary>
 	/// 全敵のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
 	std::list<IEnemy*> GetEnemyList() { return enemy_; }
+#pragma endregion
 
-	///
-	/// Setter
-	/// 
-
+#pragma region Setter
 	/// <summary>
 	/// モデルの追加
 	/// </summary>
@@ -123,7 +134,17 @@ public:
 		hitParticles_.push_back(particle);
 	}
 
+	/// <summary>
+	/// カメラの進行度を設定
+	/// </summary>
+	/// <param name="percentage">カメラの進行度[%]</param>
 	void SetRailCameraProgress(float* percentage) { railCameraProgress_ = percentage; }
+	/// <summary>
+	/// カメラの移動ベクトルを設定
+	/// </summary>
+	/// <param name="cameraMoveVel">カメラの移動ベクトル</param>
+	void SetCameraMoveVel(Vector3* cameraMoveVel) { cameraMoveVel_ = cameraMoveVel; }
+#pragma endregion
 
 private:// プライベートなメンバ変数
 	// 基本機能
@@ -137,6 +158,8 @@ private:// プライベートなメンバ変数
 	CollisionManager* collisionManager_;
 	// 自機のアドレス
 	Player* player_;
+	// スコアクラスのインスタンス
+	Score* score_;
 
 	// 敵
 	std::list<IEnemy*> enemy_;
@@ -152,6 +175,8 @@ private:// プライベートなメンバ変数
 
 	// 出現時のパーティクルのテクスチャ
 	uint32_t spawnParticleTex_;
+	// 被弾時のパーティクルのテクスチャ
+	uint32_t hitParticleTex_;
 
 	// 死亡SE
 	uint32_t deadSE_;
@@ -163,6 +188,8 @@ private:// プライベートなメンバ変数
 
 	// レールカメラの進行度
 	float* railCameraProgress_;
+	// カメラの移動ベクトル
+	const Vector3* cameraMoveVel_;
 
 	// 敵の管理番号を与える
 	int id_;

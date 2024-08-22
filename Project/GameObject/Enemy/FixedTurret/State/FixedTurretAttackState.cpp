@@ -46,7 +46,8 @@ void FixedTurretAttackState::Update(FixedTurret* enemy) {
 	}
 
 	// 既定の回数撃ったらクールタイム状態に移行
-	if (shotCount_ >= kLimitShot) {
+	// もしくは機能停止状態なら待機状態に移行
+	if (shotCount_ >= kLimitShot || !enemy->GetIsActive()) {
 		enemy->ChangeState(new FixedTurretWaitState(enemy, player_));
 	}
 }

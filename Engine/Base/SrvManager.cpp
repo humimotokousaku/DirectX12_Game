@@ -1,7 +1,7 @@
 #include "SrvManager.h"
 #include <assert.h>
 
-const uint32_t SrvManager::kMaxSRVCount = 512;
+const uint32_t SrvManager::kMaxSRVCount = 5120;
 
 SrvManager* SrvManager::GetInstance() {
 	static SrvManager instance;
@@ -26,7 +26,7 @@ void SrvManager::PreDraw() {
 uint32_t SrvManager::Allocate() {
 	// 返り値の番号を記録
 	int index = useIndex_;
-	// 次回の溜めに番号を1進める
+	// 次回のために番号を1進める
 	useIndex_++;
 	// 上で記録した番号をreturn
 	return index;

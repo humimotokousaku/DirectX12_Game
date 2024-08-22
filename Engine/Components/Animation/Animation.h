@@ -71,7 +71,7 @@ public: // メンバ関数
 	}
 
 	/// <summary>
-	///  アニメーションに必要なパラメータをリストに登録
+	/// アニメーションに必要なパラメータをリストに登録
 	/// </summary>
 	/// <param name="target">アニメーションする対象</param>
 	/// <param name="start">最初のパラメータ</param>
@@ -80,6 +80,9 @@ public: // メンバ関数
 	/// <param name="name">アニメーションの名前</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
 	void SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
+	// アニメーションに必要なパラメータを先頭のリスト情報を上書き
+	// 無い場合はリストに登録
+	void SetFirstAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
 	
 private: // メンバ変数
 	std::list<AnimData> animData_;

@@ -30,8 +30,14 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	state_ = new FixedTurretWaitState(this, player_);
 	state_->Initialize(this, player_);
 
+	// HP
+	hp_ = 50;
+
 	// 管理番号
 	id_ = id;
+
+	// スコア
+	score_ = 50;
 }
 
 void FixedTurret::Update() {

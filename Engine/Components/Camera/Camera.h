@@ -32,8 +32,17 @@ public:
 
 	// スケールの取得
 	Vector3 GetScale()const { return worldTransform_.scale; }
-	// 座標の取得
+	// ローカル座標の取得
 	Vector3 GetTranslate()const { return worldTransform_.translate; }
+	// ワールド座標の取得
+	Vector3 GetWorldPosition() const{
+		Vector3 worldPosition = {
+			worldTransform_.matWorld_.m[3][0],
+			worldTransform_.matWorld_.m[3][1],
+			worldTransform_.matWorld_.m[3][2]
+		};
+		return worldPosition;
+	}
 	// 角度の取得
 	Vector3 GetRotate() const { return worldTransform_.rotate; }
 	// viewProjectionの取得

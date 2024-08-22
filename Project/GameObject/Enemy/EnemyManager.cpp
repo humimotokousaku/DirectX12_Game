@@ -20,7 +20,7 @@ EnemyManager::~EnemyManager() {
 	// 被弾時のパーティクル
 	for (Particles* particle : hitParticles_) {
 		delete particle;
-	}	
+	}
 	hitParticles_.clear();
 
 	models_.clear();
@@ -29,10 +29,14 @@ EnemyManager::~EnemyManager() {
 void EnemyManager::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 	audio_ = Audio::GetInstance();
+	// スコアのインスタンスを取得
+	score_ = Score::GetInstance();
 
 	// テクスチャの読み込み
 	textureManager_->LoadTexture("DefaultTexture", "white.png");
+	textureManager_->LoadTexture("Textures", "hitParticle.png");
 	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
+	hitParticleTex_ = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
 
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
@@ -42,9 +46,14 @@ void EnemyManager::Update() {
 	// 出現条件を満たしているかを確認
 	CheckSpawn();
 
+	// カメラの後ろにいるなら機能停止
+	CheckActiveState();
+
 	// 敵の削除
 	enemy_.remove_if([&](IEnemy* enemy) {
 		if (enemy->IsDead()) {
+			// 割り振られたスコアを加算
+   			score_->AddScore(enemy->GetScore());
 			// 死亡SEを再生
 			audio_->SoundPlayWave(deadSE_, false, 0.3f);
 			delete enemy;
@@ -74,8 +83,8 @@ void EnemyManager::Update() {
 		particle->Update();
 	}
 	// 被弾時のパーティクル
-	for (Particles* particle : hitParticles_) {
-		particle->Update();
+	for (Particles* hitParticle : hitParticles_) {
+    	hitParticle->Update();
 	}
 }
 
@@ -96,8 +105,8 @@ void EnemyManager::DrawParticle() {
 		particle->Draw(spawnParticleTex_);
 	}
 	// 被弾時のパーティクル
-	for (Particles* particle : hitParticles_) {
-		particle->Draw(spawnParticleTex_);
+	for (Particles* hitParticle : hitParticles_) {
+		hitParticle->Draw(hitParticleTex_);
 	}
 }
 
@@ -112,7 +121,7 @@ void EnemyManager::CheckSpawn() {
 				if (spawnPoints_[i].type == "normal") {
 					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity);
 				}
-				else if(spawnPoints_[i].type == "turret"){
+				else if (spawnPoints_[i].type == "turret") {
 					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
 				}
 			}
@@ -120,7 +129,7 @@ void EnemyManager::CheckSpawn() {
 	}
 }
 
-void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate,Vector3 moveSpeed) {
+void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed) {
 	Enemy* enemy = new Enemy();
 
 	// 敵モデルを追加
@@ -134,40 +143,6 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate,Vector3 moveSpeed) {
 	enemy->SetEnemyManager(this);
 	// Blenderで設定した移動速度を代入
 	enemy->SetMoveSpeed(moveSpeed);
-
-	// 初期化
-	enemy->Initialize(pos, rotate,id_);
-	// リストに登録
-	enemy_.push_back(enemy);
-
-	// 管理番号更新
-	id_++;
-
-	// 出現時のパーティクルを生成
-	Particles* particle = new Particles();
-	particle->Initialize(pos);
-	particle->SetCamera(camera_);
-	particle->SetEmitterFrequency(1);
-	particle->SetEmitterCount(40);
-	particle->SetEmitterSpawnCount(1);
-	particle->randomScaleLimit = { 0.3f, 0.4f };
-
-	spawnParticles_.push_back(particle);
-}
-
-void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
-	FixedTurret* enemy = new FixedTurret();
-
-	// 敵モデルを追加
-	enemy->AddModel(models_[0]);
-	// 弾のモデルを追加
-	enemy->AddModel(models_[1]);
-	// 必要なアドレスを設定
-	enemy->SetPlayer(player_);
-	enemy->SetCamera(camera_);
-	enemy->SetCollisionManager(collisionManager_);
-	enemy->SetEnemyManager(this);
-
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
@@ -184,6 +159,55 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	particle->SetEmitterCount(40);
 	particle->SetEmitterSpawnCount(1);
 	particle->randomScaleLimit = { 0.3f, 0.4f };
-
 	spawnParticles_.push_back(particle);
+}
+
+void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
+	FixedTurret* enemy = new FixedTurret();
+
+	// 敵モデルを追加
+	enemy->AddModel(models_[0]);
+	// 弾のモデルを追加
+	enemy->AddModel(models_[1]);
+	// 必要なアドレスを設定
+	enemy->SetPlayer(player_);
+	enemy->SetCamera(camera_);
+	enemy->SetCollisionManager(collisionManager_);
+	enemy->SetEnemyManager(this);
+	// 初期化
+	enemy->Initialize(pos, rotate, id_);
+	// リストに登録
+	enemy_.push_back(enemy);
+
+	// 管理番号更新
+	id_++;
+
+	// 出現時のパーティクルを生成
+	Particles* particle = new Particles();
+	particle->Initialize(pos);
+	particle->SetCamera(camera_);
+	particle->SetEmitterFrequency(1);
+	particle->SetEmitterCount(40);
+	particle->SetEmitterSpawnCount(1);
+	particle->randomScaleLimit = { 0.3f, 0.4f };
+	spawnParticles_.push_back(particle);
+}
+
+bool EnemyManager::IsEnemyBehindCamera(const Vector3& cameraPosition, const Vector3& cameraDirection, const Vector3& enemyPosition) {
+	Vector3 toObject = Normalize(enemyPosition - cameraPosition);
+	float dot = Dot(Normalize(cameraDirection), toObject);
+	// 後ろ側ならtrue
+	if (dot <= 0.0f) {
+		return true;
+	}
+	return false;
+}
+
+void EnemyManager::CheckActiveState() {
+	for (IEnemy* enemy : enemy_) {
+		// カメラの後ろなら敵の描画と機能停止
+		if (IsEnemyBehindCamera(camera_->GetWorldPosition(), *cameraMoveVel_, enemy->GetWorldPosition())) {
+			//enemy->SetIsActive(false);
+		}
+	}
 }

@@ -22,18 +22,27 @@ public:
 	/// </summary>
 	virtual void Draw() = 0;
 
+	///
+	/// User Method
+	/// 
+
 	// 敵モデルを追加
 	void AddModel(Model* model) {
 		models_.push_back(model);
 	}
 
+#pragma region Getter
 	// 管理番号の取得
 	int GetId() { return id_; }
+	// スコアの取得
+	int GetScore() { return score_; }
 	// 移動速度を取得
 	Vector3 GetMoveSpeed() { return moveSpeed_; }
 	// 完了ならtrueを返す
 	bool IsDead() const { return isDead_; }
-
+	// 機能停止状態かを取得
+	bool GetIsActive() { return isActive_; }
+	// ワールド座標の取得
 	Vector3 GetWorldPosition() {
 		// ワールド座標を入れる変数
 		Vector3 worldPos{};
@@ -44,11 +53,10 @@ public:
 
 		return worldPos;
 	}
+#pragma endregion
 
-	/// <summary>
-	/// 自機のアドレスを設定
-	/// </summary>
-	/// <param name="player">自機のアドレス</param>
+#pragma region Setter
+	// 自機のアドレスを設定
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
@@ -60,6 +68,14 @@ public:
 	void SetMoveSpeed(Vector3 speed) { moveSpeed_ = speed; }
 	// 死亡フラグを設定
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
+	// 機能停止にするかを設定
+	// falseなら機能停止
+	void SetIsActive(bool isActive) { 
+		isActive_ = isActive;
+		// 描画しない
+		object3d_->SetIsActive(isActive);
+	}
+#pragma endregion
 
 protected:	
 	// 全てのモデル(見た目のデータ)
@@ -82,8 +98,15 @@ protected:
 	// 管理番号
 	int id_;
 
+	// スコア
+	int score_;
+
 	// 敵のタイプ
 	std::string type_;
 	// 移動速度
 	Vector3 moveSpeed_;
+
+	// カメラの後ろ側にいるなら描画と機能を停止
+	// falseなら機能停止
+	bool isActive_ = true;
 };

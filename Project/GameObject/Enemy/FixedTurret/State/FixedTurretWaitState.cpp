@@ -13,6 +13,9 @@ void FixedTurretWaitState::Initialize(FixedTurret* enemy, Player* player) {
 }
 
 void FixedTurretWaitState::Update(FixedTurret* enemy) {
+	// 機能停止状態なら早期リターン
+	if (!enemy->GetIsActive()) { return; }
+
 	float dist = Length(player_->GetWorldPosition() - enemy->GetWorldPosition());
 	if (dist <= kShotModeRange) {
 		if (shotCoolTime_ <= 0) {
@@ -20,6 +23,4 @@ void FixedTurretWaitState::Update(FixedTurret* enemy) {
 		}
 	}
 	shotCoolTime_--;
-
-	//shotCoolTime_ = std::clamp<float>(shotCoolTime_, 0, kShotCoolTime);
 }

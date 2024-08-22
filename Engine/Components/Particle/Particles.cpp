@@ -83,6 +83,8 @@ void Particles::Update() {
 		}
 
 		if (numInstance < kNumMaxInstance) {
+			// パーティクルの挙動
+			//updateFunc_(*particleIterator);
 			// 移動処理
 			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, Multiply(kDeltaTime, (*particleIterator).vel));
 
