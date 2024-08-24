@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "GameManager.h"
+#include "SceneTransition/SceneTransition.h"
 
 void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
@@ -136,11 +137,11 @@ void GameScene::Update() {
 	// シーン切り替え
 	// クリア条件
 	if (railCamera_.GetIsGameClear()) {
-		sceneNum = GAMECLEAR_SCENE;
+		SceneTransition::GetInstance()->Start();
 	}
 	// ゲームオーバ条件
 	if (player_.GetIsDead()) {
-		sceneNum = GAMEOVER_SCENE;
+		SceneTransition::GetInstance()->Start();
 	}
 
 	// エネミーマネージャ
@@ -176,6 +177,16 @@ void GameScene::Update() {
 
 	// ステージBGM
 	audio_->SetMuffle(BGM_, 1.0f);
+
+	if (SceneTransition::GetInstance()->GetSceneTransitionSignal()) {
+		if (railCamera_.GetIsGameClear()) {
+			sceneNum = GAMECLEAR_SCENE;
+		}
+		// ゲームオーバ条件
+		if (player_.GetIsDead()) {
+			sceneNum = GAMEOVER_SCENE;
+		}
+	}
 }
 
 void GameScene::Draw() {
@@ -187,7 +198,7 @@ void GameScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		//object->Draw();
+		object->Draw();
 	}
 
 	// 自機

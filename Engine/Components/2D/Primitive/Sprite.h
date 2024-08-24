@@ -62,6 +62,10 @@ public:
 	Vector2 GetTextureSize() { return textureSize_; }
 	// アドレス渡し
 	Vector2* GetTextureSizeP() { return &textureSize_; }
+	// 色取得
+	Vector4 GetColor() { return materialData_->color; }
+	// アドレス渡し
+	Vector4* GetColorP() { return &materialData_->color; }
 
 	/// Setter
 	// 縦幅、横幅

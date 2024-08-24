@@ -1,5 +1,6 @@
 #pragma once
 #include "Framework.h"
+#include "SceneTransition/SceneTransition.h"
 
 class GameManager : public Framework
 {	
@@ -40,5 +41,7 @@ private:
 	std::array<std::unique_ptr<IScene>, 4u> sceneArr_;
 	int sceneNum_;
 	int preSceneNum_;
+
+	SceneTransition* sceneTransition_;
 };
 

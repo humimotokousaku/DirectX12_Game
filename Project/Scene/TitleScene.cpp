@@ -4,6 +4,7 @@
 #include "GlobalVariables.h"
 #include "Lerp.h"
 #include "Audio.h"
+#include "SceneTransition/SceneTransition.h"
 
 void TitleScene::Initialize() {
 	sceneNum = TITLE_SCENE;
@@ -28,16 +29,22 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 	if (input_->TriggerKey(DIK_SPACE) || input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
-		sceneNum = GAME_SCENE;
+		SceneTransition::GetInstance()->Start();
 	}
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_2)) {
 		sceneNum = GAMEOVER_SCENE;
+		SceneTransition::GetInstance()->Start();
 	}
 	if (input_->TriggerKey(DIK_3)) {
 		sceneNum = GAMECLEAR_SCENE;
+		SceneTransition::GetInstance()->Start();
 	}
 #endif
+
+	if (SceneTransition::GetInstance()->GetSceneTransitionSignal()) {
+		sceneNum = GAME_SCENE;
+	}
 }
 
 void TitleScene::Draw() {

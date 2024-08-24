@@ -6,18 +6,29 @@
 #include <assert.h>
 
 namespace Lerps {
+	Vector4 Lerp(const Vector4& start, const Vector4& end, float t) {
+		Vector4 result = {
+			(1.0f - t) * start.x + t * end.x,
+			(1.0f - t) * start.y + t * end.y,
+			(1.0f - t) * start.z + t * end.z,
+			(1.0f - t) * start.w + t * end.w
+		};
+		return result;
+	}
 	Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
-		float newX = (1.0f - t) * start.x + t * end.x;
-		float newY = (1.0f - t) * start.y + t * end.y;
-		float newZ = (1.0f - t) * start.z + t * end.z;
-
-		return Vector3(newX, newY, newZ);
+		Vector3 result = {
+			(1.0f - t) * start.x + t * end.x,
+			(1.0f - t) * start.y + t * end.y,
+			(1.0f - t) * start.z + t * end.z
+		};
+		return result;
 	}
 	Vector2 Lerp(const Vector2& start, const Vector2& end, float t) {
-		float newX = (1.0f - t) * start.x + t * end.x;
-		float newY = (1.0f - t) * start.y + t * end.y;
-
-		return Vector2(newX, newY);
+		Vector2 result = {
+			(1.0f - t) * start.x + t * end.x,
+			(1.0f - t) * start.y + t * end.y
+		};
+		return result;
 	}
 	float Lerp(const float& start, const float& end, float t) {
 		float result = (1.0f - t) * start + t * end;

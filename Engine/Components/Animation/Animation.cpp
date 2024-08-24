@@ -21,10 +21,13 @@ void Animation::Update() {
 					}
 					else if (std::next(it) == animData_.end()) {
 						isStart_ = false;
+						isEnd_ = true;
 						break;
 					}
 				}
 				else {
+					isEnd_ = false;
+
 					// アニメーション
 					it->t = it->easeFunc((float)it->currentFrame / it->endFrame);
 
@@ -33,7 +36,10 @@ void Animation::Update() {
 						// 引き数の型を取得して同じ型の変数を作成
 						using T = std::decay_t<decltype(*targetPtr)>;
 						// 同じ型かを検出
-						if constexpr (std::is_same_v<T, Vector3>) {
+						if constexpr (std::is_same_v<T, Vector4>) {
+							*targetPtr = Lerps::Lerp(std::get<Vector4>(it->start), std::get<Vector4>(it->end), it->t);
+						}
+						else if constexpr (std::is_same_v<T, Vector3>) {
 							*targetPtr = Lerps::Lerp(std::get<Vector3>(it->start), std::get<Vector3>(it->end), it->t);
 						}
 						else if constexpr (std::is_same_v<T, Vector2>) {
@@ -61,7 +67,7 @@ void Animation::Update() {
 	}
 }
 
-void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 		target,
 		0,
@@ -87,7 +93,7 @@ void Animation::SetAnimData(std::variant<Vector3*, Vector2*, float*, int*> targe
 	animId_++;
 }
 
-void Animation::SetFirstAnimData(std::variant<Vector3*, Vector2*, float*, int*> target, std::variant<Vector3, Vector2, float, int> start, std::variant<Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t startFrame, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 	target,
 	0,

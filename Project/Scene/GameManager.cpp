@@ -14,14 +14,21 @@ GameManager::~GameManager() {
 
 void GameManager::Initialize() {
 	Framework::Initialize();
+
 	//初期シーンの設定
 	sceneNum_ = TITLE_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
+
+	sceneTransition_ = SceneTransition::GetInstance();
+	sceneTransition_->Initialize();
 }
 
 void GameManager::Update() {
 	Framework::Update();
+
+	// シーン切り替えの演出
+	sceneTransition_->Update();
 
 	// シーンチェック
 	preSceneNum_ = sceneNum_;
@@ -33,6 +40,8 @@ void GameManager::Update() {
 		sceneArr_[preSceneNum_]->Finalize();
 		sceneArr_[preSceneNum_].reset();
 		sceneArr_[sceneNum_]->Initialize();
+		sceneTransition_->SetSceneTransitionSignal(false);
+		sceneTransition_->SetSpriteList();
 
 		// 解放したシーンを作成しなおす
 		switch (preSceneNum_) {
