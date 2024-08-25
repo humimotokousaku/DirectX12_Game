@@ -61,7 +61,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
 
 	// Lightingするか
-	materialData_->enableLighting = false;
+	materialData_->enableLighting = true;
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();
@@ -109,7 +109,8 @@ void Model::Initialize() {
 	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
 
 	// Lightingするか
-	materialData_->enableLighting = false;
+	materialData_->shininess = 70.0f;
+	materialData_->enableLighting = true;
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();

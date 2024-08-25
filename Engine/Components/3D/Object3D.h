@@ -69,7 +69,7 @@ public:
 		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();	
 		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
 		model_->SetMaterialResource(materialResource);
-		materialData->enableLighting = false;
+		materialData->enableLighting = true;
 		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
 		materialData->uvTransform = MakeIdentity4x4();
 		model_->materialData_ = materialData;
@@ -92,7 +92,7 @@ public:
 		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
 		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
 		model_->SetMaterialResource(materialResource);
-		materialData->enableLighting = false;
+		materialData->enableLighting = true;
 		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
 		materialData->uvTransform = MakeIdentity4x4();
 		model_->materialData_ = materialData;

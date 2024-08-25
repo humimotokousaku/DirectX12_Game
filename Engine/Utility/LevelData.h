@@ -10,6 +10,7 @@ public:
 		Vector3 rotate;			// オイラー角
 		Vector3 translate;		// 座標
 		std::string fileName;	// モデルのファイル名
+		bool isSkydome;			// 背景用のオブジェクトか
 	};
 	// レールカメラの移動ルート
 	struct CurveData {

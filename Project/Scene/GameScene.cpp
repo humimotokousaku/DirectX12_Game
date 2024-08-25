@@ -134,16 +134,6 @@ void GameScene::Update() {
 	}
 #endif // _DEBUG
 
-	// シーン切り替え
-	// クリア条件
-	if (railCamera_.GetIsGameClear()) {
-		SceneTransition::GetInstance()->Start();
-	}
-	// ゲームオーバ条件
-	if (player_.GetIsDead()) {
-		SceneTransition::GetInstance()->Start();
-	}
-
 	// エネミーマネージャ
 	enemyManager_.Update();
 	// 敵のリストを保存
@@ -178,6 +168,15 @@ void GameScene::Update() {
 	// ステージBGM
 	audio_->SetMuffle(BGM_, 1.0f);
 
+	// シーン切り替え
+	// クリア条件
+	if (railCamera_.GetIsGameClear()) {
+		SceneTransition::GetInstance()->Start();
+	}
+	// ゲームオーバ条件
+	if (player_.GetIsDead()) {
+		SceneTransition::GetInstance()->Start();
+	}
 	if (SceneTransition::GetInstance()->GetSceneTransitionSignal()) {
 		if (railCamera_.GetIsGameClear()) {
 			sceneNum = GAMECLEAR_SCENE;

@@ -138,6 +138,9 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				objectData.scale.x = (float)transform["scaling"][0];
 				objectData.scale.y = (float)transform["scaling"][2];
 				objectData.scale.z = (float)transform["scaling"][1];
+				// 背景用のオブジェクトか
+				nlohmann::json& isSkydome = object["skydome"];
+				objectData.isSkydome = (int)isSkydome;
 			}
 		}
 
@@ -163,6 +166,11 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		newObject->worldTransform.rotate = objectData.rotate;
 		// 座標
 		newObject->worldTransform.scale = objectData.scale;
+		
+		// 背景用のオブジェクトなら光を適用しない
+		if (objectData.isSkydome) {
+			newObject->SetIsLighting(false);
+		}
 
 		objects.push_back(newObject);
 	}
