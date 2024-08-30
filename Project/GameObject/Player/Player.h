@@ -26,17 +26,14 @@ public:// パブリックなメンバ関数
 	/// 初期化(設定すべき項目を全て終わらせてから行う)
 	/// <summary>
 	void Initialize();
-
 	/// <summary>
 	/// 更新
 	/// <summary>
 	void Update();
-
 	/// <summary>
 	/// 描画
 	/// <summary>
 	void Draw();
-
 	/// <summary>
 	/// UI描画
 	/// </summary>

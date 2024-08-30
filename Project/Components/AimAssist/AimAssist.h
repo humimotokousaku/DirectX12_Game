@@ -24,14 +24,8 @@ public:
 	/// User Method
 	/// 
 
-	/// <summary>
-	/// 自機の後ろ側に敵がいるか
-	/// </summary>
-	/// <param name="cameraPosition">カメラの座標</param>
-	/// <param name="cameraDirection">カメラの方向ベクトル</param>
-	/// <param name="enemyPosition">敵の座標</param>
-	/// <returns>自機の後ろ側ならtrue</returns>
-	bool IsEnemyBehindPlayer(const Vector3& playerPosition, const Vector3& cameraDirection, const Vector3& enemyPosition);
+	// オブジェクトが反対方向にあるか判定する関数
+	bool IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition);
 
 	/// <summary>
 	/// ワールド座標からスクリーン座標に変換

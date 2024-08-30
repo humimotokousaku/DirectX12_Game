@@ -58,24 +58,35 @@ public:
 	Particles() = default;
 	~Particles();
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="emitterPos">生成場所</param>
 	void Initialize(Vector3 emitterPos);
-
-	// 更新処理
+	/// <summary>
+	/// 更新処理
+	/// </summary>
 	void Update();
-
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
+	/// <param name="textureHandle">使用テクスチャ</param>
 	void Draw(uint32_t textureHandle);
 
-	ModelData GetModelData() { return modelData_; }
+	//ModelData GetModelData() { return modelData_; }
 
 	///
 	/// User Method
 	///
-	/// Setter
+
+#pragma region Setter	
 	// カメラ
 	void SetCamera(Camera* camera) { camera_ = camera; }
-
+	/// <summary>
+	/// パーティクルの挙動の設定
+	/// </summary>
+	/// <param name="updateFunc">void (Particle＆);の関数</param>
+	void SetParticleUpdate(std::function<void(Particle&)> updateFunc) { updateFunc_ = updateFunc; }
 	/// <summary>
 	/// パーティクルの発生源の座標
 	/// </summary>
@@ -104,6 +115,7 @@ public:
 	/// </summary>
 	/// <param name="easeFunc"></param>
 	void SetParticleFade(std::function<float(float)> easeFunc) { easeFunc_ = easeFunc; }
+#pragma endregion
 
 	/// <summary>
 	/// ランダムの上限下限値をすべて0にする

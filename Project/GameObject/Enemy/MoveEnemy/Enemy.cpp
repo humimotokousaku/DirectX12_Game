@@ -26,6 +26,7 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate,int id) {
 	object3d_->worldTransform.translate = pos;
 	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
+	object3d_->worldTransform.UpdateMatrix();
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 

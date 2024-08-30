@@ -62,6 +62,12 @@ struct Vector3 final {
 	Vector3 operator/=(float obj) {
 		return *this = *this / obj;;
 	}
+
+	float dot(Vector3 v1) {
+		float result{};
+		result = v1.x * x + v1.y * y + v1.z * z;
+		return result;
+	}
 };
 
 // 加算

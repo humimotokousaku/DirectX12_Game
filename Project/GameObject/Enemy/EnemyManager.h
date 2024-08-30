@@ -29,12 +29,10 @@ public:
 	/// 初期化
 	/// </summary>
 	void Initialize();
-
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update();
-
 	/// <summary>
 	/// 描画
 	/// </summary>
@@ -48,6 +46,12 @@ public:
 	/// User Method
 	/// 
 private:
+	/// <summary>
+	/// ダメージパーティクルの更新処理
+	/// </summary>
+	/// <param name="particle"></param>
+	void ParticleUpdate(Particle& particle);
+
 	/// <summary>
 	/// 発生条件
 	/// </summary>
@@ -63,18 +67,14 @@ private:
 	/// <param name="pos">発生する座標</param>
 	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
 
-	/// <summary>
-	/// カメラの後ろに敵が行ったら機能停止
-	/// </summary>
-	/// <param name="cameraPosition">カメラの座標</param>
-	/// <param name="cameraDirection">カメラの移動方向</param>
-	/// <param name="enemyPosition">敵のワールド座標</param>
-	/// <returns></returns>
-	bool IsEnemyBehindCamera(const Vector3& cameraPosition, const Vector3& cameraDirection, const Vector3& enemyPosition);
+	// カメラの後ろに敵が行ってしまったら機能停止
+	bool IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition);
 	/// <summary>
 	/// 全ての敵の活性化状態を調べる
 	/// </summary>
 	void CheckActiveState();
+
+	Vector2 ConvertWorld2Screen(Vector3 worldPos);
 
 public:
 	/// <summary>

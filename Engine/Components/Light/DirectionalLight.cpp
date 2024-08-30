@@ -52,12 +52,12 @@ void DirectionalLight::Initialize() {
 
 	// DirectionalLightingのデフォ値
 	directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	directionalLightData_->direction = { 0.0f, 0.0f, 0.0f };
-	directionalLightData_->intensity = 1.0f;
+	directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
+	directionalLightData_->intensity = 4.0f;
 }
 
 void DirectionalLight::ImGuiAdjustParameter() {
 	ImGui::SliderFloat3("DirectionalLighting.direction", &directionalLightData_->direction.x, -1, 1);
 	ImGui::ColorEdit3("DirectionalLighting.color", &directionalLightData_->color.x);
-	ImGui::SliderFloat("DirectionalLighting.intensity", &directionalLightData_->intensity, 0, 1);
+	ImGui::SliderFloat("DirectionalLighting.intensity", &directionalLightData_->intensity, 0, 10);
 }
