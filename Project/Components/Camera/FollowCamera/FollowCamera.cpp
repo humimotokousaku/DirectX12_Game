@@ -27,12 +27,13 @@ void FollowCamera::Update() {
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
 #ifdef _DEBUG
+
+#endif // _DEBUG
 	ImGui::Begin("FollowCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);	
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
 	ImGui::End();
-#endif // _DEBUG
 }
 
 Vector3 FollowCamera::TargetOffset() const {

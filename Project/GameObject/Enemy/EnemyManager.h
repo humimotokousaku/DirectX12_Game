@@ -68,7 +68,7 @@ private:
 	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
 
 	// カメラの後ろに敵が行ってしまったら機能停止
-	bool IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition);
+	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
 	/// <summary>
 	/// 全ての敵の活性化状態を調べる
 	/// </summary>

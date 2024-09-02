@@ -13,16 +13,28 @@ void AimAssist::Update() {
 
 }
 
-bool AimAssist::IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition)
-{
-	float dot = Dot(Normalize(direction), Normalize(objectPosition));
-	float angle = std::acos(dot); // ラジアンで返す
+bool AimAssist::IsObjectInOppositeDirection(const Vector3& objectPosition) {
+	// カメラの角度方向ベクトルに変換
+	Vector3 offset{ 0, 0, 1 };
+	// 回転行列を合成
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.parent_->rotate);
+	// 自機のワールド行列の回転を反映する
+	offset = TransformNormal(offset, rotateMatrix);
 
-	// -90° から 90° (ラジアンに変換すると -π/2 ~ π/2) の範囲に含まれていないかを確認
-	if (angle > -M_PI / 2 && angle < M_PI / 2) {
-		return true;
+	// 自機と敵の方向ベクトルを算出
+	Vector3 p2eDirVel = Normalize(objectPosition - camera_->worldTransform_.translate);
+
+	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
+	float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
+	float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
+	float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
+	angleXZ = Radian2Degree(angleXZ);
+
+	if ((angleXZ) < (90.0f)) {
+		return false;
 	}
-	return false;
+	// カメラの映らないところにいる
+	return true;
 }
 
 Vector2 AimAssist::ConvertWorld2Screen(Vector3 worldPos) {
@@ -54,12 +66,11 @@ void AimAssist::LockOn() {
 			if (enemyPos.x >= 0.0f && enemyPos.x <= 1280.0f &&
 				enemyPos.y >= 0.0f && enemyPos.y <= 720.0f) {
 				// カメラの後ろ側ではないかを算出
-				if (IsObjectInOppositeDirection(*cameraDirVel_, enemy->GetWorldPosition())) {
+				if (!IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
 					// 自機との距離を調べる
 					Vector3 p2e = enemy->GetWorldPosition() - player_->GetWorldPosition();
 					// レティクルと自機の距離内にいるならロックオン対象
 					if (100.0f >= Length(p2e)) {
-
 						// ロックオンしていないときの3Dレティクルをスクリーン座標に変換
 						Vector2 reticle2DPos = ConvertWorld2Screen(player_->GetDefault3DReticlePosition());
 						// 2Dレティクルと敵がロックオン範囲内かをスクリーン座標で調べる

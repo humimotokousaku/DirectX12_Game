@@ -13,11 +13,11 @@
 #include <functional>
 
 struct Particle {
-	Transform transform;
-	Vector3 vel;
-	Vector4 color;
-	float lifeTime;
-	float currentTime = 0;
+	Transform transform;	// 座標
+	Vector3 vel;			// 速度
+	Vector4 color;			// 色
+	float lifeTime;			// 生存時間
+	float currentTime = 0;	// 経過フレーム
 };
 
 // GPUに送る
@@ -123,7 +123,9 @@ public:
 	void OffRandom() { 
 		randomTranslateLimit = Limit{ 0.0f,0.0f };
 		randomScaleLimit = Limit{ 0.0f,0.0f };
-		randomVelLimit = Limit{ 0.0f,0.0f };
+		for (int i = 0; i < 3; i++) {
+			randomVelLimit[i] = Limit{0.0f,0.0f};
+		}
 		randomLifeTimeLimit = Limit{ 0.0f, 0.0f };
 		randomColorLimit = Limit{ 0.0f,0.0f };
 	}
@@ -158,7 +160,14 @@ public:
 	// ランダムスケールの上限下限
 	Limit randomScaleLimit = { 0.3f, 0.5f };
 	// ランダム速度の上限下限
-	Limit randomVelLimit = { -1.0f, 1.0f };
+	// [0]:x
+	// [1]:y
+	// [2]:z
+	Limit randomVelLimit[3] = {
+		{- 1.0f, 1.0f },	// x
+		{- 1.0f, 1.0f },	// y
+		{- 1.0f, 1.0f }		// z
+	};
 	// ランダム生存時間の下限上限
 	Limit randomLifeTimeLimit = { 1.0f, 3.0f };
 	// ランダムカラーの上限下限
@@ -179,7 +188,7 @@ private:
 
 	// パーティクルの消え方で使用するイージング
 	std::function<float(float)> easeFunc_;
-	// 
+	// パーティクルの挙動
 	std::function<void(Particle&)> updateFunc_;
 
 	// エミッタ

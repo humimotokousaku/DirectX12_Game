@@ -66,7 +66,7 @@ public: // メンバ関数
 #pragma region Getter
 	// アニメーションを始めるかを取得
 	bool GetIsStart() { return isStart_; }
-	// アニメーションが狩猟しているかを取得
+	// アニメーションが終了しているかを取得
 	bool GetIsEnd() { return isEnd_; }
 #pragma endregion
 

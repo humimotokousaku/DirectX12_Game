@@ -50,8 +50,6 @@ void Player::Initialize() {
 	default3dReticle_.Initialize();
 	default3dReticle_ = object3dReticle_[0]->worldTransform;
 
-	gameSpeed_ = 1.0f;
-
 	// 2Dレティクル作成
 	sprite2DReticle_[0].Initialize("", "reticle.png");
 	sprite2DReticle_[0].SetSize(Vector2{ 50.0f,50.0f });
@@ -104,6 +102,9 @@ void Player::Initialize() {
 
 	// ロックオン時のレティクルのアニメーション
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 0, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+	// ロックオン時のレティクルのアニメーション
+	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 0, 90, "BoostRotAnim", Easings::EaseOutExpo);
+	boostRotVelZ_ = 0.0f;
 
 	isDead_ = false;
 	// HP
@@ -127,9 +128,6 @@ void Player::Update() {
 	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y, kMoveLimit.y);
 	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
 
-	// 全ての処理が終わってからz軸を代入
-	// 現状、オイラー角を使用しているのでジンバルロックを回避できない。なのでレティクルの挙動をマシにするために最後に入れている
-	object3d_->worldTransform.rotate.z = rotateVel_.z;
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -158,7 +156,7 @@ void Player::Update() {
 	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
 		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
-		audio_->soundMuffleValue = -0.9f;		
+		audio_->soundMuffleValue = -0.9f;
 	}
 	else {
 		// 緑色にする
@@ -182,7 +180,7 @@ void Player::Update() {
 	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
 #endif
-	
+
 }
 
 void Player::Draw() {
@@ -197,17 +195,10 @@ void Player::Draw() {
 }
 
 void Player::DrawUI() {
-	// レティクル
-	for (int i = 0; i < 2; i++) {
-		//sprite2DReticle_[i].Draw();
-	}
 	// ロックオン時のレティクル
 	if (*isLockOn_) {
 		sprite2DReticle_[2].Draw();
 	}
-
-	// HPバー
-	//hpSprite_.Draw();
 
 	// 軌道
 	particle_->Draw(defaultTexture);
@@ -292,6 +283,7 @@ void Player::Move() {
 	// ブースト
 	if (input_->PressKey(DIK_B)) {
 		isBoost_ = true;
+		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
 	}
 #pragma endregion
@@ -312,6 +304,7 @@ void Player::Move() {
 	// ブースト
 	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_X)) {
 		isBoost_ = true;
+		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
 	}
 #pragma endregion
@@ -329,7 +322,7 @@ void Player::Move() {
 	else {
 		// 徐々に速度を上げる
 		moveVel_.y = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.y, 0.05f).y;
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;		
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;
 		// カメラ演出
 		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedAttenuationRate.x, 0.1f).x;
 	}
@@ -360,12 +353,22 @@ void Player::Move() {
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate, move, kMoveSpeedAttenuationRate.z, 0.01f).z;
 		moveVel_.z = 0;
 		input_->GamePadVibration(0, 0, 0);
+		// ガウスを消す
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
 	}
 	else {
 		// 徐々に速度を上げる
 		moveVel_.z = Lerps::ExponentialInterpolate(moveVel_, move, kMoveSpeedAttenuationRate.z, 1.0f).z;
+
+		// 振動
 		input_->GamePadVibration(0, 65535, 65535);
+		if (boostRotAnim_.GetIsEnd()) {
+			input_->GamePadVibration(0, 0, 0);
+		}
+		// ガウスをかける
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
 	}
+	boostRotAnim_.Update();
 
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
@@ -379,7 +382,7 @@ void Player::Move() {
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
 	object3d_->worldTransform.rotate.y = rotateVel_.y;
-	object3d_->worldTransform.rotate.z = 0;
+	object3d_->worldTransform.rotate.z = rotateVel_.z + boostRotVelZ_;
 	// 速度を自機に加算
 	object3d_->worldTransform.translate += moveVel_;
 
@@ -402,7 +405,7 @@ void Player::Aim() {
 	aimAssist_->LockOn();
 
 	// ロックオンしたら赤くなる
-	if (*isLockOn_) {	
+	if (*isLockOn_) {
 		// 補間量を足す
 		object3dReticle_[0]->worldTransform.translate += *lockOnReticleOffset_;
 		sprite2DReticle_[0].SetColor(Vector4{ 1,0,0,1 });
@@ -484,8 +487,10 @@ void Player::DecrementHP() {
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset{ 0, 0, kDistanceObject };
+	Vector3 rotate = object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate;
+	rotate.z = 0;
 	// 回転行列を合成
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate);
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
 	// 自機のワールド行列の回転を反映する
 	offset = TransformNormal(offset, rotateMatrix);
 	// 3Dレティクルの座標を設定

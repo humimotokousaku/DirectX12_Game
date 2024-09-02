@@ -59,6 +59,10 @@ void EnemyManager::Update() {
 			delete enemy;
 			return true;
 		}
+		if (!enemy->GetIsActive()) {
+			delete enemy;
+			return true;
+		}
 		return false;
 		});
 	// enemyの更新
@@ -111,18 +115,14 @@ void EnemyManager::DrawParticle() {
 }
 
 void EnemyManager::ParticleUpdate(Particle& particle) {
-	particle.vel.x *= 0.9f;
-	particle.vel.z *= 0.9f;
-	particle.vel.y -= 0.1f;
+	particle.vel.y -= 0.3f;
 }
 
 void EnemyManager::CheckSpawn() {
 	for (int i = 0; i < spawnPoints_.size(); i++) {
 		if (!spawnPointDatas_[i].isActive) {
 			if ((*railCameraProgress_) >= spawnPoints_[i].percentage / 100) {
-				//if (i == 0) {
-					spawnPointDatas_[i].isActive = true;
-				//}
+				spawnPointDatas_[i].isActive = true;
 			}
 
 			if (spawnPointDatas_[i].isActive) {
@@ -164,10 +164,9 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed) {
 	particle->Initialize(pos);
 	particle->SetCamera(camera_);
 	particle->SetEmitterFrequency(1);
-	particle->SetEmitterCount(40);
+	particle->SetEmitterCount(20);
 	particle->SetEmitterSpawnCount(1);
 	particle->randomScaleLimit = { 0.3f, 0.4f };
-	particle->SetParticleUpdate(std::bind(&EnemyManager::ParticleUpdate, this, std::placeholders::_1));
 	spawnParticles_.push_back(particle);
 }
 
@@ -196,36 +195,50 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	particle->Initialize(pos);
 	particle->SetCamera(camera_);
 	particle->SetEmitterFrequency(1);
-	particle->SetEmitterCount(40);
+	particle->SetEmitterCount(20);
 	particle->SetEmitterSpawnCount(1);
 	particle->randomScaleLimit = { 0.3f, 0.4f };
-	particle->SetParticleUpdate(std::bind(&EnemyManager::ParticleUpdate, this, std::placeholders::_1));
 	spawnParticles_.push_back(particle);
 }
 
-bool EnemyManager::IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition) {
-	float dot = Dot(Normalize(direction), Normalize(objectPosition));
-	float angle = std::acos(dot); // ラジアンで返す
+bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
+	// カメラの角度方向ベクトルに変換
+	Vector3 offset{ 0, 0, 1 };
+	// 回転行列を合成
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.parent_->rotate);
+	// 自機のワールド行列の回転を反映する
+	offset = TransformNormal(offset, rotateMatrix);
 
-	// -π/2 ~ π/2の範囲に含まれていないかを確認
-	if (std::fabs(angle) < M_PI / 2) {
-		return true;
+	// 自機と敵の方向ベクトルを算出
+	Vector3 p2eDirVel = Normalize(objectPosition - camera_->worldTransform_.translate);
+
+	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
+	float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
+	float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
+	float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
+	angleXZ = Radian2Degree(angleXZ);
+
+	if ((angleXZ) < (90.0f)) {
+		return false;
 	}
-	return false;
+	// カメラの映らないところにいる
+	return true;
 }
 
 void EnemyManager::CheckActiveState() {
 	for (IEnemy* enemy : enemy_) {
 		// カメラの後ろなら敵の描画と機能停止
 		Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
-		if (enemyPos.x >= 0.0f && enemyPos.x <= 1280.0f &&
-			enemyPos.y >= 0.0f && enemyPos.y <= 720.0f) {
-			if (!IsObjectInOppositeDirection(*cameraMoveVel_, enemy->GetWorldPosition())) {
+		if (enemyPos.x >= -50.0f && enemyPos.x <= 1330.0f &&
+			enemyPos.y >= -50.0f && enemyPos.y <= 770.0f) {		
+			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
 				enemy->SetIsActive(false);
 			}
 		}
 		else {
-			enemy->SetIsActive(false);
+			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
+				enemy->SetIsActive(false);
+			}
 		}
 	}
 }

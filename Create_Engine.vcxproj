@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.cpp" />

@@ -1,8 +1,9 @@
 #pragma once
+#include <math.h>
+
 struct Vector2 {
 	float x;
 	float y;
-
 
 	// 算術演算子のオーバーロード
 	// 加算
@@ -61,3 +62,9 @@ struct Vector2 {
 		return *this = *this / obj;;
 	}
 };
+
+// 内積
+float Dot(Vector2 v1, Vector2 v2);
+
+// 長さ
+float Length(Vector2 v);

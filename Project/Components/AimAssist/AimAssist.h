@@ -25,7 +25,7 @@ public:
 	/// 
 
 	// オブジェクトが反対方向にあるか判定する関数
-	bool IsObjectInOppositeDirection(const Vector3& direction, const Vector3& objectPosition);
+	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
 
 	/// <summary>
 	/// ワールド座標からスクリーン座標に変換

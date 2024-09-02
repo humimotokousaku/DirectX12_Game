@@ -36,11 +36,17 @@ void GameManager::Update() {
 
 	//シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		// ポストエフェクトを使用しないスプライトリストを消す
 		postEffectManager_->ClearSpriteList();
+		// ポストエフェクト機能を停止する
+		postEffectManager_->ResetPostEffect();
 		sceneArr_[preSceneNum_]->Finalize();
 		sceneArr_[preSceneNum_].reset();
 		sceneArr_[sceneNum_]->Initialize();
+
+		// シーン遷移演出開始
 		sceneTransition_->SetSceneTransitionSignal(false);
+		// シーン遷移で使うスプライトはポストエフェクトを使用しない
 		sceneTransition_->SetSpriteList();
 
 		// 解放したシーンを作成しなおす

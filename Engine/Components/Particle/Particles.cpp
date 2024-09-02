@@ -124,7 +124,7 @@ void Particles::Draw(uint32_t textureHandle) {
 	// 板ポリを正面に向ける
 	Matrix4x4 backToFrontMatrix = MakeIdentity4x4();
 	// billboardMatrixを作成
-	Matrix4x4 billboardMatrix = cameraMatrix;
+	Matrix4x4 billboardMatrix = Multiply(backToFrontMatrix, cameraMatrix);
 	billboardMatrix.m[3][0] = 0.0f;
 	billboardMatrix.m[3][1] = 0.0f;
 	billboardMatrix.m[3][2] = 0.0f;
@@ -185,8 +185,11 @@ Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& t
 	Vector3 randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
 	particle.transform.translate = translate + randomTranslate;
 	// 速度
-	std::uniform_real_distribution<float> distVel(randomVelLimit.min, randomVelLimit.max);
-	particle.vel = { distVel(randomEngine) ,distVel(randomEngine) ,distVel(randomEngine) };
+	std::uniform_real_distribution<float> distVelX(randomVelLimit[0].min, randomVelLimit[0].max);
+	std::uniform_real_distribution<float> distVelY(randomVelLimit[1].min, randomVelLimit[1].max);
+	std::uniform_real_distribution<float> distVelZ(randomVelLimit[2].min, randomVelLimit[2].max);
+
+	particle.vel = { distVelX(randomEngine) ,distVelY(randomEngine) ,distVelZ(randomEngine) };
 	particle.vel += particle_.vel;
 	// 大きさ
 	std::uniform_real_distribution<float> distScale(randomScaleLimit.min, randomScaleLimit.max);

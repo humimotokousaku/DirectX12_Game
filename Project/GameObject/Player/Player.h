@@ -197,6 +197,8 @@ private:// プライベートなメンバ変数
 	std::list<PlayerBullet*> bullets_;
 	// ロックオン時のアニメーション
 	Animation reticleAnim_;
+	// ブースト時のアニメーション
+	Animation boostRotAnim_;
 
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
@@ -227,7 +229,8 @@ private:// プライベートなメンバ変数
 	Vector3 reticleMoveVel_;
 	//自機の回転速度
 	Vector3 rotateVel_;
-	float gameSpeed_;
+	// ブースト中の自機の回転
+	float boostRotVelZ_;
 
 	// ロックオン時のレティクルの補間量
 	Vector3* lockOnReticleOffset_;

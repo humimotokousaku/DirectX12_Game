@@ -30,6 +30,15 @@ public:
 	/// </summary>
 	void ClearSpriteList() { sprites_.clear(); }
 
+	/// <summary>
+	/// ポストエフェクトをすべてオフにする
+	/// </summary>
+	void ResetPostEffect() {
+		radialBlurData_.isActive = false;
+		gaussData_.isActive = false;
+		bloomData_.isActive = false;
+	}
+
 public:
 	RadialBlur::RadialBlurData radialBlurData_;
 	Gauss::GaussData gaussData_;

@@ -40,7 +40,7 @@ public:
 	Vector3 GetMoveSpeed() { return moveSpeed_; }
 	// 完了ならtrueを返す
 	bool IsDead() const { return isDead_; }
-	// 機能停止状態かを取得
+	// 活動可能状態かを取得
 	bool GetIsActive() { return isActive_; }
 	// ワールド座標の取得
 	Vector3 GetWorldPosition() {
