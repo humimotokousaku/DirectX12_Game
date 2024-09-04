@@ -76,6 +76,6 @@ void Score::Update() {
 void Score::AddScore(int value) {
 	int preScore = score_;
 	goalScore_ += value;
-	scoreAnim_.SetFirstAnimData(&score_, preScore, goalScore_, 0, 20, "scoreAnim", Easings::EaseOutCubic);
+	scoreAnim_.SetFirstAnimData(&score_, preScore, goalScore_, 20, "scoreAnim", Easings::EaseOutCubic);
 	scoreAnim_.SetIsStart(true);
 }

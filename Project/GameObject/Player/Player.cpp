@@ -101,9 +101,9 @@ void Player::Initialize() {
 	aimAssist_ = AimAssist::GetInstance();
 
 	// ロックオン時のレティクルのアニメーション
-	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 0, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
-	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 0, 90, "BoostRotAnim", Easings::EaseOutExpo);
+	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
 	boostRotVelZ_ = 0.0f;
 
 	isDead_ = false;

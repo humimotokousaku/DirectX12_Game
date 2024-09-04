@@ -13,8 +13,8 @@ void SceneTransition::Initialize() {
 	PostEffectManager::GetInstance()->AddSpriteList(&sprite_);
 	sprite_.SetColor(Vector4{ 0,0,0,0 });
 
-	beginAnim_.SetAnimData(sprite_.GetColorP(), Vector4{ 0,0,0,0 }, Vector4{ 0,0,0,1 }, 0, 30, "sceneTransition_00", Easings::EaseInOutExpo);
-	endAnim_.SetAnimData(sprite_.GetColorP(), Vector4{ 0,0,0,1 }, Vector4{ 0,0,0,0 }, 0, 30, "sceneTransition_00", Easings::EaseInOutExpo);
+	beginAnim_.SetAnimData(sprite_.GetColorP(), Vector4{ 0,0,0,0 }, Vector4{ 0,0,0,1 }, 30, "sceneTransition_00", Easings::EaseInOutExpo);
+	endAnim_.SetAnimData(sprite_.GetColorP(), Vector4{ 0,0,0,1 }, Vector4{ 0,0,0,0 }, 30, "sceneTransition_00", Easings::EaseInOutExpo);
 
 	isStart_ = false;
 }
