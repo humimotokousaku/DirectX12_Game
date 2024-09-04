@@ -387,7 +387,7 @@ void Player::Move() {
 	object3d_->worldTransform.translate += moveVel_;
 
 	// カメラ移動
-	cameraOffset_ += moveVel_ / 2;
+	cameraOffset_ += moveVel_;
 	// カメラの移動幅上限
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);

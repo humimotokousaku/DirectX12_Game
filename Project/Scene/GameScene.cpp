@@ -15,7 +15,7 @@ void GameScene::Initialize() {
 	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
 	// BGMの読み込み
 	BGM_ = audio_->SoundLoadWave("Audio/gameBGM_Noesis.wav");
-	audio_->SoundPlayWave(BGM_, true, 0.1f);
+	//audio_->SoundPlayWave(BGM_, true, 0.1f);
 	// 使用するモデルの読み込み
 	modelManager_->LoadModel("", "block.obj");
 	modelManager_->LoadModel("", "Bob.obj");
@@ -166,7 +166,7 @@ void GameScene::Update() {
 	score_->Update();
 
 	// ステージBGM
-	audio_->SetMuffle(BGM_, 1.0f);
+	//audio_->SetMuffle(BGM_, 1.0f);
 
 	// シーン切り替え
 	// クリア条件

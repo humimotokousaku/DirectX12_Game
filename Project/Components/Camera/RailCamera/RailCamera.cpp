@@ -42,7 +42,7 @@ void RailCamera::Update() {
 	// 加速時はfovを上げる
 	if (*isBoost_) {
 		// fov
-		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, 52, 1.0f, 0.9f);
+		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, 60, 1.0f, 0.9f);
 		boostVel_ = Lerps::ExponentialInterpolate(boostVel_, 2, 1.0f, 0.1f);
 	}
 	else {
@@ -90,8 +90,6 @@ void RailCamera::Update() {
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
 #ifdef _DEBUG
-
-#endif // _DEBUG
 	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
@@ -99,6 +97,8 @@ void RailCamera::Update() {
 	ImGui::Checkbox("isMove", &isMove_);
 	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100,100);
 	ImGui::End();
+#endif // _DEBUG
+
 
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();
