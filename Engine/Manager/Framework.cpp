@@ -62,22 +62,22 @@ void Framework::Initialize() {
 }
 
 void Framework::Update() {
-	GameTimer::GetInstance()->Tick();
+	//GameTimer::GetInstance()->Tick();
 #ifdef _DEBUG
-	ImGui::Begin("Light");
-	if (ImGui::TreeNode("PointLight")) {
-		pointLight_->ImGuiAdjustParameter();
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("DirectinalLight")) {
-		directionalLight_->ImGuiAdjustParameter();
-		ImGui::TreePop();
-	}
-	if (ImGui::TreeNode("SpotLight")) {
-		spotLight_->ImGuiAdjustParameter();
-		ImGui::TreePop();
-	}
-	ImGui::End();
+	//ImGui::Begin("Light");
+	//if (ImGui::TreeNode("PointLight")) {
+	//	pointLight_->ImGuiAdjustParameter();
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("DirectinalLight")) {
+	//	directionalLight_->ImGuiAdjustParameter();
+	//	ImGui::TreePop();
+	//}
+	//if (ImGui::TreeNode("SpotLight")) {
+	//	spotLight_->ImGuiAdjustParameter();
+	//	ImGui::TreePop();
+	//}
+	//ImGui::End();
 #endif
 }
 
