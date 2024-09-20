@@ -8,16 +8,12 @@ Enemy::Enemy() {
 
 }
 Enemy::~Enemy() {
-	collisionManager_->ClearColliderList(this);
 	models_.clear();
 }
 
 void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
-	// colliderの設定
-	SetCollisionPrimitive(kCollisionOBB);
-	SetCollisionAttribute(kCollisionAttributeEnemy);
-	SetCollisionMask(~kCollisionAttributeEnemy);
-	collisionManager_->SetColliderList(this);
+	// 衝突マネージャーのインスタンスを取得
+	collisionManager_ = CollisionManager::GetInstance();
 
 	object3d_ = std::make_unique<Object3D>();
 	object3d_->Initialize();
@@ -27,6 +23,15 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
 	object3d_->worldTransform.UpdateMatrix();
+
+	// colliderの設定
+	bodyCollider_ = std::make_unique<Collider>();
+	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
+	bodyCollider_->SetCollisionAttribute(kCollisionAttributeEnemy);
+	bodyCollider_->SetCollisionMask(~kCollisionAttributeEnemy);
+	bodyCollider_->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
+	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
+	collisionManager_->SetColliderList(bodyCollider_.get());
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
@@ -47,6 +52,8 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 void Enemy::Update() {
 	// 状態遷移
 	state_->Update(this);
+
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void Enemy::Draw() {
@@ -116,7 +123,6 @@ void Enemy::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->SetCamera(camera_);
 	newBullet->SetPlayer(player_);
-	newBullet->SetCollisionManager(collisionManager_);
 	newBullet->Initialize(models_[1], object3d_->worldTransform.translate, velocity);
 
 	// 弾を登録
@@ -124,13 +130,13 @@ void Enemy::Fire() {
 }
 
 Vector3 Enemy::GetRotation() {
-	Vector3 rotate;// = model_->worldTransform.transform.rotate;
+	Vector3 rotate = object3d_->worldTransform.rotate;
 	return rotate;
 }
 
 Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数
-	Vector3 worldPos{};// = model_->worldTransform.transform.translate;
+	Vector3 worldPos{};
 	// ワールド行列の平行移動成分を取得
 	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
 	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];

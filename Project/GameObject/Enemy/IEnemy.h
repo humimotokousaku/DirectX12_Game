@@ -60,8 +60,6 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	// 衝突マネージャのアドレスを設定
-	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	// エネミーマネージャのアドレスを設定
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
 	// 移動速度を設定
@@ -82,6 +80,9 @@ protected:
 	std::vector<Model*> models_;
 	// 敵の3DObject
 	std::unique_ptr<Object3D> object3d_;
+
+	// 当たり判定
+	std::unique_ptr<Collider> bodyCollider_;
 
 	Player* player_;
 	// カメラのアドレス

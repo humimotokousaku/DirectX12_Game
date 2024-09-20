@@ -7,7 +7,7 @@
 /// <summary>
 /// 自キャラの弾
 /// </summary>
-class PlayerBullet : public Collider{
+class PlayerBullet{
 public: // メンバ関数
 
 	PlayerBullet() = default;
@@ -38,6 +38,11 @@ public: // メンバ関数
 	// 死亡フラグの取得
 	bool IsDead() const { return isDead_; }
 
+	// ワールド行列の平行移動成分を取得
+	Vector3 GetWorldPosition();
+	// 角度
+	Vector3 GetRotation();
+
 	///
 	/// Setter
 	/// 
@@ -47,24 +52,16 @@ public: // メンバ関数
 
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	// 衝突マネージャのアドレスを設定
-	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 
-	///
-	/// 純粋仮想関数
-	/// 
-
-	// ワールド行列の平行移動成分を取得
-	Vector3 GetWorldPosition() override;
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(Collider* collider) override;
-	// 角度
-	Vector3 GetRotation() override;
-
+	void OnCollision(Collider* collider);
 
 private: // メンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;
+
+	// 当たり判定
+	std::unique_ptr<Collider> bodyCollider_;
 
 	// カメラのアドレス
 	Camera* camera_;

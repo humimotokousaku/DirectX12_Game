@@ -147,7 +147,6 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed) {
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
-	enemy->SetCollisionManager(collisionManager_);
 	enemy->SetEnemyManager(this);
 	// Blenderで設定した移動速度を代入
 	enemy->SetMoveSpeed(moveSpeed);
@@ -180,7 +179,6 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
-	enemy->SetCollisionManager(collisionManager_);
 	enemy->SetEnemyManager(this);
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);

@@ -7,12 +7,15 @@
 #include <cassert>
 
 EnemyBullet::~EnemyBullet() {
-	collisionManager_->ClearColliderList(this);
+	collisionManager_->ClearColliderList(bodyCollider_.get());
 }
 
 void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
 	// NULLポインタチェック
 	assert(model);
+
+	// 衝突マネージャーのインスタンスを取得
+	collisionManager_ = CollisionManager::GetInstance();
 
 	// モデルを設定
 	object3d_ = std::make_unique<Object3D>();
@@ -28,10 +31,13 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->SetColor(Vector4{ 1.0f,0.0f,0.0f,1.0f });
 
 	// colliderの設定
-	SetCollisionPrimitive(kCollisionOBB);
-	SetCollisionAttribute(kCollisionAttributeEnemy);
-	SetCollisionMask(~kCollisionAttributeEnemy);
-	collisionManager_->SetColliderList(this);
+	bodyCollider_ = std::make_unique<Collider>();
+	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
+	bodyCollider_->SetCollisionAttribute(kCollisionAttributeEnemy);
+	bodyCollider_->SetCollisionMask(~kCollisionAttributeEnemy);
+	bodyCollider_->SetOnCollision(std::bind(&EnemyBullet::OnCollision, this, std::placeholders::_1));
+	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
+	collisionManager_->SetColliderList(bodyCollider_.get());
 
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
@@ -78,7 +84,6 @@ Vector3 EnemyBullet::GetWorldPosition() {
 	return worldPos;
 }
 
-Vector3 EnemyBullet::GetRotation()
-{
-	return Vector3();
+Vector3 EnemyBullet::GetRotation() {
+	return object3d_->worldTransform.rotate;
 }

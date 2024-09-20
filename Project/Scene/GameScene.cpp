@@ -57,7 +57,6 @@ void GameScene::Initialize() {
 	// 必要なクラスのアドレスをセットする
 	player_.SetCamera(followCamera_.GetCamera());
 	player_.SetGameScene(this);
-	player_.SetCollisionManager(&collisionManager_);
 	player_.Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_.SetParent(&railCamera_.GetWorldTransform());
@@ -70,7 +69,6 @@ void GameScene::Initialize() {
 	enemyManager_.AddModel(models_[4]);
 	// アドレスを設定
 	enemyManager_.SetCamera(followCamera_.GetCamera());
-	enemyManager_.SetCollisionManager(&collisionManager_);
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetSpawnPoints(enemyPoints_);
 	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
@@ -158,9 +156,6 @@ void GameScene::Update() {
 	railCamera_.Update();
 	followCamera_.SetPlayerPos(railCamera_.GetWorldTransform().translate);
 	followCamera_.Update();
-
-	// 衝突マネージャー(当たり判定)
-	collisionManager_.CheckAllCollisions();
 
 	// スコア
 	score_->Update();

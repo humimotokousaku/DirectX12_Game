@@ -13,7 +13,7 @@
 
 class AimAssist;
 class GameScene;
-class Player : public Collider {
+class Player {
 public:// パブリックなメンバ関数
 	/// 
 	/// Default Method
@@ -71,8 +71,6 @@ public:
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// ゲームシーンのアドレスを設定
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
-	// 衝突マネージャのアドレスを設定
-	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
 	// ロックオンフラグのアドレス取得
 	void SetIsLockOn(bool* isLockOn) { isLockOn_ = isLockOn; }
 	/// <summary>
@@ -92,16 +90,12 @@ public:
 
 #pragma endregion
 
-	///
-	/// 純粋仮想関数
-	/// 
-
 	// ワールド座標
-	Vector3 GetWorldPosition() override;
+	Vector3 GetWorldPosition();
 	// 角度
-	Vector3 GetRotation() override;
+	Vector3 GetRotation();
 	// 衝突判定
-	void OnCollision(Collider* collider)override;
+	void OnCollision(Collider* collider);
 
 private:// プライベートなメンバ関数
 	/// <summary>
@@ -179,27 +173,40 @@ private:// プライベートなメンバ変数
 	// ゲームパッド
 	XINPUT_STATE joyState_;
 
-	// 自機
-	std::unique_ptr<Object3D> object3d_;
-	// 3Dレティクルの座標
-	std::array<std::unique_ptr<Object3D>,2> object3dReticle_;
-	// ロックオンしていないときのレティクル座標
-	WorldTransform default3dReticle_;
 	// 使用するモデル
 	std::vector<Model*> models_;
+
+private:
+	// 自機
+	std::unique_ptr<Object3D> object3d_;
+
+	// 3Dレティクルの座標
+	std::array<std::unique_ptr<Object3D>, 2> object3dReticle_;
+	// ロックオンしていないときのレティクル座標
+	WorldTransform default3dReticle_;
+
 	// 2Dレティクル用のスプライト
-	std::array<Sprite,3> sprite2DReticle_;
+	std::array<Sprite, 3> sprite2DReticle_;
 	// HP用のスプライト
 	Sprite hpSprite_;
+
 	// 自機の軌道パーティクル
 	std::unique_ptr<Particles> particle_;
+
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+
+	// 当たり判定
+	std::unique_ptr<Collider> bodyCollider_;
+
+#pragma region アニメーション
 	// ロックオン時のアニメーション
 	Animation reticleAnim_;
 	// ブースト時のアニメーション
 	Animation boostRotAnim_;
+#pragma endregion
 
+#pragma region テクスチャ
 	// レティクルハンドル
 	uint32_t reticleTexture_ = 0u;
 	// ロックオン時のレティクル
@@ -208,12 +215,16 @@ private:// プライベートなメンバ変数
 	uint32_t playerTexture_ = 0u;
 	// パーティクルテクスチャ
 	uint32_t defaultTexture = 0u;
+#pragma endregion
 
+#pragma region 音
 	// 射撃SE
 	uint32_t shotSE_;
 
 	std::array<uint32_t, 3> dyingSE_;
+#pragma endregion
 
+#pragma region 他のクラスのアドレス
 	// カメラのアドレス
 	Camera* camera_;
 	// ゲームシーンのアドレス
@@ -222,6 +233,7 @@ private:// プライベートなメンバ変数
 	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス
 	CollisionManager* collisionManager_;
+#pragma endregion
 
 	// 自機の移動速度
 	Vector3 moveVel_;
@@ -234,12 +246,10 @@ private:// プライベートなメンバ変数
 
 	// ロックオン時のレティクルの補間量
 	Vector3* lockOnReticleOffset_;
-#pragma region カメラ演出
 	// カメラの移動
 	Vector3 cameraOffset_;
 	// カメラの回転
 	Vector3 cameraRotateOffset_;
-#pragma endregion
 
 	// HPテクスチャのサイズ
 	Vector2 hpSize_;

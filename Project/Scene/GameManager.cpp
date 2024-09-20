@@ -15,6 +15,9 @@ GameManager::~GameManager() {
 void GameManager::Initialize() {
 	Framework::Initialize();
 
+	// 衝突マネージャーを作成
+	collisionManager_ = CollisionManager::GetInstance();
+
 	//初期シーンの設定
 	sceneNum_ = TITLE_SCENE;
 	// シーンごとの初期化
@@ -36,6 +39,9 @@ void GameManager::Update() {
 
 	//シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		// コライダーリストをすべて削除
+		collisionManager_->ClearColliderList();
+
 		// ポストエフェクトを使用しないスプライトリストを消す
 		postEffectManager_->ClearSpriteList();
 		// ポストエフェクト機能を停止する
@@ -70,6 +76,8 @@ void GameManager::Update() {
 	/// 更新処理
 	/// 
 	sceneArr_[sceneNum_]->Update();
+	// 衝突マネージャー(当たり判定)
+	collisionManager_->CheckAllCollisions();
 
 #ifdef _DEBUG
 	// FPSカウンターの表示

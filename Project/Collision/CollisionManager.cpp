@@ -5,12 +5,19 @@ CollisionManager::~CollisionManager() {
 	ClearColliderList();
 }
 
+CollisionManager* CollisionManager::GetInstance() {
+	static CollisionManager instance;
+	return &instance;
+}
+
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	// 衝突フィルタリング
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
+	// お互いが当たり判定をとる状態か
+	if (!colliderA->GetIsActive() || !colliderB->GetIsActive()) { return; }
 
 	/// 球体同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
@@ -25,8 +32,10 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
 			// コライダーAの衝突時コールバックを呼び出す
 			colliderA->OnCollision(colliderB);
+			colliderA->worldTransform.UpdateMatrix();
 			// コライダーBの衝突時コールバックを呼び出す
 			colliderB->OnCollision(colliderA);
+			colliderB->worldTransform.UpdateMatrix();
 
 			// 今当たっている
 			colliderA->SetIsOnCollision(true);
@@ -52,8 +61,10 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->SetIsOnCollision(true);
 			// コライダーAの衝突時コールバックを呼び出す
 			colliderA->OnCollision(colliderB);
+			colliderA->worldTransform.UpdateMatrix();
 			// コライダーBの衝突時コールバックを呼び出す
 			colliderB->OnCollision(colliderA);
+			colliderB->worldTransform.UpdateMatrix();
 		}
 		else {
 			// 今は当たっていない
@@ -61,6 +72,10 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->SetIsOnCollision(false);
 		}
 	}
+
+	// ワールドトランスフォーム更新
+	colliderA->worldTransform.UpdateMatrix();
+	colliderB->worldTransform.UpdateMatrix();
 
 	// 前のフレームで当たっていたかを更新
 	colliderA->SetIsPreOnCollision(colliderA->GetIsOnCollision());
@@ -87,7 +102,7 @@ void CollisionManager::CheckAllCollisions() {
 
 bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 各方向ベクトルの確保
-	// （N***:標準化方向ベクトル）
+	// N***:標準化方向ベクトル
 	Vector3 NAe1 = obb1.m_NormaDirect[0], Ae1 = Multiply(obb1.m_fLength.x, NAe1);
 	Vector3 NAe2 = obb1.m_NormaDirect[1], Ae2 = Multiply(obb1.m_fLength.y, NAe2);
 	Vector3 NAe3 = obb1.m_NormaDirect[2], Ae3 = Multiply(obb1.m_fLength.z, NAe3);

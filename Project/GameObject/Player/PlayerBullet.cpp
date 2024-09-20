@@ -4,10 +4,13 @@
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {
-	collisionManager_->ClearColliderList(this);
+	collisionManager_->ClearColliderList(bodyCollider_.get());
 }
 
 void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
+	// 衝突マネージャーのインスタンスを取得
+	collisionManager_ = CollisionManager::GetInstance();
+
 	// モデルの生成
 	object3d_ = std::make_unique<Object3D>();
 	object3d_->Initialize();
@@ -15,11 +18,14 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->SetCamera(camera_);
 
 	// colliderの設定
-	SetDamage(40);
-	SetCollisionPrimitive(kCollisionOBB);
-	SetCollisionAttribute(kCollisionAttributePlayer);
-	SetCollisionMask(~kCollisionAttributePlayer);
-	collisionManager_->SetColliderList(this);
+	bodyCollider_ = std::make_unique<Collider>();
+	bodyCollider_->SetDamage(40);
+	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
+	bodyCollider_->SetCollisionAttribute(kCollisionAttributePlayer);
+	bodyCollider_->SetCollisionMask(~kCollisionAttributePlayer);
+	bodyCollider_->SetOnCollision(std::bind(&PlayerBullet::OnCollision, this, std::placeholders::_1));
+	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
+	collisionManager_->SetColliderList(bodyCollider_.get());
 
 	// ワールド変換の初期化
 	object3d_->worldTransform.Initialize();
@@ -69,7 +75,7 @@ void PlayerBullet::OnCollision(Collider* collider) {
 
 Vector3 PlayerBullet::GetRotation()
 {
-	return Vector3();
+	return object3d_->worldTransform.rotate;
 }
 
 Vector3 PlayerBullet::GetWorldPosition() {

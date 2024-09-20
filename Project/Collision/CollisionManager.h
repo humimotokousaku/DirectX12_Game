@@ -8,6 +8,12 @@ public:
 	~CollisionManager();
 
 	/// <summary>
+	/// シングルトン
+	/// </summary>
+	/// <returns></returns>
+	static CollisionManager* GetInstance();
+
+	/// <summary>
 	/// 当たっているなら衝突応答関数を呼ぶ
 	/// </summary>
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);

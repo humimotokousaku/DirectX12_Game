@@ -1,7 +1,6 @@
 #include "Dissolve.h"
 
-Dissolve::Dissolve()
-{
+Dissolve::Dissolve() {
 
 }
 

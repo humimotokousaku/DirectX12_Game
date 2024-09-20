@@ -67,8 +67,6 @@ private:// プライベートなメンバ変数
 	std::list<PlayerBullet*> playerBullets_;
 	// ロックオン機能
 	AimAssist* aimAssist_;
-	// 衝突マネージャー
-	CollisionManager collisionManager_;
 	// エネミーマネージャ
 	EnemyManager enemyManager_;
 	// カメラレール

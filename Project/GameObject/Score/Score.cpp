@@ -70,7 +70,6 @@ void Score::Update() {
 		// それぞれの桁に適した数値の画像を差し替える
 		numSprite_[i]->SetTextureIndex(numbersTexture_[eachScore_[i]]);
 	}
-
 }
 
 void Score::AddScore(int value) {

@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "WorldTransform.h"
 
-class EnemyBullet : public Collider {
+class EnemyBullet {
 public:// パブリックなメンバ関数
 	///
 	/// Default Method
@@ -54,23 +54,20 @@ public:// パブリックなメンバ関数
 	void SetPlayer(Player* player) { player_ = player; }
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	// 衝突マネージャのアドレスを設定
-	void SetCollisionManager(CollisionManager* collisionManager) { collisionManager_ = collisionManager; }
-
-	///
-	/// 純粋仮想関数
-	/// 
 
 	// 衝突を検出したら呼び出されるコールバック関数
-	void OnCollision(Collider* collider) override;
+	void OnCollision(Collider* collider);
 	// ワールド行列の平行移動成分を取得
-	Vector3 GetWorldPosition() override;
+	Vector3 GetWorldPosition();
 	// 角度
-	Vector3 GetRotation() override;
+	Vector3 GetRotation();
 
 private: // プライベートなメンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;
+
+	// 当たり判定
+	std::unique_ptr<Collider> bodyCollider_;
 
 	// プレイヤーのアドレス
 	Player* player_ = nullptr;

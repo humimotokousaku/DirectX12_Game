@@ -1,6 +1,7 @@
 #pragma once
 #include "Framework.h"
 #include "SceneTransition/SceneTransition.h"
+#include "CollisionManager.h"
 
 class GameManager : public Framework
 {	
@@ -42,6 +43,10 @@ private:
 	int sceneNum_;
 	int preSceneNum_;
 
+	// シーン遷移
 	SceneTransition* sceneTransition_;
+
+	// 衝突マネージャー
+	CollisionManager* collisionManager_;
 };
 

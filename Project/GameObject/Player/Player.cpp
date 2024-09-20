@@ -18,16 +18,9 @@ void Player::Initialize() {
 	// シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+	collisionManager_ = CollisionManager::GetInstance();
 	// 射撃SEの読み込み
 	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
-
-	//dyingSE_[0] = audio_->SoundLoadWave("Audio/dying_00.wav");
-	//dyingSE_[1] = audio_->SoundLoadWave("Audio/dying_01.wav");
-	//dyingSE_[2] = audio_->SoundLoadWave("Audio/dying_02.wav");
-	//for (int i = 0; i < 3; i++) {
-	//	audio_->SoundPlayWave(dyingSE_[i], true, 0.1f);
-	//	audio_->SoundStop(dyingSE_[i]);
-	//}
 
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
@@ -92,10 +85,13 @@ void Player::Initialize() {
 	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
 
 	// colliderの設定
-	SetCollisionPrimitive(kCollisionOBB);
-	SetCollisionAttribute(kCollisionAttributePlayer);
-	SetCollisionMask(~kCollisionAttributePlayer);
-	collisionManager_->SetColliderList(this);
+	bodyCollider_ = std::make_unique<Collider>();
+	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
+	bodyCollider_->SetCollisionAttribute(kCollisionAttributePlayer);
+	bodyCollider_->SetCollisionMask(~kCollisionAttributePlayer);
+	bodyCollider_->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
+	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
+	collisionManager_->SetColliderList(bodyCollider_.get());
 
 	// エイムアシスト作成
 	aimAssist_ = AimAssist::GetInstance();
@@ -447,7 +443,6 @@ void Player::Attack() {
 			// 弾を生成し、初期化
 			PlayerBullet* newBullet = new PlayerBullet();
 			newBullet->SetCamera(camera_);
-			newBullet->SetCollisionManager(collisionManager_);
 			newBullet->Initialize(models_[2], worldPos, velocity);
 			// 弾を登録
 			gameScene_->AddPlayerBullet(newBullet);
@@ -468,7 +463,7 @@ void Player::Attack() {
 void Player::DecrementHP() {
 	// 今無敵か
 	if (!isInvinsible_) {
-		if (PressOnCollision()) {
+		if (bodyCollider_->PressOnCollision()) {
 			// とりあえず固定で30ダメ食らう
 			hp_ -= 30;
 			// 死んでいる

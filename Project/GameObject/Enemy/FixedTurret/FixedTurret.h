@@ -5,7 +5,7 @@
 #include "EnemyBullet.h"
 #include <vector>
 
-class FixedTurret : public Collider, public IEnemy {
+class FixedTurret : public IEnemy {
 public:
 	FixedTurret();
 	~FixedTurret() override;
@@ -28,11 +28,11 @@ public:
 	void Draw() override;
 
 	// ワールド座標
-	Vector3 GetWorldPosition() override;
+	Vector3 GetWorldPosition();
 	// 角度
-	Vector3 GetRotation() override;
+	Vector3 GetRotation();
 	// 衝突判定
-	void OnCollision(Collider* collider)override;
+	void OnCollision(Collider* collider);
 
 	///
 	/// User Method
