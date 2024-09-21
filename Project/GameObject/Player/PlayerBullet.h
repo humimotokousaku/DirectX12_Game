@@ -60,9 +60,6 @@ private: // メンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;
 
-	// 当たり判定
-	std::unique_ptr<Collider> bodyCollider_;
-
 	// カメラのアドレス
 	Camera* camera_;
 	// 衝突マネージャー

@@ -5,6 +5,7 @@
 #include "ModelManager.h"
 #include "Sphere.h"
 #include "PipelineManager.h"
+#include "Collider.h"
 
 class Object3D {
 public:
@@ -202,13 +203,18 @@ public:
 #pragma endregion
 
 public:// パブリックな変数
+	// ワールドトランスフォーム
 	WorldTransform worldTransform;
+	// 衝突判定(初期設定は判定をとらない)
+	std::unique_ptr<Collider> collider;
 
 private:// プライベートな変数
 	// カメラ
 	Camera* camera_;
+
 	// モデル
 	Model* model_;
+
 	// アニメーション
 	std::vector<Motion> animation_;
 	float animationTime_ = 0.0f;

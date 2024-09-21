@@ -29,6 +29,13 @@ void Player::Initialize() {
 	object3d_->SetCamera(camera_);
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	object3d_->worldTransform.UpdateMatrix();
+	// colliderの設定
+	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
+	object3d_->collider->SetCollisionAttribute(kCollisionAttributePlayer);
+	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
+	object3d_->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetIsActive(true);
+	
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 
@@ -84,14 +91,7 @@ void Player::Initialize() {
 	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
 	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
 
-	// colliderの設定
-	bodyCollider_ = std::make_unique<Collider>();
-	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
-	bodyCollider_->SetCollisionAttribute(kCollisionAttributePlayer);
-	bodyCollider_->SetCollisionMask(~kCollisionAttributePlayer);
-	bodyCollider_->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
-	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
-	collisionManager_->SetColliderList(bodyCollider_.get());
+
 
 	// エイムアシスト作成
 	aimAssist_ = AimAssist::GetInstance();
@@ -463,7 +463,7 @@ void Player::Attack() {
 void Player::DecrementHP() {
 	// 今無敵か
 	if (!isInvinsible_) {
-		if (bodyCollider_->PressOnCollision()) {
+		if (object3d_->collider->PressOnCollision()) {
 			// とりあえず固定で30ダメ食らう
 			hp_ -= 30;
 			// 死んでいる

@@ -81,9 +81,6 @@ protected:
 	// 敵の3DObject
 	std::unique_ptr<Object3D> object3d_;
 
-	// 当たり判定
-	std::unique_ptr<Collider> bodyCollider_;
-
 	Player* player_;
 	// カメラのアドレス
 	Camera* camera_;

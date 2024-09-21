@@ -196,9 +196,6 @@ private:
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
-	// 当たり判定
-	std::unique_ptr<Collider> bodyCollider_;
-
 #pragma region アニメーション
 	// ロックオン時のアニメーション
 	Animation reticleAnim_;

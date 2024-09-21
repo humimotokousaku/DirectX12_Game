@@ -4,6 +4,8 @@
 Collider::Collider() {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
+	// コライダーリスト登録
+	collisionManager_->SetColliderList(this);
 	// 当たり判定のワールドトランスフォームの初期化
 	worldTransform.Initialize();
 }

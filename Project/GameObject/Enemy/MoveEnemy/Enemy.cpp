@@ -25,13 +25,11 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->worldTransform.UpdateMatrix();
 
 	// colliderの設定
-	bodyCollider_ = std::make_unique<Collider>();
-	bodyCollider_->SetCollisionPrimitive(kCollisionOBB);
-	bodyCollider_->SetCollisionAttribute(kCollisionAttributeEnemy);
-	bodyCollider_->SetCollisionMask(~kCollisionAttributeEnemy);
-	bodyCollider_->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
-	bodyCollider_->worldTransform.parent_ = &object3d_->worldTransform;
-	collisionManager_->SetColliderList(bodyCollider_.get());
+	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
+	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
+	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
+	object3d_->collider->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetIsActive(true);
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 

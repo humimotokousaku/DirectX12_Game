@@ -15,6 +15,11 @@ void Object3D::Initialize() {
 	model_ = new Model();
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
+
+	// 衝突判定
+	collider = std::make_unique<Collider>();
+	collider->worldTransform.parent_ = &worldTransform;
+	collider->SetIsActive(false);
 }
 
 void Object3D::Draw(uint32_t textureNum, int fillMode) {
