@@ -15,7 +15,7 @@ void LeftHand::Initialize(const WorldTransform* parent, Camera* camera, Model* m
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
-	//object3d_->collider->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetOnCollision(std::bind(&LeftHand::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 
 	// HP
@@ -34,4 +34,13 @@ void LeftHand::Update() {
 
 void LeftHand::Draw() {
 	object3d_->Draw();
+}
+
+void LeftHand::OnCollision(Collider* collider) {
+	if (hp_ <= 0.0f) {
+		isDead_ = true;
+	}
+	else {
+		hp_ = hp_ - collider->GetDamage();
+	}
 }

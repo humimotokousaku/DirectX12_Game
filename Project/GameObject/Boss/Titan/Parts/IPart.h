@@ -22,6 +22,12 @@ public:
 	/// </summary>
 	virtual void Draw() = 0;
 
+	/// <summary>
+	/// 衝突応答
+	/// </summary>
+	/// <param name="collider">当たった相手のコライダ</param>
+	virtual void OnCollision(Collider* collider) = 0;
+
 	///
 	/// User Method
 	/// 

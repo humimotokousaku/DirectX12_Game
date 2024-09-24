@@ -18,7 +18,7 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	object3d_->collider->SetOnCollision(std::bind(&Titan::OnCollision, this, std::placeholders::_1));
-	object3d_->collider->SetIsActive(false);
+	object3d_->collider->SetIsActive(true);
 
 	// パーツの生成
 	partsManager_ = std::make_unique<PartsManager>();
@@ -46,6 +46,11 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 
 void Titan::Update() {
 	partsManager_->Update();
+	object3d_->worldTransform.UpdateMatrix();
+	ImGui::Begin("Titan");
+	ImGui::DragFloat3("BodyPos", &object3d_->worldTransform.translate.x, 0.1f, -100.0f, 100.0f);
+	ImGui::DragFloat3("BodyRot", &object3d_->worldTransform.rotate.x, 0.01f, -6.28f, 6.28f);
+	ImGui::End();
 }
 
 void Titan::Draw() {

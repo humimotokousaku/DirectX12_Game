@@ -39,7 +39,7 @@ private:
 	// 左手の生成
 	void CreateLeftHand(int id);
 	// 弱点の生成
-	void CreateWeakness(int id);
+	void CreateWeakPoint(int id);
 
 public:
 #pragma region Getter
@@ -62,7 +62,7 @@ private:
 	std::vector<Model*> models_;
 
 	// ボスのパーツ
-	std::vector<IPart*> parts_;
+	std::list<IPart*> parts_;
 
 	// ボスの体(親子関係の親に当たるオブジェクト)
 	WorldTransform* rootObject_;

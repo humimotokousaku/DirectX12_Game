@@ -33,9 +33,22 @@ void PartsManager::Initialize(WorldTransform* object3d, Camera* camera, EnemyMan
 }
 
 void PartsManager::Update() {
+	// 死んだパーツを削除
+	parts_.remove_if([](IPart* part) {
+		if (part->IsDead()) {
+			delete part;
+			return true;
+		}
+		return false;
+		});
 	for (IPart* part : parts_) {
 		part->Update();
 	}
+
+	ImGui::Begin("Parts");
+	ImGui::DragFloat3("BodyPos", &rootObject_->translate.x, 0.1f, -100.0f, 100.0f);
+	ImGui::DragFloat3("BodyRot", &rootObject_->rotate.x, 0.01f, -6.28f, 6.28f);
+	ImGui::End();
 }
 
 void PartsManager::Draw() {
@@ -60,6 +73,6 @@ void PartsManager::CreateLeftHand(int id) {
 	parts_.push_back(leftHand);
 }
 
-void PartsManager::CreateWeakness(int id) {
+void PartsManager::CreateWeakPoint(int id) {
 
 }

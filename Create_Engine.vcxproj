@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Boss\Titan\State\ITitanState.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\PartsManager.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\LeftHand.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\IPart.cpp" />
@@ -258,8 +259,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\Score\Score.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Titan.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\RightHand.cpp" />
+    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWaitState.cpp" />
+    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.cpp" />
+    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Boss\Titan\State\ITitanState.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\PartsManager.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\LeftHand.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\IPart.h" />
@@ -363,6 +368,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\Score\Score.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Titan.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\RightHand.h" />
+    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWaitState.h" />
+    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.h" />
+    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />

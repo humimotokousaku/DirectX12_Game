@@ -1,6 +1,6 @@
-#include "RightHand.h"
+#include "WeakPoint.h"
 
-void RightHand::Initialize(const WorldTransform* parent, Camera* camera, Model* model, int id) {
+void WeakPoint::Initialize(const WorldTransform* parent, Camera* camera, Model* model, int id) {
 	model_ = model;
 	camera_ = camera;
 
@@ -15,7 +15,7 @@ void RightHand::Initialize(const WorldTransform* parent, Camera* camera, Model* 
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
-	object3d_->collider->SetOnCollision(std::bind(&RightHand::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetOnCollision(std::bind(&WeakPoint::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 
 	// HP
@@ -28,15 +28,15 @@ void RightHand::Initialize(const WorldTransform* parent, Camera* camera, Model* 
 	score_ = 2000;
 }
 
-void RightHand::Update() {
+void WeakPoint::Update() {
 	object3d_->worldTransform.UpdateMatrix();
 }
 
-void RightHand::Draw() {
+void WeakPoint::Draw() {
 	object3d_->Draw();
 }
 
-void RightHand::OnCollision(Collider* collider) {
+void WeakPoint::OnCollision(Collider* collider) {
 	if (hp_ <= 0.0f) {
 		isDead_ = true;
 	}
