@@ -19,8 +19,17 @@ void Player::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	collisionManager_ = CollisionManager::GetInstance();
-	// 射撃SEの読み込み
-	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
+	// エイムアシスト作成
+	aimAssist_ = AimAssist::GetInstance();
+
+#pragma region 読み込み
+	// 射撃SE
+	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");	
+	// 自機のテクスチャ
+	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
+	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
+	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
+#pragma endregion
 
 	// 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
@@ -35,11 +44,9 @@ void Player::Initialize() {
 	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
 	object3d_->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
-	
-	// 自機のテクスチャ
-	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 
-	// 3Dレティクルモデル作成
+#pragma region レティクル
+	// 3Dレティクルモデル作成(デバッグ用)
 	for (int i = 0; i < 2; i++) {
 		object3dReticle_[i] = std::make_unique<Object3D>();
 		object3dReticle_[i]->Initialize();
@@ -60,6 +67,7 @@ void Player::Initialize() {
 		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
 		PostEffectManager::GetInstance()->AddSpriteList(&sprite2DReticle_[i]);
 	}
+#pragma endregion
 
 	// HP作成
 	hpSize_ = kMaxHPSize;
@@ -71,6 +79,7 @@ void Player::Initialize() {
 	hpSprite_.SetColor(Vector4{ 0,1,0,1 });
 	PostEffectManager::GetInstance()->AddSpriteList(&hpSprite_);
 
+#pragma region パーティクル
 	// 自機の軌道パーティクルの作成
 	particle_ = std::make_unique<Particles>();
 	particle_->Initialize(GetWorldPosition());
@@ -87,20 +96,15 @@ void Player::Initialize() {
 	particle_->particle_.transform.translate = { 0.0f,0.0f,0.0f };
 	particle_->particle_.transform.scale = { 0.1f,0.1f,0.1f };
 	particle_->particle_.vel = { 0.0f,0.0f,0.0f };
+#pragma endregion
 
-	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
-	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("DefaultTexture", "white.png");
-
-
-
-	// エイムアシスト作成
-	aimAssist_ = AimAssist::GetInstance();
-
+#pragma region アニメーションの設定
 	// ロックオン時のレティクルのアニメーション
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
 	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
 	boostRotVelZ_ = 0.0f;
+#pragma endregion
 
 	isDead_ = false;
 	// HP

@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "FixedTurret.h"
 #include "EnemyBullet.h"
+#include "Boss/Titan/Titan.h"
 #include "Player.h"
 #include "Camera.h"
 #include "CollisionManager.h"
@@ -66,6 +67,11 @@ private:
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
 	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
+	/// <summary>
+	///	巨人の発生(ボス)
+	/// </summary>
+	/// <param name="pos">発生する座標</param>
+	void SpawnTitan(Vector3 pos, Vector3 rotate);
 
 	// カメラの後ろに敵が行ってしまったら機能停止
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition);

@@ -1,12 +1,12 @@
 #include "EnemyManager.h"
 
 EnemyManager::~EnemyManager() {
-	// 通常敵
+	// 敵
 	for (IEnemy* enemy : enemy_) {
 		delete enemy;
 	}
 	enemy_.clear();
-	// 通常敵の弾
+	// 敵の弾
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
 	}
@@ -40,6 +40,8 @@ void EnemyManager::Initialize() {
 
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
+
+	SpawnTitan(Vector3{ 0,2,10 }, Vector3{ 0,3.14f,0 });
 }
 
 void EnemyManager::Update() {
@@ -184,6 +186,34 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
 	enemy_.push_back(enemy);
+
+	// 管理番号更新
+	id_++;
+
+	// 出現時のパーティクルを生成
+	Particles* particle = new Particles();
+	particle->Initialize(pos);
+	particle->SetCamera(camera_);
+	particle->SetEmitterFrequency(1);
+	particle->SetEmitterCount(20);
+	particle->SetEmitterSpawnCount(1);
+	particle->randomScaleLimit = { 0.3f, 0.4f };
+	spawnParticles_.push_back(particle);
+}
+
+void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
+	Titan* boss = new Titan();
+
+	// 敵モデルを追加
+	boss->AddModel(models_[0]);
+	// 必要なアドレスを設定
+	boss->SetPlayer(player_);
+	boss->SetCamera(camera_);
+	boss->SetEnemyManager(this);
+	// 初期化
+	boss->Initialize(pos, rotate, id_);
+	// リストに登録
+	enemy_.push_back(boss);
 
 	// 管理番号更新
 	id_++;

@@ -61,8 +61,7 @@ void GameScene::Initialize() {
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_.SetParent(&railCamera_.GetWorldTransform());
 
-	// エネミーマネージャの生成
-	enemyManager_.Initialize();
+	/// エネミーマネージャの生成
 	// 通常敵の体
 	enemyManager_.AddModel(models_[3]);
 	// 通常敵の弾
@@ -72,6 +71,8 @@ void GameScene::Initialize() {
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetSpawnPoints(enemyPoints_);
 	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
+	// 初期化
+	enemyManager_.Initialize();
 
 	// 自機のロックオンクラス生成
 	aimAssist_ = AimAssist::GetInstance();
