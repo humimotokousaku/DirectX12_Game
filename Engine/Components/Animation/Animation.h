@@ -98,6 +98,17 @@ public: // メンバ関数
 	// アニメーションに必要なパラメータを先頭のリスト情報を上書き
 	// 無い場合はリストに登録
 	void SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
+	/// <summary>
+	/// 任意のアニメーション情報を上書き
+	/// </summary>
+	/// <param name="index">対象の要素番号</param>
+	/// <param name="target">アニメーションする対象</param>
+	/// <param name="start">最初のパラメータ</param>
+	/// <param name="end">終了時のパラメータ</param>
+	/// <param name="endFrame">アニメーション終了時間</param>
+	/// <param name="name">アニメーションの名前</param>
+	/// <param name="easeFunc">使用するイージング関数</param>
+	void AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc);
 #pragma endregion
 
 private: // メンバ変数

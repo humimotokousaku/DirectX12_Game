@@ -5,6 +5,10 @@
 // Parts
 #include "LeftHand.h"
 #include "RightHand.h"
+#include "WeakPoint.h"
+#include <algorithm>
+#include <map>
+#include <optional>
 
 class EnemyManager;
 class Player;
@@ -13,13 +17,22 @@ class Player;
 /// </summary>
 class PartsManager {
 public:
+	// 振るまい
+	enum class TitanBehavior {
+		Wait,			// 通常状態
+		HandAttack,		// シーン遷移開始演出
+		BeamAttack,		// ビーム攻撃
+		RevealWeakPoint	// 弱点露出
+	};
+
+public:
 	PartsManager() = default;
 	~PartsManager();
 
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(WorldTransform* object3d,Camera* camera, EnemyManager* enemyManager, int id);
+	void Initialize(WorldTransform* object3d, Camera* camera, EnemyManager* enemyManager, int id);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -41,9 +54,42 @@ private:
 	// 弱点の生成
 	void CreateWeakPoint(int id);
 
-public:
-#pragma region Getter
+#pragma region 振る舞い
+	// 振る舞いの更新処理
+	void BehaviorUpdate();
 
+	// 待機状態
+	void B_WaitInit();
+	void B_WaitUpdate();
+
+	// 両手攻撃
+	void B_HandAttackInit();
+	void B_HandAttackUpdate();
+
+	// ビーム攻撃
+	void B_BeamAttackInit();
+	void B_BeamAttackUpdate();
+
+	// 弱点露出状態
+	void B_RevealWeakPointInit();
+	void B_RevealWeakPointUpdate();
+#pragma endregion
+
+public:
+#pragma region 振る舞い
+	// パーツを待機状態にする
+	void StartWait() { behaviorRequest_ = TitanBehavior::Wait; }
+	// パーツを両手攻撃状態にする
+	void StartHandAttack() { behaviorRequest_ = TitanBehavior::HandAttack; }
+	// パーツをビーム攻撃状態にする
+	void StartBeamAttack() { behaviorRequest_ = TitanBehavior::BeamAttack; }
+	// パーツを弱点露出状態にする
+	void StartRevealWeakPoint() { behaviorRequest_ = TitanBehavior::RevealWeakPoint; }
+#pragma endregion
+
+#pragma region Getter
+	// 状態変更可能かを取得
+	bool GetIsStateChangeable() { return isStateChangeable_; }
 #pragma endregion
 
 #pragma region Setter
@@ -62,7 +108,7 @@ private:
 	std::vector<Model*> models_;
 
 	// ボスのパーツ
-	std::list<IPart*> parts_;
+	std::map<std::string, IPart*> parts_;
 
 	// ボスの体(親子関係の親に当たるオブジェクト)
 	WorldTransform* rootObject_;
@@ -73,4 +119,12 @@ private:
 	Camera* camera_;
 	// 自機のアドレス
 	Player* player_;
+
+	// 現在の振るまい
+	TitanBehavior behavior_ = TitanBehavior::Wait;
+	// 次の振るまいリクエスト
+	std::optional<TitanBehavior> behaviorRequest_ = std::nullopt;
+
+	// 状態変更可能
+	bool isStateChangeable_ = true;
 };

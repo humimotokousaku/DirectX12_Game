@@ -65,7 +65,9 @@ public:
 	// falseなら機能停止
 	void SetIsActive(bool isActive) { 
 		isActive_ = isActive;
-		// 描画しない
+		// 当たり判定
+		object3d_->collider->SetIsActive(isActive);
+		// 描画
 		object3d_->SetIsActive(isActive);
 	}
 #pragma endregion

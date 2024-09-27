@@ -143,7 +143,7 @@ public:// 定数
 	const Vector3 kMaxRotSpeed = { 0.5f , 0.7f, 1.0f };
 
 	// 移動限界座標
-	const Vector3 kMoveLimit = { 19.0f, 10.0f, 5.0f };
+	const Vector3 kMoveLimit = { 19.0f, 15.0f, 5.0f };
 
 #pragma region カメラ演出
 	// 回転幅

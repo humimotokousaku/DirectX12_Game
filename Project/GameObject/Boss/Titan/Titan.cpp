@@ -1,7 +1,8 @@
 #include "Titan.h"
-
+#include "TitanWaitState.h"
 Titan::~Titan() {
 	models_.clear();
+	delete partsManager_;
 }
 
 void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
@@ -13,6 +14,7 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
+	//object3d_->worldTransform.parent_ = &camera_->worldTransform_;
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
@@ -21,15 +23,21 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetIsActive(true);
 
 	// パーツの生成
-	partsManager_ = std::make_unique<PartsManager>();
-	partsManager_->Initialize(&object3d_->worldTransform, camera_, enemyManager_, id);
+	//partsManager_ = std::make_unique<PartsManager>();
+	partsManager_ = new PartsManager();
 	partsManager_->SetPlayer(player_);
 	partsManager_->SetEnemyManager(enemyManager_);
+	partsManager_->Initialize(&object3d_->worldTransform, camera_, enemyManager_, id);
+
 
 	// 体の位置と向きを設定
 	object3d_->worldTransform.translate = pos;
 	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.UpdateMatrix();
+
+	// 状態遷移
+	state_ = new TitanWaitState(this, player_);
+	state_->Initialize();
 
 	// HP
 	hp_ = 1000;
@@ -45,12 +53,14 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void Titan::Update() {
+	// 状態遷移
+	state_->Update();
+
+	// 各パーツの更新処理
 	partsManager_->Update();
+
+	// ワールドトランスフォームを更新
 	object3d_->worldTransform.UpdateMatrix();
-	ImGui::Begin("Titan");
-	ImGui::DragFloat3("BodyPos", &object3d_->worldTransform.translate.x, 0.1f, -100.0f, 100.0f);
-	ImGui::DragFloat3("BodyRot", &object3d_->worldTransform.rotate.x, 0.01f, -6.28f, 6.28f);
-	ImGui::End();
 }
 
 void Titan::Draw() {
@@ -67,4 +77,9 @@ void Titan::OnCollision(Collider* collider) {
 	else {
 		hp_ = hp_ - collider->GetDamage();
 	}
+}
+
+void Titan::ChangeState(ITitanState* pState) {
+	delete state_;
+	state_ = pState;
 }

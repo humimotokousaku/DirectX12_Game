@@ -193,7 +193,7 @@ void GameScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		object->Draw();
+		//object->Draw();
 	}
 
 	// 自機

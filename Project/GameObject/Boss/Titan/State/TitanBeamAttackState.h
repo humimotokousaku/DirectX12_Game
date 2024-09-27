@@ -1,16 +1,10 @@
 #pragma once
 #include "ITitanState.h"
 
-class Titan; // 前方宣言
-class TitanWaitState : public ITitanState {
+class Titan;
+class TitanBeamAttackState : public ITitanState {
 public:
-	enum AttackList {
-		HandAttack,
-		BeamAttack
-	};
-
-public:
-	TitanWaitState(Titan* titan, Player* player);
+	TitanBeamAttackState(Titan* titan, Player* player);
 
 	/// <summary>
 	/// 初期化
@@ -28,16 +22,11 @@ public:
 	/// User Method
 	/// 
 
-	// ランダムで攻撃パターンを選択する
-	void RandomAttackSelector();
-
 public:// 定数
 	// 待機フレーム
-	const int kWaitFrame = 240;
+	const int kBeamFrame = 240;
 
 public:
 	Titan* titan_;
-
-	// 選択された攻撃パターン
-	int selectedAttackPattern_ = -1;
 };
+

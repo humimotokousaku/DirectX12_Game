@@ -1,5 +1,6 @@
 #pragma once
 #include "IEnemy.h"
+#include "ITitanState.h"
 #include "PartsManager.h"
 #include <memory>
 
@@ -24,6 +25,21 @@ public:
 	// 衝突判定
 	void OnCollision(Collider* collider) override;
 
+	// 状態切り替え
+	void ChangeState(ITitanState* pState);
+
+	///
+	/// User Method
+	///
+	
+#pragma region Getter
+	// パーツマネージャーを取得
+	PartsManager* GetPartsManager() { return partsManager_; }
+#pragma endregion
+
 private:
-	std::unique_ptr<PartsManager> partsManager_;
+	PartsManager* partsManager_;
+
+	// 状態遷移
+	ITitanState* state_;
 };

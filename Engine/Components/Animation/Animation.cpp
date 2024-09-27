@@ -115,7 +115,31 @@ void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, floa
 	// リストが空なら登録
  	if (animData_.size() == 0) {
 		animData_.push_back(animData);
+		animId_++;
 		return;
 	}
 	animData_.front() = animData;
+}
+
+void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+	AnimData animData = {
+	target,
+	0,
+	0,
+	endFrame,
+	0,
+	start,
+	end,
+	false,
+	name,
+	index,
+	easeFunc
+	};
+
+	// イテレータをリストの先頭に設定
+	std::list<AnimData>::iterator it = animData_.begin();
+
+	// index分要素に進む
+	std::advance(it, index);
+	*it = animData;
 }

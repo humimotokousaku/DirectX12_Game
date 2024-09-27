@@ -41,7 +41,7 @@ Motion LoadAnimationFile(const std::string& directoryPath, const std::string& fi
 	// アニメーションの再生速度
 	animation.playBackSpeed = 1.0f;
 	// ループ再生
-	animation.isLoop = true;
+	animation.isLoop = false;
 
 	aiAnimation* animationAssimp = scene->mAnimations[0];
 	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond); // 時間の単位を秒に変換
@@ -93,7 +93,7 @@ Motion LoadAnimationFile(const std::string& filename) {
 	// アニメーションの再生速度
 	animation.playBackSpeed = 1.0f;
 	// ループ再生
-	animation.isLoop = true;
+	animation.isLoop = false;
 
 	aiAnimation* animationAssimp = scene->mAnimations[0];
 	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond); // 時間の単位を秒に変換

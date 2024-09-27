@@ -10,18 +10,18 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="titan">敵クラス</param>
-	void Initialize(Titan* titan, Player* player);
+	void Initialize()override;
 
 	/// <summary>
 	/// 更新処理
 	/// </summary>
 	/// <param name="titan">敵クラス</param>
-	void Update(Titan* titan);
+	void Update()override;
 
 private:// 定数
+	// 弱点を露出する時間
+	const int kWeakPointFrame = 300;
 
 public:
 	Titan* titan_;
-	// 射撃のクールタイム
-	float shotCoolTime_;
 };

@@ -125,7 +125,7 @@ void Player::Update() {
 
 	// 範囲を超えない処理
 	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
-	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -kMoveLimit.y, kMoveLimit.y);
+	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -5.0f, kMoveLimit.y);
 	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
 
 	// ワールド行列を更新

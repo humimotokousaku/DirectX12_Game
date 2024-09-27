@@ -9,7 +9,7 @@ void WeakPoint::Initialize(const WorldTransform* parent, Camera* camera, Model* 
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(model_);
 	object3d_->worldTransform.parent_ = parent;
-	object3d_->worldTransform.translate = { 5,-3,4 };
+	object3d_->worldTransform.translate = { 0,0,2 };
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
@@ -19,7 +19,7 @@ void WeakPoint::Initialize(const WorldTransform* parent, Camera* camera, Model* 
 	object3d_->collider->SetIsActive(true);
 
 	// HP
-	hp_ = 50;
+	hp_ = 100;
 
 	// 管理番号
 	id_ = id;

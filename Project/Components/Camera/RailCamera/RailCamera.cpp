@@ -69,7 +69,6 @@ void RailCamera::Update() {
 		}
 	}
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
-	target_.y += 0.3f;
 	Vector3 cameraPosition{};
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);

@@ -211,7 +211,11 @@ void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
 	boss->SetCamera(camera_);
 	boss->SetEnemyManager(this);
 	// 初期化
-	boss->Initialize(pos, rotate, id_);
+	// カメラの座標が中心なのでspawnPosはカメラとの距離
+	Vector3 spawnPos = { 0,0,10 };//TargetOffset(Vector3{ 0,0,-60 }, camera_->worldTransform_.rotate);
+	boss->Initialize(spawnPos, rotate, id_);
+	// カメラに追従してくるようにする
+	//boss->SetParent(&camera_->worldTransform_);
 	// リストに登録
 	enemy_.push_back(boss);
 
@@ -220,7 +224,7 @@ void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
 
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();
-	particle->Initialize(pos);
+	particle->Initialize(boss->GetWorldPosition() + spawnPos);
 	particle->SetCamera(camera_);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(20);

@@ -51,6 +51,7 @@ void Enemy::Update() {
 	// 状態遷移
 	state_->Update(this);
 
+	// ワールドトランスフォームを更新
 	object3d_->worldTransform.UpdateMatrix();
 }
 
@@ -111,9 +112,6 @@ void Enemy::Fire() {
 	// 弾の速度(正の数だと敵の後ろから弾が飛ぶ)
 	const float kBulletSpeed = -0.5f;
 	Vector3 velocity{ 0, 0, kBulletSpeed };
-
-	// 自キャラのワールド座標を取得する
-	player_->GetWorldPosition();
 
 	object3d_->worldTransform.UpdateMatrix();
 

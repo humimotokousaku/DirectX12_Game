@@ -38,7 +38,7 @@ void FollowCamera::Update() {
 
 Vector3 FollowCamera::TargetOffset() const {
 	// 追従対象からのオフセット
-	Vector3 offset = { 0, 0, -20 };
+	Vector3 offset = { 0, 5, -20 };
 	offset += (*offset_);
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate);
