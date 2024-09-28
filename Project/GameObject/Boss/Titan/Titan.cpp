@@ -8,6 +8,8 @@ Titan::~Titan() {
 void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
+	// 強い攻撃を警告するクラスのインスタンス取得
+	attackAlert_ = AttackAlert::GetInstance();
 
 	// 体の生成
 	object3d_ = std::make_unique<Object3D>();

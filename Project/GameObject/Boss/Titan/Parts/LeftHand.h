@@ -57,6 +57,8 @@ public:// 定数
 
 	// 攻撃対象を狙う時間
 	const int kAimFrame = 180;
+	// 攻撃開始時間
+	const int kAttackFrame = 240;
 
 private:
 	// 手の攻撃アニメーション

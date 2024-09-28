@@ -78,6 +78,7 @@ void GameScene::Initialize() {
 	aimAssist_ = AimAssist::GetInstance();
 	aimAssist_->SetCamera(followCamera_.GetCamera());
 	aimAssist_->SetPlayer(&player_);
+	// 自機クラスにアドレスを渡す
 	player_.SetIsLockOn(aimAssist_->GetIsLockOn());
 	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
 
@@ -90,15 +91,16 @@ void GameScene::Initialize() {
 	followCamera_.SetCameraRotateOffset(player_.GetCameraRotateOffset());
 	followCamera_.SetParent(&railCamera_.GetWorldTransform());
 	followCamera_.SetFov(railCamera_.GetFov());
+	// レールカメラにブーストしているかをアドレスで渡す
 	railCamera_.SetIsBoost(player_.GetIsBoost());
 
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(followCamera_.GetCamera());
-		//object->SetIsLighting(true);
+		object->SetIsLighting(true);
 	}
 
-	// UIのスプライトを作成
+#pragma region UIスプライトを作成
 	guideUI_[0].Initialize("Textures/UI", "guide_Attack.png");
 	guideUI_[0].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
 	guideUI_[0].SetPos(Vector2{ 1200.0f, 64.0f });
@@ -118,6 +120,7 @@ void GameScene::Initialize() {
 	guideUI_[3].SetPos(Vector2{ 1132.0f, 128.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
 	PostEffectManager::GetInstance()->bloomData_.isActive = false;
+#pragma endregion
 }
 
 void GameScene::Update() {

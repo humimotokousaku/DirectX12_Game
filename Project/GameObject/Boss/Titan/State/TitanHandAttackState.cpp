@@ -14,6 +14,7 @@ void TitanHandAttackState::Initialize() {
 }
 
 void TitanHandAttackState::Update() {
+	// 既定の時間が過ぎる+パーツが状態変更可能なら待機状態に移行
 	if (currentFrame_ >= kHandFrame && titan_->GetPartsManager()->GetIsStateChangeable()) {
 		// パーツの状態変更
 		titan_->GetPartsManager()->StartWait();

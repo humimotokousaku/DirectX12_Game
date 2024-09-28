@@ -176,7 +176,7 @@ private:// プライベートなメンバ変数
 	// 使用するモデル
 	std::vector<Model*> models_;
 
-private:
+private:// プライベートなメンバ変数
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
 

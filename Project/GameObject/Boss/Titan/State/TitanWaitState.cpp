@@ -42,6 +42,7 @@ void TitanWaitState::RandomAttackSelector() {
 	case HandAttack:
 		// パーツの状態変更
 		titan_->GetPartsManager()->StartHandAttack();
+		AttackAlert::GetInstance()->Start();
 		// 状態変更
 		titan_->ChangeState(new TitanHandAttackState(titan_, player_));
 		break;

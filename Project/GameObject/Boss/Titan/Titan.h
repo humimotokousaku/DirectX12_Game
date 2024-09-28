@@ -1,6 +1,7 @@
 #pragma once
 #include "IEnemy.h"
 #include "ITitanState.h"
+#include "AttackAlert.h"
 #include "PartsManager.h"
 #include <memory>
 
@@ -37,8 +38,12 @@ public:
 	PartsManager* GetPartsManager() { return partsManager_; }
 #pragma endregion
 
-private:
+private:// エンジン機能
+	// ポストエフェクト
 	PartsManager* partsManager_;
+
+private:
+	AttackAlert* attackAlert_;
 
 	// 状態遷移
 	ITitanState* state_;

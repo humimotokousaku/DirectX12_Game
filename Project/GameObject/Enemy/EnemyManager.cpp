@@ -41,6 +41,12 @@ void EnemyManager::Initialize() {
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 
+	// 攻撃の警告
+	attackAlert_ = AttackAlert::GetInstance();
+	attackAlert_->Initialize();
+	attackAlert_->SetCamera(camera_);
+	attackAlert_->SetPlayer(player_);
+
 	SpawnTitan(Vector3{ 0,2,10 }, Vector3{ 0,3.14f,0 });
 }
 
@@ -92,6 +98,9 @@ void EnemyManager::Update() {
 	for (Particles* hitParticle : hitParticles_) {
 		hitParticle->Update();
 	}
+
+	// 攻撃の警告
+	attackAlert_->Update();
 }
 
 void EnemyManager::Draw() {

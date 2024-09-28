@@ -1,5 +1,6 @@
 #pragma once
 #include "Audio.h"
+#include "AttackAlert.h"
 #include "Enemy.h"
 #include "FixedTurret.h"
 #include "EnemyBullet.h"
@@ -169,6 +170,8 @@ private:// プライベートなメンバ変数
 
 	// 敵
 	std::list<IEnemy*> enemy_;
+	// 攻撃の警告
+	AttackAlert* attackAlert_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
 	// 出現時のパーティクル

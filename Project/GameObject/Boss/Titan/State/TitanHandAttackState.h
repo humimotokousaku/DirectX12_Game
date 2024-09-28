@@ -24,7 +24,7 @@ public:
 
 public:// 定数
 	// 待機フレーム
-	const int kHandFrame = 240;
+	const int kHandFrame = 300;
 
 public:
 	Titan* titan_;

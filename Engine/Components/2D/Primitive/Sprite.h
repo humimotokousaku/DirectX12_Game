@@ -118,8 +118,10 @@ protected:
 	void CreateMaterialResource();
 
 public:
-	// Sprite
+	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
+	// uv座標
+	Transform uvTransform_;
 
 	// 描画をするか
 	bool isActive_ = true;
@@ -135,7 +137,6 @@ private:
 	// Material
 	Material* materialData_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-	Transform uvTransform_;
 	Matrix4x4 uvTransformMatrix_;
 	// Vertex
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;

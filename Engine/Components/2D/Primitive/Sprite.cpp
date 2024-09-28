@@ -120,6 +120,13 @@ void Sprite::Draw() {
 	vertexData_[3].position = { right,top, 0.0f, 1.0f };// 右上
 #pragma endregion
 
+#pragma region UV座標
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	materialData_->uvTransform = uvTransformMatrix_;
+#pragma endregion
+
 	// ワールド座標の更新
 	worldTransform_.UpdateMatrix();
 	/// コマンドを積む

@@ -468,6 +468,9 @@
     <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\AttackAlert.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -795,6 +798,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\AttackAlert.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

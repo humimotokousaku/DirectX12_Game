@@ -60,13 +60,12 @@ void RightHand::HandAttack() {
 		// X軸周りの角度(θx)
 		object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
 	}
-	else if (aimFrame_ == kAimFrame + 1) {
-		// 体の正面方向にうつ
+	else if (aimFrame_ == kAttackFrame) {
 		velocity = { 0,0,1 };
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity, object3d_->worldTransform.matWorld_) * 10;
 	}
-	else if (aimFrame_ >= kAimFrame + 15) {
+	else if (aimFrame_ >= kAttackFrame + 15) {
 		object3d_->worldTransform.translate = kDefaultPos;
 		object3d_->worldTransform.rotate = { 0,0,0 };
 		velocity_ = { 0,0,0 };
