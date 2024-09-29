@@ -29,7 +29,7 @@ struct ParticleForGPU {
 
 // Particleを発生させる
 struct Emitter {
-	Transform transform;
+	WorldTransform transform;
 	uint32_t count;
 	uint32_t spawnCount;
 	uint32_t spawnLeft = 1;	// 発生の残り回数 
@@ -55,7 +55,7 @@ public:
 	/// Default Method
 	///
 
-	Particles() = default;
+	Particles();
 	~Particles();
 
 	/// <summary>
@@ -79,6 +79,18 @@ public:
 	/// User Method
 	///
 
+#pragma region Getter
+	// ワールド座標を取得
+	Vector3 GetEmitterWorldPosition() {
+		Vector3 worldPos = {
+			emitter_.transform.matWorld_.m[3][0],
+			emitter_.transform.matWorld_.m[3][1],
+			emitter_.transform.matWorld_.m[3][2]
+		};
+		return worldPos;
+	}
+#pragma endregion
+
 #pragma region Setter	
 	// カメラ
 	void SetCamera(Camera* camera) { camera_ = camera; }
@@ -87,6 +99,10 @@ public:
 	/// </summary>
 	/// <param name="updateFunc">void (Particle＆);の関数</param>
 	void SetParticleUpdate(std::function<void(Particle&)> updateFunc) { updateFunc_ = updateFunc; }
+	/// <summary>
+	/// エミッターのワールドトランスフォームとペアレントする
+	/// </summary>
+	void SetEmitterParent(const WorldTransform* parent) { emitter_.transform.parent_ = parent; }
 	/// <summary>
 	/// パーティクルの発生源の座標
 	/// </summary>
@@ -176,6 +192,9 @@ public:
 	// 座標と速度は自動的にランダムが適応されている
 	Particle particle_;
 
+	// エミッタ
+	Emitter emitter_;
+
 private:// 定数
 	// 1フレームで進む時間
 	const float kDeltaTime = 1.0f / 60.0f;
@@ -191,8 +210,6 @@ private:
 	// パーティクルの挙動
 	std::function<void(Particle&)> updateFunc_;
 
-	// エミッタ
-	Emitter emitter_;
 	// フィールド
 	AccField accField_;
 

@@ -7,6 +7,7 @@
 #include "Boss/Titan/Titan.h"
 #include "Player.h"
 #include "Camera.h"
+#include "RailCamera.h"
 #include "CollisionManager.h"
 #include "Particles.h"
 #include "Score.h"
@@ -114,6 +115,11 @@ public:
 	/// <param name="camera">カメラ</param>
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	/// <summary>
+	/// レールカメラのアドレスを設定
+	/// </summary>
+	/// <param name="railCamera">レールカメラ</param>
+	void SetRailCamera(RailCamera* railCamera) { railCamera_ = railCamera; }
+	/// <summary>
 	/// 衝突マネージャのアドレスを設定
 	/// </summary>
 	/// <param name="collisionManager">衝突マネージャ</param>
@@ -123,24 +129,6 @@ public:
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
-
-	/// <summary>
-	/// 出現する場所のリストを設定
-	/// </summary>
-	/// <param name="spawnPoints">敵の出現する場所</param>
-	void SetSpawnPoints(std::vector<LevelData::EnemyPoint> spawnPoints) { 
-		spawnPoints_ = spawnPoints; 
-		spawnPointDatas_.resize(spawnPoints_.size());
-	}
-
-	/// <summary>
-	/// 作成した被弾パーティクルをプッシュする
-	/// </summary>
-	/// <param name="particle"></param>
-	void SetHitParticle(Particles* particle) { 
-		hitParticles_.push_back(particle);
-	}
-
 	/// <summary>
 	/// カメラの進行度を設定
 	/// </summary>
@@ -151,6 +139,29 @@ public:
 	/// </summary>
 	/// <param name="cameraMoveVel">カメラの移動ベクトル</param>
 	void SetCameraMoveVel(Vector3* cameraMoveVel) { cameraMoveVel_ = cameraMoveVel; }
+
+	/// <summary>
+	/// 出現する場所のリストを設定
+	/// </summary>
+	/// <param name="spawnPoints">敵の出現する場所</param>
+	void SetSpawnPoints(std::vector<LevelData::EnemyPoint> spawnPoints) {
+		spawnPoints_ = spawnPoints;
+		spawnPointDatas_.resize(spawnPoints_.size());
+	}
+
+	/// <summary>
+	/// 作成した被弾パーティクルをプッシュする
+	/// </summary>
+	/// <param name="particle"></param>
+	void SetHitParticle(Particles* particle) {
+		hitParticles_.push_back(particle);
+	}
+
+	/// <summary>
+	/// 追従カメラのワールドトランスフォームの設定
+	/// </summary>
+	/// <param name="worldTransform">カメラのワールドトランスフォームのアドレス</param>
+	//void SetFollowCameraWorldTransform(WorldTransform* worldTransform) { followWorldTransform_ = worldTransform; }
 #pragma endregion
 
 private:// プライベートなメンバ変数
@@ -161,6 +172,8 @@ private:// プライベートなメンバ変数
 
 	// カメラのアドレス
 	Camera* camera_;
+	// 追従カメラのアドレス
+	RailCamera* railCamera_;
 	// 衝突マネージャのアドレス
 	CollisionManager* collisionManager_;
 	// 自機のアドレス
@@ -178,6 +191,9 @@ private:// プライベートなメンバ変数
 	std::vector<Particles*> spawnParticles_;
 	// 被弾時時のパーティクル
 	std::vector<Particles*> hitParticles_;
+
+	// 追従カメラのワールドトランスフォーム
+	WorldTransform followWorldTransform_;
 
 	// 使用するモデル
 	std::vector<Model*> models_;

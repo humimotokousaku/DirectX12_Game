@@ -27,6 +27,7 @@ public:
 	Camera* GetCamera() { return camera_.get(); }
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
+	WorldTransform* GetWorldTransform_P() { return &camera_->worldTransform_; }
 	// レールの何パーセント進んだかを取得
 	float* GetRailPercentage() { return &t_; }
 	// 方向ベクトルを取得

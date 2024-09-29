@@ -9,6 +9,10 @@
 #include <numbers>
 #include <vector>
 
+Particles::Particles() {
+	emitter_.transform.Initialize();
+}
+
 Particles::~Particles() {
 
 }
@@ -74,6 +78,8 @@ void Particles::Initialize(Vector3 emitterPos) {
 }
 
 void Particles::Update() {
+	emitter_.transform.UpdateMatrix();
+
 	uint32_t numInstance = 0;
 	for (std::list<Particle>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 		// 生存時間が過ぎたら処理を行わない
@@ -227,7 +233,8 @@ std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& ra
 	// ランダムの場合
 	//if (emitter.isRandom) {
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+		//particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+		particles.push_back(MakeNewParticle(randomEngine, GetEmitterWorldPosition()));
 	}
 	return particles;
 	//}

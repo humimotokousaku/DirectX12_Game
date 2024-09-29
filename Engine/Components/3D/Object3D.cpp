@@ -193,30 +193,30 @@ void Object3D::ImGuiParameter(const char* name) {
 			ImGui::EndTabItem();
 		}
 		if (isEditor_) {
-			if (ImGui::BeginTabItem("EditorMode")) {
-				// Create a ListBox
-				if (ImGui::ListBox("NodeList", &selectVertex_, verteciesName.data(), verteciesName.size()))
-				{
-					selectedVertexName = verteciesName[selectVertex_];
-				}
+			//if (ImGui::BeginTabItem("EditorMode")) {
+			//	// Create a ListBox
+			//	if (ImGui::ListBox("NodeList", &selectVertex_, verteciesName.data(), verteciesName.size()))
+			//	{
+			//		selectedVertexName = verteciesName[selectVertex_];
+			//	}
 
-				if (selectedVertexName) {
-					// Item was clicked
-					// Handle the selected item
-					ImGui::Text("selectedNode: %s", selectedVertexName);
-					if (ImGui::TreeNode(selectedVertexName)) {
-						ImGui::DragFloat3("LocalPos", &model_->GetModelData().vertices[selectVertex_].position.x, 0.0f);
-						ImGui::TreePop();
-					}
-					Vector3 offset = {
-						worldTransform.matWorld_.m[3][0] + model_->GetModelData().vertices[selectVertex_].position.x,
-						worldTransform.matWorld_.m[3][1] + model_->GetModelData().vertices[selectVertex_].position.y,
-						worldTransform.matWorld_.m[3][2] + model_->GetModelData().vertices[selectVertex_].position.z
-					};
-					sphere_->worldTransform.translate = offset;
-				}
-				ImGui::EndTabItem();
-			}
+			//	if (selectedVertexName) {
+			//		// Item was clicked
+			//		// Handle the selected item
+			//		ImGui::Text("selectedNode: %s", selectedVertexName);
+			//		if (ImGui::TreeNode(selectedVertexName)) {
+			//			ImGui::DragFloat3("LocalPos", &model_->GetModelData().vertices[selectVertex_].position.x, 0.0f);
+			//			ImGui::TreePop();
+			//		}
+			//		Vector3 offset = {
+			//			worldTransform.matWorld_.m[3][0] + model_->GetModelData().vertices[selectVertex_].position.x,
+			//			worldTransform.matWorld_.m[3][1] + model_->GetModelData().vertices[selectVertex_].position.y,
+			//			worldTransform.matWorld_.m[3][2] + model_->GetModelData().vertices[selectVertex_].position.z
+			//		};
+			//		sphere_->worldTransform.translate = offset;
+			//	}
+			//	ImGui::EndTabItem();
+			//}
 		}
 	
 
@@ -257,12 +257,12 @@ void Object3D::SetModel(const std::string& directoryPath, const std::string& fil
 	//	verteciesName.push_back(model_->skeleton_.joints[i].name.c_str());
 	//}
 
-	for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
-		const char* name1 = "vertex";
-		std::string name = name1 + std::to_string(i);
+	//for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
+	//	const char* name1 = "vertex";
+	//	std::string name = name1 + std::to_string(i);
 
-		verteciesName.push_back(name.c_str());
-	}
+	//	verteciesName.push_back(name.c_str());
+	//}
 }
 
 void Object3D::SetModel(Model* model) {
@@ -292,10 +292,10 @@ void Object3D::SetModel(Model* model) {
 		verteciesName.push_back(model_->skeleton_.joints[i].name.c_str());
 	}*/
 
-	for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
+	/*for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
 		const char* name1 = "vertex";
 		std::string name = name1 + std::to_string(i);
 
 		verteciesName.push_back(name.c_str());
-	}
+	}*/
 }

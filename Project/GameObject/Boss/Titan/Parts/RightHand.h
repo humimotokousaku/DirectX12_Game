@@ -68,6 +68,8 @@ private:
 	// 移動ベクトル
 	Vector3 velocity_;
 
+	Vector3 targetRot_;
+
 	// 攻撃対象を狙う時間
 	int aimFrame_ = 0;
 };

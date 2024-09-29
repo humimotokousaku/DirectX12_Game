@@ -191,7 +191,7 @@ private:// プライベートなメンバ変数
 	Sprite hpSprite_;
 
 	// 自機の軌道パーティクル
-	std::unique_ptr<Particles> particle_;
+	std::array<std::unique_ptr<Particles>, 3> particle_;
 
 	// 弾
 	std::list<PlayerBullet*> bullets_;

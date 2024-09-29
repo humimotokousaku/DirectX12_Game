@@ -90,7 +90,7 @@ public:
 	std::map<std::string, Group> datas_;
 
 	// グローバル変数の保存先ファイルパス
-	const std::string kDirectoryPath = "resources/GlobalVariables/";
+	const std::string kDirectoryPath = "engine/resources/GlobalVariables/";
 
 	bool isSave_;
 };

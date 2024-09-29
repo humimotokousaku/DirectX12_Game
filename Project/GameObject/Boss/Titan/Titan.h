@@ -38,12 +38,21 @@ public:
 	PartsManager* GetPartsManager() { return partsManager_; }
 #pragma endregion
 
+#pragma region Setter
+	// 追従する座標を設定
+	void SetParent(const WorldTransform* parent) { followWorldTransform_.parent_ = parent; }
+#pragma endregion
+
 private:// エンジン機能
 	// ポストエフェクト
 	PartsManager* partsManager_;
 
 private:
+	// 攻撃の警告
 	AttackAlert* attackAlert_;
+
+	// 追従する座標
+	WorldTransform followWorldTransform_;
 
 	// 状態遷移
 	ITitanState* state_;

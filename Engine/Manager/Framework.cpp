@@ -34,7 +34,7 @@ void Framework::Initialize() {
 	ModelManager::GetInstance()->Initialize();
 
 	// ブローバル変数の読み込み
-	//GlobalVariables::GetInstance()->LoadFiles();
+	GlobalVariables::GetInstance()->LoadFiles();
 	
 	// PSOの初期化
 	pipelineManager_ = PipelineManager::GetInstance();
@@ -139,7 +139,9 @@ void Framework::BeginFrame() {
 	// ImGui
 	imGuiManager_->PreDraw();
 	// グローバル変数の更新
-	//GlobalVariables::GetInstance()->Update();
+#ifdef _DEBUG
+	GlobalVariables::GetInstance()->Update();
+#endif // _DEBUG
 }
 
 void Framework::EndFrame() {

@@ -1,5 +1,6 @@
 #include "Titan.h"
 #include "TitanWaitState.h"
+
 Titan::~Titan() {
 	models_.clear();
 	delete partsManager_;
@@ -16,7 +17,13 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
-	//object3d_->worldTransform.parent_ = &camera_->worldTransform_;
+	// 体の位置と向きを設定
+	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.rotate = rotate;
+	object3d_->worldTransform.UpdateMatrix();
+	followWorldTransform_.Initialize();
+	object3d_->worldTransform.parent_ = &followWorldTransform_;
+	//object3d_->worldTransform.parent_ = player_->GetWorldTransform();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
@@ -31,11 +38,6 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	partsManager_->SetEnemyManager(enemyManager_);
 	partsManager_->Initialize(&object3d_->worldTransform, camera_, enemyManager_, id);
 
-
-	// 体の位置と向きを設定
-	object3d_->worldTransform.translate = pos;
-	object3d_->worldTransform.rotate = rotate;
-	object3d_->worldTransform.UpdateMatrix();
 
 	// 状態遷移
 	state_ = new TitanWaitState(this, player_);
@@ -61,8 +63,13 @@ void Titan::Update() {
 	// 各パーツの更新処理
 	partsManager_->Update();
 
+	followWorldTransform_.UpdateMatrix();
 	// ワールドトランスフォームを更新
 	object3d_->worldTransform.UpdateMatrix();
+
+	ImGui::Begin("Titan");
+	ImGui::DragFloat3("translate", &object3d_->worldTransform.translate.x, 0.1f, -100, 100);
+	ImGui::End();
 }
 
 void Titan::Draw() {

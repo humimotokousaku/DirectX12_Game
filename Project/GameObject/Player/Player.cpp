@@ -7,6 +7,7 @@
 #include "ImGuiManager.h"
 #include "Input.h"
 #include "PostEffectManager.h"
+#include "GlobalVariables.h"
 #include <numbers>
 
 Player::Player() {}
@@ -81,21 +82,24 @@ void Player::Initialize() {
 
 #pragma region パーティクル
 	// 自機の軌道パーティクルの作成
-	particle_ = std::make_unique<Particles>();
-	particle_->Initialize(GetWorldPosition());
-	particle_->SetCamera(camera_);
-	// 発生頻度
-	particle_->SetEmitterFrequency(1.0f / 60.0f);
-	// 一度に発生する個数
-	particle_->SetEmitterCount(1);
-	// ランダムを切る
-	particle_->OffRandom();
-	// パーティクル一粒の詳細設定
-	particle_->particle_.color = { 1,1,1,1 };
-	particle_->particle_.lifeTime = 1.0f;
-	particle_->particle_.transform.translate = { 0.0f,0.0f,0.0f };
-	particle_->particle_.transform.scale = { 0.1f,0.1f,0.1f };
-	particle_->particle_.vel = { 0.0f,0.0f,0.0f };
+	for (int i = 0; i < particle_.size(); i++) {
+		particle_[i] = std::make_unique<Particles>();
+		particle_[i]->Initialize(GetWorldPosition());
+		particle_[i]->SetCamera(camera_);
+		particle_[i]->SetEmitterParent(&object3d_->worldTransform);
+		// 発生頻度
+		particle_[i]->SetEmitterFrequency(1.0f / 240.0f);
+		// 一度に発生する個数
+		particle_[i]->SetEmitterCount(1);
+		// ランダムを切る
+		particle_[i]->OffRandom();
+		// パーティクル一粒の詳細設定
+		particle_[i]->particle_.color = { 1,1,1,0.6f };
+		particle_[i]->particle_.lifeTime = 1.0f;
+		particle_[i]->particle_.transform.translate = { 0.0f,0.0f,0.0f };
+		particle_[i]->particle_.transform.scale = { 0.1f,0.1f,0.1f };
+		particle_[i]->particle_.vel = { 0.0f,0.0f,0.0f };
+	}
 #pragma endregion
 
 #pragma region アニメーションの設定
@@ -113,6 +117,18 @@ void Player::Initialize() {
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
+
+
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	// グループを追加
+	GlobalVariables::GetInstance()->CreateGroup(groupName);
+	globalVariables->AddItem(groupName, "ParticleEmitterPos", particle_[0]->emitter_.transform.translate);
+	globalVariables->AddItem(groupName, "ParticleEmitterPos_LeftWing", particle_[1]->emitter_.transform.translate);
+	globalVariables->AddItem(groupName, "ParticleEmitterPos_RightWing", particle_[2]->emitter_.transform.translate);
+	particle_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
+	particle_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
+	particle_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
 }
 
 void Player::Update() {
@@ -165,8 +181,9 @@ void Player::Update() {
 	}
 
 	// 自機の軌道パーティクル
-	particle_->SetEmitterPos(GetWorldPosition());
-	particle_->Update();
+	for (int i = 0; i < particle_.size(); i++) {
+		particle_[i]->Update();
+	}
 
 	audio_->SetMuffle(shotSE_, 1.0f);
 #ifdef _DEBUG
@@ -179,8 +196,17 @@ void Player::Update() {
 	//ImGui::DragFloat3("rotateRate", &kRotateSpeedRate.x, 0.001f, 0, 1);
 	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
 	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
+	/// jsonによる数値の変更
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	particle_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
+	particle_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
+	particle_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
+	// ボタンを押したらsave
+	if (globalVariables->GetInstance()->GetIsSave()) {
+		globalVariables->SaveFile("Player");
+	}
 #endif
-
 }
 
 void Player::Draw() {
@@ -201,7 +227,9 @@ void Player::DrawUI() {
 	}
 
 	// 軌道
-	particle_->Draw(defaultTexture);
+	for (int i = 1; i < particle_.size(); i++) {
+		particle_[i]->Draw(defaultTexture);
+	}
 }
 
 void Player::SetParent(const WorldTransform* parent) {

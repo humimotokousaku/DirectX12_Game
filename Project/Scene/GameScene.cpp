@@ -68,9 +68,11 @@ void GameScene::Initialize() {
 	enemyManager_.AddModel(models_[4]);
 	// アドレスを設定
 	enemyManager_.SetCamera(followCamera_.GetCamera());
+	enemyManager_.SetRailCamera(&railCamera_);
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetSpawnPoints(enemyPoints_);
 	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
+	//enemyManager_.SetFollowCameraWorldTransform(railCamera_.GetWorldTransform_P());
 	// 初期化
 	enemyManager_.Initialize();
 
@@ -196,7 +198,7 @@ void GameScene::Draw() {
 
 	// Blenderで配置したオブジェクト
 	for (Object3D* object : levelObjects_) {
-		//object->Draw();
+		object->Draw();
 	}
 
 	// 自機

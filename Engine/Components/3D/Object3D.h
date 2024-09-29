@@ -185,8 +185,8 @@ private:// プライベートな変数
 	// エディターモード起動
 	bool isEditor_ = false;
 	int selectVertex_ = -1;
-	std::vector<const char*> verteciesName;
-	const char* selectedVertexName;
+	//std::vector<const char*> verteciesName;
+	//const char* selectedVertexName;
 
 	// 描画するか
 	bool isActive_ = true;

@@ -37,7 +37,6 @@ void EnemyManager::Initialize() {
 	textureManager_->LoadTexture("Textures", "hitParticle.png");
 	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
 	hitParticleTex_ = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
-
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 
@@ -47,10 +46,15 @@ void EnemyManager::Initialize() {
 	attackAlert_->SetCamera(camera_);
 	attackAlert_->SetPlayer(player_);
 
-	SpawnTitan(Vector3{ 0,2,10 }, Vector3{ 0,3.14f,0 });
+	followWorldTransform_.Initialize();
+	followWorldTransform_.parent_ = railCamera_->GetWorldTransform_P();
+
+	//SpawnTitan(Vector3{ 0,2,40 }, Vector3{ 0,3.14f,0 });
 }
 
 void EnemyManager::Update() {
+	followWorldTransform_.UpdateMatrix();
+
 	// 出現条件を満たしているかを確認
 	CheckSpawn();
 
@@ -219,12 +223,10 @@ void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
 	boss->SetPlayer(player_);
 	boss->SetCamera(camera_);
 	boss->SetEnemyManager(this);
+	boss->SetParent(&followWorldTransform_);
 	// 初期化
 	// カメラの座標が中心なのでspawnPosはカメラとの距離
-	Vector3 spawnPos = { 0,0,10 };//TargetOffset(Vector3{ 0,0,-60 }, camera_->worldTransform_.rotate);
-	boss->Initialize(spawnPos, rotate, id_);
-	// カメラに追従してくるようにする
-	//boss->SetParent(&camera_->worldTransform_);
+	boss->Initialize(pos, rotate, id_);
 	// リストに登録
 	enemy_.push_back(boss);
 
@@ -233,7 +235,7 @@ void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
 
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();
-	particle->Initialize(boss->GetWorldPosition() + spawnPos);
+	particle->Initialize(boss->GetWorldPosition() + pos);
 	particle->SetCamera(camera_);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(20);
