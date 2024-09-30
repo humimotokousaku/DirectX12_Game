@@ -43,7 +43,6 @@ public:// パブリックなメンバ関数
 	/// User Method
 	/// 
 
-public:
 #pragma region Getter
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
@@ -61,6 +60,10 @@ public:
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 	// 死亡フラグを取得
 	bool GetIsDead() { return isDead_; }
+	// ワールド座標
+	Vector3 GetWorldPosition();
+	// 角度
+	Vector3 GetRotation();
 #pragma endregion
 
 #pragma region Setter
@@ -90,18 +93,19 @@ public:
 
 #pragma endregion
 
-	// ワールド座標
-	Vector3 GetWorldPosition();
-	// 角度
-	Vector3 GetRotation();
+private:// プライベートなメンバ関数
 	// 衝突判定
 	void OnCollision(Collider* collider);
 
-private:// プライベートなメンバ関数
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
 	void DecrementHP();
+
+	/// <summary>
+	/// ゲームオーバー時のアニメーション
+	/// </summary>
+	void DeadAnimation();
 
 	/// <summary>
 	/// レティクルの配置

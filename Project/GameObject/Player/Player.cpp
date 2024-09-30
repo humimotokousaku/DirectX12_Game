@@ -511,6 +511,12 @@ void Player::DecrementHP() {
 	}
 }
 
+void Player::DeadAnimation() {
+	if (isDead_) {
+
+	}
+}
+
 void Player::Deploy3DReticle() {
 	// 自機から3Dレティクルへのオフセット(Z+向き)
 	Vector3 offset{ 0, 0, kDistanceObject };
