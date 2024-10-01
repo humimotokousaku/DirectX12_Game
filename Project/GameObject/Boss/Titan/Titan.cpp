@@ -23,7 +23,6 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->worldTransform.UpdateMatrix();
 	followWorldTransform_.Initialize();
 	object3d_->worldTransform.parent_ = &followWorldTransform_;
-	//object3d_->worldTransform.parent_ = player_->GetWorldTransform();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
@@ -32,7 +31,6 @@ void Titan::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetIsActive(true);
 
 	// パーツの生成
-	//partsManager_ = std::make_unique<PartsManager>();
 	partsManager_ = new PartsManager();
 	partsManager_->SetPlayer(player_);
 	partsManager_->SetEnemyManager(enemyManager_);

@@ -123,6 +123,8 @@ void GameScene::Initialize() {
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
 	PostEffectManager::GetInstance()->bloomData_.isActive = false;
 #pragma endregion
+
+	PostEffectManager::GetInstance()->bloomData_.isActive = true;
 }
 
 void GameScene::Update() {
