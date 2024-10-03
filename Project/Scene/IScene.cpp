@@ -1,6 +1,8 @@
 #include "IScene.h"
-#include "Object3D.h"
+
 #include "Audio.h"
+#include "Object3D.h"
+
 #include "../../externals/nlohmann/json.hpp"
 
 int IScene::sceneNum;

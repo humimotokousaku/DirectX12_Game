@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp" />
     <ClCompile Include="Project\GameObject\AttackAlert.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\State\ITitanState.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\PartsManager.cpp" />
@@ -267,6 +268,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.h" />
     <ClInclude Include="Project\GameObject\AttackAlert.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\State\ITitanState.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\PartsManager.h" />

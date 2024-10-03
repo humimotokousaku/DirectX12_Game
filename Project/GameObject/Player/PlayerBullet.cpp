@@ -1,6 +1,8 @@
 #include "PlayerBullet.h"
+
 #include "CollisionConfig.h"
 #include "Matrix4x4.h"
+
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {

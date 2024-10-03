@@ -64,6 +64,7 @@ void Animation::Update() {
 			it->currentFrame = 0;
 			it->isActive = false;
 		}
+		isEnd_ = false;
 	}
 }
 

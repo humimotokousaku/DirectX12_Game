@@ -1,7 +1,7 @@
 #pragma once
 #include "Framework.h"
-#include "SceneTransition/SceneTransition.h"
 #include "CollisionManager.h"
+#include "SceneTransition/SceneTransition.h"
 
 class GameManager : public Framework
 {	

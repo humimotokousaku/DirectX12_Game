@@ -2,6 +2,12 @@
 #include "GameManager.h"
 #include "SceneTransition/SceneTransition.h"
 
+static Transform uvTransform = {
+	{1,1,1},
+	{0,0,0},
+	{0,0,0}
+};
+
 void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
 	textureManager_ = TextureManager::GetInstance();
@@ -15,11 +21,12 @@ void GameScene::Initialize() {
 	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
 	// BGMの読み込み
 	BGM_ = audio_->SoundLoadWave("Audio/gameBGM_Noesis.wav");
-	//audio_->SoundPlayWave(BGM_, true, 0.1f);
+	audio_->SoundPlayWave(BGM_, true, 0.1f);
 	// 使用するモデルの読み込み
 	modelManager_->LoadModel("", "block.obj");
 	modelManager_->LoadModel("", "Bob.obj");
 	modelManager_->LoadModel("", "Spitfire.obj");
+	modelManager_->LoadModel("level", "tail.obj");
 
 	// 自機
 	AddModel(modelManager_->SetModel("", "Bob.obj"));
@@ -33,7 +40,7 @@ void GameScene::Initialize() {
 	AddModel(modelManager_->SetModel("", "block.obj"));
 
 	// Blender
-	LoadJSONFile("GameMap_00.json");
+	LoadJSONFile("GameMap_02.json");
 #pragma endregion
 
 	// カメラの生成
@@ -72,7 +79,6 @@ void GameScene::Initialize() {
 	enemyManager_.SetPlayer(&player_);
 	enemyManager_.SetSpawnPoints(enemyPoints_);
 	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
-	//enemyManager_.SetFollowCameraWorldTransform(railCamera_.GetWorldTransform_P());
 	// 初期化
 	enemyManager_.Initialize();
 
@@ -89,18 +95,27 @@ void GameScene::Initialize() {
 	// レールカメラの進行度のアドレスを渡す
 	enemyManager_.SetRailCameraProgress(railCamera_.GetRailPercentage());
 	// アドレス渡し
-	followCamera_.SetCameraOffset(player_.GetCameraOffset());
-	followCamera_.SetCameraRotateOffset(player_.GetCameraRotateOffset());
+	followCamera_.SetCameraOffset(player_.GetCameraOffset_P());
+	followCamera_.SetCameraRotateOffset(player_.GetCameraRotateOffset_P());
 	followCamera_.SetParent(&railCamera_.GetWorldTransform());
 	followCamera_.SetFov(railCamera_.GetFov());
 	// レールカメラにブーストしているかをアドレスで渡す
-	railCamera_.SetIsBoost(player_.GetIsBoost());
+	railCamera_.SetIsBoost(player_.GetIsBoost_P());
+	railCamera_.SetPlayerMoveVel(&player_.GetMoveVel_P()->z);
 
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(followCamera_.GetCamera());
 		object->SetIsLighting(true);
 	}
+
+	// 地面
+	ground_.Initialize();
+	ground_.SetModel(modelManager_->SetModel("level", "tail.obj"));
+	ground_.SetCamera(followCamera_.GetCamera());
+	ground_.worldTransform.scale = { 500, 1, 500 };
+	ground_.worldTransform.rotate = { 0,0,0 };
+	ground_.SetUVScale(Vector3{ 50,50,1 });
 
 #pragma region UIスプライトを作成
 	guideUI_[0].Initialize("Textures/UI", "guide_Attack.png");
@@ -124,20 +139,20 @@ void GameScene::Initialize() {
 	PostEffectManager::GetInstance()->bloomData_.isActive = false;
 #pragma endregion
 
-	PostEffectManager::GetInstance()->bloomData_.isActive = true;
+	//PostEffectManager::GetInstance()->bloomData_.isActive = true;
 }
 
 void GameScene::Update() {
 #ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		sceneNum = TITLE_SCENE;
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_2)) {
-		sceneNum = GAMEOVER_SCENE;
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_3)) {
-		sceneNum = GAMECLEAR_SCENE;
-	}
+	//if (Input::GetInstance()->TriggerKey(DIK_1)) {
+	//	sceneNum = TITLE_SCENE;
+	//}
+	//if (Input::GetInstance()->TriggerKey(DIK_2)) {
+	//	sceneNum = GAMEOVER_SCENE;
+	//}
+	//if (Input::GetInstance()->TriggerKey(DIK_3)) {
+	//	sceneNum = GAMECLEAR_SCENE;
+	//}
 #endif // _DEBUG
 
 	// エネミーマネージャ
@@ -169,7 +184,7 @@ void GameScene::Update() {
 	score_->Update();
 
 	// ステージBGM
-	//audio_->SetMuffle(BGM_, 1.0f);
+	audio_->SetMuffle(BGM_, 1.0f);
 
 	// シーン切り替え
 	// クリア条件
@@ -189,11 +204,17 @@ void GameScene::Update() {
 			sceneNum = GAMEOVER_SCENE;
 		}
 	}
+
+	ground_.ImGuiParameter("Ground");
+	ImGui::Begin("UV");
+	ImGui::DragFloat3("Translate", &uvTransform.translate.x, 0.1f, -100, 100);
+	ImGui::DragFloat3("Rotate", &uvTransform.rotate.x, 0.1f, -100, 100);
+	ImGui::DragFloat3("Scale", &uvTransform.scale.x, 0.1f, -100, 100);
+	ImGui::End();
 }
 
 void GameScene::Draw() {
-	// レールカメラの移動ルート表示
-	//railCamera_.MoveRouteDraw();
+	ground_.Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();

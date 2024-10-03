@@ -35,32 +35,23 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = true;
+	isMove_ = false;
+
+	boostFovAnim_.SetAnimData(&camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 70.0f, 10, "fovAnim_01", Easings::EaseOutBack);
 }
 
 void RailCamera::Update() {
-	// 加速時はfovを上げる
-	if (*isBoost_) {
-		// fov
-		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, 60, 1.0f, 0.9f);
-		boostVel_ = Lerps::ExponentialInterpolate(boostVel_, 2, 1.0f, 0.1f);
-	}
-	else {
-		// fov
-		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 1.0f, 0.1f);
-		boostVel_ = Lerps::ExponentialInterpolate(boostVel_, 0, 1.0f, 0.1f);
-	}
+	// 加速中のカメラ処理
+	BoostUpdate();
 
 	if (isMove_) {
-		currentFrame_++;
-		currentFrame_ += boostVel_;
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			t_ = Lerps::Lerp(0, 0.99f, currentFrame_ / kTimeToEndPoint);
+			t_ += *moveVelZ_  / 1000;
 		}
 		// カメラの見ている座標を移動
 		if (targetT_ <= 1.0f) {
-			targetT_ = Lerps::Lerp(0.01f, 1.0f, currentFrame_ / kTimeToEndPoint);
+			targetT_ += *moveVelZ_ / 1000;
 		}
 		if (targetT_ >= 1.0f) {
 			currentFrame_ = 0;
@@ -72,7 +63,6 @@ void RailCamera::Update() {
 	Vector3 cameraPosition{};
 	// Catmull-Romスプライン関数で補間された位置を取得
 	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
-	cameraPosition.y += 0.3f;
 	camera_->worldTransform_.translate = cameraPosition + debugVel_;
 
 	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
@@ -111,4 +101,21 @@ void RailCamera::MoveRouteDraw() {
 	}
 	sphere_.Draw(kFillModeWireFrame);
 #endif // _DEBUG
+}
+
+void RailCamera::BoostUpdate() {
+	// 加速時はfovを上げる
+	if (*isBoost_) {
+		// fov
+		boostFovAnim_.SetIsStart(true);
+		//camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, 60, 1.0f, 0.9f);
+		//moveVel_ = Lerps::ExponentialInterpolate(moveVel_, 2, 1.0f, 0.1f);
+	}
+	else {
+		// fov
+		camera_->viewProjection_.fovAngleY = Lerps::ExponentialInterpolate(camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 1.0f, 0.1f);
+		boostFovAnim_.SetIsStart(false);
+		//moveVel_ = Lerps::ExponentialInterpolate(moveVel_, 0, 1.0f, 0.1f);
+	}
+	boostFovAnim_.Update();
 }

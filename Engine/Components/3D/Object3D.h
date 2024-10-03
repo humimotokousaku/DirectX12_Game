@@ -148,13 +148,22 @@ public:
 	void SetAnimSpeed(float speed) { model_->animation_.playBackSpeed = speed; }
 #pragma endregion
 
+	// エディターモードを起動するかの設定
 	void SetIsEditor(bool isActive) { isEditor_ = isActive; }
+
 	// ライティングの設定
 	void SetIsLighting(bool isActive) { model_->SetIsLighting(isActive); }
 	// 鏡面反射の輝度の設定
 	void SetShininess(float shininess) { model_->SetShininess(shininess); }
 	// 色の設定
 	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
+	// UV座標の設定
+	void SetUVTranslate(Vector3 translate) { model_->uvTransform.translate = translate; }
+	// UVの角度の設定
+	void SetUVRotate(Vector3 rotate) { model_->uvTransform.rotate = rotate; }
+	// UVのスケールの設定
+	void SetUVScale(Vector3 scale) { model_->uvTransform.scale = scale; }
+
 	// 描画をするかの設定
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
 #pragma endregion

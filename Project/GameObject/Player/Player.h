@@ -1,15 +1,15 @@
 #pragma once
-#include "Object3D.h"
+
+#include "Animation.h"
+#include "Audio.h"
+#include "Camera.h"
 #include "Collider.h"
 #include "CollisionManager.h"
-#include "Camera.h"
-#include "Sprite.h"
+#include "Input.h"
 #include "Object3D.h"
 #include "Particles.h"
-#include "Input.h"
-#include "Audio.h"
 #include "PlayerBullet.h"
-#include "Animation.h"
+#include "Sprite.h"
 
 class AimAssist;
 class GameScene;
@@ -43,27 +43,88 @@ public:// パブリックなメンバ関数
 	/// User Method
 	/// 
 
+	/// <summary>
+	/// 加速中の処理
+	/// </summary>
+	/// <param name="moveZ">Z方向の移動ベクトル</param>
+	void BoostUpdate(float moveZ);
+
+private:// プライベートなメンバ関数
+#pragma region 入力処理
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
+	/// <summary>
+	/// レティクルの配置、移動の処理
+	/// </summary>
+	void Aim();
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void Attack();
+#pragma endregion
+
+	// 衝突判定
+	void OnCollision(Collider* collider);
+
+	/// <summary>
+	/// 自機の無敵状態の処理
+	/// </summary>
+	void InvinsibleUpdate();
+
+	/// <summary>
+	/// HPバーの更新処理
+	/// </summary>
+	void HPUpdate();
+	/// <summary>
+	/// HPの減少処理
+	/// </summary>
+	void DecrementHP();
+
+	/// <summary>
+	/// ゲームオーバー時のアニメーション
+	/// </summary>
+	void DeadAnimation();
+
+	/// <summary>
+	/// レティクルの配置
+	/// </summary>
+	void Deploy3DReticle();
+	/// <summary>
+	/// 2Dレティクルの配置
+	/// </summary>
+	void Deploy2DReticle();
+	/// <summary>
+	/// ロックオン時のレティクルの配置
+	/// </summary>
+	void DeployLockOnReticle();
+
+public:// GetterとSetter
 #pragma region Getter
-	// 弾リストを取得
-	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 3Dレティクルの座標
 	Vector3 GetWorld3DReticlePosition(int index);
 	// ロックオンされてない3Dレティクルの座標
 	Vector3 GetDefault3DReticlePosition();
-	// カメラの移動幅
-	Vector3* GetCameraOffset() { return &cameraOffset_; }
-	// カメラの回転幅
-	Vector3* GetCameraRotateOffset() { return &cameraRotateOffset_; }
-	// 加速モードかを取得
-	bool* GetIsBoost() { return &isBoost_; }
-	// 体のワールドトランスフォームを取得
-	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 	// 死亡フラグを取得
 	bool GetIsDead() { return isDead_; }
 	// ワールド座標
 	Vector3 GetWorldPosition();
 	// 角度
 	Vector3 GetRotation();
+
+	// 弾リストを取得
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+	// 体のワールドトランスフォームを取得
+	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
+	// カメラの移動幅
+	Vector3* GetCameraOffset_P() { return &cameraOffset_; }
+	// カメラの回転幅
+	Vector3* GetCameraRotateOffset_P() { return &cameraRotateOffset_; }
+	// 移動ベクトルのアドレスを取得
+	Vector3* GetMoveVel_P() { return &moveVel_; }
+	// 加速モードかを取得
+	bool* GetIsBoost_P() { return &isBoost_; }
 #pragma endregion
 
 #pragma region Setter
@@ -90,61 +151,19 @@ public:// パブリックなメンバ関数
 
 	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
 	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
-
-#pragma endregion
-
-private:// プライベートなメンバ関数
-	// 衝突判定
-	void OnCollision(Collider* collider);
-
-	/// <summary>
-	/// HPの減少処理
-	/// </summary>
-	void DecrementHP();
-
-	/// <summary>
-	/// ゲームオーバー時のアニメーション
-	/// </summary>
-	void DeadAnimation();
-
-	/// <summary>
-	/// レティクルの配置
-	/// </summary>
-	void Deploy3DReticle();
-	/// <summary>
-	/// 2Dレティクルの配置
-	/// </summary>
-	void Deploy2DReticle();
-	/// <summary>
-	/// ロックオン時のレティクルの配置
-	/// </summary>
-	void DeployLockOnReticle();
-
-#pragma region 入力処理
-	/// <summary>
-	/// 移動処理
-	/// </summary>
-	void Move();
-	/// <summary>
-	/// レティクルの配置、移動の処理
-	/// </summary>
-	void Aim();
-	/// <summary>
-	/// 攻撃処理
-	/// </summary>
-	void Attack();
 #pragma endregion
 
 public:// 定数
 	// 自機の移動速度の減衰率
-	const Vector3 kMoveSpeedAttenuationRate = { 4.0f, 4.0f, 4.0f };
+	Vector3 kMoveSpeedDecayRate = { 3.0f, 3.0f, 1.0f };
+
 	// 自機の回転速度の減衰率
-	const Vector3 kRotateSpeedAttenuationRate = { 1.0f,1.0f,1.0f };
+	Vector3 kRotateSpeedDecayRate = { 0.3f,0.3f,1.4f };
 
 	// 自機の最大移動速度
-	const float kMaxSpeed = 0.3f;
+	float kMaxSpeed = 1.0f;
 	// 自機の最大回転速度
-	const Vector3 kMaxRotSpeed = { 0.5f , 0.7f, 1.0f };
+	Vector3 kMaxRotSpeed = { 1.0f, 1.0f, 1.0f };
 
 	// 移動限界座標
 	const Vector3 kMoveLimit = { 19.0f, 15.0f, 5.0f };
@@ -184,21 +203,19 @@ private:// プライベートなメンバ変数
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
 
-	// 3Dレティクルの座標
-	std::array<std::unique_ptr<Object3D>, 2> object3dReticle_;
-	// ロックオンしていないときのレティクル座標
-	WorldTransform default3dReticle_;
-
 	// 2Dレティクル用のスプライト
 	std::array<Sprite, 3> sprite2DReticle_;
 	// HP用のスプライト
 	Sprite hpSprite_;
-
 	// 自機の軌道パーティクル
 	std::array<std::unique_ptr<Particles>, 3> particle_;
-
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+
+	// 3Dレティクルの座標
+	std::array<std::unique_ptr<Object3D>, 2> object3dReticle_;
+	// ロックオンしていないときのレティクル座標
+	WorldTransform default3dReticle_;
 
 #pragma region アニメーション
 	// ロックオン時のアニメーション
@@ -238,6 +255,8 @@ private:// プライベートなメンバ変数
 
 	// 自機の移動速度
 	Vector3 moveVel_;
+	// ブースト時の移動速度
+	float boostSpeed_;
 	// レティクルの移動速度
 	Vector3 reticleMoveVel_;
 	//自機の回転速度
@@ -264,12 +283,12 @@ private:// プライベートなメンバ変数
 	// 弾の発射間隔
 	int bulletInterval_;
 
+	// ロックオン
+	bool* isLockOn_;
 	// 無敵中か
 	bool isInvinsible_;
 	// 加速モード
 	bool isBoost_;
-	// ロックオン
-	bool* isLockOn_;
 	// 死亡フラグ
 	bool isDead_ = true;
 };

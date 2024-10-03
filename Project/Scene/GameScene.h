@@ -1,15 +1,15 @@
 #pragma once
 #include "IScene.h"
-#include "EnemyBullet.h"
+
+#include "AimAssist/AimAssist.h"
+#include "CollisionManager.h"
 #include "Enemy.h"
+#include "EnemyBullet.h"
 #include "EnemyManager.h"
+#include "FollowCamera.h"
 #include "PlayerBullet.h"
 #include "Player.h"
-#include "AimAssist/AimAssist.h"
 #include "RailCamera.h"
-#include "FollowCamera.h"
-#include "Cube.h"
-#include "CollisionManager.h"
 #include "Score.h"
 
 class GameManager;
@@ -78,5 +78,7 @@ private:// プライベートなメンバ変数
 
 	// UI
 	std::array<Sprite, 4> guideUI_;
+
+	Object3D ground_;
 };
 

@@ -33,7 +33,6 @@ void FollowCamera::Update() {
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
 	ImGui::End();
 #endif // _DEBUG
-
 }
 
 Vector3 FollowCamera::TargetOffset() const {

@@ -1,8 +1,9 @@
 #pragma once
-#include "Sprite.h"
-#include "PostEffectManager.h"
-#include "Input.h"
 #include "Animation.h"
+#include "Input.h"
+#include "PostEffectManager.h"
+#include "Sprite.h"
+
 #include <array>
 
 // スコアクラス

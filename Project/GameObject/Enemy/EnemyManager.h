@@ -1,15 +1,15 @@
 #pragma once
-#include "Audio.h"
 #include "AttackAlert.h"
-#include "Enemy.h"
-#include "FixedTurret.h"
-#include "EnemyBullet.h"
+#include "Audio.h"
 #include "Boss/Titan/Titan.h"
-#include "Player.h"
 #include "Camera.h"
-#include "RailCamera.h"
 #include "CollisionManager.h"
+#include "Enemy.h"
+#include "EnemyBullet.h"
+#include "FixedTurret.h"
 #include "Particles.h"
+#include "Player.h"
+#include "RailCamera.h"
 #include "Score.h"
 
 class EnemyManager {

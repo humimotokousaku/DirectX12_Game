@@ -1,7 +1,7 @@
 #pragma once
+#include "CollisionManager.h"
 #include "MathStructs.h"
 #include "Player.h"
-#include "CollisionManager.h"
 
 class EnemyManager;
 class IEnemy {

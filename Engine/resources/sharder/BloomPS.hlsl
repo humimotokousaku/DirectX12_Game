@@ -34,8 +34,7 @@ float4 GaussianBlur(float2 uv)
 	float4 blurredColor = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	for (int i = -4; i <= 4; ++i) {
-		for (int j = -4; j <= 4; ++j)
-		{
+		for (int j = -4; j <= 4; ++j) {
 			float2 offset = texelSize * float2(i, j) * blurAmount;
 			float4 sampleColor = gTexture.Sample(gSampler, uv + offset);
 			float brightness = dot(sampleColor.rgb, float3(0.299, 0.587, 0.114));

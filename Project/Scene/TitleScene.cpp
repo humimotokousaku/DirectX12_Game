@@ -1,9 +1,10 @@
 #include "TitleScene.h"
-#include "ImGuiManager.h"
-#include "ModelManager.h"
-#include "GlobalVariables.h"
-#include "Lerp.h"
+
 #include "Audio.h"
+#include "GlobalVariables.h"
+#include "ImGuiManager.h"
+#include "Lerp.h"
+#include "ModelManager.h"
 #include "SceneTransition/SceneTransition.h"
 
 void TitleScene::Initialize() {
