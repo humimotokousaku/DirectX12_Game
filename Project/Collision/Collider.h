@@ -80,8 +80,8 @@ public:
 	void SetOBBCenterPos(Vector3 centerPos) { obb_.m_Pos = centerPos; }
 	void SetOBBLength(Vector3 length) { obb_.m_fLength = length; }
 	void SetOBBDirect(int index) {
-		Vector3 rotateResult = TransformNormal(obb_.m_NormaDirect[index], MakeRotateMatrix(GetRotation()));
-		obb_.m_NormaDirect[index] = Normalize(rotateResult);
+		Matrix4x4 rotate = MakeRotateMatrix(GetRotation());
+		obb_.m_NormaDirect[index] = { rotate.m[index][0], rotate.m[index][1], rotate.m[index][2] };
 	}
 
 	// 衝突属性(自分)を設定

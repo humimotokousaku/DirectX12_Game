@@ -8,6 +8,13 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 	camera_->Initialize();
 	controlPoints_ = controlPoints;
 
+	t_ = 0.0f;
+	targetT_ = 1.0f / segmentCount;
+	isMove_ = true;
+
+	boostFovAnim_.SetAnimData(&camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 70.0f, 10, "fovAnim_01", Easings::EaseOutBack);
+
+	/// デバッグ用
 	// 線分の数+1個分の頂点座標の計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {
 		float t = 1.0f / segmentCount * i;
@@ -26,18 +33,11 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 		line_[i]->startPos_ = pointsDrawing_[i];
 		line_[i]->endPos_ = pointsDrawing_[i + 1];
 	}
-
 	// 注視点
 	sphere_.Initialize();
 	sphere_.SetCamera(camera_.get());
 	sphere_.worldTransform.scale = { 0.5f,0.5f,0.5f };
 	sphere_.worldTransform.UpdateMatrix();
-
-	t_ = 0.0f;
-	targetT_ = 1.0f / segmentCount;
-	isMove_ = true;
-
-	boostFovAnim_.SetAnimData(&camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 70.0f, 10, "fovAnim_01", Easings::EaseOutBack);
 }
 
 void RailCamera::Update() {
@@ -84,6 +84,11 @@ void RailCamera::Update() {
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0,200);
 	ImGui::Checkbox("isMove", &isMove_);
 	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100,100);
+	// リセットボタンを作成
+	if (ImGui::Button("Reset")) {
+		// カメラの進行度をリセット
+		Reset();
+	}
 	ImGui::End();
 #ifdef _DEBUG
 	// デバッグ用のカメラの注視点の座標を更新
@@ -116,4 +121,10 @@ void RailCamera::BoostUpdate() {
 		//moveVel_ = Lerps::ExponentialInterpolate(moveVel_, 0, 1.0f, 0.1f);
 	}
 	boostFovAnim_.Update();
+}
+
+void RailCamera::Reset() {
+	t_ = 0.0f;
+	targetT_ = 1.0f / segmentCount;
+	isMove_ = true;
 }

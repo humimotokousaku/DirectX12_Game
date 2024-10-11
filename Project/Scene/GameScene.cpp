@@ -35,6 +35,7 @@ void GameScene::Initialize() {
 
 	// Blender
 	LoadJSONFile("GameMap_03.json");
+	//LoadJSONFile("GameMap_TestObstacles.json");
 #pragma endregion
 
 	// カメラの生成
@@ -202,7 +203,7 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
-	railCamera_.MoveRouteDraw();
+	//railCamera_.MoveRouteDraw();
 
 	ground_.Draw();
 

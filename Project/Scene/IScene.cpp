@@ -18,7 +18,7 @@ void IScene::Finalize() {
 	levelObjects_.clear();
 	enemyPoints_.clear();
 	models_.clear();
-	Audio::GetInstance()->SoundUnload();	
+	Audio::GetInstance()->SoundUnload();
 }
 
 void IScene::LoadJSONFile(const std::string fileName) {
@@ -91,7 +91,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		}
 		// MESH
 		if (type.compare("MESH") == 0) {
-			if(name.substr(0,11) == checkSpawnPoint.substr(0,11)) {
+			if (name.substr(0, 11) == checkSpawnPoint.substr(0, 11)) {
 				// 要素追加
 				levelData->enemyPoints_.emplace_back(LevelData::EnemyPoint{});
 				// 追加した要素の参照を取得
@@ -141,7 +141,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 背景用のオブジェクトか
 				nlohmann::json& isSkydome = object["skydome"];
 				objectData.isSkydome = (int)isSkydome;
-				
+
 				// 当たり判定が設定されているか
 				if (object.contains("collider")) {
 					nlohmann::json& collider = object["collider"];
@@ -160,7 +160,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 	}
 
 	std::vector<Object3D*> objects;
-	for (auto& objectData : levelData->objects_) {	
+	for (auto& objectData : levelData->objects_) {
 		Model* model;
 		// モデルの読み込み
 		ModelManager::GetInstance()->LoadModel("level", objectData.fileName);
@@ -177,21 +177,24 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		newObject->worldTransform.rotate = objectData.rotate;
 		// 座標
 		newObject->worldTransform.scale = objectData.scale;
-		
+
 		// 背景用のオブジェクトなら光を適用しない
 		if (objectData.isSkydome) {
 			newObject->SetIsLighting(false);
 		}
 
-		// 当たり判定
+		// 当たり判定(今回は障害物限定)
 		if (objectData.colliderType == "OBB") {
+			//newObject->collider->worldTransform.rotate = newObject->worldTransform.rotate;
+			newObject->collider->worldTransform.parent_ = &newObject->worldTransform;
 			newObject->collider->SetCollisionPrimitive(kCollisionOBB);
 			newObject->collider->SetCollisionAttribute(kCollisionAttributeObstacles);
 			newObject->collider->SetCollisionMask(~kCollisionAttributeObstacles);
 			//newObject->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
 			newObject->collider->SetIsActive(true);
 			// 当たり判定の大きさを代入
-			newObject->collider->SetOBBLength(objectData.colliderSize);
+			//newObject->collider->SetOBBLength(objectData.colliderSize);
+			newObject->collider->SetOBBLength(newObject->worldTransform.scale);
 		}
 
 		objects.push_back(newObject);

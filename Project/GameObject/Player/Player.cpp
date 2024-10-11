@@ -39,7 +39,7 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
+	object3d_->worldTransform.scale = { 1.0f,1.0f,1.0f };
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
@@ -151,7 +151,6 @@ void Player::Update() {
 	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
 	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -5.0f, kMoveLimit.y);
 	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
-
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -172,6 +171,8 @@ void Player::Update() {
 	// ImGui
 #ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
+	ImGui::Begin("Player");
+
 	if (ImGui::TreeNode("Velocity")) {
 		if (ImGui::TreeNode("Translate")) {
 			ImGui::DragFloat3("Current", &moveVel_.x, 0);
@@ -187,11 +188,14 @@ void Player::Update() {
 		}
 		ImGui::TreePop();
 	}
+	// レティクルの情報
 	object3dReticle_[0]->ImGuiParameter("Reticle0");
 	object3dReticle_[1]->ImGuiParameter("Reticle1");
-
+	// 体力
 	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
-	ImGui::DragFloat3("CameraOffset", &cameraOffset_.x, 0.001f, 0);
+
+	ImGui::End();
+
 	/// jsonによる数値の変更
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
@@ -261,8 +265,6 @@ void Player::BoostUpdate(float moveZ) {
 
 void Player::EvasionUpdate(float moveX) {
 	if (!isEvasion_) { return; }
-
-	
 
 	// 回避速度のイージング開始
 	evasionSpeedAnim_.SetIsStart(true);	
@@ -494,6 +496,7 @@ void Player::OnCollision(Collider* collider) {
 void Player::InvinsibleUpdate() {
 	if (!isInvinsible_) { return; }
 
+	// 3フレームごとに点滅
 	if (invinsibleFrame_ % 3 == 0) {
 		object3d_->SetColor(Vector4{ 1,1,1,1 });
 	}
@@ -502,6 +505,7 @@ void Player::InvinsibleUpdate() {
 	}
 	invinsibleFrame_--;
 	invinsibleFrame_ = std::clamp<int>(invinsibleFrame_, 0, kMaxInvinsibleFrame);
+
 	// 無敵時間終了
 	if (invinsibleFrame_ <= 0) {
 		isInvinsible_ = false;
@@ -518,6 +522,7 @@ void Player::HPUpdate() {
 	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
 		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
+		// 音をこもらせる
 		audio_->soundMuffleValue = -0.9f;
 	}
 	else {

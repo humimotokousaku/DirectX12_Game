@@ -247,7 +247,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="project\scene\GameClear.cpp" />
     <ClCompile Include="project\scene\GameOver.cpp" />
     <ClCompile Include="project\scene\GameScene.cpp" />
-    <ClCompile Include="project\scene\IScene.cpp" />
+    <ClCompile Include="Project\Scene\IScene.cpp" />
     <ClCompile Include="project\scene\TitleScene.cpp" />
     <ClCompile Include="engine\Utility\ConvertString.cpp" />
     <ClCompile Include="engine\Utility\GlobalVariables.cpp" />

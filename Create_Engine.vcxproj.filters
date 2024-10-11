@@ -190,9 +190,6 @@
     <ClCompile Include="project\scene\GameScene.cpp">
       <Filter>Project\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="project\scene\IScene.cpp">
-      <Filter>Project\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="project\scene\TitleScene.cpp">
       <Filter>Project\Scene</Filter>
     </ClCompile>
@@ -479,6 +476,7 @@
       <Filter>Project\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Project\Scene\IScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">

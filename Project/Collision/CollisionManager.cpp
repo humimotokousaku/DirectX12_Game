@@ -49,6 +49,8 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	}
 	/// OBB同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionOBB && colliderB->GetCollisionPrimitive() == kCollisionOBB) {
+		colliderA->worldTransform.UpdateMatrix();
+		colliderB->worldTransform.UpdateMatrix();
 		colliderA->SetOBBCenterPos(colliderA->GetWorldPosition());
 		colliderB->SetOBBCenterPos(colliderB->GetWorldPosition());
 		for (int i = 0; i < 3; i++) {

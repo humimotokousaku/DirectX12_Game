@@ -32,6 +32,8 @@ public:
 	/// </summary>
 	void BoostUpdate();
 
+	void Reset();
+
 #pragma region Getter
 	// カメラを取得
 	Camera* GetCamera() { return camera_.get(); }
