@@ -2,12 +2,6 @@
 #include "GameManager.h"
 #include "SceneTransition/SceneTransition.h"
 
-static Transform uvTransform = {
-	{1,1,1},
-	{0,0,0},
-	{0,0,0}
-};
-
 void GameScene::Initialize() {
 	sceneNum = GAME_SCENE;
 	textureManager_ = TextureManager::GetInstance();
@@ -40,7 +34,7 @@ void GameScene::Initialize() {
 	AddModel(modelManager_->SetModel("", "block.obj"));
 
 	// Blender
-	LoadJSONFile("GameMap_02.json");
+	LoadJSONFile("GameMap_03.json");
 #pragma endregion
 
 	// カメラの生成
@@ -106,13 +100,14 @@ void GameScene::Initialize() {
 	// Blenderで読み込んだオブジェクトの設定
 	for (Object3D* object : levelObjects_) {
 		object->SetCamera(followCamera_.GetCamera());
-		object->SetIsLighting(true);
+		object->SetIsLighting(false);
 	}
 
 	// 地面
 	ground_.Initialize();
 	ground_.SetModel(modelManager_->SetModel("level", "tail.obj"));
 	ground_.SetCamera(followCamera_.GetCamera());
+	ground_.worldTransform.translate = { 0.0f, -4.0f, 0.0f };
 	ground_.worldTransform.scale = { 500, 1, 500 };
 	ground_.worldTransform.rotate = { 0,0,0 };
 	ground_.SetUVScale(Vector3{ 50,50,1 });
@@ -204,16 +199,11 @@ void GameScene::Update() {
 			sceneNum = GAMEOVER_SCENE;
 		}
 	}
-
-	ground_.ImGuiParameter("Ground");
-	ImGui::Begin("UV");
-	ImGui::DragFloat3("Translate", &uvTransform.translate.x, 0.1f, -100, 100);
-	ImGui::DragFloat3("Rotate", &uvTransform.rotate.x, 0.1f, -100, 100);
-	ImGui::DragFloat3("Scale", &uvTransform.scale.x, 0.1f, -100, 100);
-	ImGui::End();
 }
 
 void GameScene::Draw() {
+	railCamera_.MoveRouteDraw();
+
 	ground_.Draw();
 
 	// 敵の体、弾を描画

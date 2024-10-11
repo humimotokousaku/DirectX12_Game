@@ -1,6 +1,6 @@
 #pragma once
 #include "IEnemy.h"
-#include "IEnemyState.h"
+#include "IBeamEnemyState.h"
 
 #include "Animation.h"
 
@@ -26,16 +26,36 @@ public:
 	/// <summary>
 	void Draw() override;
 
-	// ワールド座標
-	Vector3 GetWorldPosition();
-	// 角度
-	Vector3 GetRotation();
+	/// <summary>
+	/// stateの変更
+	/// </summary>
+	/// <param name="pState">state</param>
+	void ChangeState(IBeamEnemyState* pState);
+
 	// 衝突判定
 	void OnCollision(Collider* collider) override;
 
+	///
+	/// User Method
+	/// 
+
+	// 被ダメージのパーティクルの更新処理
+	void HitParticleUpdate(Particle& particle);
+
+#pragma region Getter
+
+#pragma endregion
+
+#pragma region Setter
+	// 座標を設定
+	void SetPosiotion(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	// 回転角の設定
+	void SetRotate(Vector3 rotate) { object3d_->worldTransform.rotate = rotate; }
+#pragma endregion
+
 public:// 定数
 	// 初期のビームのサイズ
-	const Vector3 kDefaultBeamSize = { 1.0f, 10.0f, 1.0f };
+	const Vector3 kDefaultBeamSize = { 1.0f, 50.0f, 1.0f };
 
 private:
 	// ビーム攻撃
@@ -43,4 +63,7 @@ private:
 
 	// ビームアニメーション
 	Animation beamAnim_;
+
+	// 行動の状態
+	IBeamEnemyState* state_;
 };

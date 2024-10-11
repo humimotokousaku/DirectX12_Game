@@ -66,8 +66,12 @@ public:
 public:// 定数
 	// ロックオンを開始する範囲(スクリーン座標基準)
 	const float kLockOnRange = 64.0f;
-	// ロックオンを解除のに必要な距離(スクリーン座標基準)
+	// ロックオンを解除のに必要な範囲(スクリーン座標基準)
 	const float kLockOnDisabledDist = 64.0f;
+
+	// ロックオン可能な敵との距離(ワールド座標基準)
+	const float kLockOnDistance = 200.0f;
+
 private:
 	Camera* camera_;
 

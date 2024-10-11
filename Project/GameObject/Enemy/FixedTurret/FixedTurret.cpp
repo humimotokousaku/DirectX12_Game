@@ -77,22 +77,6 @@ void FixedTurret::OnCollision(Collider* collider) {
 	}
 }
 
-Vector3 FixedTurret::GetRotation() {
-	Vector3 rotate = object3d_->worldTransform.rotate;
-	return rotate;
-}
-
-Vector3 FixedTurret::GetWorldPosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos{};
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
-}
-
 void FixedTurret::Fire() {
 	assert(player_);
 	// 自キャラのワールド座標を取得する

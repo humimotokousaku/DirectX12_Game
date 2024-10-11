@@ -33,8 +33,6 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		assert(0);
 	}
 
-	std::vector<Object3D*> objects;
-
 	// JSON文字列から回答したデータ
 	nlohmann::json deserialized;
 
@@ -109,7 +107,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 出現タイミング
 				enemyPoint.percentage = (float)spawnData["percentage"];
 				// 種類
-				enemyPoint.type = spawnData["enemyType"].get<std::string>();
+				enemyPoint.type = spawnData["enemyTypes"].get<std::string>();
 				// 移動速度(方向ベクトルに対して扱うものとする)
 				enemyPoint.velocity.x = (float)spawnData["velocity"][0];
 				enemyPoint.velocity.y = (float)spawnData["velocity"][1];
@@ -143,14 +141,25 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 背景用のオブジェクトか
 				nlohmann::json& isSkydome = object["skydome"];
 				objectData.isSkydome = (int)isSkydome;
+				
+				// 当たり判定が設定されているか
+				if (object.contains("collider")) {
+					nlohmann::json& collider = object["collider"];
+					// OBBの場合
+					if (collider["type"] == "OBB") {
+						// 使用するコライダーの種類
+						objectData.colliderType = collider["type"];
+						// 当たり判定の大きさ
+						objectData.colliderSize.x = collider["size"][0];
+						objectData.colliderSize.y = collider["size"][2];
+						objectData.colliderSize.z = collider["size"][1];
+					}
+				}
 			}
-		}
-
-		if (object.contains("children")) {
-
 		}
 	}
 
+	std::vector<Object3D*> objects;
 	for (auto& objectData : levelData->objects_) {	
 		Model* model;
 		// モデルの読み込み
@@ -172,6 +181,17 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		// 背景用のオブジェクトなら光を適用しない
 		if (objectData.isSkydome) {
 			newObject->SetIsLighting(false);
+		}
+
+		// 当たり判定
+		if (objectData.colliderType == "OBB") {
+			newObject->collider->SetCollisionPrimitive(kCollisionOBB);
+			newObject->collider->SetCollisionAttribute(kCollisionAttributeObstacles);
+			newObject->collider->SetCollisionMask(~kCollisionAttributeObstacles);
+			//newObject->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
+			newObject->collider->SetIsActive(true);
+			// 当たり判定の大きさを代入
+			newObject->collider->SetOBBLength(objectData.colliderSize);
 		}
 
 		objects.push_back(newObject);

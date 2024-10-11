@@ -40,8 +40,17 @@ float Dot(const Vector3& v1, const Vector3& v2) {
 	result = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 	return result;
 }
+float Dot(const float& v1, const float& v2) {
+	return v1 * v2;
+}
 
 float Length(const Vector3& v) {
+	float result{};
+	result = sqrt(Dot(v, v));
+	return result;
+}
+
+float Length(const float& v) {
 	float result{};
 	result = sqrt(Dot(v, v));
 	return result;
@@ -54,6 +63,14 @@ Vector3 Normalize(const Vector3& v) {
 		result.x = v.x / length;
 		result.y = v.y / length;
 		result.z = v.z / length;
+	}
+	return result;
+}
+float Normalize(const float& v) {
+	float result{};
+	float length = Length(v);
+	if (length != 0.0f) {
+		result = v / length;
 	}
 	return result;
 }

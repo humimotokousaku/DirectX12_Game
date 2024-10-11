@@ -27,10 +27,6 @@ public:
 	/// <summary>
 	void Draw() override;
 
-	// ワールド座標
-	Vector3 GetWorldPosition();
-	// 角度
-	Vector3 GetRotation();
 	// 衝突判定
 	void OnCollision(Collider* collider) override;
 

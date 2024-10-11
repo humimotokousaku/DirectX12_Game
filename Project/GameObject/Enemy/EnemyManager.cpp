@@ -48,8 +48,6 @@ void EnemyManager::Initialize() {
 
 	followWorldTransform_.Initialize();
 	followWorldTransform_.parent_ = railCamera_->GetWorldTransform_P();
-
-	//SpawnTitan(Vector3{ 0,2,40 }, Vector3{ 0,3.14f,0 });
 }
 
 void EnemyManager::Update() {
@@ -136,16 +134,20 @@ void EnemyManager::ParticleUpdate(Particle& particle) {
 void EnemyManager::CheckSpawn() {
 	for (int i = 0; i < spawnPoints_.size(); i++) {
 		if (!spawnPointDatas_[i].isActive) {
+			// 指定のカメラ進行度まで達しているなら
 			if ((*railCameraProgress_) >= spawnPoints_[i].percentage / 100) {
 				spawnPointDatas_[i].isActive = true;
 			}
 
 			if (spawnPointDatas_[i].isActive) {
-				if (spawnPoints_[i].type == "normal") {
+				if (spawnPoints_[i].type == "NORMAL") {
 					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity);
 				}
 				else if (spawnPoints_[i].type == "turret") {
 					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
+				}
+				else if (spawnPoints_[i].type == "BEAM") {
+					SpawnBeamEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate);
 				}
 			}
 		}
@@ -190,6 +192,36 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	// 敵モデルを追加
 	enemy->AddModel(models_[0]);
 	// 弾のモデルを追加
+	enemy->AddModel(models_[1]);
+	// 必要なアドレスを設定
+	enemy->SetPlayer(player_);
+	enemy->SetCamera(camera_);
+	enemy->SetEnemyManager(this);
+	// 初期化
+	enemy->Initialize(pos, rotate, id_);
+	// リストに登録
+	enemy_.push_back(enemy);
+
+	// 管理番号更新
+	id_++;
+
+	// 出現時のパーティクルを生成
+	Particles* particle = new Particles();
+	particle->Initialize(pos);
+	particle->SetCamera(camera_);
+	particle->SetEmitterFrequency(1);
+	particle->SetEmitterCount(20);
+	particle->SetEmitterSpawnCount(1);
+	particle->randomScaleLimit = { 0.3f, 0.4f };
+	spawnParticles_.push_back(particle);
+}
+
+void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate) {
+	BeamEnemy* enemy = new BeamEnemy();
+
+	// 敵モデルを追加
+	enemy->AddModel(models_[0]);
+	// ビームのモデルを追加
 	enemy->AddModel(models_[1]);
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
@@ -275,12 +307,12 @@ void EnemyManager::CheckActiveState() {
 		if (enemyPos.x >= -50.0f && enemyPos.x <= 1330.0f &&
 			enemyPos.y >= -50.0f && enemyPos.y <= 770.0f) {		
 			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-				enemy->SetIsActive(false);
+				//enemy->SetIsActive(false);
 			}
 		}
 		else {
 			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-				enemy->SetIsActive(false);
+				//enemy->SetIsActive(false);
 			}
 		}
 	}

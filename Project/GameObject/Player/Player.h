@@ -44,10 +44,16 @@ public:// パブリックなメンバ関数
 	/// 
 
 	/// <summary>
-	/// 加速中の処理
+	/// 加速中の更新処理
 	/// </summary>
 	/// <param name="moveZ">Z方向の移動ベクトル</param>
 	void BoostUpdate(float moveZ);
+
+	/// <summary>
+	/// 回避の更新処理
+	/// </summary>
+	/// <param name="moveX">X方向の移動ベクトル</param>
+	void EvasionUpdate(float moveX);
 
 private:// プライベートなメンバ関数
 #pragma region 入力処理
@@ -165,6 +171,9 @@ public:// 定数
 	// 自機の最大回転速度
 	Vector3 kMaxRotSpeed = { 1.0f, 1.0f, 1.0f };
 
+	// 自機の最大回避速度
+	float kMaxEvasionSpeed = 4.0f;
+
 	// 移動限界座標
 	const Vector3 kMoveLimit = { 19.0f, 15.0f, 5.0f };
 
@@ -222,6 +231,8 @@ private:// プライベートなメンバ変数
 	Animation reticleAnim_;
 	// ブースト時のアニメーション
 	Animation boostRotAnim_;
+	// 回避速度のアニメーション(イージング)
+	Animation evasionSpeedAnim_;
 #pragma endregion
 
 #pragma region テクスチャ
@@ -255,6 +266,8 @@ private:// プライベートなメンバ変数
 
 	// 自機の移動速度
 	Vector3 moveVel_;
+	// 回避速度
+	float evasionSpeed_;
 	// ブースト時の移動速度
 	float boostSpeed_;
 	// レティクルの移動速度
@@ -286,9 +299,11 @@ private:// プライベートなメンバ変数
 	// ロックオン
 	bool* isLockOn_;
 	// 無敵中か
-	bool isInvinsible_;
+	bool isInvinsible_ = false;
 	// 加速モード
-	bool isBoost_;
+	bool isBoost_ = false;
+	// 回避モード
+	bool isEvasion_ = false;
 	// 死亡フラグ
 	bool isDead_ = true;
 };

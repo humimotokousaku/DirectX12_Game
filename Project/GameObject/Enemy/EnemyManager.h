@@ -1,6 +1,7 @@
 #pragma once
 #include "AttackAlert.h"
 #include "Audio.h"
+#include "BeamEnemy.h"
 #include "Boss/Titan/Titan.h"
 #include "Camera.h"
 #include "CollisionManager.h"
@@ -69,6 +70,12 @@ private:
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
 	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
+	/// <summary>
+	/// ビーム敵の発生
+	/// </summary>
+	/// <param name="pos">座標</param>
+	/// <param name="rotate">回転角</param>
+	void SpawnBeamEnemy(Vector3 pos, Vector3 rotate);
 	/// <summary>
 	///	巨人の発生(ボス)
 	/// </summary>

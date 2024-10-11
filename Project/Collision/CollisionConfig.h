@@ -7,6 +7,8 @@
 const uint32_t kCollisionAttributePlayer = 0b1;
 // 敵陣営
 const uint32_t kCollisionAttributeEnemy = 0b1 << 1;
+// 障害物
+const uint32_t kCollisionAttributeObstacles = 0b1 << 2;
 
 /// 当たり判定の形状
 // 球体

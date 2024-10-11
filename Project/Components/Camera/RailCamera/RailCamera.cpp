@@ -35,7 +35,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = false;
+	isMove_ = true;
 
 	boostFovAnim_.SetAnimData(&camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 70.0f, 10, "fovAnim_01", Easings::EaseOutBack);
 }
@@ -78,7 +78,6 @@ void RailCamera::Update() {
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
-#ifdef _DEBUG
 	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
@@ -86,15 +85,14 @@ void RailCamera::Update() {
 	ImGui::Checkbox("isMove", &isMove_);
 	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100,100);
 	ImGui::End();
-#endif // _DEBUG
-
-
+#ifdef _DEBUG
+	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();
+#endif // _DEBUG
 }
 
 void RailCamera::MoveRouteDraw() {
-
 #ifdef _DEBUG
 	for (int i = 0; i < segmentCount; i++) {
 		line_[i]->Draw();

@@ -1,4 +1,6 @@
 #include "BeamEnemy.h"
+#include "BeamEnemyStateWait.h"
+#include "EnemyManager.h" 
 
 BeamEnemy::BeamEnemy() {
 
@@ -29,7 +31,8 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	beamObject_ = std::make_unique<Object3D>();
 	beamObject_->Initialize();
 	beamObject_->SetCamera(camera_);
-	beamObject_->SetModel(models_[0]);
+	beamObject_->SetModel(models_[1]);
+	beamObject_->worldTransform.translate.y = -50;
 	beamObject_->worldTransform.scale = kDefaultBeamSize;
 	beamObject_->worldTransform.UpdateMatrix();
 	beamObject_->worldTransform.parent_ = &object3d_->worldTransform;
@@ -38,13 +41,20 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	beamObject_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	beamObject_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	beamObject_->collider->SetOBBLength(beamObject_->worldTransform.scale);
+	beamObject_->collider->SetDamage(30);
 	beamObject_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
 	beamObject_->collider->SetIsActive(true);
 #pragma endregion
+
+	// 状態遷移
+	state_ = new BeamEnemyStateWait(this, player_);
+	state_->Initialize();
+
+	hp_ = 100;
 }
 
 void BeamEnemy::Update() {
-	beamObject_->worldTransform.rotate += 0.1f;
+	beamObject_->worldTransform.rotate.y += 0.1f;
 }
 
 void BeamEnemy::Draw() {
@@ -55,13 +65,42 @@ void BeamEnemy::Draw() {
 	beamObject_->Draw();
 }
 
-Vector3 BeamEnemy::GetWorldPosition() {
-	return Vector3();
-}
-
-Vector3 BeamEnemy::GetRotation() {
-	return Vector3();
+void BeamEnemy::ChangeState(IBeamEnemyState* pState) {
+	delete state_;
+	state_ = pState;
 }
 
 void BeamEnemy::OnCollision(Collider* collider) {
+	if (hp_ <= 0.0f) {
+		isDead_ = true;
+	}
+	else {
+		// 自機陣営に当たった場合のみダメージを受ける
+		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+			// HPを減らす
+			hp_ = hp_ - collider->GetDamage();
+
+			// 被弾時のパーティクルを生成
+			Particles* particles = new Particles();
+			particles->Initialize(GetWorldPosition());
+			particles->SetCamera(camera_);
+			particles->SetEmitterFrequency(1);
+			particles->SetEmitterCount(10);
+			particles->SetEmitterSpawnCount(1);
+			particles->randomScaleLimit = { 0.01f,0.2f };
+			particles->randomVelLimit[0] = { -8.0f,8.0f };
+			particles->randomVelLimit[1] = { 0.0f,0.0f };
+			particles->randomVelLimit[2] = { -8.0f,8.0f };
+			particles->randomColorLimit = { 0.0f,0.0f };
+			particles->randomLifeTimeLimit = { 0.1f,0.2f };
+			particles->particle_.vel.y = 20.0f;
+			particles->particle_.color = { 1.0f,1.0f,1.0f,1.0f };
+			particles->SetParticleUpdate(std::bind(&BeamEnemy::HitParticleUpdate, this, std::placeholders::_1));
+			enemyManager_->SetHitParticle(particles);
+		}
+	}
+}
+
+void BeamEnemy::HitParticleUpdate(Particle& particle) {
+	particle.vel.y -= 2.0f;
 }

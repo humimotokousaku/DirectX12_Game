@@ -112,6 +112,8 @@ void Player::Initialize() {
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
 	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
+	// 回避速度のイージング
+	evasionSpeedAnim_.SetAnimData(&evasionSpeed_, kMaxEvasionSpeed, 0.0f, 10, "EvasionSpeedAnim", Easings::EaseOutExpo);
 #pragma endregion
 
 	// 加速時の自機のZ軸の回転速度
@@ -167,6 +169,9 @@ void Player::Update() {
 	// 音のこもり具合
 	audio_->SetMuffle(shotSE_, 1.0f);
 
+	// ImGui
+#ifdef _DEBUG
+	object3d_->ImGuiParameter("Player");
 	if (ImGui::TreeNode("Velocity")) {
 		if (ImGui::TreeNode("Translate")) {
 			ImGui::DragFloat3("Current", &moveVel_.x, 0);
@@ -182,11 +187,6 @@ void Player::Update() {
 		}
 		ImGui::TreePop();
 	}
-
-
-#ifdef _DEBUG
-	// ImGui
-	object3d_->ImGuiParameter("Player");
 	object3dReticle_[0]->ImGuiParameter("Reticle0");
 	object3dReticle_[1]->ImGuiParameter("Reticle1");
 
@@ -259,6 +259,25 @@ void Player::BoostUpdate(float moveZ) {
 	PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
 }
 
+void Player::EvasionUpdate(float moveX) {
+	if (!isEvasion_) { return; }
+
+	
+
+	// 回避速度のイージング開始
+	evasionSpeedAnim_.SetIsStart(true);	
+
+	// 回避速度のイージングを更新
+	evasionSpeedAnim_.Update();
+	evasionSpeed_ *= Normalize(moveX);
+
+	// イージングが終了したら初期化
+	if (evasionSpeedAnim_.GetIsEnd()) {
+		evasionSpeedAnim_.ResetData();
+		isEvasion_ = false;
+	}
+}
+
 void Player::Move() {
 	// キャラクターの移動ベクトル
 	Vector3 move{};
@@ -289,11 +308,15 @@ void Player::Move() {
 		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
 	}
+	// 回避
+	if (input_->PressKey(DIK_C)) {
+		isEvasion_ = true;
+	}
 #pragma endregion
 
 #pragma region ゲームパッド
 	// ゲームパッド状態取得
-	if (Input::GetInstance()->GetJoystickState(0, joyState_)) {
+	if (input_->GetJoystickState(0, joyState_)) {
 		// デッドゾーンの設定
 		SHORT leftThumbX = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbLX);
 		SHORT leftThumbY = Input::GetInstance()->ApplyDeadzone(joyState_.Gamepad.sThumbLY);
@@ -302,10 +325,15 @@ void Player::Move() {
 		rotate.x -= (float)leftThumbY / SHRT_MAX * kMaxRotSpeed.x;
 	}
 	// ブースト
-	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_X)) {
+	if (input_->GamePadPress(XINPUT_GAMEPAD_X)) {
 		isBoost_ = true;
 		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
+
+	}
+	// 回避
+	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_A)) {
+		isEvasion_ = true;
 	}
 #pragma endregion
 
@@ -347,6 +375,9 @@ void Player::Move() {
 	// 加速処理
 	BoostUpdate(move.z);
 
+	// 回避処理
+	EvasionUpdate(rotate.y);
+
 	// 向いている方向に移動
 	Vector3 velocity = { 0, 0, kMaxSpeed };
 	// 現在の回転角を取得
@@ -359,7 +390,6 @@ void Player::Move() {
 	// 加速時の速度も加算する
 	moveVel_.z += boostSpeed_;
 
-
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
 	moveVel_.y = std::clamp<float>(moveVel_.y, -kMaxSpeed, kMaxSpeed);
@@ -368,6 +398,7 @@ void Player::Move() {
 	rotateVel_.y = std::clamp<float>(rotateVel_.y, -kMaxRotSpeed.y, kMaxRotSpeed.y);
 	rotateVel_.z = std::clamp<float>(rotateVel_.z, -kMaxRotSpeed.z, kMaxRotSpeed.z);
 
+	moveVel_.x += evasionSpeed_;
 
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
@@ -378,7 +409,7 @@ void Player::Move() {
 	object3d_->worldTransform.translate.y += moveVel_.y;
 
 	// カメラ移動
-	cameraOffset_ += moveVel_ / 10;
+	cameraOffset_ += moveVel_ / 5;
 	// カメラの移動幅上限
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);

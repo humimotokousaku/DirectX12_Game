@@ -124,19 +124,3 @@ void Enemy::Fire() {
 	// 弾を登録
 	enemyManager_->AddEnemyBullet(newBullet);
 }
-
-Vector3 Enemy::GetRotation() {
-	Vector3 rotate = object3d_->worldTransform.rotate;
-	return rotate;
-}
-
-Vector3 Enemy::GetWorldPosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos{};
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
-}

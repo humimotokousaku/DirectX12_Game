@@ -11,29 +11,6 @@
         },
         {
             "type": "MESH",
-            "name": "skydome",
-            "transform": {
-                "translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    1500.0,
-                    1500.0,
-                    1500.0
-                ]
-            },
-            "skydome": 1,
-            "file_name": "skydome.obj"
-        },
-        {
-            "type": "MESH",
             "name": "平面",
             "transform": {
                 "translation": [
@@ -54,6 +31,29 @@
             },
             "skydome": 0,
             "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "skydome",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    1500.0,
+                    1500.0,
+                    1500.0
+                ]
+            },
+            "skydome": 1,
+            "file_name": "skydome.obj"
         },
         {
             "type": "CURVE",
@@ -89,30 +89,41 @@
                 },
                 {
                     "point": [
-                        0.0,
-                        -1344.462890625,
+                        -737.5704956054688,
+                        -1076.94775390625,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        -712.0,
+                        1037.314453125,
                         25.0
                     ]
                 }
             ]
         },
         {
+            "type": "LIGHT",
+            "name": "Light.001"
+        },
+        {
             "type": "MESH",
-            "name": "enemy_point",
+            "name": "enemy_point.034",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 50,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        -24.82541275024414,
-                        491.37725830078125,
-                        56.77866744995117
+                        -6.597489356994629,
+                        -565.5626831054688,
+                        33.993133544921875
                     ],
                     "rotation": [
                         0.0,
@@ -124,21 +135,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.001",
+            "name": "enemy_point.033",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 51,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        0.0,
-                        491.37725830078125,
-                        56.77866744995117
+                        -0.29534053802490234,
+                        -570.1748657226562,
+                        29.11050796508789
                     ],
                     "rotation": [
                         0.0,
@@ -150,229 +161,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.002",
+            "name": "enemy_point.032",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 49,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
-                    ],
-                    "point": [
-                        6.302149295806885,
-                        491.37725830078125,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.003",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        11.766434669494629,
-                        491.37725830078125,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.004",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        11.766434669494629,
-                        301.4952087402344,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.005",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        6.302149295806885,
-                        301.4952087402344,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.006",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        0.0,
-                        301.4952087402344,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.007",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -15.353500366210938,
-                        83.489501953125,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.008",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -9.051351547241211,
-                        83.489501953125,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.009",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -3.5870656967163086,
-                        83.489501953125,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.010",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
                         5.1689453125,
-                        -99.95941162109375,
-                        56.77866744995117
+                        -557.52001953125,
+                        38.04401779174805
                     ],
                     "rotation": [
                         0.0,
@@ -384,151 +187,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.011",
+            "name": "enemy_point.031",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 51,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -0.29534053802490234,
-                        -99.95941162109375,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.012",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -6.597489356994629,
-                        -99.95941162109375,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.013",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -6.597489356994629,
-                        -356.55859375,
-                        52.24296569824219
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.014",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -0.29534053802490234,
-                        -356.55859375,
-                        52.24296569824219
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.015",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        5.693972587585449,
-                        -356.55859375,
-                        52.24296569824219
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        0.0
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.016",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
                         -13.82740592956543,
-                        -356.55859375,
-                        52.24296569824219
+                        -571.1844482421875,
+                        31.488677978515625
                     ],
                     "rotation": [
                         0.0,
@@ -540,21 +213,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.017",
+            "name": "enemy_point.030",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 53,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
                         -19.291690826416016,
-                        -356.55859375,
-                        52.24296569824219
+                        -583.5809326171875,
+                        18.907241821289062
                     ],
                     "rotation": [
                         0.0,
@@ -566,21 +239,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.018",
+            "name": "enemy_point.029",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 50,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        -25.593841552734375,
-                        -356.55859375,
-                        52.24296569824219
+                        -24.361330032348633,
+                        -562.0606689453125,
+                        37.12022399902344
                     ],
                     "rotation": [
                         0.0,
@@ -592,21 +265,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.019",
+            "name": "enemy_point.028",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 52,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        11.779400825500488,
-                        -356.55859375,
-                        52.24296569824219
+                        11.054340362548828,
+                        -565.5626831054688,
+                        22.797977447509766
                     ],
                     "rotation": [
                         0.0,
@@ -618,21 +291,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.020",
+            "name": "enemy_point.027",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 53,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        18.548967361450195,
-                        -356.55859375,
-                        52.24296569824219
+                        17.356491088867188,
+                        -561.7462768554688,
+                        38.04401779174805
                     ],
                     "rotation": [
                         0.0,
@@ -644,21 +317,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.021",
+            "name": "enemy_point.026",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
+                    "enemyTypes": "NORMAL",
+                    "percentage": 52,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.0
+                        0.10000000149011612
                     ],
                     "point": [
-                        25.436275482177734,
-                        -356.55859375,
-                        52.24296569824219
+                        22.820775985717773,
+                        -576.6241455078125,
+                        29.995018005371094
                     ],
                     "rotation": [
                         0.0,
@@ -670,7 +343,7 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.022",
+            "name": "enemy_point.025",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
@@ -682,33 +355,7 @@
                         0.0
                     ],
                     "point": [
-                        -6.853640556335449,
-                        641.0648193359375,
-                        56.77866744995117
-                    ],
-                    "rotation": [
-                        0.0,
-                        -0.0,
-                        -179.99998474121094
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "MESH",
-            "name": "enemy_point.023",
-            "spawn_data": [
-                {
-                    "type": "SPAWN_POINT",
-                    "enemyTypes": "BEAM",
-                    "percentage": 0,
-                    "velocity": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "point": [
-                        -1.3893547058105469,
+                        17.011703491210938,
                         641.0648193359375,
                         56.77866744995117
                     ],
@@ -748,7 +395,7 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.025",
+            "name": "enemy_point.023",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
@@ -760,7 +407,7 @@
                         0.0
                     ],
                     "point": [
-                        17.011703491210938,
+                        -1.3893547058105469,
                         641.0648193359375,
                         56.77866744995117
                     ],
@@ -774,21 +421,47 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.026",
+            "name": "enemy_point.022",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 52,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
-                        22.820775985717773,
-                        -576.6241455078125,
-                        29.995018005371094
+                        -6.853640556335449,
+                        641.0648193359375,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        -179.99998474121094
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.021",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        25.436275482177734,
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -800,21 +473,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.027",
+            "name": "enemy_point.020",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 53,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
-                        17.356491088867188,
-                        -561.7462768554688,
-                        38.04401779174805
+                        18.548967361450195,
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -826,21 +499,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.028",
+            "name": "enemy_point.019",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 52,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
-                        11.054340362548828,
-                        -565.5626831054688,
-                        22.797977447509766
+                        11.779400825500488,
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -852,21 +525,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.029",
+            "name": "enemy_point.018",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 50,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
-                        -24.361330032348633,
-                        -562.0606689453125,
-                        37.12022399902344
+                        -25.593841552734375,
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -878,21 +551,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.030",
+            "name": "enemy_point.017",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 53,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
                         -19.291690826416016,
-                        -583.5809326171875,
-                        18.907241821289062
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -904,21 +577,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.031",
+            "name": "enemy_point.016",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 51,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
                         -13.82740592956543,
-                        -571.1844482421875,
-                        31.488677978515625
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -930,21 +603,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.032",
+            "name": "enemy_point.015",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 49,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
-                        5.1689453125,
-                        -557.52001953125,
-                        38.04401779174805
+                        5.693972587585449,
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -956,21 +629,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.033",
+            "name": "enemy_point.014",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 51,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
                         -0.29534053802490234,
-                        -570.1748657226562,
-                        29.11050796508789
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -982,21 +655,21 @@
         },
         {
             "type": "MESH",
-            "name": "enemy_point.034",
+            "name": "enemy_point.013",
             "spawn_data": [
                 {
                     "type": "SPAWN_POINT",
-                    "enemyTypes": "NORMAL",
-                    "percentage": 50,
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
                     "velocity": [
                         0.0,
                         0.0,
-                        0.10000000149011612
+                        0.0
                     ],
                     "point": [
                         -6.597489356994629,
-                        -565.5626831054688,
-                        33.993133544921875
+                        -356.55859375,
+                        52.24296569824219
                     ],
                     "rotation": [
                         0.0,
@@ -1005,6 +678,384 @@
                     ]
                 }
             ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.012",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -6.597489356994629,
+                        -99.95941162109375,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.011",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -0.29534053802490234,
+                        -99.95941162109375,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.010",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        5.1689453125,
+                        -99.95941162109375,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.009",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -3.5870656967163086,
+                        83.489501953125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.008",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -9.051351547241211,
+                        83.489501953125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.007",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -15.353500366210938,
+                        83.489501953125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.006",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        0.0,
+                        301.4952087402344,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.005",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        6.302149295806885,
+                        301.4952087402344,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.004",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        11.766434669494629,
+                        301.4952087402344,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.003",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        11.766434669494629,
+                        491.37725830078125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.002",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        6.302149295806885,
+                        491.37725830078125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.001",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        0.0,
+                        491.37725830078125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "BEAM",
+                    "percentage": 0,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -24.82541275024414,
+                        491.37725830078125,
+                        56.77866744995117
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "CAMERA",
+            "name": "Camera.001"
+        },
+        {
+            "type": "MESH",
+            "name": "立方体",
+            "transform": {
+                "translation": [
+                    20.58846664428711,
+                    375.4849853515625,
+                    -5.835448265075684
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    20.0,
+                    20.0,
+                    50.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "cube.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    20.0,
+                    20.0,
+                    50.0
+                ]
+            }
         }
     ]
 }

@@ -57,6 +57,13 @@ public:
 
 		return worldPos;
 	}
+	Vector3 GetRotation() {
+		Vector3 rotate = object3d_->worldTransform.rotate;
+		if (object3d_->worldTransform.parent_) {
+			rotate += object3d_->worldTransform.parent_->rotate;
+		}
+		return rotate;
+	}
 #pragma endregion
 
 #pragma region Setter

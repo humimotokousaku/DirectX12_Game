@@ -103,7 +103,10 @@ public:
 #pragma endregion
 	
 	// 衝突時に呼ばれる関数(ユーザーの使用禁止)
-	void OnCollision(Collider* collider) { onCollision_(collider); }
+	void OnCollision(Collider* collider) { 
+		if (!onCollision_) { return; }
+		onCollision_(collider); 
+	}
 
 public:// パブリックな変数
 	WorldTransform worldTransform;

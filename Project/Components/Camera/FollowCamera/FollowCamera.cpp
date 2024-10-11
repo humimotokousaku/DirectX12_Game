@@ -26,12 +26,13 @@ void FollowCamera::Update() {
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
-#ifdef _DEBUG
 	ImGui::Begin("FollowCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);	
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
 	ImGui::End();
+#ifdef _DEBUG
+
 #endif // _DEBUG
 }
 
