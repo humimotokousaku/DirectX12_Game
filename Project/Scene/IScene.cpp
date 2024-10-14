@@ -170,7 +170,10 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		// モデルを指定して3Dオブジェクト生成
 		Object3D* newObject = new Object3D();
 		newObject->Initialize();
+
+		// 見た目のモデルを設定
 		newObject->SetModel(model);
+
 		// 座標
 		newObject->worldTransform.translate = objectData.translate;
 		// 回転
@@ -178,6 +181,8 @@ void IScene::LoadJSONFile(const std::string fileName) {
 		// 座標
 		newObject->worldTransform.scale = objectData.scale;
 
+		// ライティングを行う
+		newObject->SetIsLighting(true);
 		// 背景用のオブジェクトなら光を適用しない
 		if (objectData.isSkydome) {
 			newObject->SetIsLighting(false);
@@ -185,16 +190,14 @@ void IScene::LoadJSONFile(const std::string fileName) {
 
 		// 当たり判定(今回は障害物限定)
 		if (objectData.colliderType == "OBB") {
-			//newObject->collider->worldTransform.rotate = newObject->worldTransform.rotate;
+			// 当たり判定の設定
 			newObject->collider->worldTransform.parent_ = &newObject->worldTransform;
 			newObject->collider->SetCollisionPrimitive(kCollisionOBB);
 			newObject->collider->SetCollisionAttribute(kCollisionAttributeObstacles);
 			newObject->collider->SetCollisionMask(~kCollisionAttributeObstacles);
-			//newObject->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
 			newObject->collider->SetIsActive(true);
 			// 当たり判定の大きさを代入
-			//newObject->collider->SetOBBLength(objectData.colliderSize);
-			newObject->collider->SetOBBLength(newObject->worldTransform.scale);
+			newObject->collider->SetOBBLength(objectData.colliderSize);
 		}
 
 		objects.push_back(newObject);

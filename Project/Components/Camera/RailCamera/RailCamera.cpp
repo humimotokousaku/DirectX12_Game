@@ -98,10 +98,11 @@ void RailCamera::Update() {
 }
 
 void RailCamera::MoveRouteDraw() {
-#ifdef _DEBUG
 	for (int i = 0; i < segmentCount; i++) {
 		line_[i]->Draw();
 	}
+#ifdef _DEBUG
+
 	sphere_.Draw(kFillModeWireFrame);
 #endif // _DEBUG
 }

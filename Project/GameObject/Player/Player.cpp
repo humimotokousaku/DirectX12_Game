@@ -39,7 +39,8 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
-	object3d_->worldTransform.scale = { 1.0f,1.0f,1.0f };
+	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
+	//object3d_->worldTransform.scale = { 1.0f,1.0f,1.0f };
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
