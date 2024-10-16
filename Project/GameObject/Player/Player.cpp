@@ -50,6 +50,20 @@ void Player::Initialize() {
 	object3d_->collider->SetIsActive(true);
 #pragma endregion
 
+	// 自機の残像オブジェクトを作成
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		afterImageObject3d_[i] = std::make_unique<Object3D>();
+		afterImageObject3d_[i]->Initialize();
+		afterImageObject3d_[i]->SetModel(models_[0]);
+		afterImageObject3d_[i]->SetCamera(camera_);
+		afterImageObject3d_[i]->worldTransform.scale = { 0.5f,0.5f,0.5f };
+		afterImageObject3d_[i]->worldTransform.UpdateMatrix();
+		// 透明にする
+		afterImageObject3d_[i]->SetColor(Vector4{ 0.3f,0.3f,0.3f,0.6f });
+		// 表示をしない
+		afterImageObject3d_[i]->SetIsActive(false);
+	}
+
 #pragma region レティクル
 	// 3Dレティクルモデル作成(デバッグ用)
 	for (int i = 0; i < 2; i++) {
@@ -114,7 +128,7 @@ void Player::Initialize() {
 	// ロックオン時のレティクルのアニメーション
 	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
 	// 回避速度のイージング
-	evasionSpeedAnim_.SetAnimData(&evasionSpeed_, kMaxEvasionSpeed, 0.0f, 10, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	evasionSpeedAnim_.SetAnimData(&evasionSpeed_, kMaxEvasionSpeed, 0.0f, kMaxEvasionFrame, "EvasionSpeedAnim", Easings::EaseOutExpo);
 #pragma endregion
 
 	// 加速時の自機のZ軸の回転速度
@@ -129,7 +143,8 @@ void Player::Initialize() {
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
-
+	// 残像表示時間
+	evasionFrame_ = kMaxEvasionFrame;
 
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
@@ -213,6 +228,10 @@ void Player::Update() {
 void Player::Draw() {
 	// 自機
 	object3d_->Draw(playerTexture_);
+	// 残像
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		afterImageObject3d_[i]->Draw(playerTexture_);
+	}
 
 	// 3Dレティクル
 #ifdef _DEBUG
@@ -242,42 +261,73 @@ void Player::BoostUpdate(float moveZ) {
 	if (isBoost_) {
 		// 徐々に速度を上げる
 		boostSpeed_ = Lerps::ExponentialInterpolate(boostSpeed_, moveZ, kMoveSpeedDecayRate.z, 1.0f);
+		// 自機を徐々に前に出す
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 10.0f, kMoveSpeedDecayRate.z, 1.0f);
 
 		// コントローラの振動開始
 		input_->GamePadVibration(0, 65535, 65535);
+		// アニメーションが終了しているなら振動させない
 		if (boostRotAnim_.GetIsEnd()) {
 			input_->GamePadVibration(0, 0, 0);
 		}
 		// ガウスをかける
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
-		return;
+	}
+	else {
+		// 徐々に速度を下げる
+		boostSpeed_ = Lerps::ExponentialInterpolate(boostSpeed_, moveZ, kMoveSpeedDecayRate.z, 1.0f);
+		// 自機をもとの位置徐々に戻す
+		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 0.0f, kMoveSpeedDecayRate.z, 1.0f);
+
+		// コントローラの振動除去
+		input_->GamePadVibration(0, 0, 0);
+		// ガウスを消す
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
 	}
 
-	// 徐々に速度を下げる
-	boostSpeed_ = Lerps::ExponentialInterpolate(boostSpeed_, moveZ, kMoveSpeedDecayRate.z, 1.0f);
-	object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 0.0f, kMoveSpeedDecayRate.z, 1.0f);
-
-	// コントローラの振動除去
-	input_->GamePadVibration(0, 0, 0);
-	// ガウスを消す
-	PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
+	// 速度を加算
+	moveVel_.z += boostSpeed_;
 }
 
 void Player::EvasionUpdate(float moveX) {
-	if (!isEvasion_) { return; }
+	// 回避中でなければ終了
+	if (!isEvasion_) {
+		if (moveX < 0) { evasionVelX_ = -1; }
+		else if (moveX > 0) { evasionVelX_ = 1; }
+		return;
+	}
+
+	// 残像を出す
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		if (evasionFrame_ % 6 == i) {
+			afterImageObject3d_[i]->SetIsActive(true);
+			afterImageObject3d_[i]->worldTransform.translate = object3d_->worldTransform.translate;
+			afterImageObject3d_[i]->worldTransform.rotate = object3d_->worldTransform.rotate;
+		}
+	}
 
 	// 回避速度のイージング開始
-	evasionSpeedAnim_.SetIsStart(true);	
+	evasionSpeedAnim_.SetIsStart(true);
 
 	// 回避速度のイージングを更新
 	evasionSpeedAnim_.Update();
-	evasionSpeed_ *= Normalize(moveX);
+
+	// 速度を正規化
+	evasionSpeed_ *= Normalize(evasionVelX_) * 1.2f;
+	moveVel_.x = evasionSpeed_;
+
+	// 時間を進める
+	evasionFrame_--;
 
 	// イージングが終了したら初期化
 	if (evasionSpeedAnim_.GetIsEnd()) {
 		evasionSpeedAnim_.ResetData();
+		evasionFrame_ = kMaxEvasionFrame;
 		isEvasion_ = false;
+		// 残像を消す
+		for (int i = 0; i < afterImageObject3d_.size(); i++) {
+			afterImageObject3d_[i]->SetIsActive(false);
+		}
 	}
 }
 
@@ -332,7 +382,6 @@ void Player::Move() {
 		isBoost_ = true;
 		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
-
 	}
 	// 回避
 	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_A)) {
@@ -375,11 +424,7 @@ void Player::Move() {
 	}
 #pragma endregion
 
-	// 加速処理
-	BoostUpdate(move.z);
 
-	// 回避処理
-	EvasionUpdate(rotate.y);
 
 	// 向いている方向に移動
 	Vector3 velocity = { 0, 0, kMaxSpeed };
@@ -387,11 +432,9 @@ void Player::Move() {
 	Vector3 rot = object3d_->worldTransform.rotate;
 	// 回転行列を求める
 	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
-
 	// 方向ベクトルを求める
 	moveVel_ = TransformNormal(velocity, rotMatrix) * 0.8f;
-	// 加速時の速度も加算する
-	moveVel_.z += boostSpeed_;
+
 
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
@@ -401,7 +444,11 @@ void Player::Move() {
 	rotateVel_.y = std::clamp<float>(rotateVel_.y, -kMaxRotSpeed.y, kMaxRotSpeed.y);
 	rotateVel_.z = std::clamp<float>(rotateVel_.z, -kMaxRotSpeed.z, kMaxRotSpeed.z);
 
-	moveVel_.x += evasionSpeed_;
+	// 加速処理
+	BoostUpdate(move.z);
+
+	// 回避処理
+	EvasionUpdate(rotate.y);
 
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
@@ -669,4 +716,7 @@ Vector3 Player::GetDefault3DReticlePosition() {
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ
 	object3d_->worldTransform.parent_ = parent;
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		afterImageObject3d_[i]->worldTransform.parent_ = parent;
+	}
 }

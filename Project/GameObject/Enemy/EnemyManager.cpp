@@ -143,7 +143,7 @@ void EnemyManager::CheckSpawn() {
 				if (spawnPoints_[i].type == "NORMAL") {
 					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity);
 				}
-				else if (spawnPoints_[i].type == "turret") {
+				else if (spawnPoints_[i].type == "TURRET") {
 					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
 				}
 				else if (spawnPoints_[i].type == "BEAM") {

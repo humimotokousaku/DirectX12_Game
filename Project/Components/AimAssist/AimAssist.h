@@ -62,11 +62,10 @@ public:
 	Vector3* GetLockOnReticleOffset() { return &lockOnReticleOffset_; }
 #pragma endregion
 
-	Vector3 reticlePos_;
 public:// 定数
 	// ロックオンを開始する範囲(スクリーン座標基準)
 	const float kLockOnRange = 64.0f;
-	// ロックオンを解除のに必要な範囲(スクリーン座標基準)
+	// ロックオンを解除に必要な範囲(スクリーン座標基準)
 	const float kLockOnDisabledDist = 64.0f;
 
 	// ロックオン可能な敵との距離(ワールド座標基準)
@@ -86,7 +85,4 @@ private:
 
 	// ロックオン時のレティクルの補間量
 	Vector3 lockOnReticleOffset_;
-
-	// ロックオンした敵の管理番号
-	int enemyId_;
 };

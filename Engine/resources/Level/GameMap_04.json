@@ -1,0 +1,1167 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "MESH",
+            "name": "平面",
+            "transform": {
+                "translation": [
+                    0.0,
+                    0.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "CURVE",
+            "name": "NURBSパス",
+            "curve_data": [
+                {
+                    "point": [
+                        0.0,
+                        1071.306640625,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        56.87799072265625,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -957.5505981445312,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -1971.979248046875,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -2986.40771484375,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -4000.83642578125,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -5015.26513671875,
+                        25.0
+                    ]
+                },
+                {
+                    "point": [
+                        0.0,
+                        -6029.693359375,
+                        25.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.024",
+            "transform": {
+                "translation": [
+                    102.3259506225586,
+                    168.93324279785156,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.023",
+            "transform": {
+                "translation": [
+                    102.3259506225586,
+                    139.37979125976562,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.022",
+            "transform": {
+                "translation": [
+                    102.3259506225586,
+                    107.61187744140625,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.021",
+            "transform": {
+                "translation": [
+                    102.3259506225586,
+                    76.39976501464844,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.020",
+            "transform": {
+                "translation": [
+                    102.3259506225586,
+                    199.74392700195312,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.019",
+            "transform": {
+                "translation": [
+                    -103.0,
+                    199.74392700195312,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.018",
+            "transform": {
+                "translation": [
+                    -103.0,
+                    76.39976501464844,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.017",
+            "transform": {
+                "translation": [
+                    -103.0,
+                    107.61187744140625,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.016",
+            "transform": {
+                "translation": [
+                    -103.0,
+                    139.37979125976562,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.015",
+            "transform": {
+                "translation": [
+                    20.0,
+                    168.93324279785156,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    5.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    10.0,
+                    10.0,
+                    15.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.014",
+            "transform": {
+                "translation": [
+                    -103.0,
+                    168.93324279785156,
+                    40.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.013",
+            "transform": {
+                "translation": [
+                    -20.0,
+                    168.93324279785156,
+                    10.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    5.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    10.0,
+                    10.0,
+                    15.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.012",
+            "transform": {
+                "translation": [
+                    120.537353515625,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.011",
+            "transform": {
+                "translation": [
+                    151.9031524658203,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.010",
+            "transform": {
+                "translation": [
+                    -109.97576904296875,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.009",
+            "transform": {
+                "translation": [
+                    -141.7028045654297,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.008",
+            "transform": {
+                "translation": [
+                    -78.72599029541016,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.007",
+            "transform": {
+                "translation": [
+                    89.06488037109375,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.006",
+            "transform": {
+                "translation": [
+                    21.40843963623047,
+                    365.31695556640625,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -6.500001430511475,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.005",
+            "transform": {
+                "translation": [
+                    -33.895294189453125,
+                    365.31695556640625,
+                    31.227968215942383
+                ],
+                "rotation": [
+                    0.0,
+                    34.5,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.004",
+            "transform": {
+                "translation": [
+                    -2.8982887268066406,
+                    -70.11614990234375,
+                    9.108726501464844
+                ],
+                "rotation": [
+                    -0.0,
+                    89.99999237060547,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.003",
+            "transform": {
+                "translation": [
+                    57.69907760620117,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.002",
+            "transform": {
+                "translation": [
+                    -46.99895095825195,
+                    632.1396484375,
+                    35.73582458496094
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    15.0,
+                    15.0,
+                    15.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    15.0,
+                    15.0,
+                    46.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    168.93324279785156,
+                    36.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    11.0,
+                    11.0,
+                    13.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    10.050000190734863,
+                    10.0,
+                    40.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "平面.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    1000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.002",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -1000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -3000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.004",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -2000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.005",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -4000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.006",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -5000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.007",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -6000.0,
+                    -6.0
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "TURRET",
+                    "percentage": 10,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        19.81119155883789,
+                        173.9462432861328,
+                        25.689720153808594
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.002",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "TURRET",
+                    "percentage": 10,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        -20.375064849853516,
+                        173.9462432861328,
+                        25.689720153808594
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -270,6 +270,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.cpp" />
     <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.cpp" />
+    <ClCompile Include="Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateHorizontal.h" />
@@ -387,6 +388,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.h" />
     <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.h" />
+    <ClInclude Include="Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />

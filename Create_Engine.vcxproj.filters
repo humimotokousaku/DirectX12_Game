@@ -477,6 +477,7 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\Scene\IScene.cpp" />
+    <ClCompile Include="Skydome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -824,6 +825,7 @@
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
       <Filter>Project\Components\SceneTransition</Filter>
     </ClInclude>
+    <ClInclude Include="Skydome.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

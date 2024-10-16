@@ -162,7 +162,6 @@ public:// GetterとSetter
 public:// 定数
 	// 自機の移動速度の減衰率
 	Vector3 kMoveSpeedDecayRate = { 3.0f, 3.0f, 1.0f };
-
 	// 自機の回転速度の減衰率
 	Vector3 kRotateSpeedDecayRate = { 0.3f,0.3f,1.4f };
 
@@ -170,7 +169,6 @@ public:// 定数
 	float kMaxSpeed = 1.0f;
 	// 自機の最大回転速度
 	Vector3 kMaxRotSpeed = { 1.0f, 1.0f, 1.0f };
-
 	// 自機の最大回避速度
 	float kMaxEvasionSpeed = 4.0f;
 
@@ -186,16 +184,17 @@ public:// 定数
 	// カメラから照準オブジェクトの距離
 	const float kDistanceObject = 50.0f;
 
-	// 弾の発射間隔[frame]
-	const int kBulletInterval = 5;
-
 	// HPスプライトの最大サイズ
 	const Vector2 kMaxHPSize = { 300.0f, 32.0f };
 	// HPの最大値
 	const float kMaxHp = 100;
 
-	// 無敵時間
+	// 弾の発射間隔[frame]
+	const int kBulletInterval = 5;
+	// 無敵時間[frame]
 	const int kMaxInvinsibleFrame = 60;
+	// 残像を表示する時間[frame]
+	const int kMaxEvasionFrame = 10;
 
 private:// プライベートなメンバ変数
 	// キーボード入力
@@ -211,6 +210,8 @@ private:// プライベートなメンバ変数
 private:// プライベートなメンバ変数
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
+	// 自機の残像
+	std::array<std::unique_ptr<Object3D>, 6> afterImageObject3d_;
 
 	// 2Dレティクル用のスプライト
 	std::array<Sprite, 3> sprite2DReticle_;
@@ -266,6 +267,8 @@ private:// プライベートなメンバ変数
 
 	// 自機の移動速度
 	Vector3 moveVel_;
+	// 回避した瞬間のX方向のベクトル
+	float evasionVelX_;
 	// 回避速度
 	float evasionSpeed_;
 	// ブースト時の移動速度
@@ -291,6 +294,8 @@ private:// プライベートなメンバ変数
 
 	// 無敵時間
 	int invinsibleFrame_;
+	// 回避時間
+	int evasionFrame_;
 	// ロックオン時のレティクルのサイズ変更に使用するframe
 	int currentFrame_;
 	// 弾の発射間隔

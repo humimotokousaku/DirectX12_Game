@@ -34,7 +34,7 @@ void GameScene::Initialize() {
 	AddModel(modelManager_->SetModel("", "block.obj"));
 
 	// Blender
-	LoadJSONFile("GameMap_03.json");
+	LoadJSONFile("GameMap_04.json");
 	//LoadJSONFile("GameMap_TestObstacles.json");
 #pragma endregion
 
