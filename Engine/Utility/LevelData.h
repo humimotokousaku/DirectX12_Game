@@ -23,6 +23,7 @@ public:
 	struct EnemyPoint {
 		Vector3 point;		// 座標
 		Vector3 rotate;		// 向き
+		CurveData controlPoints; // 移動ルートの制御点
 		float percentage;	// 出現条件:カーブの割合
 		std::string type;	// 種類
 		Vector3 velocity;	// 初速度(移動ベクトル)

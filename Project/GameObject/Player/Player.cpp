@@ -40,7 +40,6 @@ void Player::Initialize() {
 	object3d_->SetModel(models_[0]);
 	object3d_->SetCamera(camera_);
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
-	//object3d_->worldTransform.scale = { 1.0f,1.0f,1.0f };
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
@@ -59,7 +58,7 @@ void Player::Initialize() {
 		afterImageObject3d_[i]->worldTransform.scale = { 0.5f,0.5f,0.5f };
 		afterImageObject3d_[i]->worldTransform.UpdateMatrix();
 		// 透明にする
-		afterImageObject3d_[i]->SetColor(Vector4{ 0.3f,0.3f,0.3f,0.6f });
+		afterImageObject3d_[i]->SetColor(Vector4{ 0.3f,0.3f,0.3f,0.3f });
 		// 表示をしない
 		afterImageObject3d_[i]->SetIsActive(false);
 	}
@@ -298,8 +297,9 @@ void Player::EvasionUpdate(float moveX) {
 	}
 
 	// 残像を出す
+	const int division = afterImageObject3d_.size();
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
-		if (evasionFrame_ % 6 == i) {
+		if (evasionFrame_ % division == i) {
 			afterImageObject3d_[i]->SetIsActive(true);
 			afterImageObject3d_[i]->worldTransform.translate = object3d_->worldTransform.translate;
 			afterImageObject3d_[i]->worldTransform.rotate = object3d_->worldTransform.rotate;
@@ -330,7 +330,7 @@ void Player::EvasionUpdate(float moveX) {
 		}
 	}
 }
-
+static float cameraMoveFactor = 0.3f;
 void Player::Move() {
 	// キャラクターの移動ベクトル
 	Vector3 move{};
@@ -419,12 +419,10 @@ void Player::Move() {
 		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y, 0.1f).y;
 		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z, 0.1f).z;
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y, 0.1f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z, 0.1f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y, 0.2f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z, 0.2f).z;
 	}
 #pragma endregion
-
-
 
 	// 向いている方向に移動
 	Vector3 velocity = { 0, 0, kMaxSpeed };
@@ -434,7 +432,6 @@ void Player::Move() {
 	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
 	// 方向ベクトルを求める
 	moveVel_ = TransformNormal(velocity, rotMatrix) * 0.8f;
-
 
 	// 移動速度の上限
 	moveVel_.x = std::clamp<float>(moveVel_.x, -kMaxSpeed, kMaxSpeed);
@@ -459,14 +456,16 @@ void Player::Move() {
 	object3d_->worldTransform.translate.y += moveVel_.y;
 
 	// カメラ移動
-	cameraOffset_ += moveVel_ / 5;
+	cameraOffset_ += moveVel_ * cameraMoveFactor;
 	// カメラの移動幅上限
-	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -3.5f, 3.5f);
-	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -3.5f, 3.5f);
+	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -19.5f, 19.5f);
+	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -5.5f, 5.5f);
 	cameraOffset_.z = 0.0f;
 
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
+
+	ImGui::DragFloat("cameraMoveFactor", &cameraMoveFactor, 0.01f, -1, 1);
 }
 
 void Player::Aim() {

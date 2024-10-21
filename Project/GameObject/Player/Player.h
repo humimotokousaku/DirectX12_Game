@@ -173,7 +173,7 @@ public:// 定数
 	float kMaxEvasionSpeed = 4.0f;
 
 	// 移動限界座標
-	const Vector3 kMoveLimit = { 19.0f, 15.0f, 5.0f };
+	const Vector3 kMoveLimit = { 35.0f, 17.0f, 5.0f };
 
 #pragma region カメラ演出
 	// 回転幅
@@ -211,7 +211,7 @@ private:// プライベートなメンバ変数
 	// 自機
 	std::unique_ptr<Object3D> object3d_;
 	// 自機の残像
-	std::array<std::unique_ptr<Object3D>, 6> afterImageObject3d_;
+	std::array<std::unique_ptr<Object3D>, 20> afterImageObject3d_;
 
 	// 2Dレティクル用のスプライト
 	std::array<Sprite, 3> sprite2DReticle_;

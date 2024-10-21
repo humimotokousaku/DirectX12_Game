@@ -22,7 +22,11 @@ public:
 	/// </summary>
 	virtual void Draw() = 0;
 
-	virtual void OnCollision(Collider* collider) = 0;
+	/// <summary>
+	/// 衝突応答
+	/// </summary>
+	/// <param name="collider">当たった相手の衝突情報</param>
+	virtual void OnCollision(Collider* collider) = 0;;
 
 	///
 	/// User Method
@@ -84,6 +88,8 @@ public:
 		// 描画しない
 		object3d_->SetIsActive(isActive);
 	}
+	// 移動ルートの制御点の設定
+	void SetTravelRouteControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
 #pragma endregion
 
 protected:	
@@ -102,6 +108,8 @@ protected:
 
 	// 死亡フラグ
 	bool isDead_ = false;
+
+	// 体力
 	float hp_ = 100;
 
 	// 管理番号
@@ -112,8 +120,19 @@ protected:
 
 	// 敵のタイプ
 	std::string type_;
+
 	// 移動速度
 	Vector3 moveSpeed_;
+
+	// 移動ルートの進行度
+	float t_;
+
+	// 移動用スプライン曲線制御点（通過点）
+	std::vector<Vector3> controlPoints_;
+	// 線分で描画する用の頂点リスト
+	std::vector<Vector3> pointsDrawing_;
+	// 移動ルートの線(デバッグ用)
+	std::array<std::unique_ptr<Line>, 10> line_;
 
 	// カメラの後ろ側にいるなら描画と機能を停止
 	// falseなら機能停止

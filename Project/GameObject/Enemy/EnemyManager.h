@@ -64,7 +64,7 @@ private:
 	/// 敵の発生
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
-	void SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed);
+	void SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, std::vector<Vector3> controlPoints);
 	/// <summary>
 	///	固定砲台の発生
 	/// </summary>
@@ -92,6 +92,11 @@ private:
 	Vector2 ConvertWorld2Screen(Vector3 worldPos);
 
 public:
+	/// <summary>
+	/// 登場演出のエディター
+	/// </summary>
+	void AppearanceDirectionEditor();
+
 	/// <summary>
 	/// 弾のアドレスを登録
 	/// </summary>
@@ -212,6 +217,13 @@ private:// プライベートなメンバ変数
 
 	// 死亡SE
 	uint32_t deadSE_;
+
+	// 登場時の移動用スプライン曲線制御点（通過点）
+	std::vector<Vector3> controlPoints_;
+	// 線分で描画する用の頂点リスト
+	std::vector<Vector3> pointsDrawing_;
+	// 移動ルートの線(デバッグ用)
+	std::array<std::unique_ptr<Line>, 10> line_;
 
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;

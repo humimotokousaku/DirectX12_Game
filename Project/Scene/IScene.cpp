@@ -75,10 +75,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 
 			// 各制御点を走査
 			for (const auto& pointData : curve_data) {
-				assert(pointData.contains("point"));
 				const auto& point = pointData["point"];
-				assert(point.is_array());
-				assert(point.size() == 3);
 
 				// ワールド座標に変換して追加
 				railCameraData.points.emplace_back(Vector3{
@@ -97,6 +94,7 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 追加した要素の参照を取得
 				LevelData::EnemyPoint& enemyPoint = levelData->enemyPoints_.back();
 				nlohmann::json& spawnData = object["spawn_data"][0];
+
 				// 出現場所
 				enemyPoint.point.x = (float)spawnData["point"][0];
 				enemyPoint.point.y = (float)spawnData["point"][2];
@@ -104,14 +102,37 @@ void IScene::LoadJSONFile(const std::string fileName) {
 				// 初期の向き
 				Vector3 rotate = { Degree2Radian(-(float)spawnData["rotation"][0]) ,Degree2Radian(-(float)spawnData["rotation"][2]),Degree2Radian(-(float)spawnData["rotation"][1]) };
 				enemyPoint.rotate = rotate;
+
 				// 出現タイミング
 				enemyPoint.percentage = (float)spawnData["percentage"];
+
 				// 種類
 				enemyPoint.type = spawnData["enemyTypes"].get<std::string>();
+
 				// 移動速度(方向ベクトルに対して扱うものとする)
 				enemyPoint.velocity.x = (float)spawnData["velocity"][0];
 				enemyPoint.velocity.y = (float)spawnData["velocity"][1];
 				enemyPoint.velocity.z = (float)spawnData["velocity"][2];
+
+				// 
+				if (object.contains("children")) {
+					nlohmann::json& children = object["children"][0];
+					// 追加した要素の参照を取得
+					LevelData::CurveData& curveData = enemyPoint.controlPoints;
+					
+					// 各制御点を走査
+					for (const auto& pointData : children["curve_data"]) {
+						const auto& point = pointData["point"];
+
+						// ワールド座標に変換して追加
+						curveData.points.emplace_back(Vector3{
+							(float)point[0],
+							(float)point[2],
+							(float)point[1]
+							});		
+					}
+					enemyPoint.controlPoints = curveData;
+				}
 
 				enemyPoints_.push_back(enemyPoint);
 			}

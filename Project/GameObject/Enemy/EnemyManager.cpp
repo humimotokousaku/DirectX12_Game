@@ -141,7 +141,7 @@ void EnemyManager::CheckSpawn() {
 
 			if (spawnPointDatas_[i].isActive) {
 				if (spawnPoints_[i].type == "NORMAL") {
-					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity);
+					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity, spawnPoints_[i].controlPoints.points);
 				}
 				else if (spawnPoints_[i].type == "TURRET") {
 					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
@@ -154,7 +154,7 @@ void EnemyManager::CheckSpawn() {
 	}
 }
 
-void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed) {
+void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, std::vector<Vector3> controlPoints) {
 	Enemy* enemy = new Enemy();
 
 	// 敵モデルを追加
@@ -167,6 +167,8 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed) {
 	enemy->SetEnemyManager(this);
 	// Blenderで設定した移動速度を代入
 	enemy->SetMoveSpeed(moveSpeed);
+	// 移動ルート
+	enemy->SetTravelRouteControlPoints(controlPoints);
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
@@ -319,10 +321,8 @@ void EnemyManager::CheckActiveState() {
 }
 
 Vector2 EnemyManager::ConvertWorld2Screen(Vector3 worldPos) {
-	Vector3 result = worldPos;
-	if (result.x == 0 && result.y == 0 && result.z == 0) {
-		result = { 0.000001f,0.000001f ,0.000001f };
-	}
+	Vector3 result = worldPos + 0.00001f;
+
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
 	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
@@ -333,4 +333,8 @@ Vector2 EnemyManager::ConvertWorld2Screen(Vector3 worldPos) {
 	result = Transforms(result, matViewProjectionViewport);
 
 	return Vector2(result.x, result.y);
+}
+
+void EnemyManager::AppearanceDirectionEditor() {
+
 }

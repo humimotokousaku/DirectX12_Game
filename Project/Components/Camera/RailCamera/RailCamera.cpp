@@ -10,7 +10,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = true;
+	isMove_ = false;
 
 	boostFovAnim_.SetAnimData(&camera_->viewProjection_.fovAngleY, camera_->kDefaultFov, 70.0f, 10, "fovAnim_01", Easings::EaseOutBack);
 
@@ -39,7 +39,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints) {
 	sphere_.worldTransform.scale = { 0.5f,0.5f,0.5f };
 	sphere_.worldTransform.UpdateMatrix();
 }
-
+static float moveSpeed = 1.0f;
 void RailCamera::Update() {
 	// 加速中のカメラ処理
 	BoostUpdate();
@@ -47,11 +47,11 @@ void RailCamera::Update() {
 	if (isMove_) {
 		// カメラの移動
 		if (t_ <= 1.0f) {
-			t_ += *moveVelZ_  / 1000;
+			t_ += moveSpeed / 1000;
 		}
 		// カメラの見ている座標を移動
 		if (targetT_ <= 1.0f) {
-			targetT_ += *moveVelZ_ / 1000;
+			targetT_ += moveSpeed / 1000;
 		}
 		if (targetT_ >= 1.0f) {
 			currentFrame_ = 0;
@@ -84,6 +84,7 @@ void RailCamera::Update() {
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0,200);
 	ImGui::Checkbox("isMove", &isMove_);
 	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100,100);
+	ImGui::DragFloat("moveSpeed", &moveSpeed, 0.1f, -100,100);
 	// リセットボタンを作成
 	if (ImGui::Button("Reset")) {
 		// カメラの進行度をリセット
