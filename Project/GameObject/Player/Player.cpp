@@ -1,5 +1,4 @@
 #include "Player.h"
-
 #include "AimAssist/AimAssist.h"
 #include "CollisionConfig.h"
 #include "GameScene.h"
@@ -9,7 +8,7 @@
 #include "ImGuiManager.h"
 #include "PostEffectManager.h"
 #include "TextureManager.h"
-
+#include "Utility.h"
 #include <numbers>
 
 Player::Player() {}
@@ -58,7 +57,7 @@ void Player::Initialize() {
 		afterImageObject3d_[i]->worldTransform.scale = { 0.5f,0.5f,0.5f };
 		afterImageObject3d_[i]->worldTransform.UpdateMatrix();
 		// 透明にする
-		afterImageObject3d_[i]->SetColor(Vector4{ 0.3f,0.3f,0.3f,0.3f });
+		afterImageObject3d_[i]->SetColor(Vector4{ 0.2f,0.2f,0.2f,0.3f });
 		// 表示をしない
 		afterImageObject3d_[i]->SetIsActive(false);
 	}
@@ -101,23 +100,23 @@ void Player::Initialize() {
 
 #pragma region パーティクル
 	// 自機の軌道パーティクルの作成
-	for (int i = 0; i < particle_.size(); i++) {
-		particle_[i] = std::make_unique<Particles>();
-		particle_[i]->Initialize(GetWorldPosition());
-		particle_[i]->SetCamera(camera_);
-		particle_[i]->SetEmitterParent(&object3d_->worldTransform);
+	for (int i = 0; i < particles_.size(); i++) {
+		particles_[i] = std::make_unique<Particles>();
+		particles_[i]->Initialize(GetWorldPosition());
+		particles_[i]->SetCamera(camera_);
+		particles_[i]->SetEmitterParent(&object3d_->worldTransform);
 		// 発生頻度
-		particle_[i]->SetEmitterFrequency(1.0f / 240.0f);
+		particles_[i]->SetEmitterFrequency(1.0f / 240.0f);
 		// 一度に発生する個数
-		particle_[i]->SetEmitterCount(1);
+		particles_[i]->SetEmitterCount(1);
 		// ランダムを切る
-		particle_[i]->OffRandom();
+		particles_[i]->OffRandom();
 		// パーティクル一粒の詳細設定
-		particle_[i]->particle_.color = { 1,1,1,0.6f };
-		particle_[i]->particle_.lifeTime = 1.0f;
-		particle_[i]->particle_.transform.translate = { 0.0f,0.0f,0.0f };
-		particle_[i]->particle_.transform.scale = { 0.1f,0.1f,0.1f };
-		particle_[i]->particle_.vel = { 0.0f,0.0f,0.0f };
+		particles_[i]->particle_.color = { 1,1,1,0.6f };
+		particles_[i]->particle_.lifeTime = 1.0f;
+		particles_[i]->particle_.transform.translate = { 0.0f,0.0f,0.0f };
+		particles_[i]->particle_.transform.scale = { 0.1f,0.1f,0.1f };
+		particles_[i]->particle_.vel = { 0.0f,0.0f,0.0f };
 	}
 #pragma endregion
 
@@ -125,13 +124,19 @@ void Player::Initialize() {
 	// ロックオン時のレティクルのアニメーション
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
-	boostRotAnim_.SetAnimData(&boostRotVelZ_, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
-	// 回避速度のイージング
-	evasionSpeedAnim_.SetAnimData(&evasionSpeed_, kMaxEvasionSpeed, 0.0f, kMaxEvasionFrame, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
+	// 回避時の移動速度のイージング
+	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{0.0f,0.0f}, kMaxEvasionFrame, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	// 回避時の回転速度のイージング
+	evasionRotSpeedAnim_["RightTurn"].SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, kMaxEvasionRotNum, 45, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	evasionRotSpeedAnim_["LeftTurn"].SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, kMaxEvasionRotNum, 45, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	// 残像のα値のアニメーション
+	evasionAlphaAnims_.resize(afterImageObject3d_.size());
+	evasion_.alphas.resize(evasionAlphaAnims_.size());
+	for (int i = 0; i < evasionAlphaAnims_.size();i++) {
+		evasionAlphaAnims_[i].SetAnimData(&evasion_.alphas[i], 1.0f, 0.0f, 20, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	}
 #pragma endregion
-
-	// 加速時の自機のZ軸の回転速度
-	boostRotVelZ_ = 0.0f;
 
 	// 死亡フラグ
 	isDead_ = false;
@@ -143,18 +148,18 @@ void Player::Initialize() {
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
 	// 残像表示時間
-	evasionFrame_ = kMaxEvasionFrame;
+	evasion_.frame = kMaxEvasionFrame;
 
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
 	// グループを追加
 	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->AddItem(groupName, "ParticleEmitterPos", particle_[0]->emitter_.transform.translate);
-	globalVariables->AddItem(groupName, "ParticleEmitterPos_LeftWing", particle_[1]->emitter_.transform.translate);
-	globalVariables->AddItem(groupName, "ParticleEmitterPos_RightWing", particle_[2]->emitter_.transform.translate);
-	particle_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
-	particle_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
-	particle_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
+	globalVariables->AddItem(groupName, "ParticleEmitterPos", particles_[0]->emitter_.transform.translate);
+	globalVariables->AddItem(groupName, "ParticleEmitterPos_LeftWing", particles_[1]->emitter_.transform.translate);
+	globalVariables->AddItem(groupName, "ParticleEmitterPos_RightWing", particles_[2]->emitter_.transform.translate);
+	particles_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
+	particles_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
+	particles_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
 }
 
 void Player::Update() {
@@ -176,52 +181,15 @@ void Player::Update() {
 	HPUpdate();
 
 	// 自機の軌道パーティクル
-	for (int i = 0; i < particle_.size(); i++) {
-		particle_[i]->Update();
+	for (int i = 0; i < particles_.size(); i++) {
+		particles_[i]->Update();
 	}
 
 	// 音のこもり具合
 	audio_->SetMuffle(shotSE_, 1.0f);
 
 	// ImGui
-#ifdef _DEBUG
-	object3d_->ImGuiParameter("Player");
-	ImGui::Begin("Player");
-
-	if (ImGui::TreeNode("Velocity")) {
-		if (ImGui::TreeNode("Translate")) {
-			ImGui::DragFloat3("Current", &moveVel_.x, 0);
-			ImGui::DragFloat3("Attenuation", &kMoveSpeedDecayRate.x, 0.1f, -10.0f, 10.0f);
-			ImGui::DragFloat("Limit", &kMaxSpeed, 0.1f, -10.0f, 10.0f);
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNode("Rotate")) {
-			ImGui::DragFloat3("Current", &rotateVel_.x, 0);
-			ImGui::DragFloat3("Attenuation", &kRotateSpeedDecayRate.x, 0.1f, -10.0f, 10.0f);
-			ImGui::DragFloat3("Limit", &kMaxRotSpeed.x, 0.1f, -10.0f, 10.0f);
-			ImGui::TreePop();
-		}
-		ImGui::TreePop();
-	}
-	// レティクルの情報
-	object3dReticle_[0]->ImGuiParameter("Reticle0");
-	object3dReticle_[1]->ImGuiParameter("Reticle1");
-	// 体力
-	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
-
-	ImGui::End();
-
-	/// jsonによる数値の変更
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	particle_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
-	particle_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
-	particle_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
-	// ボタンを押したらsave
-	if (globalVariables->GetInstance()->GetIsSave()) {
-		globalVariables->SaveFile("Player");
-	}
-#endif
+	ImGuiParameter();
 }
 
 void Player::Draw() {
@@ -247,8 +215,8 @@ void Player::DrawUI() {
 	}
 
 	// 軌道
-	for (int i = 1; i < particle_.size(); i++) {
-		particle_[i]->Draw(defaultTexture);
+	for (int i = 1; i < particles_.size(); i++) {
+		particles_[i]->Draw(defaultTexture);
 	}
 }
 
@@ -257,9 +225,9 @@ void Player::BoostUpdate(float moveZ) {
 	boostRotAnim_.Update();
 
 	// 加速中なら速度を上げる
-	if (isBoost_) {
+	if (boost_.isActive) {
 		// 徐々に速度を上げる
-		boostSpeed_ = Lerps::ExponentialInterpolate(boostSpeed_, moveZ, kMoveSpeedDecayRate.z, 1.0f);
+		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z, 1.0f);
 		// 自機を徐々に前に出す
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 10.0f, kMoveSpeedDecayRate.z, 1.0f);
 
@@ -274,7 +242,7 @@ void Player::BoostUpdate(float moveZ) {
 	}
 	else {
 		// 徐々に速度を下げる
-		boostSpeed_ = Lerps::ExponentialInterpolate(boostSpeed_, moveZ, kMoveSpeedDecayRate.z, 1.0f);
+		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z, 1.0f);
 		// 自機をもとの位置徐々に戻す
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 0.0f, kMoveSpeedDecayRate.z, 1.0f);
 
@@ -285,21 +253,25 @@ void Player::BoostUpdate(float moveZ) {
 	}
 
 	// 速度を加算
-	moveVel_.z += boostSpeed_;
+	moveVel_.z += boost_.moveSpeed;
 }
 
-void Player::EvasionUpdate(float moveX) {
+void Player::EvasionUpdate(float rotateY, float rotateX) {
 	// 回避中でなければ終了
-	if (!isEvasion_) {
-		if (moveX < 0) { evasionVelX_ = -1; }
-		else if (moveX > 0) { evasionVelX_ = 1; }
+	if (!evasion_.isActive) {
+		evasion_.moveVel.x = Utility::Sign(rotateY);
+		evasion_.moveVel.y = Utility::Sign(rotateX) * -1;
 		return;
 	}
 
+	// 
+	evasion_.rotVel.z = Lerps::ExponentialInterpolate(evasion_.rotVel.z, kMaxEvasionRotNum.z * evasion_.moveVel.x, kRotateSpeedDecayRate.z * 3, 0.1f);
+
 	// 残像を出す
-	const int division = afterImageObject3d_.size();
+	const int division = (int)afterImageObject3d_.size();
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
-		if (evasionFrame_ % division == i) {
+		if (evasion_.frame % division == i) {
+			evasionAlphaAnims_[i].SetIsStart(true);
 			afterImageObject3d_[i]->SetIsActive(true);
 			afterImageObject3d_[i]->worldTransform.translate = object3d_->worldTransform.translate;
 			afterImageObject3d_[i]->worldTransform.rotate = object3d_->worldTransform.rotate;
@@ -308,36 +280,51 @@ void Player::EvasionUpdate(float moveX) {
 
 	// 回避速度のイージング開始
 	evasionSpeedAnim_.SetIsStart(true);
-
+	//if (evasion_.moveVel.x > 0) {
+	//	evasionRotSpeedAnim_["RightTurn"].SetIsStart(true);
+	//}
+	//else if (evasion_.moveVel.x < 0) {
+	//	evasionRotSpeedAnim_["LeftTurn"].SetIsStart(true);
+	//}
 	// 回避速度のイージングを更新
 	evasionSpeedAnim_.Update();
+	//evasionRotSpeedAnim_["RightTurn"].Update();
+	//evasionRotSpeedAnim_["LeftTurn"].Update();
+	// 残像のα値のアニメーションを更新 + α値を変更
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		evasionAlphaAnims_[i].Update();
+		afterImageObject3d_[i]->SetAlpha(evasion_.alphas[i]);
+	}
 
 	// 速度を正規化
-	evasionSpeed_ *= Normalize(evasionVelX_) * 1.2f;
-	moveVel_.x = evasionSpeed_;
+	evasion_.moveSpeed *= Normalize(evasion_.moveVel) * 1.3f;
+	moveVel_.x += evasion_.moveSpeed.x;
+	moveVel_.y += evasion_.moveSpeed.y / 2.0f;
 
 	// 時間を進める
-	evasionFrame_--;
+	evasion_.frame--;
 
 	// イージングが終了したら初期化
 	if (evasionSpeedAnim_.GetIsEnd()) {
 		evasionSpeedAnim_.ResetData();
-		evasionFrame_ = kMaxEvasionFrame;
-		isEvasion_ = false;
 		// 残像を消す
 		for (int i = 0; i < afterImageObject3d_.size(); i++) {
+			evasionAlphaAnims_[i].SetIsStart(false);
 			afterImageObject3d_[i]->SetIsActive(false);
 		}
+		evasion_.frame = kMaxEvasionFrame;
+		evasion_.isActive = false;
+		evasion_.rotVel.z = 0.0f;
 	}
 }
-static float cameraMoveFactor = 0.3f;
+
 void Player::Move() {
 	// キャラクターの移動ベクトル
 	Vector3 move{};
 	// 自機の回転
 	Vector3 rotate{};
 	// 加速モードをOFFにする
-	isBoost_ = false;
+	boost_.isActive = false;
 
 #pragma region キーボード
 	// キーボード入力
@@ -357,13 +344,13 @@ void Player::Move() {
 	}
 	// ブースト
 	if (input_->PressKey(DIK_B)) {
-		isBoost_ = true;
+		boost_.isActive = true;
 		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
 	}
 	// 回避
 	if (input_->PressKey(DIK_C)) {
-		isEvasion_ = true;
+		evasion_.isActive = true;
 	}
 #pragma endregion
 
@@ -379,13 +366,13 @@ void Player::Move() {
 	}
 	// ブースト
 	if (input_->GamePadPress(XINPUT_GAMEPAD_X)) {
-		isBoost_ = true;
+		boost_.isActive = true;
 		boostRotAnim_.SetIsStart(true);
 		move.z += 1.0f;
 	}
 	// 回避
 	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_A)) {
-		isEvasion_ = true;
+		evasion_.isActive = true;
 	}
 #pragma endregion
 
@@ -425,7 +412,7 @@ void Player::Move() {
 #pragma endregion
 
 	// 向いている方向に移動
-	Vector3 velocity = { 0, 0, kMaxSpeed };
+	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
 	// 現在の回転角を取得
 	Vector3 rot = object3d_->worldTransform.rotate;
 	// 回転行列を求める
@@ -445,27 +432,24 @@ void Player::Move() {
 	BoostUpdate(move.z);
 
 	// 回避処理
-	EvasionUpdate(rotate.y);
+	EvasionUpdate(rotate.y, rotate.x);
 
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
 	object3d_->worldTransform.rotate.y = rotateVel_.y;
-	object3d_->worldTransform.rotate.z = rotateVel_.z + boostRotVelZ_;
+	object3d_->worldTransform.rotate.z = rotateVel_.z + boost_.rotVelZ /*+ evasionRotVel_.z*/;
 	// 速度を自機に加算
 	object3d_->worldTransform.translate.x += moveVel_.x;
 	object3d_->worldTransform.translate.y += moveVel_.y;
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
 
 	// カメラ移動
-	cameraOffset_ += moveVel_ * cameraMoveFactor;
+	cameraOffset_ += moveVel_ * 0.6f;
 	// カメラの移動幅上限
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -19.5f, 19.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -5.5f, 5.5f);
 	cameraOffset_.z = 0.0f;
-
-	// ワールド行列を更新
-	object3d_->worldTransform.UpdateMatrix();
-
-	ImGui::DragFloat("cameraMoveFactor", &cameraMoveFactor, 0.01f, -1, 1);
 }
 
 void Player::Aim() {
@@ -672,6 +656,31 @@ void Player::DeployLockOnReticle() {
 	sprite2DReticle_[2].SetRotate(sprite2DReticle_[2].GetRotate() + rotate);
 
 	reticleAnim_.SetIsStart(true);
+}
+
+void Player::ImGuiParameter() {
+#ifdef _DEBUG
+	object3d_->ImGuiParameter("Player");
+
+	ImGui::Begin("Player");
+	// レティクルの情報
+	object3dReticle_[0]->ImGuiParameter("Reticle0");
+	object3dReticle_[1]->ImGuiParameter("Reticle1");
+	// 体力
+	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
+	ImGui::End();
+
+	/// jsonによる数値の変更
+	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
+	const char* groupName = "Player";
+	particles_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos");
+	particles_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
+	particles_[2]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
+	// ボタンを押したらsave
+	if (globalVariables->GetInstance()->GetIsSave()) {
+		globalVariables->SaveFile("Player");
+	}
+#endif
 }
 
 Vector3 Player::GetRotation() {

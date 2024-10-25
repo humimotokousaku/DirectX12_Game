@@ -40,6 +40,5 @@ void GameOver::Draw() {
 }
 
 void GameOver::Finalize() {
-	// 基底クラスの解放
-	IScene::Finalize();
+
 }

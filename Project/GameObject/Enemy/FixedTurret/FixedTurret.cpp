@@ -3,7 +3,9 @@
 #include "EnemyManager.h"
 
 FixedTurret::FixedTurret() {
-
+	// 体のオブジェクト作成
+	object3d_ = std::make_unique<Object3D>();
+	object3d_->Initialize();
 }
 FixedTurret::~FixedTurret() {
 	models_.clear();
@@ -13,12 +15,10 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
 
-	// 体のオブジェクト作成
-	object3d_ = std::make_unique<Object3D>();
-	object3d_->Initialize();
+
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
-	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.translate = {10,10,0};
 	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
 	object3d_->worldTransform.UpdateMatrix();
@@ -46,6 +46,14 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void FixedTurret::Update() {
+	// Catmull-Romスプライン関数で補間された位置を取得
+	Vector3 pos{};
+	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
+
+	t_ += 0.005f;
+
+	object3d_->worldTransform.translate = pos;
+
 	// 状態遷移
 	state_->Update(this);
 

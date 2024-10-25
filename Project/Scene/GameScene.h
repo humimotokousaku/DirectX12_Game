@@ -3,6 +3,7 @@
 
 #include "AimAssist/AimAssist.h"
 #include "CollisionManager.h"
+#include "LevelManager.h"
 #include "Enemy.h"
 #include "EnemyBullet.h"
 #include "EnemyManager.h"
@@ -50,15 +51,13 @@ public:
 	// 自機の弾を追加
 	void AddPlayerBullet(PlayerBullet* playerBullet);
 
-private:// プライベートなメンバ変数
-	// 基本機能
+private:// エンジン機能
 	TextureManager* textureManager_;
 	ModelManager* modelManager_;
 	Audio* audio_;
+	LevelManager* levelManager_;
 
-	// BGM
-	uint32_t BGM_;
-
+private:// プライベートなメンバ変数
 	// カメラ
 	Camera camera_;
 	// 自機
@@ -75,10 +74,10 @@ private:// プライベートなメンバ変数
 	FollowCamera followCamera_;
 	// スコア
 	Score* score_;
-
 	// UI
 	std::array<Sprite, 4> guideUI_;
 
-	Object3D ground_;
+	// BGM
+	uint32_t BGM_;
 };
 

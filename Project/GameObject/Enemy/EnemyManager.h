@@ -69,13 +69,13 @@ private:
 	///	固定砲台の発生
 	/// </summary>
 	/// <param name="pos">発生する座標</param>
-	void SpawnFixedTurret(Vector3 pos, Vector3 rotate);
+	void SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints);
 	/// <summary>
 	/// ビーム敵の発生
 	/// </summary>
 	/// <param name="pos">座標</param>
 	/// <param name="rotate">回転角</param>
-	void SpawnBeamEnemy(Vector3 pos, Vector3 rotate);
+	void SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints);
 	/// <summary>
 	///	巨人の発生(ボス)
 	/// </summary>

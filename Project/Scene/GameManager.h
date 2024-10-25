@@ -2,6 +2,7 @@
 #include "Framework.h"
 #include "CollisionManager.h"
 #include "SceneTransition/SceneTransition.h"
+#include "LevelManager.h"
 
 class GameManager : public Framework
 {	
@@ -42,6 +43,9 @@ private:
 	std::array<std::unique_ptr<IScene>, 4u> sceneArr_;
 	int sceneNum_;
 	int preSceneNum_;
+
+	// レベルマネージャー
+	LevelManager* levelManager_;
 
 	// シーン遷移
 	SceneTransition* sceneTransition_;

@@ -48,6 +48,9 @@ void EnemyManager::Initialize() {
 
 	followWorldTransform_.Initialize();
 	followWorldTransform_.parent_ = railCamera_->GetWorldTransform_P();
+
+	SetCameraMoveVel(railCamera_->GetDirectionVelocity());
+	SetRailCameraProgress(railCamera_->GetRailPercentage());
 }
 
 void EnemyManager::Update() {
@@ -144,10 +147,10 @@ void EnemyManager::CheckSpawn() {
 					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity, spawnPoints_[i].controlPoints.points);
 				}
 				else if (spawnPoints_[i].type == "TURRET") {
-					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate);
+					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].controlPoints.points);
 				}
 				else if (spawnPoints_[i].type == "BEAM") {
-					SpawnBeamEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate);
+					SpawnBeamEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].controlPoints.points);
 				}
 			}
 		}
@@ -188,7 +191,7 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	spawnParticles_.push_back(particle);
 }
 
-void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
+void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints) {
 	FixedTurret* enemy = new FixedTurret();
 
 	// 敵モデルを追加
@@ -199,8 +202,11 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
 	enemy->SetEnemyManager(this);
+	// 移動ルート
+	enemy->SetTravelRouteControlPoints(controlPoints);
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
+
 	// リストに登録
 	enemy_.push_back(enemy);
 
@@ -218,7 +224,7 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate) {
 	spawnParticles_.push_back(particle);
 }
 
-void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate) {
+void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints) {
 	BeamEnemy* enemy = new BeamEnemy();
 
 	// 敵モデルを追加
@@ -229,6 +235,8 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate) {
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
 	enemy->SetEnemyManager(this);
+	// 移動ルート
+	enemy->SetTravelRouteControlPoints(controlPoints);
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録

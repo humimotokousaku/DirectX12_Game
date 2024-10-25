@@ -157,6 +157,8 @@ public:
 	void SetShininess(float shininess) { model_->SetShininess(shininess); }
 	// 色の設定
 	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
+	// α値の設定
+	void SetAlpha(float alpha) { model_->materialData_->color.w = alpha; }
 	// UV座標の設定
 	void SetUVTranslate(Vector3 translate) { model_->uvTransform.translate = translate; }
 	// UVの角度の設定

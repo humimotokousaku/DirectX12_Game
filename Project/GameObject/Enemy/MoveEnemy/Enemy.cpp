@@ -5,7 +5,8 @@
 #include "EnemyManager.h" 
 
 Enemy::Enemy() {
-
+	object3d_ = std::make_unique<Object3D>();
+	object3d_->Initialize();
 }
 Enemy::~Enemy() {
 	models_.clear();
@@ -15,18 +16,19 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
 
-	object3d_ = std::make_unique<Object3D>();
-	object3d_->Initialize();
+	//object3d_ = std::make_unique<Object3D>();
+	//object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
 	object3d_->worldTransform.rotate = rotate;
-	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
+	object3d_->worldTransform.scale = { 1.5f, 1.5f, 1.5f };
 	object3d_->worldTransform.UpdateMatrix();
 
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
+	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	object3d_->collider->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);

@@ -1,12 +1,13 @@
 #pragma once
 #include "Camera.h"
+#include "Player.h"
 
 class FollowCamera {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize();
+	void Initialize(Player* player);
 
 	/// <summary>
 	/// 更新処理
@@ -58,6 +59,8 @@ public:
 private:
 	// カメラ
 	std::unique_ptr<Camera> camera_;
+	// 自機のアドレス
+	Player* player_;
 
 	Vector3* offset_;
 	Vector3* rotateOffset_;

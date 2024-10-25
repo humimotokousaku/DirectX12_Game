@@ -15,6 +15,9 @@ GameManager::~GameManager() {
 void GameManager::Initialize() {
 	Framework::Initialize();
 
+	// レベルマネージャーの生成
+	levelManager_ = LevelManager::GetInstance();
+
 	// 衝突マネージャーを作成
 	collisionManager_ = CollisionManager::GetInstance();
 
@@ -23,6 +26,7 @@ void GameManager::Initialize() {
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 
+	// シーン切り替え
 	sceneTransition_ = SceneTransition::GetInstance();
 	sceneTransition_->Initialize();
 }
@@ -33,12 +37,14 @@ void GameManager::Update() {
 	// シーン切り替えの演出
 	sceneTransition_->Update();
 
-	// シーンチェック
+	// 現在のシーンをチェック
 	preSceneNum_ = sceneNum_;
 	sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
 
-	//シーン変更チェック
+	// シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		levelManager_->Finalize();
+
 		// コライダーリストをすべて削除
 		collisionManager_->ClearColliderList();
 
@@ -46,8 +52,11 @@ void GameManager::Update() {
 		postEffectManager_->ClearSpriteList();
 		// ポストエフェクト機能を停止する
 		postEffectManager_->ResetPostEffect();
+
+		// 以前のシーンを解放する
 		sceneArr_[preSceneNum_]->Finalize();
 		sceneArr_[preSceneNum_].reset();
+		// 新しいシーンを初期化
 		sceneArr_[sceneNum_]->Initialize();
 
 		// シーン遷移演出開始
@@ -76,6 +85,7 @@ void GameManager::Update() {
 	/// 更新処理
 	/// 
 	sceneArr_[sceneNum_]->Update();
+
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
 
@@ -100,7 +110,13 @@ void GameManager::EndFrame() {
 }
 
 void GameManager::Finalize() {
+	// エンジン機能
 	Framework::Finalize();
+
+	// レベルマネージャー
+	levelManager_->Finalize();
+
+	// 各シーン
 	for (auto& scene : sceneArr_) {
 		scene->Finalize();
 		scene.reset();

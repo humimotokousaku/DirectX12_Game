@@ -7,15 +7,21 @@ void GameScene::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 	modelManager_ = ModelManager::GetInstance();
 	audio_ = Audio::GetInstance();
+	levelManager_ = LevelManager::GetInstance();
+
+	// カメラの生成
+	camera_.Initialize();
 
 #pragma region 読み込み
 	// テクスチャの読み込み
 	textureManager_->LoadTexture("", "reticle.png");
 	textureManager_->LoadTexture("Textures", "Bob_Red.png");
 	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
+
 	// BGMの読み込み
 	BGM_ = audio_->SoundLoadWave("Audio/gameBGM_Noesis.wav");
 	audio_->SoundPlayWave(BGM_, true, 0.1f);
+
 	// 使用するモデルの読み込み
 	modelManager_->LoadModel("", "block.obj");
 	modelManager_->LoadModel("", "Bob.obj");
@@ -34,22 +40,26 @@ void GameScene::Initialize() {
 	AddModel(modelManager_->SetModel("", "block.obj"));
 
 	// Blender
-	LoadJSONFile("GameMap_04.json");
-	//LoadJSONFile("GameMap_TestObstacles.json");
+	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
-	// カメラの生成
-	camera_.Initialize();
-	// カメラレールの生成
-	railCamera_.Initialize(controlPoints_);
+#pragma region 追従カメラとレールカメラ生成
+	// レールカメラの生成
+	railCamera_.Initialize(levelManager_->GetRailCameraControlPoints(), &player_);
 	// 追従カメラの生成
-	followCamera_.Initialize();
+	followCamera_.Initialize(&player_);
+	followCamera_.SetParent(&railCamera_.GetWorldTransform());
+	followCamera_.SetFov(railCamera_.GetFov());
 
-	// スコア
+	// 使用するカメラの変更
+	levelManager_->SetCamera(followCamera_.GetCamera());
+#pragma endregion
+
+	// スコアの生成
 	score_ = Score::GetInstance();
 	score_->Initialize();
 
-	// 自キャラの生成
+#pragma region 自機の作成
 	// 自機モデル
 	player_.AddModel(models_[0]);
 	// 3Dレティクルモデル
@@ -62,8 +72,9 @@ void GameScene::Initialize() {
 	player_.Initialize();
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_.SetParent(&railCamera_.GetWorldTransform());
+#pragma endregion
 
-	/// エネミーマネージャの生成
+#pragma region エネミーマネージャの生成
 	// 通常敵の体
 	enemyManager_.AddModel(models_[3]);
 	// 通常敵の弾
@@ -72,46 +83,21 @@ void GameScene::Initialize() {
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetRailCamera(&railCamera_);
 	enemyManager_.SetPlayer(&player_);
-	enemyManager_.SetSpawnPoints(enemyPoints_);
-	enemyManager_.SetCameraMoveVel(railCamera_.GetDirectionVelocity());
+	enemyManager_.SetSpawnPoints(levelManager_->GetEnemyPoints());
 	// 初期化
 	enemyManager_.Initialize();
+#pragma endregion
 
-	// 自機のロックオンクラス生成
+#pragma region 自機のロックオンクラス生成
 	aimAssist_ = AimAssist::GetInstance();
 	aimAssist_->SetCamera(followCamera_.GetCamera());
 	aimAssist_->SetPlayer(&player_);
+	// カメラの方向ベクトルをアドレスで渡す
+	aimAssist_->SetCameraDirectionVelocity(railCamera_.GetDirectionVelocity());
 	// 自機クラスにアドレスを渡す
 	player_.SetIsLockOn(aimAssist_->GetIsLockOn());
 	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
-
-	// カメラの方向ベクトルをアドレスで渡す
-	aimAssist_->SetCameraDirectionVelocity(railCamera_.GetDirectionVelocity());
-	// レールカメラの進行度のアドレスを渡す
-	enemyManager_.SetRailCameraProgress(railCamera_.GetRailPercentage());
-	// アドレス渡し
-	followCamera_.SetCameraOffset(player_.GetCameraOffset_P());
-	followCamera_.SetCameraRotateOffset(player_.GetCameraRotateOffset_P());
-	followCamera_.SetParent(&railCamera_.GetWorldTransform());
-	followCamera_.SetFov(railCamera_.GetFov());
-	// レールカメラにブーストしているかをアドレスで渡す
-	railCamera_.SetIsBoost(player_.GetIsBoost_P());
-	railCamera_.SetPlayerMoveVel(&player_.GetMoveVel_P()->z);
-
-	// Blenderで読み込んだオブジェクトの設定
-	for (Object3D* object : levelObjects_) {
-		object->SetCamera(followCamera_.GetCamera());
-		object->SetIsLighting(false);
-	}
-
-	// 地面
-	ground_.Initialize();
-	ground_.SetModel(modelManager_->SetModel("level", "tail.obj"));
-	ground_.SetCamera(followCamera_.GetCamera());
-	ground_.worldTransform.translate = { 0.0f, -4.0f, 0.0f };
-	ground_.worldTransform.scale = { 500, 1, 500 };
-	ground_.worldTransform.rotate = { 0,0,0 };
-	ground_.SetUVScale(Vector3{ 50,50,1 });
+#pragma endregion
 
 #pragma region UIスプライトを作成
 	guideUI_[0].Initialize("Textures/UI", "guide_Attack.png");
@@ -134,25 +120,24 @@ void GameScene::Initialize() {
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
 	PostEffectManager::GetInstance()->bloomData_.isActive = false;
 #pragma endregion
-
-	//PostEffectManager::GetInstance()->bloomData_.isActive = true;
 }
 
 void GameScene::Update() {
 #ifdef _DEBUG
-	//if (Input::GetInstance()->TriggerKey(DIK_1)) {
-	//	sceneNum = TITLE_SCENE;
-	//}
-	//if (Input::GetInstance()->TriggerKey(DIK_2)) {
-	//	sceneNum = GAMEOVER_SCENE;
-	//}
-	//if (Input::GetInstance()->TriggerKey(DIK_3)) {
-	//	sceneNum = GAMECLEAR_SCENE;
-	//}
+	if (Input::GetInstance()->TriggerKey(DIK_1)) {
+		sceneNum = TITLE_SCENE;
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_2)) {
+		sceneNum = GAMEOVER_SCENE;
+	}
+	if (Input::GetInstance()->TriggerKey(DIK_3)) {
+		sceneNum = GAMECLEAR_SCENE;
+	}
 #endif // _DEBUG
 
 	// エネミーマネージャ
 	enemyManager_.Update();
+
 	// 敵のリストを保存
 	aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
 
@@ -171,9 +156,9 @@ void GameScene::Update() {
 		bullet->Update();
 	}
 
-	// デバッグカメラの更新
+	// レールカメラ
 	railCamera_.Update();
-	followCamera_.SetPlayerPos(railCamera_.GetWorldTransform().translate);
+	// 追従カメラ
 	followCamera_.Update();
 
 	// スコア
@@ -203,17 +188,14 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
+	// レールカメラの移動ルート
 	//railCamera_.MoveRouteDraw();
 
-	ground_.Draw();
+	// Blenderで配置したオブジェクト
+	levelManager_->Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();
-
-	// Blenderで配置したオブジェクト
-	for (Object3D* object : levelObjects_) {
-		object->Draw();
-	}
 
 	// 自機
 	player_.Draw();
@@ -229,17 +211,11 @@ void GameScene::Draw() {
 }
 
 void GameScene::Finalize() {
-	// ゲームパッドの振動を消す
-	Input::GetInstance()->GamePadVibration(0, 0, 0);
-
 	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
 	}
 	playerBullets_.clear();
-
-	// 基底クラスの解放
-	IScene::Finalize();
 }
 
 void GameScene::AddPlayerBullet(PlayerBullet* playerBullet) {

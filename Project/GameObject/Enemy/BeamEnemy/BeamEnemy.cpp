@@ -54,6 +54,14 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void BeamEnemy::Update() {
+	// Catmull-Romスプライン関数で補間された位置を取得
+	Vector3 pos{};
+	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
+
+	t_ += 0.005f;
+
+	object3d_->worldTransform.translate = pos;
+
 	beamObject_->worldTransform.rotate.y += 0.1f;
 }
 

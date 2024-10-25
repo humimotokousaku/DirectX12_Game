@@ -11,3 +11,13 @@ float Length(Vector2 v) {
 	result = sqrt(Dot(v, v));
 	return result;
 }
+
+Vector2 Normalize(const Vector2& v) {
+	Vector2 result{};
+	float length = Length(v);
+	if (length != 0.0f) {
+		result.x = v.x / length;
+		result.y = v.y / length;
+	}
+	return result;
+}

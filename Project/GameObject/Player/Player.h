@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Animation.h"
 #include "Audio.h"
 #include "Camera.h"
@@ -9,7 +8,9 @@
 #include "Object3D.h"
 #include "Particles.h"
 #include "PlayerBullet.h"
+#include "PlayerConfig.h"
 #include "Sprite.h"
+#include <map>
 
 class AimAssist;
 class GameScene;
@@ -52,8 +53,9 @@ public:// パブリックなメンバ関数
 	/// <summary>
 	/// 回避の更新処理
 	/// </summary>
-	/// <param name="moveX">X方向の移動ベクトル</param>
-	void EvasionUpdate(float moveX);
+	/// <param name="rotateY">自機のY軸回転角</param>
+	/// <param name="rotateX">自機のX軸回転角</param>
+	void EvasionUpdate(float rotateY, float rotateX);
 
 private:// プライベートなメンバ関数
 #pragma region 入力処理
@@ -82,7 +84,7 @@ private:// プライベートなメンバ関数
 	/// <summary>
 	/// HPバーの更新処理
 	/// </summary>
-	void HPUpdate();
+	void HPUpdate();	
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
@@ -105,6 +107,11 @@ private:// プライベートなメンバ関数
 	/// ロックオン時のレティクルの配置
 	/// </summary>
 	void DeployLockOnReticle();
+
+	/// <summary>
+	/// ImGuiの表示
+	/// </summary>
+	void ImGuiParameter();
 
 public:// GetterとSetter
 #pragma region Getter
@@ -130,7 +137,9 @@ public:// GetterとSetter
 	// 移動ベクトルのアドレスを取得
 	Vector3* GetMoveVel_P() { return &moveVel_; }
 	// 加速モードかを取得
-	bool* GetIsBoost_P() { return &isBoost_; }
+	bool* GetIsBoost_P() { return &boost_.isActive; }
+	// 回避中かを取得
+	bool GetIsEvasion() { return evasion_.isActive; }
 #pragma endregion
 
 #pragma region Setter
@@ -159,43 +168,6 @@ public:// GetterとSetter
 	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
 #pragma endregion
 
-public:// 定数
-	// 自機の移動速度の減衰率
-	Vector3 kMoveSpeedDecayRate = { 3.0f, 3.0f, 1.0f };
-	// 自機の回転速度の減衰率
-	Vector3 kRotateSpeedDecayRate = { 0.3f,0.3f,1.4f };
-
-	// 自機の最大移動速度
-	float kMaxSpeed = 1.0f;
-	// 自機の最大回転速度
-	Vector3 kMaxRotSpeed = { 1.0f, 1.0f, 1.0f };
-	// 自機の最大回避速度
-	float kMaxEvasionSpeed = 4.0f;
-
-	// 移動限界座標
-	const Vector3 kMoveLimit = { 35.0f, 17.0f, 5.0f };
-
-#pragma region カメラ演出
-	// 回転幅
-	const Vector3 kMaxCameraRotDirection = { 0.1f,0.1f,0.1f };
-
-#pragma endregion
-
-	// カメラから照準オブジェクトの距離
-	const float kDistanceObject = 50.0f;
-
-	// HPスプライトの最大サイズ
-	const Vector2 kMaxHPSize = { 300.0f, 32.0f };
-	// HPの最大値
-	const float kMaxHp = 100;
-
-	// 弾の発射間隔[frame]
-	const int kBulletInterval = 5;
-	// 無敵時間[frame]
-	const int kMaxInvinsibleFrame = 60;
-	// 残像を表示する時間[frame]
-	const int kMaxEvasionFrame = 10;
-
 private:// プライベートなメンバ変数
 	// キーボード入力
 	Input* input_ = nullptr;
@@ -217,8 +189,9 @@ private:// プライベートなメンバ変数
 	std::array<Sprite, 3> sprite2DReticle_;
 	// HP用のスプライト
 	Sprite hpSprite_;
+
 	// 自機の軌道パーティクル
-	std::array<std::unique_ptr<Particles>, 3> particle_;
+	std::array<std::unique_ptr<Particles>, 3> particles_;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
@@ -232,8 +205,12 @@ private:// プライベートなメンバ変数
 	Animation reticleAnim_;
 	// ブースト時のアニメーション
 	Animation boostRotAnim_;
-	// 回避速度のアニメーション(イージング)
+	// 回避時の移動速度のアニメーション(イージングとして使用)
 	Animation evasionSpeedAnim_;
+	// 回避時の回転速度のアニメーション(イージングとして使用)
+	std::map <std::string, Animation> evasionRotSpeedAnim_;
+	// 残像のα値のアニメーション
+	std::vector<Animation> evasionAlphaAnims_;
 #pragma endregion
 
 #pragma region テクスチャ
@@ -265,20 +242,18 @@ private:// プライベートなメンバ変数
 	CollisionManager* collisionManager_;
 #pragma endregion
 
+	// 加速時の情報
+	BoostData boost_{};
+
+	// 回避時の情報
+	EvasionData evasion_{};
+
 	// 自機の移動速度
 	Vector3 moveVel_;
-	// 回避した瞬間のX方向のベクトル
-	float evasionVelX_;
-	// 回避速度
-	float evasionSpeed_;
-	// ブースト時の移動速度
-	float boostSpeed_;
-	// レティクルの移動速度
-	Vector3 reticleMoveVel_;
 	//自機の回転速度
 	Vector3 rotateVel_;
-	// ブースト中の自機の回転
-	float boostRotVelZ_;
+	// レティクルの移動速度
+	Vector3 reticleMoveVel_;
 
 	// ロックオン時のレティクルの補間量
 	Vector3* lockOnReticleOffset_;
@@ -294,8 +269,6 @@ private:// プライベートなメンバ変数
 
 	// 無敵時間
 	int invinsibleFrame_;
-	// 回避時間
-	int evasionFrame_;
 	// ロックオン時のレティクルのサイズ変更に使用するframe
 	int currentFrame_;
 	// 弾の発射間隔
@@ -305,10 +278,6 @@ private:// プライベートなメンバ変数
 	bool* isLockOn_;
 	// 無敵中か
 	bool isInvinsible_ = false;
-	// 加速モード
-	bool isBoost_ = false;
-	// 回避モード
-	bool isEvasion_ = false;
 	// 死亡フラグ
 	bool isDead_ = true;
 };

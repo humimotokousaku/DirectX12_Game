@@ -16,8 +16,6 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
-	// お互いが当たり判定をとる状態か
-	if (!colliderA->GetIsActive() || !colliderB->GetIsActive()) { return; }
 
 	/// 球体同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
@@ -89,13 +87,14 @@ void CollisionManager::CheckAllCollisions() {
 	std::list<Collider*>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
 		Collider* colliderA = *itrA;
-
+		if (!colliderA->GetIsActive()) { continue; }
 		// イテレータBはイテレータAの次の要素から回す(重複判定を回避)
 		std::list<Collider*>::iterator itrB = itrA;
 		itrB++;
 
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
+			if (!colliderB->GetIsActive()) { continue; }
 			// 当たり判定と応答(フレンドリーファイアしないように設定)
 			CheckCollisionPair(colliderA, colliderB);
 		}

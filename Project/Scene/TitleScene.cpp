@@ -56,6 +56,5 @@ void TitleScene::Draw() {
 }
 
 void TitleScene::Finalize() {
-	// 基底クラスの解放
-	IScene::Finalize();
+
 }

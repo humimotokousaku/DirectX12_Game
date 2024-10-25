@@ -64,6 +64,8 @@ public:
 #pragma region Setter
 	// 座標を設定
 	void SetPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	// 親子関係の設定
+	void SetParent(const WorldTransform* parent) { object3d_->worldTransform.parent_ = parent; }
 #pragma endregion
 
 private:

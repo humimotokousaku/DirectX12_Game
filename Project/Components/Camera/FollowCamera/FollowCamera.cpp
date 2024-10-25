@@ -2,9 +2,16 @@
 #include "Input.h"
 #include "ImGuiManager.h"
 
-void FollowCamera::Initialize() {
+void FollowCamera::Initialize(Player* player) {
+	player_ = player;
+
+	// カメラの生成
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
+
+	// 
+	SetCameraOffset(player_->GetCameraOffset_P());
+	SetCameraRotateOffset(player_->GetCameraRotateOffset_P());
 }
 
 void FollowCamera::Update() {
@@ -15,7 +22,7 @@ void FollowCamera::Update() {
 	Vector3 offset = TargetOffset();
 
 	// 座標をコピーしてオフセット分ずらす
-	camera_->worldTransform_.translate = playerPos_ + offset;
+	camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset;
 	// 演出用のoffsetを加算
 	camera_->worldTransform_.rotate += (*rotateOffset_);
 
@@ -26,13 +33,12 @@ void FollowCamera::Update() {
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
+#ifdef _DEBUG
 	ImGui::Begin("FollowCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);	
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
 	ImGui::End();
-#ifdef _DEBUG
-
 #endif // _DEBUG
 }
 

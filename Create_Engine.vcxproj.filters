@@ -477,7 +477,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\Scene\IScene.cpp" />
-    <ClCompile Include="Skydome.cpp" />
+    <ClCompile Include="Project\GameObject\Skydome.cpp" />
+    <ClCompile Include="Engine\Utility\Utility.cpp" />
+    <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -825,7 +827,10 @@
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
       <Filter>Project\Components\SceneTransition</Filter>
     </ClInclude>
-    <ClInclude Include="Skydome.h" />
+    <ClInclude Include="Project\GameObject\Skydome.h" />
+    <ClInclude Include="Engine\Utility\Utility.h" />
+    <ClInclude Include="Project\GameObject\Player\PlayerConfig.h" />
+    <ClInclude Include="Project\Components\LevelManager\LevelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

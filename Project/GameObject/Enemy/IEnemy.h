@@ -88,6 +88,11 @@ public:
 		// 描画しない
 		object3d_->SetIsActive(isActive);
 	}
+	/// <summary>
+	/// 親子関係の設定
+	/// </summary>
+	/// <param name="parent"></param>
+	void SetParent(const WorldTransform* parent) { object3d_->worldTransform.parent_ = parent; }
 	// 移動ルートの制御点の設定
 	void SetTravelRouteControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
 #pragma endregion
