@@ -6,5 +6,5 @@ void EnemyStateWait::Initialize(Enemy* enemy, Player* player) {
 }
 
 void EnemyStateWait::Update(Enemy* enemy) {
-
+	enemy;
 }

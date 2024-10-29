@@ -130,30 +130,27 @@ void EnemyManager::DrawParticle() {
 	}
 }
 
-void EnemyManager::ParticleUpdate(Particle& particle) {
-	particle.vel.y -= 0.3f;
-}
-
 void EnemyManager::CheckSpawn() {
-	for (int i = 0; i < spawnPoints_.size(); i++) {
-		if (!spawnPointDatas_[i].isActive) {
-			// 指定のカメラ進行度まで達しているなら
-			if ((*railCameraProgress_) >= spawnPoints_[i].percentage / 100) {
-				spawnPointDatas_[i].isActive = true;
-			}
+	for (LevelData::EnemyPoint& spawnPoint : spawnPoints_) {
+		// すでに出現している
+		if (spawnPoint.isActive) { continue; }
+		// 指定のカメラ進行度まで達していない
+		if ((*railCameraProgress_) <= spawnPoint.percentage / 100.0f) { continue; }
 
-			if (spawnPointDatas_[i].isActive) {
-				if (spawnPoints_[i].type == "NORMAL") {
-					SpawnEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].velocity, spawnPoints_[i].controlPoints.points);
-				}
-				else if (spawnPoints_[i].type == "TURRET") {
-					SpawnFixedTurret(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].controlPoints.points);
-				}
-				else if (spawnPoints_[i].type == "BEAM") {
-					SpawnBeamEnemy(spawnPoints_[i].point, spawnPoints_[i].rotate, spawnPoints_[i].controlPoints.points);
-				}
-			}
+		// 通常の敵
+		if (spawnPoint.type == "NORMAL") {
+			SpawnEnemy(spawnPoint.point, spawnPoint.rotate, spawnPoint.velocity, spawnPoint.controlPoints.points);
 		}
+		// 弾を撃つ敵
+		else if (spawnPoint.type == "TURRET") {
+			SpawnFixedTurret(spawnPoint.point, spawnPoint.rotate, spawnPoint.controlPoints.points);
+		}
+		// ビームを撃つ敵
+		else if (spawnPoint.type == "BEAM") {
+			SpawnBeamEnemy(spawnPoint.point, spawnPoint.rotate, spawnPoint.controlPoints.points);
+		}
+		// 出現済みにする
+		spawnPoint.isActive = true;
 	}
 }
 
@@ -204,6 +201,8 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	enemy->SetEnemyManager(this);
 	// 移動ルート
 	enemy->SetTravelRouteControlPoints(controlPoints);
+
+	enemy->SetParent(railCamera_->GetWorldTransform_P());
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 
@@ -315,7 +314,7 @@ void EnemyManager::CheckActiveState() {
 		// カメラの後ろなら敵の描画と機能停止
 		Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
 		if (enemyPos.x >= -50.0f && enemyPos.x <= 1330.0f &&
-			enemyPos.y >= -50.0f && enemyPos.y <= 770.0f) {		
+			enemyPos.y >= -50.0f && enemyPos.y <= 770.0f) {
 			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
 				//enemy->SetIsActive(false);
 			}

@@ -5,6 +5,7 @@ class Titan;
 class TitanWeakPointState : public ITitanState {
 public:
 	TitanWeakPointState(Titan* titan, Player* player);
+	~TitanWeakPointState()override = default;
 
 	/// <summary>
 	/// 初期化

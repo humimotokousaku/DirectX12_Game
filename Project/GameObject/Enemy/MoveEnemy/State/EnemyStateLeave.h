@@ -6,6 +6,8 @@ class Enemy;
 // 離脱フェーズのクラス
 class EnemyStateLeave : public IEnemyState {
 public:
+	~EnemyStateLeave()override = default;
+
 	// 初期化
 	void Initialize(Enemy* enemy, Player* player);
 

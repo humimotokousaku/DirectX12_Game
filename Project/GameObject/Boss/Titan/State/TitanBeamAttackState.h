@@ -5,6 +5,7 @@ class Titan;
 class TitanBeamAttackState : public ITitanState {
 public:
 	TitanBeamAttackState(Titan* titan, Player* player);
+	~TitanBeamAttackState()override = default;
 
 	/// <summary>
 	/// 初期化

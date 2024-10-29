@@ -18,7 +18,7 @@ public: // 構造体
 		std::variant<Vector4, Vector3, Vector2, float, int> end;		   // 終了時の値
 		bool isActive;  									   // アニメーションをしているか
 		const char* name;									   // アニメーションの名前
-		uint32_t id;										   // アニメーションの番号
+		int id;												   // アニメーションの番号
 		std::function<float(float)> easeFunc;                  // 使用するイージング関数
 	};
 
@@ -114,7 +114,7 @@ public: // メンバ関数
 private: // メンバ変数
 	std::list<AnimData> animData_;
 	// アニメーションの順番
-	uint32_t animId_;
+	int animId_;
 	// アニメーションスタート
 	bool isStart_;
 	// アニメーションが終了しているか

@@ -10,8 +10,8 @@ void FollowCamera::Initialize(Player* player) {
 	camera_->Initialize();
 
 	// 
-	SetCameraOffset(player_->GetCameraOffset_P());
-	SetCameraRotateOffset(player_->GetCameraRotateOffset_P());
+	offset_ = player_->GetCameraOffset_P();
+	rotateOffset_ = player_->GetCameraRotateOffset_P();
 }
 
 void FollowCamera::Update() {

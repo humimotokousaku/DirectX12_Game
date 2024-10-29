@@ -14,11 +14,13 @@ FixedTurret::~FixedTurret() {
 void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
-
+	// 敵のテクスチャを割り振る
+	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
-	object3d_->worldTransform.translate = {10,10,0};
+	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.translate = {0,0,10};
 	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
 	object3d_->worldTransform.UpdateMatrix();
@@ -30,8 +32,7 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetOnCollision(std::bind(&FixedTurret::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 
-	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
-
+	// 敵の行動状態
 	state_ = new FixedTurretWaitState(this, player_);
 	state_->Initialize(this, player_);
 
@@ -47,11 +48,10 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 
 void FixedTurret::Update() {
 	// Catmull-Romスプライン関数で補間された位置を取得
+	t_ += 0.005f;
 	Vector3 pos{};
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
-
-	t_ += 0.005f;
-
+	// 座標を更新
 	object3d_->worldTransform.translate = pos;
 
 	// 状態遷移

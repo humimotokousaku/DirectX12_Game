@@ -92,7 +92,10 @@ public:
 	/// 親子関係の設定
 	/// </summary>
 	/// <param name="parent"></param>
-	void SetParent(const WorldTransform* parent) { object3d_->worldTransform.parent_ = parent; }
+	void SetParent(const WorldTransform* parent) { 
+		object3d_->worldTransform.parent_ = parent; 
+		object3d_->worldTransform.UpdateMatrix();
+	}
 	// 移動ルートの制御点の設定
 	void SetTravelRouteControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
 #pragma endregion

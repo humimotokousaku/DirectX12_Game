@@ -70,6 +70,7 @@ void EnemyBullet::Draw() {
 }
 
 void EnemyBullet::OnCollision(Collider* collider) { 
+	collider;
 	isDead_ = true;
 }
 

@@ -69,6 +69,7 @@ void PlayerBullet::Draw() {
 }
 
 void PlayerBullet::OnCollision(Collider* collider) {
+	collider;
 	isDead_ = true;
 }
 

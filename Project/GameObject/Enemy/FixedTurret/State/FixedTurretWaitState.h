@@ -7,6 +7,7 @@ class FixedTurret;
 class FixedTurretWaitState : public IFixedTurretState {
 public:
 	FixedTurretWaitState(FixedTurret* enemy, Player* player);
+	~FixedTurretWaitState()override = default;
 
 	/// <summary>
 	/// 初期化

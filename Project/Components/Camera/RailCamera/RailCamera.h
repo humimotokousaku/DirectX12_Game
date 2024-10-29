@@ -75,11 +75,6 @@ public:// GetterとSetter
 	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
 
 	/// <summary>
-	/// 自機の移動ベクトルをアドレスで設定
-	/// </summary>
-	/// <param name="moveVel">Z方向の移動ベクトルのアドレス</param>
-	void SetPlayerMoveVel(float* moveVelZ) { moveVelZ_ = moveVelZ; }
-	/// <summary>
 	/// 加速モードかを設定
 	/// </summary>
 	/// <param name="isBoost"></param>
@@ -111,8 +106,6 @@ private:
 
 	// 速度
 	Vector3 velocity_;
-	// 自機のZ方向の移動ベクトル(自機の移動ベクトルのアドレスをもらう)
-	float* moveVelZ_;
 
 	// 加速中のfovの増加量
 	float boostFov_;

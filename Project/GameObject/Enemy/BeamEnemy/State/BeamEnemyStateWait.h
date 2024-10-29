@@ -5,7 +5,7 @@ class BeamEnemy; // 前方宣言
 class BeamEnemyStateWait : public IBeamEnemyState {
 public:
 	BeamEnemyStateWait(BeamEnemy* enemy, Player* player);
-	~BeamEnemyStateWait() = default;
+	~BeamEnemyStateWait()override = default;
 
 	/// <summary>
 	/// 初期化

@@ -184,7 +184,7 @@ void Object3D::ImGuiParameter(const char* name) {
 					ImGui::DragFloat3("rotate", &worldTransform.rotate.x, 0.01f, -6.28f, 6.28f);
 					ImGui::DragFloat("playBackSpeed", &animation_[i].playBackSpeed, 0.01f, -10.0f, 10.0f);
 					ImGui::Checkbox("isAnimation", &animation_[i].isActive);
-					ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.10);
+					ImGui::DragFloat("duration", &animation_[i].duration, 0, -10.0f,10.0f);
 					ImGui::DragFloat("animTime", &animationTime_, 0, -100, 100);
 					ImGui::TreePop();
 					index++;

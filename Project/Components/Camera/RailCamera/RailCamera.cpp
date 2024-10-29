@@ -20,8 +20,8 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	targetT_ = 1.0f / segmentCount;
 	isMove_ = true;
 
-	SetIsBoost(player_->GetIsBoost_P());
-	SetPlayerMoveVel(&player_->GetMoveVel_P()->z);
+	// アドレスを代入
+	isBoost_ = player_->GetIsBoost_P();
 
 #pragma region デバッグ用
 	// 線分の数+1個分の頂点座標の計算
@@ -51,14 +51,9 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 }
 static float moveSpeed = 0.2f;
 void RailCamera::Update() {
-	// 移動処理
-	Move();
-
-	// 加速中のカメラ処理
-	BoostUpdate();
-
-	// 回避中のカメラ処理
-	EvasionUpdate();
+	Move();			// 移動処理
+	BoostUpdate();	// 加速中のカメラ処理
+	EvasionUpdate();// 回避中のカメラ処理
 
 	// fovを適用
 	camera_->viewProjection_.fovAngleY = camera_->kDefaultFov + boostFov_ + evasionFov_;

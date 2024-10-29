@@ -51,6 +51,8 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	state_->Initialize();
 
 	hp_ = 100;
+
+	id_ = id;
 }
 
 void BeamEnemy::Update() {

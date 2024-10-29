@@ -208,7 +208,7 @@ private:// プライベートなメンバ変数
 	// 回避時の移動速度のアニメーション(イージングとして使用)
 	Animation evasionSpeedAnim_;
 	// 回避時の回転速度のアニメーション(イージングとして使用)
-	std::map <std::string, Animation> evasionRotSpeedAnim_;
+	Animation evasionRotSpeedAnim_;
 	// 残像のα値のアニメーション
 	std::vector<Animation> evasionAlphaAnims_;
 #pragma endregion

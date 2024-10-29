@@ -11,6 +11,7 @@ public:
 
 public:
 	TitanWaitState(Titan* titan, Player* player);
+	~TitanWaitState()override = default;
 
 	/// <summary>
 	/// 初期化

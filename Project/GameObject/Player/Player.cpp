@@ -125,11 +125,11 @@ void Player::Initialize() {
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
 	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
+	
 	// 回避時の移動速度のイージング
 	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{0.0f,0.0f}, kMaxEvasionFrame, "EvasionSpeedAnim", Easings::EaseOutExpo);
 	// 回避時の回転速度のイージング
-	evasionRotSpeedAnim_["RightTurn"].SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, kMaxEvasionRotNum, 45, "EvasionSpeedAnim", Easings::EaseOutExpo);
-	evasionRotSpeedAnim_["LeftTurn"].SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, kMaxEvasionRotNum, 45, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, "EvasionSpeedAnim", Easings::EaseOutExpo);
 	// 残像のα値のアニメーション
 	evasionAlphaAnims_.resize(afterImageObject3d_.size());
 	evasion_.alphas.resize(evasionAlphaAnims_.size());
@@ -257,64 +257,62 @@ void Player::BoostUpdate(float moveZ) {
 }
 
 void Player::EvasionUpdate(float rotateY, float rotateX) {
+	// 回避時の回転のイージングを更新
+	evasionRotSpeedAnim_.Update();
+
 	// 回避中でなければ終了
 	if (!evasion_.isActive) {
 		evasion_.moveVel.x = Utility::Sign(rotateY);
-		evasion_.moveVel.y = Utility::Sign(rotateX) * -1;
+		evasion_.moveVel.y = Utility::Sign(-rotateX);
 		return;
 	}
 
-	// 
-	evasion_.rotVel.z = Lerps::ExponentialInterpolate(evasion_.rotVel.z, kMaxEvasionRotNum.z * evasion_.moveVel.x, kRotateSpeedDecayRate.z * 3, 0.1f);
+#pragma region 回避速度の算出 
+	// 回避速度のイージング開始
+	evasionSpeedAnim_.SetIsStart(true);
+	// 回避速度のイージングを更新
+	evasionSpeedAnim_.Update();
+	// 回避速度を正規化
+	evasion_.moveSpeed *= Normalize(evasion_.moveVel) * 1.3f;
+	moveVel_.x += evasion_.moveSpeed.x;
+	moveVel_.y += evasion_.moveSpeed.y / 2.0f;
+#pragma endregion
 
+#pragma region 残像の処理
 	// 残像を出す
 	const int division = (int)afterImageObject3d_.size();
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
 		if (evasion_.frame % division == i) {
+			// α値のイージング開始
 			evasionAlphaAnims_[i].SetIsStart(true);
+			// 残像オブジェクトを表示
 			afterImageObject3d_[i]->SetIsActive(true);
 			afterImageObject3d_[i]->worldTransform.translate = object3d_->worldTransform.translate;
 			afterImageObject3d_[i]->worldTransform.rotate = object3d_->worldTransform.rotate;
 		}
 	}
-
-	// 回避速度のイージング開始
-	evasionSpeedAnim_.SetIsStart(true);
-	//if (evasion_.moveVel.x > 0) {
-	//	evasionRotSpeedAnim_["RightTurn"].SetIsStart(true);
-	//}
-	//else if (evasion_.moveVel.x < 0) {
-	//	evasionRotSpeedAnim_["LeftTurn"].SetIsStart(true);
-	//}
-	// 回避速度のイージングを更新
-	evasionSpeedAnim_.Update();
-	//evasionRotSpeedAnim_["RightTurn"].Update();
-	//evasionRotSpeedAnim_["LeftTurn"].Update();
 	// 残像のα値のアニメーションを更新 + α値を変更
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
 		evasionAlphaAnims_[i].Update();
 		afterImageObject3d_[i]->SetAlpha(evasion_.alphas[i]);
 	}
-
-	// 速度を正規化
-	evasion_.moveSpeed *= Normalize(evasion_.moveVel) * 1.3f;
-	moveVel_.x += evasion_.moveSpeed.x;
-	moveVel_.y += evasion_.moveSpeed.y / 2.0f;
+#pragma endregion
 
 	// 時間を進める
 	evasion_.frame--;
 
 	// イージングが終了したら初期化
 	if (evasionSpeedAnim_.GetIsEnd()) {
-		evasionSpeedAnim_.ResetData();
 		// 残像を消す
 		for (int i = 0; i < afterImageObject3d_.size(); i++) {
-			evasionAlphaAnims_[i].SetIsStart(false);
+			// アニメーション情報初期化
+			evasionAlphaAnims_[i].ResetData();
 			afterImageObject3d_[i]->SetIsActive(false);
 		}
+		// アニメーション情報初期化
+		evasionSpeedAnim_.ResetData();
 		evasion_.frame = kMaxEvasionFrame;
 		evasion_.isActive = false;
-		evasion_.rotVel.z = 0.0f;
 	}
 }
 
@@ -349,8 +347,10 @@ void Player::Move() {
 		move.z += 1.0f;
 	}
 	// 回避
-	if (input_->PressKey(DIK_C)) {
+	if (input_->TriggerKey(DIK_C)) {
 		evasion_.isActive = true;
+		evasionRotSpeedAnim_.ResetData();
+		evasionRotSpeedAnim_.SetIsStart(true);
 	}
 #pragma endregion
 
@@ -437,7 +437,7 @@ void Player::Move() {
 	// 求めた回転を代入
 	object3d_->worldTransform.rotate.x = rotateVel_.x;
 	object3d_->worldTransform.rotate.y = rotateVel_.y;
-	object3d_->worldTransform.rotate.z = rotateVel_.z + boost_.rotVelZ /*+ evasionRotVel_.z*/;
+	object3d_->worldTransform.rotate.z = rotateVel_.z + boost_.rotVelZ + evasion_.rotVel.z;
 	// 速度を自機に加算
 	object3d_->worldTransform.translate.x += moveVel_.x;
 	object3d_->worldTransform.translate.y += moveVel_.y;
@@ -520,6 +520,7 @@ void Player::Attack() {
 }
 
 void Player::OnCollision(Collider* collider) {
+	collider;
 	// HP減少処理
 	DecrementHP();
 }

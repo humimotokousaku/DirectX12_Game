@@ -5,7 +5,7 @@ class BeamEnemy; // 前方宣言
 class BeamEnemyStateHorizontal : public IBeamEnemyState {
 public:
 	BeamEnemyStateHorizontal(BeamEnemy* enemy, Player* player);
-	~BeamEnemyStateHorizontal() = default;
+	~BeamEnemyStateHorizontal()override = default;
 	
 	/// <summary>
 	/// 初期化

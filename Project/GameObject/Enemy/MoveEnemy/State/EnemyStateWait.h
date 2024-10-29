@@ -5,16 +5,12 @@
 class Enemy; // 前方宣言
 class EnemyStateWait : public IEnemyState {
 public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	/// <param name="enemy">敵クラス</param>
+	~EnemyStateWait()override = default;
+
+	// 初期化
 	void Initialize(Enemy* enemy, Player* player);
 
-	/// <summary>
-	/// 更新処理
-	/// </summary>
-	/// <param name="enemy">敵クラス</param>
+	// 更新処理
 	void Update(Enemy* enemy);
 
 public:

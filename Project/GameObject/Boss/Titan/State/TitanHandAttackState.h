@@ -5,6 +5,7 @@ class Titan;
 class TitanHandAttackState : public ITitanState {
 public:
 	TitanHandAttackState(Titan* titan, Player* player);
+	~TitanHandAttackState()override = default;
 
 	/// <summary>
 	/// 初期化

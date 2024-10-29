@@ -188,9 +188,6 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
-	// レールカメラの移動ルート
-	//railCamera_.MoveRouteDraw();
-
 	// Blenderで配置したオブジェクト
 	levelManager_->Draw();
 
@@ -208,6 +205,9 @@ void GameScene::Draw() {
 
 	// 敵に関するパーティクル
 	enemyManager_.DrawParticle();
+
+	// レールカメラの移動ルート
+	//railCamera_.MoveRouteDraw();
 }
 
 void GameScene::Finalize() {

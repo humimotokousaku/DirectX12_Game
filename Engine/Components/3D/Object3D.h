@@ -53,6 +53,8 @@ public:
 #pragma region Getter
 	// モデル
 	Model* GetModel() { return model_; }
+	// カメラを取得
+	Camera* GetCamera() { return camera_; }
 #pragma endregion
 
 #pragma region Setter

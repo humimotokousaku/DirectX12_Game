@@ -52,7 +52,7 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 
 		//種別を取得
 		std::string type = object["type"].get<std::string>();
-		std::string name = object["name"].get<std::string>();
+		std::string objectName = object["name"].get<std::string>();
 		// 敵の出現場所かの判別をする
 		std::string checkSpawnPoint = "enemy_point";
 
@@ -82,7 +82,7 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		}
 		// MESH
 		if (type.compare("MESH") == 0) {
-			if (name.substr(0, 11) == checkSpawnPoint.substr(0, 11)) {
+			if (objectName.substr(0, 11) == checkSpawnPoint.substr(0, 11)) {
 				// 要素追加
 				levelData->enemyPoints_.emplace_back(LevelData::EnemyPoint{});
 				// 追加した要素の参照を取得
@@ -229,5 +229,6 @@ void LevelManager::Finalize() {
 		delete object;
 	}
 	levelObjects_.clear();
+	controlPoints_.clear();
 	enemyPoints_.clear();
 }

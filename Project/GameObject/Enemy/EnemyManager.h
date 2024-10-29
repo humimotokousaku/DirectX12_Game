@@ -51,12 +51,6 @@ public:
 	/// 
 private:
 	/// <summary>
-	/// ダメージパーティクルの更新処理
-	/// </summary>
-	/// <param name="particle"></param>
-	void ParticleUpdate(Particle& particle);
-
-	/// <summary>
 	/// 発生条件
 	/// </summary>
 	void CheckSpawn();
@@ -158,7 +152,7 @@ public:
 	/// <param name="spawnPoints">敵の出現する場所</param>
 	void SetSpawnPoints(std::vector<LevelData::EnemyPoint> spawnPoints) {
 		spawnPoints_ = spawnPoints;
-		spawnPointDatas_.resize(spawnPoints_.size());
+		//spawnPointDatas_.resize(spawnPoints_.size());
 	}
 
 	/// <summary>
@@ -228,7 +222,7 @@ private:// プライベートなメンバ変数
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;
 	// 自機と出現場所の距離
-	std::vector<SpawnPointData> spawnPointDatas_;
+	//std::vector<SpawnPointData> spawnPointDatas_;
 
 	// レールカメラの進行度
 	float* railCameraProgress_;

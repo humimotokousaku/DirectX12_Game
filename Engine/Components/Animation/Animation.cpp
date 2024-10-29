@@ -48,9 +48,6 @@ void Animation::Update() {
 						else if constexpr (std::is_same_v<T, float>) {
 							*targetPtr = Lerps::Lerp(std::get<float>(it->start), std::get<float>(it->end), it->t);
 						}
-						else if constexpr (std::is_same_v<T, int>) {
-							*targetPtr = Lerps::Lerp(std::get<int>(it->start), std::get<int>(it->end), it->t);
-						}
 						}, (*it).target);
 					it->currentFrame++;
 				}	
@@ -64,7 +61,6 @@ void Animation::Update() {
 			it->currentFrame = 0;
 			it->isActive = false;
 		}
-		//isEnd_ = false;
 	}
 }
 

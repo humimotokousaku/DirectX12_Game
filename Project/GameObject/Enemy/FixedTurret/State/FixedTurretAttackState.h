@@ -10,7 +10,7 @@ class FixedTurret; // 前方宣言
 class FixedTurretAttackState : public IFixedTurretState {
 public:
 	FixedTurretAttackState(FixedTurret* enemy, Player* player);
-	~FixedTurretAttackState();
+	~FixedTurretAttackState()override;
 
 	/// <summary>
 	/// 弾を発射してタイマーをリセット

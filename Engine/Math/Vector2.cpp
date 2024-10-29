@@ -8,7 +8,7 @@ float Dot(Vector2 v1, Vector2 v2) {
 
 float Length(Vector2 v) {
 	float result{};
-	result = sqrt(Dot(v, v));
+	result = sqrtf(Dot(v, v));
 	return result;
 }
 

@@ -27,6 +27,7 @@ public:
 		float percentage;	// 出現条件:カーブの割合
 		std::string type;	// 種類
 		Vector3 velocity;	// 初速度(移動ベクトル)
+		bool isActive = false;// 出現済みか
 	};
 	std::vector<Transform> transform_;
 	std::vector<std::string> type_;

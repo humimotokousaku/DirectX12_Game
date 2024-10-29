@@ -5,7 +5,7 @@ class BeamEnemy; // 前方宣言
 class BeamEnemyStateVertical : public IBeamEnemyState {
 public:
 	BeamEnemyStateVertical(BeamEnemy* enemy, Player* player);
-	~BeamEnemyStateVertical() = default;
+	~BeamEnemyStateVertical()override = default;
 
 	/// <summary>
 	/// 初期化
