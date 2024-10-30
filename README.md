@@ -22,7 +22,7 @@
 ## Blenderを利用したレベルエディタ
 Blenderのアドオン開発を行い以下の設定を行えるようにしました。
 
-## 1. 敵の出現情報  
+### 敵の出現情報  
 "敵の出現場所を生成"タブをクリックするとトーラスモデルとNURBSパスが生成されます。トーラスモデルは敵の向きを表し、NURBSパスは敵の移動ルートです。
 ![](ReadMe_resource/Blender_Editor_00.png)
 
@@ -34,7 +34,7 @@ Blenderのアドオン開発を行い以下の設定を行えるようにしま�
  - #### 移動ルートの編集
  ![](ReadMe_resource/Blender_Editor_03.png)
 
-## 2. 障害物の配置  
+### 障害物の配置  
  - #### モデル配置
  ファイルの名前を入力後にEngine/resources/Levelフォルダー内に該当のモデルを入れることでモデルの配置することができます。
  ![](ReadMe_resource/Blender_Editor_Object.png)
@@ -45,7 +45,7 @@ Blenderのアドオン開発を行い以下の設定を行えるようにしま�
  サイズ:当たり判定の大きさを変更できます    
  ![](ReadMe_resource/Blender_Editor_Collider.png)
 
-## 3. レールカメラのルートを編集
+### レールカメラのルートを編集
 "レールカメラの移動ルートの生成"タブをクリックするとNURBSパスが生成されます。  
 敵の発生タイミングが調整しやすくなるするために各制御点の位置がカーブ全体の何パーセントにしているのかを表示しています。
 ![](ReadMe_resource/Blender_Editor_RailCamera_01.png)
