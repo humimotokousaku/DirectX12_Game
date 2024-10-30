@@ -62,10 +62,10 @@ void RailCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
+
+#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
-#ifdef _DEBUG
-
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();
@@ -82,6 +82,24 @@ void RailCamera::MoveRouteDraw() {
 }
 
 void RailCamera::Move() {
+	// 注視点を曲線に沿って移動
+	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
+
+	// カメラを曲線に沿って移動
+	Vector3 cameraPosition{};
+	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
+	camera_->worldTransform_.translate = cameraPosition + debugVel_;
+
+	// 移動ベクトルを求める
+	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
+	// 移動ベクトルからY軸周り角度を算出
+	camera_->worldTransform_.rotate.y = std::atan2(velocity_.x, velocity_.z);
+	// 横軸方向の長さを求める
+	float velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
+	// 移動ベクトルからX軸周りの角度
+	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
+
+
 	// 移動フラグがないなら早期リターン
 	if (!isMove_) { return; }
 
@@ -101,21 +119,7 @@ void RailCamera::Move() {
 		return;
 	}
 
-	// 注視点を曲線に沿って移動
-	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
-	Vector3 cameraPosition{};
-	// カメラを曲線に沿って移動
-	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
-	camera_->worldTransform_.translate = cameraPosition + debugVel_;
 
-	// 移動ベクトルを求める
-	velocity_ = Subtract(target_, camera_->worldTransform_.translate);
-	// 移動ベクトルからY軸周り角度を算出
-	camera_->worldTransform_.rotate.y = std::atan2(velocity_.x, velocity_.z);
-	// 横軸方向の長さを求める
-	float velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
-	// 移動ベクトルからX軸周りの角度
-	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 }
 
 void RailCamera::BoostUpdate() {

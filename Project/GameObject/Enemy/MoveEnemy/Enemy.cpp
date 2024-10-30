@@ -16,8 +16,7 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
 
-	//object3d_ = std::make_unique<Object3D>();
-	//object3d_->Initialize();
+	// 3dオブジェクトの設定
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;

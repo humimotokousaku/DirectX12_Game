@@ -44,6 +44,11 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 
 	// スコア
 	score_ = 50;
+
+	for (Vector3& controlPoint : controlPoints_) {
+		controlPoint = player_->GetWorldPosition() - controlPoint;
+	}
+
 }
 
 void FixedTurret::Update() {
@@ -53,6 +58,7 @@ void FixedTurret::Update() {
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
 	// 座標を更新
 	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.UpdateMatrix();
 
 	// 状態遷移
 	state_->Update(this);
@@ -62,6 +68,7 @@ void FixedTurret::Update() {
 	Vector3 velocity = player_->GetWorldPosition() - GetWorldPosition();
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
+	object3d_->worldTransform.rotate.y += object3d_->worldTransform.parent_->rotate.y;
 	// 横軸方向の長さを求める
 	float velocityXZ;
 	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
@@ -103,7 +110,7 @@ void FixedTurret::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->SetCamera(camera_);
 	newBullet->SetPlayer(player_);
-	newBullet->Initialize(models_[1], object3d_->worldTransform.translate, velocity);
+	newBullet->Initialize(models_[1], GetWorldPosition(), velocity);
 
 	// 弾を登録
 	enemyManager_->AddEnemyBullet(newBullet);
