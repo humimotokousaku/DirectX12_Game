@@ -79,18 +79,13 @@ private:
 	// カメラの後ろに敵が行ってしまったら機能停止
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
 	/// <summary>
-	/// 全ての敵の活性化状態を調べる
+	/// 全ての敵弾がカメラの後ろにいるかを調べる
 	/// </summary>
 	void CheckActiveState();
 
 	Vector2 ConvertWorld2Screen(Vector3 worldPos);
 
 public:
-	/// <summary>
-	/// 登場演出のエディター
-	/// </summary>
-	void AppearanceDirectionEditor();
-
 	/// <summary>
 	/// 弾のアドレスを登録
 	/// </summary>
@@ -197,9 +192,6 @@ private:// プライベートなメンバ変数
 	std::vector<Particles*> spawnParticles_;
 	// 被弾時時のパーティクル
 	std::vector<Particles*> hitParticles_;
-
-	// 追従カメラのワールドトランスフォーム
-	WorldTransform followWorldTransform_;
 
 	// 使用するモデル
 	std::vector<Model*> models_;

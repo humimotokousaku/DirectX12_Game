@@ -1,6 +1,7 @@
 #pragma once
 #include "ModelManager.h"
 #include "Object3D.h"
+#include "../../externals/nlohmann/json.hpp"
 
 /// <summary>
 /// ブレンダーで作成したjson情報を読み込むクラス
@@ -26,6 +27,19 @@ public:
 	/// <param name="fileName">Blenderで出力したjsonファイルの名前</param>
 	/// <param name="camera">カメラのアドレス</param>
 	void LoadJSONFile(const std::string fileName, Camera* camera);
+
+	/// <summary>
+	/// jsonのデータを読み取ってVector3型に変換
+	/// </summary>
+	/// <param name="v">x,y,zの情報,もしくはそれに準ずるもの</param>
+	/// <returns>Vector3</returns>
+	Vector3 ConvertVector3(nlohmann::json& v) {
+		Vector3 result{};
+		result.x = (float)v[0];
+		result.y = (float)v[2];
+		result.z = (float)v[1];
+		return result;
+	}
 
 #pragma region Setter
 	/// <summary>

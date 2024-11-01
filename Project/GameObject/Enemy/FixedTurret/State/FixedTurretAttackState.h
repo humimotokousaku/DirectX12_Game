@@ -27,9 +27,9 @@ public:
 	// 発射間隔
 	static const int kFireInterval = 10;
 	// 射撃のクールタイム
-	const float kShotCoolTime = 90.0f;
+	const float kShotCoolTime = 120.0f;
 	// 連続で射撃する回数
-	const int kLimitShot = 3;
+	const int kLimitShot = 1;
 
 public:
 	FixedTurret* enemy_;

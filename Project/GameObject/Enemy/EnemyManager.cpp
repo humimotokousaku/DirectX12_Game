@@ -46,16 +46,11 @@ void EnemyManager::Initialize() {
 	attackAlert_->SetCamera(camera_);
 	attackAlert_->SetPlayer(player_);
 
-	followWorldTransform_.Initialize();
-	followWorldTransform_.parent_ = railCamera_->GetWorldTransform_P();
-
-	SetCameraMoveVel(railCamera_->GetDirectionVelocity());
-	SetRailCameraProgress(railCamera_->GetRailPercentage());
+	cameraMoveVel_ = railCamera_->GetDirectionVelocity();
+	railCameraProgress_ = railCamera_->GetRailPercentage();
 }
 
 void EnemyManager::Update() {
-	followWorldTransform_.UpdateMatrix();
-
 	// 出現条件を満たしているかを確認
 	CheckSpawn();
 
@@ -64,6 +59,7 @@ void EnemyManager::Update() {
 
 	// 敵の削除
 	enemy_.remove_if([&](IEnemy* enemy) {
+		// 倒したら点数を加算して解放
 		if (enemy->IsDead()) {
 			// 割り振られたスコアを加算
 			score_->AddScore(enemy->GetScore());
@@ -72,6 +68,7 @@ void EnemyManager::Update() {
 			delete enemy;
 			return true;
 		}
+		// 機能停止状態なら解放
 		if (!enemy->GetIsActive()) {
 			delete enemy;
 			return true;
@@ -256,33 +253,33 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 }
 
 void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
-	Titan* boss = new Titan();
+	//Titan* boss = new Titan();
 
-	// 敵モデルを追加
-	boss->AddModel(models_[0]);
-	// 必要なアドレスを設定
-	boss->SetPlayer(player_);
-	boss->SetCamera(camera_);
-	boss->SetEnemyManager(this);
-	boss->SetParent(&followWorldTransform_);
-	// 初期化
-	// カメラの座標が中心なのでspawnPosはカメラとの距離
-	boss->Initialize(pos, rotate, id_);
-	// リストに登録
-	enemy_.push_back(boss);
+	//// 敵モデルを追加
+	//boss->AddModel(models_[0]);
+	//// 必要なアドレスを設定
+	//boss->SetPlayer(player_);
+	//boss->SetCamera(camera_);
+	//boss->SetEnemyManager(this);
+	//boss->SetParent(&followWorldTransform_);
+	//// 初期化
+	//// カメラの座標が中心なのでspawnPosはカメラとの距離
+	//boss->Initialize(pos, rotate, id_);
+	//// リストに登録
+	//enemy_.push_back(boss);
 
-	// 管理番号更新
-	id_++;
+	//// 管理番号更新
+	//id_++;
 
-	// 出現時のパーティクルを生成
-	Particles* particle = new Particles();
-	particle->Initialize(boss->GetWorldPosition() + pos);
-	particle->SetCamera(camera_);
-	particle->SetEmitterFrequency(1);
-	particle->SetEmitterCount(20);
-	particle->SetEmitterSpawnCount(1);
-	particle->randomScaleLimit = { 0.3f, 0.4f };
-	spawnParticles_.push_back(particle);
+	//// 出現時のパーティクルを生成
+	//Particles* particle = new Particles();
+	//particle->Initialize(boss->GetWorldPosition() + pos);
+	//particle->SetCamera(camera_);
+	//particle->SetEmitterFrequency(1);
+	//particle->SetEmitterCount(20);
+	//particle->SetEmitterSpawnCount(1);
+	//particle->randomScaleLimit = { 0.3f, 0.4f };
+	//spawnParticles_.push_back(particle);
 }
 
 bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
@@ -310,19 +307,10 @@ bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 }
 
 void EnemyManager::CheckActiveState() {
-	for (IEnemy* enemy : enemy_) {
+	for (EnemyBullet* bullet : enemyBullets_) {
 		// カメラの後ろなら敵の描画と機能停止
-		Vector2 enemyPos = ConvertWorld2Screen(enemy->GetWorldPosition());
-		if (enemyPos.x >= -50.0f && enemyPos.x <= 1330.0f &&
-			enemyPos.y >= -50.0f && enemyPos.y <= 770.0f) {
-			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-				//enemy->SetIsActive(false);
-			}
-		}
-		else {
-			if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-				//enemy->SetIsActive(false);
-			}
+		if (IsObjectInOppositeDirection(bullet->GetWorldPosition())) {
+			bullet->SetIsDead(true);
 		}
 	}
 }
@@ -340,8 +328,4 @@ Vector2 EnemyManager::ConvertWorld2Screen(Vector3 worldPos) {
 	result = Transforms(result, matViewProjectionViewport);
 
 	return Vector2(result.x, result.y);
-}
-
-void EnemyManager::AppearanceDirectionEditor() {
-
 }

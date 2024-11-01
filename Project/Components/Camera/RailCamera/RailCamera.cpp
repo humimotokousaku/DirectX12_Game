@@ -1,7 +1,7 @@
 #pragma once
 #include "RailCamera.h"
-#include "../math/Matrix4x4.h"
-#include "../Manager/ImGuiManager.h"
+#include "Matrix4x4.h"
+#include "ImGuiManager.h"
 
 void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) {
 	player_ = player;
@@ -62,10 +62,10 @@ void RailCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
-
-#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
+#ifdef _DEBUG
+
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();
@@ -86,8 +86,7 @@ void RailCamera::Move() {
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
 
 	// カメラを曲線に沿って移動
-	Vector3 cameraPosition{};
-	cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
+	Vector3 cameraPosition = Lerps::CatmullRomSpline(controlPoints_, t_);
 	camera_->worldTransform_.translate = cameraPosition + debugVel_;
 
 	// 移動ベクトルを求める
@@ -100,7 +99,7 @@ void RailCamera::Move() {
 	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 
 
-	// 移動フラグがないなら早期リターン
+	// 移動フラグがないならリターン
 	if (!isMove_) { return; }
 
 	// カメラの移動
@@ -118,8 +117,6 @@ void RailCamera::Move() {
 		isGameClear_ = true;
 		return;
 	}
-
-
 }
 
 void RailCamera::BoostUpdate() {
@@ -139,11 +136,13 @@ void RailCamera::BoostUpdate() {
 }
 
 void RailCamera::EvasionUpdate() {
+	// 回避中
 	if (player_->GetIsEvasion()) {
 		evasionFovAnim_.SetIsStart(true);
 	}
 	evasionFovAnim_.Update();
 
+	// 回避のアニメーションが終了したとき
 	if (evasionFovAnim_.GetIsEnd()) {
 		evasionFov_ = Lerps::ExponentialInterpolate(evasionFov_, 0.0f, 1.0f, 0.1f);
 	}

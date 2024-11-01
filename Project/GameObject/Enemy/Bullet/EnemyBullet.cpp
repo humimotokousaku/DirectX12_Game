@@ -24,11 +24,12 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(model);
+	//object3d_->worldTransform.parent_ = parent;
 	object3d_->worldTransform.translate = pos;
 	// 形状を設定
-	object3d_->worldTransform.scale = {
-		0.25f,0.25f,0.8f
-	};
+	//object3d_->worldTransform.scale = {
+	//	//0.25f,0.25f,0.8f
+	//};
 	// 色を赤色にする
 	object3d_->SetColor(Vector4{ 1.0f,0.0f,0.0f,1.0f });
 
@@ -42,8 +43,15 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
 }
-
+static float speed = 1.5f;
+static float a = -2.0f;
 void EnemyBullet::Update() {
+	Vector3 toPlayer = player_->GetWorldPosition() - GetWorldPosition();
+	toPlayer = Normalize(toPlayer);
+	velocity_ = Normalize(velocity_);
+	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * speed;
+	velocity_.z *= a;
+
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
 	// 横軸方向の長さを求める

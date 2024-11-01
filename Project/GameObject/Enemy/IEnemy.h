@@ -132,6 +132,10 @@ protected:
 	// 移動速度
 	Vector3 moveSpeed_;
 
+	// 注視点の座標
+	Vector3 target_;
+	// 注視点の進行度
+	float targetT_;
 	// 移動ルートの進行度
 	float t_;
 

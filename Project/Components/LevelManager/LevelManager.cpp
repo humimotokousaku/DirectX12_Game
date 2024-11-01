@@ -1,5 +1,4 @@
 #include "LevelManager.h"
-#include "../../externals/nlohmann/json.hpp"
 
 LevelManager* LevelManager::GetInstance() {
 	static LevelManager instance;
@@ -56,6 +55,7 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		// 敵の出現場所かの判別をする
 		std::string checkSpawnPoint = "enemy_point";
 
+		// レールカメラ
 		if (type.compare("CURVE") == 0) {
 			// 要素追加
 			levelData->railCameraControlPoint_.emplace_back(LevelData::CurveData{});
@@ -80,8 +80,9 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 			}
 			controlPoints_ = railCameraData.points;
 		}
-		// MESH
+		// オブジェクト
 		if (type.compare("MESH") == 0) {
+			// 敵のスポーン情報
 			if (objectName.substr(0, 11) == checkSpawnPoint.substr(0, 11)) {
 				// 要素追加
 				levelData->enemyPoints_.emplace_back(LevelData::EnemyPoint{});
@@ -90,10 +91,8 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 				nlohmann::json& spawnData = object["spawn_data"][0];
 
 				// 出現場所
-				enemyPoint.point.x = (float)spawnData["point"][0];
-				enemyPoint.point.y = (float)spawnData["point"][2];
-				enemyPoint.point.z = (float)spawnData["point"][1];
-				// 初期の向き
+				enemyPoint.point = ConvertVector3(spawnData["point"]);
+				// 回転角(DegreeからRadianに変換)
 				Vector3 rotate = { Degree2Radian(-(float)spawnData["rotation"][0]) ,Degree2Radian(-(float)spawnData["rotation"][2]),Degree2Radian(-(float)spawnData["rotation"][1]) };
 				enemyPoint.rotate = rotate;
 
@@ -103,12 +102,10 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 				// 種類
 				enemyPoint.type = spawnData["enemyTypes"].get<std::string>();
 
-				// 移動速度(方向ベクトルに対して扱うものとする)
-				enemyPoint.velocity.x = (float)spawnData["velocity"][0];
-				enemyPoint.velocity.y = (float)spawnData["velocity"][1];
-				enemyPoint.velocity.z = (float)spawnData["velocity"][2];
+				// 移動速度(方向ベクトルとして扱う)
+				enemyPoint.velocity = ConvertVector3(spawnData["velocity"]);
 
-				// 
+				// 敵の移動ルート
 				if (object.contains("children")) {
 					nlohmann::json& children = object["children"][0];
 					// 追加した要素の参照を取得
@@ -117,7 +114,6 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 					// 各制御点を走査
 					for (const auto& pointData : children["curve_data"]) {
 						const auto& point = pointData["point"];
-
 						// ワールド座標に変換して追加
 						curveData.points.emplace_back(Vector3{
 							(float)point[0],
@@ -129,51 +125,50 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 				}
 
 				enemyPoints_.push_back(enemyPoint);
+				continue;
 			}
-			else {
-				// 要素追加
-				levelData->objects_.emplace_back(LevelData::ObjectData{});
-				// 追加した要素の参照を取得
-				LevelData::ObjectData& objectData = levelData->objects_.back();
 
-				if (object.contains("file_name")) {
-					// ファイル名
-					objectData.fileName = object["file_name"];
-				}
-				// トランスフォームのパラメータ読み込み
-				nlohmann::json& transform = object["transform"];
-				// 平行移動
-				objectData.translate.x = (float)transform["translation"][0];
-				objectData.translate.y = (float)transform["translation"][2];
-				objectData.translate.z = (float)transform["translation"][1];
-				// 回転角
-				Vector3 rotate = { Degree2Radian(-(float)transform["rotation"][0]) ,Degree2Radian(-(float)transform["rotation"][2]),Degree2Radian(-(float)transform["rotation"][1]) };
-				objectData.rotate = rotate;
-				// スケーリング
-				objectData.scale.x = (float)transform["scaling"][0];
-				objectData.scale.y = (float)transform["scaling"][2];
-				objectData.scale.z = (float)transform["scaling"][1];
-				// 背景用のオブジェクトか
-				nlohmann::json& isSkydome = object["skydome"];
-				objectData.isSkydome = (int)isSkydome;
+			/// 障害物の情報
 
-				// 当たり判定が設定されているか
-				if (object.contains("collider")) {
-					nlohmann::json& collider = object["collider"];
-					// OBBの場合
-					if (collider["type"] == "OBB") {
-						// 使用するコライダーの種類
-						objectData.colliderType = collider["type"];
-						// 当たり判定の大きさ
-						objectData.colliderSize.x = collider["size"][0];
-						objectData.colliderSize.y = collider["size"][2];
-						objectData.colliderSize.z = collider["size"][1];
-					}
+			// 要素追加
+			levelData->objects_.emplace_back(LevelData::ObjectData{});
+			// 追加した要素の参照を取得
+			LevelData::ObjectData& objectData = levelData->objects_.back();
+			
+			// モデルのファイル名
+			if (object.contains("file_name")) {	
+				objectData.fileName = object["file_name"];
+			}
+
+			// トランスフォームのパラメータ読み込み
+			nlohmann::json& transform = object["transform"];
+			// 平行移動
+			objectData.translate = ConvertVector3(transform["translation"]);
+			// 回転角
+			Vector3 rotate = { Degree2Radian(-(float)transform["rotation"][0]) ,Degree2Radian(-(float)transform["rotation"][2]),Degree2Radian(-(float)transform["rotation"][1]) };
+			objectData.rotate = rotate;
+			// スケーリング
+			objectData.scale = ConvertVector3(transform["scaling"]);
+
+			// 背景用のオブジェクトか
+			nlohmann::json& isSkydome = object["skydome"];
+			objectData.isSkydome = (int)isSkydome;
+
+			// 当たり判定が設定されているか
+			if (object.contains("collider")) {
+				nlohmann::json& collider = object["collider"];
+				// OBBの場合
+				if (collider["type"] == "OBB") {
+					// 使用するコライダーの種類
+					objectData.colliderType = collider["type"];
+					// 当たり判定の大きさ
+					objectData.colliderSize = ConvertVector3(collider["size"]);
 				}
 			}
 		}
 	}
 
+	// オブジェクト生成
 	std::vector<Object3D*> objects;
 	for (auto& objectData : levelData->objects_) {
 		Model* model;
@@ -185,10 +180,8 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		// モデルを指定して3Dオブジェクト生成
 		Object3D* newObject = new Object3D();
 		newObject->Initialize();
-
-		// 見た目のモデルを設定
+		// モデルを設定
 		newObject->SetModel(model);
-
 		// カメラの設定
 		newObject->SetCamera(camera_);
 

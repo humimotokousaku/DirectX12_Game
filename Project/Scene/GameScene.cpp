@@ -165,7 +165,7 @@ void GameScene::Update() {
 	score_->Update();
 
 	// ステージBGM
-	audio_->SetMuffle(BGM_, 1.0f);
+	//audio_->SetMuffle(BGM_, 1.0f);
 
 	// シーン切り替え
 	// クリア条件

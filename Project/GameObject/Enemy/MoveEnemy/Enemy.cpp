@@ -128,7 +128,7 @@ void Enemy::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->SetCamera(camera_);
 	newBullet->SetPlayer(player_);
-	newBullet->Initialize(models_[1], object3d_->worldTransform.translate, velocity);
+	newBullet->Initialize(models_[1], GetWorldPosition(), velocity);
 
 	// 弾を登録
 	enemyManager_->AddEnemyBullet(newBullet);

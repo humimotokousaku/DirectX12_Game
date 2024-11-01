@@ -21,8 +21,8 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
 	object3d_->worldTransform.translate = {0,0,10};
-	object3d_->worldTransform.rotate = rotate;
-	object3d_->worldTransform.scale = { 0.5f, 0.5f, 0.5f };
+	//object3d_->worldTransform.rotate = rotate;
+	object3d_->worldTransform.scale = { 1.5f, 1.5f, 1.5f };
 	object3d_->worldTransform.UpdateMatrix();
 
 	// colliderの設定
@@ -45,37 +45,48 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// スコア
 	score_ = 50;
 
+	// 自機と制御点の距離を測ってローカル座標に代入
 	for (Vector3& controlPoint : controlPoints_) {
 		controlPoint = player_->GetWorldPosition() - controlPoint;
 	}
-
 }
 
 void FixedTurret::Update() {
+#pragma region 曲線に沿って移動
 	// Catmull-Romスプライン関数で補間された位置を取得
-	t_ += 0.005f;
+	if (targetT_ <= 1.0f) {
+		targetT_ += 0.002f;
+		t_ = targetT_ - 0.001f;
+	}
+	// 注視点を曲線に沿って移動
+	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
 	Vector3 pos{};
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
 	// 座標を更新
 	object3d_->worldTransform.translate = pos;
 	object3d_->worldTransform.UpdateMatrix();
-
-	// 状態遷移
-	state_->Update(this);
+#pragma endregion
 
 	// 自機の方向を向く
 	// 自機との方向ベクトル
-	Vector3 velocity = player_->GetWorldPosition() - GetWorldPosition();
-	// Y軸周り角度(θy)
+	Vector3 velocity = object3d_->worldTransform.translate - target_;
+	// Y軸周り角度
 	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
-	object3d_->worldTransform.rotate.y += object3d_->worldTransform.parent_->rotate.y;
 	// 横軸方向の長さを求める
 	float velocityXZ;
 	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-	// X軸周りの角度(θx)
+	// X軸周りの角度
 	object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
+	// Z軸周りの角度
+	object3d_->worldTransform.rotate.z = std::atan2(velocity.x, -velocity.z);
+
+	// レールカメラの回転分も加算
+	object3d_->worldTransform.rotate += object3d_->worldTransform.parent_->rotate;
 
 	object3d_->worldTransform.UpdateMatrix();
+
+	// 状態遷移
+	state_->Update(this);
 }
 
 void FixedTurret::Draw() {
@@ -94,8 +105,7 @@ void FixedTurret::OnCollision(Collider* collider) {
 
 void FixedTurret::Fire() {
 	assert(player_);
-	// 自キャラのワールド座標を取得する
-	player_->GetWorldPosition();
+
 	// 本体のワールド座標更新
 	object3d_->worldTransform.UpdateMatrix();
 

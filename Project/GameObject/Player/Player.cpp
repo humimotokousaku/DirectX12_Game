@@ -522,7 +522,7 @@ void Player::Attack() {
 void Player::OnCollision(Collider* collider) {
 	collider;
 	// HP減少処理
-	DecrementHP();
+	//DecrementHP();
 }
 
 void Player::InvinsibleUpdate() {
