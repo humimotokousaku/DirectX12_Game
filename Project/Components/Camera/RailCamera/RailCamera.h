@@ -104,7 +104,10 @@ private:
 	// スプライン曲線制御点（通過点）
 	std::vector<Vector3> controlPoints_;
 
-	// 速度
+	// レールカメラの進む速さ
+	float moveSpeed_;
+
+	// 移動ベクトル
 	Vector3 velocity_;
 
 	// 加速中のfovの増加量

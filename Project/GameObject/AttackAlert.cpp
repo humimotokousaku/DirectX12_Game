@@ -28,11 +28,11 @@ void AttackAlert::Initialize() {
 	}
 
 	// アラートのアニメーション
-	alertAnim_[0].SetAnimData(alertSprite_[0].GetSizeP(), Vector2{ 1280.0f,0.0f }, Vector2{ 1280.0f,88.0f }, 5, "s", Easings::EaseOutExpo);
-	alertAnim_[1].SetAnimData(alertSprite_[1].GetSizeP(), Vector2{ 370.0f,0.0f }, Vector2{ 370.0f,64.0f }, 5, "s", Easings::EaseOutExpo);
+	alertAnim_[0].SetAnimData(alertSprite_[0].GetSizeP(), Vector2{ 1280.0f,0.0f }, Vector2{ 1280.0f,88.0f }, 5, Easings::EaseOutExpo);
+	alertAnim_[1].SetAnimData(alertSprite_[1].GetSizeP(), Vector2{ 370.0f,0.0f }, Vector2{ 370.0f,64.0f }, 5, Easings::EaseOutExpo);
 
 	// ロックオン時のレティクルのアニメーション
-	reticleAnim_.SetAnimData(sprite2DReticle_[1].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+	reticleAnim_.SetAnimData(sprite2DReticle_[1].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, Easings::EaseInExpo);
 
 	// ロックオン対象の座標
 	targetPos_ = { 0,0,0 };

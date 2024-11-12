@@ -1,5 +1,5 @@
 #include "FixedTurretAttackState.h"
-#include "FixedTurretWaitState.h"
+#include "FixedTurretLeaveState.h"
 #include "FixedTurret.h"
 
 FixedTurretAttackState::FixedTurretAttackState(FixedTurret* enemy, Player* player) {
@@ -26,12 +26,15 @@ void FixedTurretAttackState::FireAndResetTimer() {
 void FixedTurretAttackState::Initialize(FixedTurret* enemy, Player* player) {
 	enemy_ = enemy;
 	player_ = player;
-	shotCoolTime_ = 0.0f;
 	shotCount_ = 0;
+	currentFrame_ = kMaxFollowTime;
 	FireAndResetTimer();
 }
 
 void FixedTurretAttackState::Update(FixedTurret* enemy) {
+	// 自機に身体を向ける
+	enemy->Aim();
+
 	// 終了したタイマーを削除
 	timedCalls_.remove_if([](TimedCall* timedCall) {
 		if (timedCall->IsFinished()) {
@@ -47,7 +50,9 @@ void FixedTurretAttackState::Update(FixedTurret* enemy) {
 
 	// 既定の回数撃ったらクールタイム状態に移行
 	// もしくは機能停止状態なら待機状態に移行
-	if (shotCount_ >= kLimitShot || !enemy->GetIsActive()) {
-		enemy->ChangeState(new FixedTurretWaitState(enemy, player_));
+	if (shotCount_ >= kLimitShot && currentFrame_ <= 0 || !enemy->GetIsActive()) {
+		enemy->ChangeState(new FixedTurretLeaveState(enemy, player_));
 	}
+
+	currentFrame_--;
 }

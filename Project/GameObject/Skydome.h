@@ -1,5 +1,6 @@
 #pragma once
 #include "Object3D.h"
+#include <memory>
 
 class Skydome {
 public:
@@ -11,7 +12,8 @@ public:
 	/// </summary>
 	/// <param name="model">見た目のモデル</param>
 	/// <param name="camera">カメラのアドレス</param>
-	void Initialize(Model* model, Camera* camera);
+	/// <param name="parent">自機のワールドトランスフォーム</param>
+	void Initialize(Model* model, Camera* camera, const WorldTransform* parent);
 
 	/// <summary>
 	/// 描画
@@ -20,5 +22,5 @@ public:
 
 private:
 	// 3Dオブジェクト
-	Object3D object3d_;
+	std::unique_ptr<Object3D> object3d_;
 };

@@ -64,7 +64,7 @@ void Animation::Update() {
 	}
 }
 
-void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 		target,
 		0,
@@ -74,7 +74,6 @@ void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, i
 		start,
 		end,
 		false,
-		name,
 		animId_,
 		easeFunc
 	};
@@ -90,7 +89,7 @@ void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, i
 	animId_++;
 }
 
-void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 	target,
 	0,
@@ -100,7 +99,6 @@ void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, floa
 	start,
 	end,
 	false,
-	name,
 	0,
 	easeFunc
 	};
@@ -118,7 +116,7 @@ void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, floa
 	animData_.front() = animData;
 }
 
-void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, const char* name, std::function<float(float)> easeFunc) {
+void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 	target,
 	0,
@@ -128,7 +126,6 @@ void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vec
 	start,
 	end,
 	false,
-	name,
 	index,
 	easeFunc
 	};

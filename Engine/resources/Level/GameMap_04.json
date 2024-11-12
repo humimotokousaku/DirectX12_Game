@@ -3055,167 +3055,6 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.017",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4460.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.018",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4410.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.019",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4360.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.020",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4310.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.021",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4260.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.022",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4210.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.023",
-            "transform": {
-                "translation": [
-                    100.0,
-                    -4160.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
             "name": "Cube.024",
             "transform": {
                 "translation": [
@@ -3432,144 +3271,6 @@
         },
         {
             "type": "MESH",
-            "name": "Cube.030",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4410.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.031",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4360.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.032",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4310.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.033",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4260.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.034",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4210.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.035",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4160.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
-        },
-        {
-            "type": "MESH",
             "name": "Cube.036",
             "transform": {
                 "translation": [
@@ -3603,29 +3304,6 @@
                     50.0
                 ]
             }
-        },
-        {
-            "type": "MESH",
-            "name": "Cube.037",
-            "transform": {
-                "translation": [
-                    -100.0,
-                    -4460.0,
-                    45.0877685546875
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    10.0,
-                    10.0,
-                    10.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "windmill_axis.obj"
         },
         {
             "type": "MESH",
@@ -8092,6 +7770,111 @@
                                 17.329193115234375,
                                 -1040.833984375,
                                 4.974145889282227
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "MESH",
+            "name": "6Story_Stack.025",
+            "transform": {
+                "translation": [
+                    0.0,
+                    56.30302429199219,
+                    14.49506950378418
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    11.0,
+                    11.0,
+                    5.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Stack.obj",
+            "collider": {
+                "type": "OBB",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    11.0,
+                    11.0,
+                    15.0
+                ]
+            }
+        },
+        {
+            "type": "MESH",
+            "name": "enemy_point.037",
+            "spawn_data": [
+                {
+                    "type": "SPAWN_POINT",
+                    "enemyTypes": "NORMAL",
+                    "percentage": 14,
+                    "velocity": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "point": [
+                        3.92765736579895,
+                        -58.87898254394531,
+                        45.24785614013672
+                    ],
+                    "rotation": [
+                        0.0,
+                        -0.0,
+                        179.99998474121094
+                    ]
+                }
+            ],
+            "children": [
+                {
+                    "type": "CURVE",
+                    "name": "enemy_travel_route.037",
+                    "curve_data": [
+                        {
+                            "point": [
+                                63.92765426635742,
+                                -67.944091796875,
+                                67.28009796142578
+                            ]
+                        },
+                        {
+                            "point": [
+                                5.489509582519531,
+                                -67.94408416748047,
+                                45.24785614013672
+                            ]
+                        },
+                        {
+                            "point": [
+                                -56.07234573364258,
+                                -67.9440689086914,
+                                79.60148620605469
+                            ]
+                        },
+                        {
+                            "point": [
+                                3.9276561737060547,
+                                -67.9440689086914,
+                                98.59880828857422
+                            ]
+                        },
+                        {
+                            "point": [
+                                63.92765426635742,
+                                -67.94405364990234,
+                                79.28850555419922
                             ]
                         }
                     ]

@@ -2,10 +2,10 @@
 
 EnemyManager::~EnemyManager() {
 	// 敵
-	for (IEnemy* enemy : enemy_) {
+	for (IEnemy* enemy : enemys_) {
 		delete enemy;
 	}
-	enemy_.clear();
+	enemys_.clear();
 	// 敵の弾
 	for (EnemyBullet* bullet : enemyBullets_) {
 		delete bullet;
@@ -58,7 +58,7 @@ void EnemyManager::Update() {
 	CheckActiveState();
 
 	// 敵の削除
-	enemy_.remove_if([&](IEnemy* enemy) {
+	enemys_.remove_if([&](IEnemy* enemy) {
 		// 倒したら点数を加算して解放
 		if (enemy->IsDead()) {
 			// 割り振られたスコアを加算
@@ -76,7 +76,7 @@ void EnemyManager::Update() {
 		return false;
 		});
 	// enemyの更新
-	for (IEnemy* enemy : enemy_) {
+	for (IEnemy* enemy : enemys_) {
 		enemy->Update();
 	}
 	// 弾の更新
@@ -107,7 +107,7 @@ void EnemyManager::Update() {
 
 void EnemyManager::Draw() {
 	// 敵
-	for (IEnemy* enemy : enemy_) {
+	for (IEnemy* enemy : enemys_) {
 		enemy->Draw();
 	}
 	// 通常敵の弾
@@ -169,7 +169,7 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
-	enemy_.push_back(enemy);
+	enemys_.push_back(enemy);
 
 	// 管理番号更新
 	id_++;
@@ -204,7 +204,7 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	enemy->Initialize(pos, rotate, id_);
 
 	// リストに登録
-	enemy_.push_back(enemy);
+	enemys_.push_back(enemy);
 
 	// 管理番号更新
 	id_++;
@@ -236,7 +236,7 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 	// リストに登録
-	enemy_.push_back(enemy);
+	enemys_.push_back(enemy);
 
 	// 管理番号更新
 	id_++;
@@ -253,6 +253,8 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 }
 
 void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
+	pos;
+	rotate;
 	//Titan* boss = new Titan();
 
 	//// 敵モデルを追加
@@ -291,7 +293,7 @@ bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 	offset = TransformNormal(offset, rotateMatrix);
 
 	// 自機と敵の方向ベクトルを算出
-	Vector3 p2eDirVel = Normalize(objectPosition - camera_->worldTransform_.translate);
+	Vector3 p2eDirVel = Normalize(objectPosition - camera_->GetWorldPosition());
 
 	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
 	float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
@@ -307,10 +309,17 @@ bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 }
 
 void EnemyManager::CheckActiveState() {
+	for (IEnemy* enemy : enemys_) {
+		// カメラの後ろなら敵の描画と機能停止
+		if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
+			enemy->SetIsActive(false);
+		}
+	}
+
 	for (EnemyBullet* bullet : enemyBullets_) {
 		// カメラの後ろなら敵の描画と機能停止
 		if (IsObjectInOppositeDirection(bullet->GetWorldPosition())) {
-			bullet->SetIsDead(true);
+			//bullet->SetIsDead(true);
 		}
 	}
 }

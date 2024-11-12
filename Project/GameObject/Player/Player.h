@@ -13,7 +13,7 @@
 #include <map>
 
 class AimAssist;
-class GameScene;
+class GameSystem;
 class Player {
 public:// パブリックなメンバ関数
 	/// 
@@ -44,6 +44,7 @@ public:// パブリックなメンバ関数
 	/// User Method
 	/// 
 
+private:// プライベートなメンバ関数
 	/// <summary>
 	/// 加速中の更新処理
 	/// </summary>
@@ -57,7 +58,16 @@ public:// パブリックなメンバ関数
 	/// <param name="rotateX">自機のX軸回転角</param>
 	void EvasionUpdate(float rotateY, float rotateX);
 
-private:// プライベートなメンバ関数
+	/// <summary>
+	/// ジャスト回避
+	/// </summary>
+	void JustEvasion();
+	/// <summary>
+	/// ジャスト回避成功フレーム中かを検出
+	/// </summary>
+	/// <returns></returns>
+	bool IsJustEvasionFrame();
+
 #pragma region 入力処理
 	/// <summary>
 	/// 移動処理
@@ -82,13 +92,18 @@ private:// プライベートなメンバ関数
 	void InvinsibleUpdate();
 
 	/// <summary>
-	/// HPバーの更新処理
+	/// HPゲージの更新処理
 	/// </summary>
 	void HPUpdate();	
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
 	void DecrementHP();
+
+	/// <summary>
+	/// 弾ゲージの更新処理
+	/// </summary>
+	void BulletGaugeUpdate();
 
 	/// <summary>
 	/// ゲームオーバー時のアニメーション
@@ -143,13 +158,13 @@ public:// GetterとSetter
 #pragma endregion
 
 #pragma region Setter
-	// モデルを追加
+	// 使用するモデルを追加
 	void AddModel(Model* model) { models_.push_back(model); }
 
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	// ゲームシーンのアドレスを設定
-	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+	// ゲームシステムクラスのアドレスを設定
+	void SetGameScene(GameSystem* gameSystem) { gameSystem_ = gameSystem; }
 	// ロックオンフラグのアドレス取得
 	void SetIsLockOn(bool* isLockOn) { isLockOn_ = isLockOn; }
 	/// <summary>
@@ -164,8 +179,11 @@ public:// GetterとSetter
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
 
-	void SetPos(Vector3 pos) { object3d_->worldTransform.translate = pos; }
-	void SetReticle3DPos(Vector3 pos) { object3dReticle_[0]->worldTransform.translate = pos; }
+	/// <summary>
+	/// ローカル座標を設定
+	/// </summary>
+	/// <param name="pos"></param>
+	void SetLocalPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
 #pragma endregion
 
 private:// プライベートなメンバ変数
@@ -185,10 +203,14 @@ private:// プライベートなメンバ変数
 	// 自機の残像
 	std::array<std::unique_ptr<Object3D>, 20> afterImageObject3d_;
 
+	// ブースト時の炎
+	std::array<std::unique_ptr<Object3D>, 10> boostFire_;
+
 	// 2Dレティクル用のスプライト
 	std::array<Sprite, 3> sprite2DReticle_;
-	// HP用のスプライト
-	Sprite hpSprite_;
+
+	// ジャスト回避時のUI
+	std::unique_ptr<Sprite> justSprite_;
 
 	// 自機の軌道パーティクル
 	std::array<std::unique_ptr<Particles>, 3> particles_;
@@ -235,7 +257,7 @@ private:// プライベートなメンバ変数
 	// カメラのアドレス
 	Camera* camera_;
 	// ゲームシーンのアドレス
-	GameScene* gameScene_;
+	GameSystem* gameSystem_;
 	// エイムアシストのアドレス
 	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス
@@ -262,10 +284,10 @@ private:// プライベートなメンバ変数
 	// カメラの回転
 	Vector3 cameraRotateOffset_;
 
-	// HPテクスチャのサイズ
-	Vector2 hpSize_;
-	// HP
-	float hp_;
+	// HPゲージ
+	GaugeData hp_;
+	// 弾ゲージ
+	GaugeData bulletGauge_;
 
 	// 無敵時間
 	int invinsibleFrame_;
@@ -280,4 +302,7 @@ private:// プライベートなメンバ変数
 	bool isInvinsible_ = false;
 	// 死亡フラグ
 	bool isDead_ = true;
+
+
+	int frame_;
 };

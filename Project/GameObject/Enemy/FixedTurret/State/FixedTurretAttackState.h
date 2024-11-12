@@ -25,11 +25,14 @@ public:
 
 public:
 	// 発射間隔
-	static const int kFireInterval = 10;
+	static const int kFireInterval = 120;
 	// 射撃のクールタイム
 	const float kShotCoolTime = 120.0f;
 	// 連続で射撃する回数
 	const int kLimitShot = 1;
+
+	// 自機を追尾する時間
+	const float kMaxFollowTime = 180.0f;
 
 public:
 	FixedTurret* enemy_;
@@ -39,4 +42,7 @@ public:
 	int shotCount_;
 	// 射撃のクールタイム
 	float shotCoolTime_;
+
+	// 経過フレーム
+	float currentFrame_;
 };

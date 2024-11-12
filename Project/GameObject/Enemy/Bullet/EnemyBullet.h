@@ -74,7 +74,7 @@ private: // プライベートなメンバ変数
 	CollisionManager* collisionManager_ = nullptr;
 
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 5;
+	static const int32_t kLifeTime = 60 * 3;
 	// 死亡タイマー
 	int32_t deathTimer_ = kLifeTime;
 	// 弾の有無

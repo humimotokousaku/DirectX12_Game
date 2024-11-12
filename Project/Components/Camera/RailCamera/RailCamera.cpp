@@ -12,9 +12,9 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	camera_->Initialize();
 
 	// 加速中のfovアニメーション
-	boostFovAnim_.SetAnimData(&boostFov_, 0.0f, kMaxBoostFovIncrease, 10, "fovAnim_01", Easings::EaseOutBack);
+	boostFovAnim_.SetAnimData(&boostFov_, 0.0f, kMaxBoostFovIncrease, 10, Easings::EaseOutBack);
 	// 回避中のfovアニメーション
-	evasionFovAnim_.SetAnimData(&evasionFov_, 0.0f, kMaxEvasionFovIncrease, 5, "fovAnim_01", Easings::EaseOutExpo);
+	evasionFovAnim_.SetAnimData(&evasionFov_, 0.0f, kMaxEvasionFovIncrease, 5, Easings::EaseOutExpo);
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
@@ -49,7 +49,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	sphere_.worldTransform.UpdateMatrix();
 #pragma endregion
 }
-static float moveSpeed = 0.2f;
+
 void RailCamera::Update() {
 	Move();			// 移動処理
 	BoostUpdate();	// 加速中のカメラ処理
@@ -104,11 +104,11 @@ void RailCamera::Move() {
 
 	// カメラの移動
 	if (t_ <= 1.0f) {
-		t_ += moveSpeed / 1000;
+		t_ += moveSpeed_ / 1000;
 	}
 	// カメラの見ている座標(注視点)を移動
 	if (targetT_ <= 1.0f) {
-		targetT_ += moveSpeed / 1000;
+		targetT_ += moveSpeed_ / 1000;
 	}
 	// 注視点がゴールまでいったら停止
 	if (targetT_ >= 1.0f) {
@@ -122,12 +122,12 @@ void RailCamera::Move() {
 void RailCamera::BoostUpdate() {
 	// 加速時はfovを上げる
 	if (*isBoost_) {
-		moveSpeed = 0.8f;
+		moveSpeed_ = 0.8f;
 		// fov
 		boostFovAnim_.SetIsStart(true);
 	}
 	else {
-		moveSpeed = 0.6f;
+		moveSpeed_ = 0.6f;
 		// fov
 		boostFov_ = Lerps::ExponentialInterpolate(boostFov_, 0.0f, 1.0f, 0.1f);
 		boostFovAnim_.SetIsStart(false);
@@ -161,7 +161,7 @@ void RailCamera::ImGuiParameter() {
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
 	ImGui::Checkbox("isMove", &isMove_);
 	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100, 100);
-	ImGui::DragFloat("moveSpeed", &moveSpeed, 0.1f, -100, 100);
+	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.1f, -100, 100);
 	// リセットボタンを作成
 	if (ImGui::Button("Reset")) {
 		// カメラの進行度をリセット

@@ -9,18 +9,22 @@ FixedTurretWaitState::FixedTurretWaitState(FixedTurret* enemy, Player* player) {
 void FixedTurretWaitState::Initialize(FixedTurret* enemy, Player* player) {
 	enemy_ = enemy;
 	player_ = player;
-	shotCoolTime_ = kShotCoolTime;
 }
 
 void FixedTurretWaitState::Update(FixedTurret* enemy) {
 	// 機能停止状態なら早期リターン
 	if (!enemy->GetIsActive()) { return; }
 
+	// 移動処理
+	enemy->Move();
+
+	// 射程範囲に自機がいるか
 	float dist = Length(player_->GetWorldPosition() - enemy->GetWorldPosition());
 	if (dist <= kShotModeRange) {
-		if (shotCoolTime_ <= 0) {
-			enemy->ChangeState(new FixedTurretAttackState(enemy_, player_));
-		}
+		// 移動中は弾を撃たない
+		if (enemy->GetIsMove()) { return; }
+		// 移動終了したら攻撃を開始する
+		enemy->ChangeState(new FixedTurretAttackState(enemy_, player_));
 	}
 	shotCoolTime_--;
 }

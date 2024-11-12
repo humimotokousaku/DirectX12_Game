@@ -43,6 +43,7 @@ void GameManager::Update() {
 
 	// シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		// Blenderで読み込んだオブジェクトを初期化
 		levelManager_->Finalize();
 
 		// コライダーリストをすべて削除

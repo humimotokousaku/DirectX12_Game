@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "AimAssist/AimAssist.h"
 #include "CollisionConfig.h"
-#include "GameScene.h"
+#include "GameSystem.h"
 #include "GameTime.h"
 #include "GlobalVariables.h"
 #include "Input.h"
@@ -46,7 +46,6 @@ void Player::Initialize() {
 	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
 	object3d_->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
-#pragma endregion
 
 	// 自機の残像オブジェクトを作成
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
@@ -60,6 +59,19 @@ void Player::Initialize() {
 		afterImageObject3d_[i]->SetColor(Vector4{ 0.2f,0.2f,0.2f,0.3f });
 		// 表示をしない
 		afterImageObject3d_[i]->SetIsActive(false);
+	}
+#pragma endregion
+
+	for (int i = 0; i < boostFire_.size(); i++) {
+		boostFire_[i] = std::make_unique<Object3D>();
+		boostFire_[i]->Initialize();
+		boostFire_[i]->SetModel(models_[3]);
+		boostFire_[i]->SetCamera(camera_);
+		boostFire_[i]->worldTransform.parent_ = &object3d_->worldTransform;
+		boostFire_[i]->worldTransform.translate = { 0,0,-2 };
+		boostFire_[i]->worldTransform.UpdateMatrix();
+		boostFire_[i]->SetIsLighting(false);
+		boostFire_[i]->SetColor(Vector4{ 1,0,0,0.7f });
 	}
 
 #pragma region レティクル
@@ -86,16 +98,33 @@ void Player::Initialize() {
 	}
 #pragma endregion
 
-#pragma region HPのUI作成
+#pragma region ゲージ系のUI作成
+	// HP量
+	hp_.value = kMaxHp;
 	// HPバーのサイズ指定
-	hpSize_ = kMaxHPSize;
-	hpSprite_.Initialize("DefaultTexture", "white.png");
-	hpSprite_.SetSize(hpSize_);
-	hpSprite_.SetAnchorPoint(Vector2{ 0.0f,0.5f });
-	hpSprite_.SetPos(Vector2(64.0f, 64.0f));
+	hp_.size = kMaxHPSize;
+	hp_.sprite.Initialize("DefaultTexture", "white.png");
+	hp_.sprite.SetSize(hp_.size);
+	hp_.sprite.SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	hp_.sprite.SetPos(Vector2{ 64.0f, 64.0f });
 	// 緑色にする
-	hpSprite_.SetColor(Vector4{ 0,1,0,1 });
-	PostEffectManager::GetInstance()->AddSpriteList(&hpSprite_);
+	hp_.sprite.SetColor(Vector4{ 0.0f,1.0f,0.0f,1.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(&hp_.sprite);
+
+	// 弾ゲージ量
+	bulletGauge_.value = 0.0f;
+	bulletGauge_.incrementValue = kIncrementBulletGauge;
+	// 弾ゲージの増加倍率
+	bulletGauge_.magnification = kMagnificationBulletGauge;
+	// 弾ゲージのサイズ指定
+	bulletGauge_.size = kMaxBulletGaugeSize;
+	bulletGauge_.sprite.Initialize("DefaultTexture", "white.png");
+	bulletGauge_.sprite.SetSize(bulletGauge_.size);
+	bulletGauge_.sprite.SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	bulletGauge_.sprite.SetPos(Vector2{ 64.0f, 96.0f });
+	// 青色にする
+	bulletGauge_.sprite.SetColor(Vector4{ 0.0f,0.0f,1.0f,1.0f });
+	//PostEffectManager::GetInstance()->AddSpriteList(&bulletGauge_.sprite);
 #pragma endregion
 
 #pragma region パーティクル
@@ -122,33 +151,35 @@ void Player::Initialize() {
 
 #pragma region アニメーションの設定
 	// ロックオン時のレティクルのアニメーション
-	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, "LockOnReticle_size_Anim", Easings::EaseInExpo);
+	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, Easings::EaseInExpo);
 	// ロックオン時のレティクルのアニメーション
-	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, "BoostRotAnim", Easings::EaseOutExpo);
-	
+	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, Easings::EaseOutExpo);
+
 	// 回避時の移動速度のイージング
-	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{0.0f,0.0f}, kMaxEvasionFrame, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{ 0.0f,0.0f }, kMaxEvasionFrame, Easings::EaseOutExpo);
 	// 回避時の回転速度のイージング
-	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{0.0f,0.0f, 0.0f}, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, Easings::EaseOutExpo);
 	// 残像のα値のアニメーション
 	evasionAlphaAnims_.resize(afterImageObject3d_.size());
 	evasion_.alphas.resize(evasionAlphaAnims_.size());
-	for (int i = 0; i < evasionAlphaAnims_.size();i++) {
-		evasionAlphaAnims_[i].SetAnimData(&evasion_.alphas[i], 1.0f, 0.0f, 20, "EvasionSpeedAnim", Easings::EaseOutExpo);
+	for (int i = 0; i < evasionAlphaAnims_.size(); i++) {
+		evasionAlphaAnims_[i].SetAnimData(&evasion_.alphas[i], 1.0f, 0.0f, 20, Easings::EaseOutExpo);
 	}
 #pragma endregion
+
+	justSprite_ = std::make_unique<Sprite>();
+	justSprite_->Initialize("Textures/UI", "guide_JUST.png");
+	justSprite_->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, 64.0f });
+	justSprite_->isActive_ = false;
+	PostEffectManager::GetInstance()->AddSpriteList(justSprite_.get());
 
 	// 死亡フラグ
 	isDead_ = false;
 
-	// HP
-	hp_ = kMaxHp;
-
+	// 無敵フラグ
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
-	// 残像表示時間
-	evasion_.frame = kMaxEvasionFrame;
 
 	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
 	const char* groupName = "Player";
@@ -167,7 +198,7 @@ void Player::Update() {
 	Aim();	  // レティクルの配置と移動処理
 	Attack(); // 弾の発射処理
 
-	// 範囲を超えない処理
+	// 自機が移動範囲を超えないようにする処理
 	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
 	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -5.0f, kMoveLimit.y);
 	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
@@ -179,6 +210,9 @@ void Player::Update() {
 
 	// HPの更新処理
 	HPUpdate();
+
+	// 弾ゲージの更新処理
+	BulletGaugeUpdate();
 
 	// 自機の軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
@@ -200,13 +234,17 @@ void Player::Draw() {
 		afterImageObject3d_[i]->Draw(playerTexture_);
 	}
 
+	for (int i = 0; i < boostFire_.size(); i++) {
+		boostFire_[i]->Draw(defaultTexture);
+	}
+
 	// 3Dレティクル
 #ifdef _DEBUG
 	for (int i = 0; i < 2; i++) {
 		object3dReticle_[i]->Draw();
 	}
 #endif // _DEBUG
-}
+	}
 
 void Player::DrawUI() {
 	// ロックオン時のレティクル
@@ -224,6 +262,9 @@ void Player::BoostUpdate(float moveZ) {
 	// アニメーションを更新
 	boostRotAnim_.Update();
 
+	// 弾ゲージの増加量
+	float incrementValue = kIncrementBulletGauge;
+
 	// 加速中なら速度を上げる
 	if (boost_.isActive) {
 		// 徐々に速度を上げる
@@ -231,14 +272,17 @@ void Player::BoostUpdate(float moveZ) {
 		// 自機を徐々に前に出す
 		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 10.0f, kMoveSpeedDecayRate.z, 1.0f);
 
+		// 弾ゲージを上昇量を増加
+		incrementValue *= bulletGauge_.magnification;
+
+		// ガウスをかける
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
 		// コントローラの振動開始
 		input_->GamePadVibration(0, 65535, 65535);
 		// アニメーションが終了しているなら振動させない
 		if (boostRotAnim_.GetIsEnd()) {
 			input_->GamePadVibration(0, 0, 0);
 		}
-		// ガウスをかける
-		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
 	}
 	else {
 		// 徐々に速度を下げる
@@ -254,14 +298,21 @@ void Player::BoostUpdate(float moveZ) {
 
 	// 速度を加算
 	moveVel_.z += boost_.moveSpeed;
+
+	// 弾ゲージの増加量を適用
+	bulletGauge_.incrementValue = incrementValue;
 }
 
 void Player::EvasionUpdate(float rotateY, float rotateX) {
+	// ジャスト回避の更新処理
+	JustEvasion();
+
 	// 回避時の回転のイージングを更新
 	evasionRotSpeedAnim_.Update();
 
 	// 回避中でなければ終了
 	if (!evasion_.isActive) {
+		// 移動方向に合わせて回避方向を指定
 		evasion_.moveVel.x = Utility::Sign(rotateY);
 		evasion_.moveVel.y = Utility::Sign(-rotateX);
 		return;
@@ -314,6 +365,35 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 		evasion_.frame = kMaxEvasionFrame;
 		evasion_.isActive = false;
 	}
+}
+
+void Player::JustEvasion() {
+	if (frame_ > 0) {
+		frame_--;
+	}
+	else if (frame_ <= 0) {
+		justSprite_->isActive_ = false;
+	}
+
+	if (!evasion_.isJust) { return; }
+
+	// ジャスト回避の情報のみ初期化
+	if (evasion_.justFrame <= 0) {
+		evasion_.JustDataReset();
+		return;
+	}
+
+	evasion_.justFrame--;
+}
+
+bool Player::IsJustEvasionFrame() {
+	// ジャスト回避猶予時間のとき
+	if (evasion_.isActive) {
+		if (evasion_.frame <= kMaxEvasionFrame - kStartEvasionJustFrame && evasion_.frame >= kMaxEvasionFrame - kStartEvasionJustFrame - kMaxEvasionJustFrame) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void Player::Move() {
@@ -484,7 +564,8 @@ void Player::Aim() {
 void Player::Attack() {
 	// Rトリガーを押していたら
 	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER || Input::GetInstance()->PressKey(DIK_SPACE)) {
-		if (bulletInterval_ <= 0) {
+		// 弾ゲージが0以外で発射クールタイムが0のとき
+		if (bulletInterval_ <= 0 && bulletGauge_.value >= kDecrementBulletGauge) {
 			// 弾の速度
 			const float kBulletSpeed = 5.0f;
 			Vector3 velocity(0, 0, kBulletSpeed);
@@ -504,10 +585,13 @@ void Player::Attack() {
 			newBullet->SetCamera(camera_);
 			newBullet->Initialize(models_[2], worldPos, velocity);
 			// 弾を登録
-			gameScene_->AddPlayerBullet(newBullet);
+			gameSystem_->AddPlayerBullet(newBullet);
 
 			// 弾の発射間隔リセット
 			bulletInterval_ = kBulletInterval;
+
+			// 弾ゲージを減少させる
+			bulletGauge_.value -= kDecrementBulletGauge;
 
 			// 音の再生
 			audio_->SoundPlayWave(shotSE_, false, 0.25f);
@@ -521,8 +605,18 @@ void Player::Attack() {
 
 void Player::OnCollision(Collider* collider) {
 	collider;
+	// ジャスト回避猶予フレーム中でダメージを食らっていないとき
+	if (IsJustEvasionFrame() && !isInvinsible_) {
+		evasion_.isJust = true;
+		// ジャストUIを表示
+		justSprite_->isActive_ = true;
+		// 無敵状態にする
+		isInvinsible_ = true;
+		frame_ = 60;
+	}
+
 	// HP減少処理
-	//DecrementHP();
+	DecrementHP();
 }
 
 void Player::InvinsibleUpdate() {
@@ -548,18 +642,18 @@ void Player::InvinsibleUpdate() {
 void Player::HPUpdate() {
 	// HPバーの長さ計算
 	// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-	hpSprite_.SetSizeX(kMaxHPSize.x * (hp_ / kMaxHp));
+	hp_.sprite.SetSizeX(kMaxHPSize.x * (hp_.value / kMaxHp));
 
 	// 30%未満なら赤色にする
-	if (hp_ / kMaxHp <= 30.0f / 100.0f) {
+	if (hp_.value / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
-		hpSprite_.SetColor(Vector4{ 1,0,0,1 });
+		hp_.sprite.SetColor(Vector4{ 1,0,0,1 });
 		// 音をこもらせる
 		audio_->soundMuffleValue = -0.9f;
 	}
 	else {
 		// 緑色にする
-		hpSprite_.SetColor(Vector4{ 0,1,0,1 });
+		hp_.sprite.SetColor(Vector4{ 0,1,0,1 });
 		audio_->soundMuffleValue = 0.0f;
 	}
 }
@@ -569,10 +663,10 @@ void Player::DecrementHP() {
 	if (!isInvinsible_) {
 		if (object3d_->collider->PressOnCollision()) {
 			// とりあえず固定で30ダメ食らう
-			hp_ -= 30;
+			hp_.value -= 30;
 			// 死んでいる
-			if (hp_ <= 0.0f) {
-				hp_ = 0.0f;
+			if (hp_.value <= 0.0f) {
+				hp_.value = 0.0f;
 				isDead_ = true;
 			}
 
@@ -583,10 +677,18 @@ void Player::DecrementHP() {
 	}
 }
 
-void Player::DeadAnimation() {
-	if (isDead_) {
+void Player::BulletGaugeUpdate() {
+	// 弾ゲージを増加させる
+	bulletGauge_.value += bulletGauge_.incrementValue;
+	// 0未満にならないようにする
+	bulletGauge_.value = std::clamp<float>(bulletGauge_.value, 0, kMaxBulletGauge);
 
-	}
+	// 弾ゲージの長さ計算
+	bulletGauge_.sprite.SetSizeX(kMaxBulletGaugeSize.x * (bulletGauge_.value / kMaxBulletGauge));
+}
+
+void Player::DeadAnimation() {
+	if (isDead_) { return; }
 }
 
 void Player::Deploy3DReticle() {
@@ -660,7 +762,6 @@ void Player::DeployLockOnReticle() {
 }
 
 void Player::ImGuiParameter() {
-#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -668,7 +769,7 @@ void Player::ImGuiParameter() {
 	object3dReticle_[0]->ImGuiParameter("Reticle0");
 	object3dReticle_[1]->ImGuiParameter("Reticle1");
 	// 体力
-	ImGui::DragFloat("Hp", &hp_, 1.0f, 0.0f, 100.0f);
+	ImGui::DragFloat("Hp", &hp_.value, 1.0f, 0.0f, 100.0f);
 	ImGui::End();
 
 	/// jsonによる数値の変更
@@ -681,6 +782,8 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
+#ifdef _DEBUG
+
 #endif
 }
 

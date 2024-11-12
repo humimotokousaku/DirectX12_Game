@@ -24,8 +24,6 @@ public:
 private:// 定数
 	// 射撃状態になる範囲
 	const float kShotModeRange = 1000.0f;
-	// 射撃のクールタイム
-	const float kShotCoolTime = 90.0f;
 
 public:
 	FixedTurret* enemy_;

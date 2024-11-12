@@ -139,8 +139,9 @@ void Framework::BeginFrame() {
 	// ImGui
 	imGuiManager_->PreDraw();
 	// グローバル変数の更新
-#ifdef _DEBUG
 	GlobalVariables::GetInstance()->Update();
+#ifdef _DEBUG
+
 #endif // _DEBUG
 }
 

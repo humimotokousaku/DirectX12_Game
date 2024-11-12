@@ -50,6 +50,13 @@ public:
 	bool GetIsActive() { return isActive_; }
 	// ロックオンできる状態か
 	bool GetIsLockOnAvailable() { return isLockOnAvailable_; }
+	// 移動中かを取得
+	bool GetIsMove() {
+		// 終了している
+		if (targetT_ >= 1.0f) { return false; }
+		// 移動中
+		return true;
+	}
 	// ワールド座標の取得
 	Vector3 GetWorldPosition() {
 		// ワールド座標を入れる変数
@@ -61,6 +68,9 @@ public:
 
 		return worldPos;
 	}
+	// ローカル座標の取得
+	Vector3 GetLocalPosition() { return object3d_->worldTransform.translate; }
+	// 回転角の取得
 	Vector3 GetRotation() {
 		Vector3 rotate = object3d_->worldTransform.rotate;
 		if (object3d_->worldTransform.parent_) {
@@ -83,7 +93,7 @@ public:
 	void SetIsDead(bool isDead) { isDead_ = isDead; }
 	// 機能停止にするかを設定
 	// falseなら機能停止
-	void SetIsActive(bool isActive) { 
+	void SetIsActive(bool isActive) {
 		isActive_ = isActive;
 		// 描画しない
 		object3d_->SetIsActive(isActive);
@@ -91,16 +101,21 @@ public:
 	/// <summary>
 	/// 親子関係の設定
 	/// </summary>
-	/// <param name="parent"></param>
-	void SetParent(const WorldTransform* parent) { 
-		object3d_->worldTransform.parent_ = parent; 
+	/// <param name="parent">親のワールドトランスフォーム</param>
+	void SetParent(const WorldTransform* parent) {
+		object3d_->worldTransform.parent_ = parent;
 		object3d_->worldTransform.UpdateMatrix();
 	}
-	// 移動ルートの制御点の設定
+	// 移動ルートの制御点の座標の設定
 	void SetTravelRouteControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
+	/// <summary>
+	/// ローカル座標を設定
+	/// </summary>
+	/// <param name="pos">ローカル座標</param>
+	void SetLocalPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
 #pragma endregion
 
-protected:	
+protected:
 	// 全てのモデル(見た目のデータ)
 	std::vector<Model*> models_;
 	// 敵の3DObject

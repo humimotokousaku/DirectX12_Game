@@ -1,17 +1,6 @@
 #pragma once
 #include "IScene.h"
-
-#include "AimAssist/AimAssist.h"
-#include "CollisionManager.h"
-#include "LevelManager.h"
-#include "Enemy.h"
-#include "EnemyBullet.h"
-#include "EnemyManager.h"
-#include "FollowCamera.h"
-#include "PlayerBullet.h"
-#include "Player.h"
-#include "RailCamera.h"
-#include "Score.h"
+#include "GameSystem.h"
 
 class GameManager;
 class GameScene : public IScene
@@ -44,40 +33,8 @@ public:
 	/// </summary>
 	void Finalize()override;
 
-	///
-	/// User Method
-	/// 
-
-	// 自機の弾を追加
-	void AddPlayerBullet(PlayerBullet* playerBullet);
-
-private:// エンジン機能
-	TextureManager* textureManager_;
-	ModelManager* modelManager_;
-	Audio* audio_;
-	LevelManager* levelManager_;
-
 private:// プライベートなメンバ変数
-	// カメラ
-	Camera camera_;
-	// 自機
-	Player player_;
-	// 自弾
-	std::list<PlayerBullet*> playerBullets_;
-	// ロックオン機能
-	AimAssist* aimAssist_;
-	// エネミーマネージャ
-	EnemyManager enemyManager_;
-	// カメラレール
-	RailCamera railCamera_;
-	// 追従カメラ
-	FollowCamera followCamera_;
-	// スコア
-	Score* score_;
-	// UI
-	std::array<Sprite, 4> guideUI_;
-
-	// BGM
-	uint32_t BGM_;
+	// ゲームシステム
+	std::unique_ptr<GameSystem> gameSystem_;
 };
 

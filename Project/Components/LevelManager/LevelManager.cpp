@@ -192,8 +192,10 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		// 座標
 		newObject->worldTransform.scale = objectData.scale;
 
+		newObject->worldTransform.UpdateMatrix();
+
 		// ライティングを行う
-		newObject->SetIsLighting(true);
+		newObject->SetIsLighting(false);
 		// 背景用のオブジェクトなら光を適用しない
 		if (objectData.isSkydome) {
 			newObject->SetIsLighting(false);

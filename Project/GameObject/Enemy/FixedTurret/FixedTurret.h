@@ -35,6 +35,16 @@ public:
 	/// 
 
 	/// <summary>
+	/// 曲線に沿って移動
+	/// </summary>
+	void Move();
+
+	/// <summary>
+	/// 自機を狙って体を向ける
+	/// </summary>
+	void Aim();
+
+	/// <summary>
 	/// 発射処理
 	/// </summary>
 	void Fire();

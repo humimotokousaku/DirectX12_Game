@@ -15,7 +15,6 @@ void Object3D::Initialize() {
 	model_ = new Model();
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
-	//sphere_->worldTransform.parent_ = &worldTransform;
 
 	// 衝突判定
 	collider = std::make_unique<Collider>();

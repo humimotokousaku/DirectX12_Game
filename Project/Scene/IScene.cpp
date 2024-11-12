@@ -1,6 +1,5 @@
 #include "IScene.h"
 #include "Audio.h"
-#include "Object3D.h"
 
 int IScene::sceneNum;
 

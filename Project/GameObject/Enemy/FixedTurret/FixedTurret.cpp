@@ -20,8 +20,8 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
-	object3d_->worldTransform.translate = {0,0,10};
-	//object3d_->worldTransform.rotate = rotate;
+	object3d_->worldTransform.translate = { 0,0,10 };
+	object3d_->worldTransform.rotate = rotate;
 	object3d_->worldTransform.scale = { 1.5f, 1.5f, 1.5f };
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -52,39 +52,6 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void FixedTurret::Update() {
-#pragma region 曲線に沿って移動
-	// Catmull-Romスプライン関数で補間された位置を取得
-	if (targetT_ <= 1.0f) {
-		targetT_ += 0.002f;
-		t_ = targetT_ - 0.001f;
-	}
-	// 注視点を曲線に沿って移動
-	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
-	Vector3 pos{};
-	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
-	// 座標を更新
-	object3d_->worldTransform.translate = pos;
-	object3d_->worldTransform.UpdateMatrix();
-#pragma endregion
-
-	// 自機の方向を向く
-	// 自機との方向ベクトル
-	Vector3 velocity = object3d_->worldTransform.translate - target_;
-	// Y軸周り角度
-	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
-	// 横軸方向の長さを求める
-	float velocityXZ;
-	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-	// X軸周りの角度
-	object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
-	// Z軸周りの角度
-	object3d_->worldTransform.rotate.z = std::atan2(velocity.x, -velocity.z);
-
-	// レールカメラの回転分も加算
-	object3d_->worldTransform.rotate += object3d_->worldTransform.parent_->rotate;
-
-	object3d_->worldTransform.UpdateMatrix();
-
 	// 状態遷移
 	state_->Update(this);
 }
@@ -101,6 +68,58 @@ void FixedTurret::OnCollision(Collider* collider) {
 	else {
 		hp_ = hp_ - collider->GetDamage();
 	}
+}
+
+void FixedTurret::Move() {
+	// Catmull-Romスプライン関数で補間された位置を取得
+	if (targetT_ <= 1.0f) {
+		targetT_ += 0.002f;
+		t_ = targetT_ - 0.001f;
+	}
+	// 注視点を曲線に沿って移動
+	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
+	Vector3 pos{};
+	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
+	// 座標を更新
+	object3d_->worldTransform.translate = pos;
+	object3d_->worldTransform.UpdateMatrix();
+
+	// 自機との方向ベクトル
+	Vector3 velocity = object3d_->worldTransform.translate - target_;;
+	// Y軸周り角度
+	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
+	// 横軸方向の長さを求める
+	float velocityXZ;
+	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+	// X軸周りの角度
+	object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
+	// Z軸周りの角度
+	object3d_->worldTransform.rotate.z = std::atan2(velocity.x, -velocity.z);
+
+	// レールカメラの回転分も加算
+	object3d_->worldTransform.rotate += object3d_->worldTransform.parent_->rotate;
+
+	object3d_->worldTransform.UpdateMatrix();
+}
+
+void FixedTurret::Aim() {
+	// 自機の方向を向く
+	// 自機との方向ベクトル
+	Vector3 velocity = player_->GetWorldPosition() - GetWorldPosition();
+	// Y軸周り角度
+	object3d_->worldTransform.rotate.y = std::atan2(velocity.x, velocity.z);
+	// 横軸方向の長さを求める
+	float velocityXZ;
+	velocityXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+	// X軸周りの角度
+	object3d_->worldTransform.rotate.x = std::atan2(-velocity.y, velocityXZ);
+
+	object3d_->worldTransform.rotate.z = 0.0f;
+
+	// レールカメラの回転分も加算
+	object3d_->worldTransform.rotate += object3d_->worldTransform.parent_->rotate;
+
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void FixedTurret::Fire() {

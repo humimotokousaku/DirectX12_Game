@@ -1,41 +1,35 @@
 #pragma once
 #include <chrono>
 
-class GameTimer
-{
+class GameTimer {
 public:
     static GameTimer* GetInstance();
 
-    GameTimer()
-    {
+    GameTimer() {
         m_StartTime = std::chrono::high_resolution_clock::now();
         m_LastTime = m_StartTime;
         m_DeltaTime = 0.0;
     }
 
-    void Reset()
-    {
+    void Reset() {
         m_StartTime = std::chrono::high_resolution_clock::now();
         m_LastTime = m_StartTime;
         m_DeltaTime = 0.0;
     }
 
-    void Tick()
-    {
+    void Tick() {
         auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> delta = currentTime - m_LastTime;
+        std::chrono::duration<float> delta = currentTime - m_LastTime;
         m_DeltaTime = delta.count();
         m_LastTime = currentTime;
     }
 
-    double GetDeltaTime() const
-    {
+    float GetDeltaTime() const {
         return m_DeltaTime * coefficient;
     }
 
-    double GetTotalTime() const
-    {
-        std::chrono::duration<double> totalTime = std::chrono::high_resolution_clock::now() - m_StartTime;
+    float GetTotalTime() const {
+        std::chrono::duration<float> totalTime = std::chrono::high_resolution_clock::now() - m_StartTime;
         return totalTime.count();
     }
 
@@ -48,6 +42,6 @@ public:
 private:
     std::chrono::high_resolution_clock::time_point m_StartTime;
     std::chrono::high_resolution_clock::time_point m_LastTime;
-    double m_DeltaTime;
+    float m_DeltaTime;
     float coefficient = 60.0f;
 };

@@ -16,6 +16,8 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
+	colliderA->worldTransform.UpdateMatrix();
+	colliderB->worldTransform.UpdateMatrix();
 
 	/// 球体同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
@@ -47,8 +49,6 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	}
 	/// OBB同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionOBB && colliderB->GetCollisionPrimitive() == kCollisionOBB) {
-		colliderA->worldTransform.UpdateMatrix();
-		colliderB->worldTransform.UpdateMatrix();
 		colliderA->SetOBBCenterPos(colliderA->GetWorldPosition());
 		colliderB->SetOBBCenterPos(colliderB->GetWorldPosition());
 		for (int i = 0; i < 3; i++) {
@@ -72,10 +72,6 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->SetIsOnCollision(false);
 		}
 	}
-
-	// ワールドトランスフォーム更新
-	colliderA->worldTransform.UpdateMatrix();
-	colliderB->worldTransform.UpdateMatrix();
 
 	// 前のフレームで当たっていたかを更新
 	colliderA->SetIsPreOnCollision(colliderA->GetIsOnCollision());

@@ -100,7 +100,7 @@ public:
 	/// 全敵のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	std::list<IEnemy*> GetEnemyList() { return enemy_; }
+	std::list<IEnemy*> GetEnemyList() { return enemys_; }
 #pragma endregion
 
 #pragma region Setter
@@ -183,7 +183,7 @@ private:// プライベートなメンバ変数
 	Score* score_;
 
 	// 敵
-	std::list<IEnemy*> enemy_;
+	std::list<IEnemy*> enemys_;
 	// 攻撃の警告
 	AttackAlert* attackAlert_;
 	// 敵弾
@@ -213,8 +213,6 @@ private:// プライベートなメンバ変数
 
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;
-	// 自機と出現場所の距離
-	//std::vector<SpawnPointData> spawnPointDatas_;
 
 	// レールカメラの進行度
 	float* railCameraProgress_;

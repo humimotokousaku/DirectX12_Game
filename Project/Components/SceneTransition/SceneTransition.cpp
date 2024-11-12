@@ -19,8 +19,8 @@ void SceneTransition::Initialize() {
 	}
 	for (int i = 0; i < sprite_.size(); i++) {
 		for (int j = 0; j < sprite_[0].size(); j++) {
-			beginAnim_[i][j].SetAnimData(sprite_[i][j].GetSizeP(), Vector2{ 0,0 }, Vector2{ 80,80 }, 40, "sceneTransition_00", Easings::EaseOutExpo);
-			endAnim_[i][j].SetAnimData(sprite_[i][j].GetSizeP(), Vector2{ 80,80 }, Vector2{ 0,0 }, 40, "sceneTransition_01", Easings::EaseOutExpo);
+			beginAnim_[i][j].SetAnimData(sprite_[i][j].GetSizeP(), Vector2{ 0,0 }, Vector2{ 80,80 }, 40, Easings::EaseOutExpo);
+			endAnim_[i][j].SetAnimData(sprite_[i][j].GetSizeP(), Vector2{ 80,80 }, Vector2{ 0,0 }, 40, Easings::EaseOutExpo);
 		}
 	}
 	isStart_ = false;
