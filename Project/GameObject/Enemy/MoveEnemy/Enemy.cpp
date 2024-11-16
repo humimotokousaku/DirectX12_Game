@@ -52,13 +52,12 @@ void Enemy::Update() {
 	// Catmull-Romスプライン関数で補間された位置を取得
 	Vector3 pos{};
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
-
+	object3d_->worldTransform.translate = pos;
+	// 進行度を進める
 	t_ += 0.005f;
 
 	// 状態遷移
 	state_->Update(this);
-
-	object3d_->worldTransform.translate = pos;
 
 	// ワールドトランスフォームを更新
 	object3d_->worldTransform.UpdateMatrix();

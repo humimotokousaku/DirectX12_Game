@@ -43,7 +43,6 @@ public:// パブリックなメンバ関数
 	///
 	/// User Method
 	/// 
-
 private:// プライベートなメンバ関数
 	/// <summary>
 	/// 加速中の更新処理
@@ -219,6 +218,9 @@ private:// プライベートなメンバ変数
 
 	// 3Dレティクルの座標
 	std::array<std::unique_ptr<Object3D>, 2> object3dReticle_;
+	// ロックオン時の3Dレティクル
+	std::array<std::unique_ptr<Object3D>, 20> lockOn3dReticle_;
+
 	// ロックオンしていないときのレティクル座標
 	WorldTransform default3dReticle_;
 

@@ -11,6 +11,7 @@
 #include "RailCamera.h"
 #include "Score.h"
 #include "Skydome.h"
+#include "MultiLockOnSystem.h"
 
 /// <summary>
 /// ゲームシーンで行われる処理をまとめたクラス
@@ -74,6 +75,8 @@ private:// プライベートなメンバ変数
 	Player player_;
 	// 自弾
 	std::list<PlayerBullet*> playerBullets_;
+	// マルチロックオン機能
+	std::unique_ptr<MultiLockOnSystem> multiLockOnSystem_;
 
 	// カメラ
 	Camera camera_;

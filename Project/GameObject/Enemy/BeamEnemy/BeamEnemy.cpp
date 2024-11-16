@@ -3,7 +3,8 @@
 #include "EnemyManager.h" 
 
 BeamEnemy::BeamEnemy() {
-
+	object3d_ = std::make_unique<Object3D>();
+	object3d_->Initialize();
 }
 
 BeamEnemy::~BeamEnemy() {
@@ -12,8 +13,6 @@ BeamEnemy::~BeamEnemy() {
 
 void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 #pragma region 体のオブジェクト
-	object3d_ = std::make_unique<Object3D>();
-	object3d_->Initialize();
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
@@ -50,8 +49,10 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	state_ = new BeamEnemyStateWait(this, player_);
 	state_->Initialize();
 
+	// 体力
 	hp_ = 100;
 
+	// 管理番号
 	id_ = id;
 }
 
@@ -59,12 +60,14 @@ void BeamEnemy::Update() {
 	// Catmull-Romスプライン関数で補間された位置を取得
 	Vector3 pos{};
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
-
+	object3d_->worldTransform.translate = pos;
+	// 進行度を進める
 	t_ += 0.005f;
 
-	object3d_->worldTransform.translate = pos;
-
+	// ビームを回転させる
 	beamObject_->worldTransform.rotate.y += 0.1f;
+
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void BeamEnemy::Draw() {

@@ -57,6 +57,7 @@ public:
 		// 移動中
 		return true;
 	}
+	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 	// ワールド座標の取得
 	Vector3 GetWorldPosition() {
 		// ワールド座標を入れる変数

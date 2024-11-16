@@ -20,7 +20,8 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="size">画像の縦幅、横幅</param>
+	/// <param name="directoryPath"></param>
+	/// <param name="textureFilePath"></param>
 	void Initialize(const std::string& directoryPath, std::string textureFilePath);
 
 	//void update();
@@ -28,8 +29,6 @@ public:
 	/// <summary>
 	/// 描画処理
 	/// </summary>
-	/// <param name="size">縦幅、横幅を入力</param>
-	/// <param name="textureNum">textureManagerで登録したenum型の番号を入れる</param>
 	void Draw();
 
 	// 解放処理

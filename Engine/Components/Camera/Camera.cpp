@@ -47,5 +47,5 @@ void Camera::UpdateViewMatrix() {
 }
 
 void Camera::UpdateProjectionMatrix() {
-	viewProjection_.matProjection = MakePerspectiveFovMatrix(viewProjection_.fovAngleY * std::numbers::pi / 180.0f, viewProjection_.aspectRatio, viewProjection_.nearZ, viewProjection_.farZ);
+	viewProjection_.matProjection = MakePerspectiveFovMatrix(viewProjection_.fovAngleY * (float)std::numbers::pi / 180.0f, viewProjection_.aspectRatio, viewProjection_.nearZ, viewProjection_.farZ);
 }

@@ -48,4 +48,7 @@ struct WorldTransform {
 	void TransferMatrix();
 
 	void UpdateMatrix();
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
 };

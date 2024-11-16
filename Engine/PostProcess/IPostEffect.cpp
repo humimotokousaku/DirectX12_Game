@@ -110,7 +110,7 @@ void IPostEffect::PreDrawScene() {
 	directXCommon_->GetCommandList()->OMSetRenderTargets(1, &rtvHandles_[0], false, &dsvHandle);
 
 	// ビューポートの設定
-	D3D12_VIEWPORT viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, WinApp::kClientWidth_, WinApp::kClientHeight_);
+	D3D12_VIEWPORT viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, (FLOAT)WinApp::kClientWidth_, (FLOAT)WinApp::kClientHeight_);
 	directXCommon_->GetCommandList()->RSSetViewports(1, &viewport);
 	// シザー矩形の設定
 	D3D12_RECT scissor = CD3DX12_RECT(0, 0, WinApp::kClientWidth_, WinApp::kClientHeight_);

@@ -483,6 +483,7 @@
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.cpp" />
     <ClCompile Include="Project\GameSystem.cpp" />
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
+    <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -837,6 +838,7 @@
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.h" />
     <ClInclude Include="Project\GameSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />
+    <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

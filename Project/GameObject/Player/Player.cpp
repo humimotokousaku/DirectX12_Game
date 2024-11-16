@@ -76,7 +76,7 @@ void Player::Initialize() {
 
 #pragma region レティクル
 	// 3Dレティクルモデル作成(デバッグ用)
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < object3dReticle_.size(); i++) {
 		object3dReticle_[i] = std::make_unique<Object3D>();
 		object3dReticle_[i]->Initialize();
 		object3dReticle_[i]->SetModel(models_[1]);
@@ -85,6 +85,13 @@ void Player::Initialize() {
 	// ロックオンしてない3Dレティクルの座標
 	default3dReticle_.Initialize();
 	default3dReticle_ = object3dReticle_[0]->worldTransform;
+	// ロックオンしたときの3Dレティクル
+	for (int i = 0; i < lockOn3dReticle_.size(); i++) {
+		lockOn3dReticle_[i] = std::make_unique<Object3D>();
+		lockOn3dReticle_[i]->Initialize();
+		lockOn3dReticle_[i]->SetModel(models_[1]);
+		lockOn3dReticle_[i]->SetCamera(camera_);
+	}
 
 	// 2Dレティクル作成
 	sprite2DReticle_[0].Initialize("", "reticle.png");

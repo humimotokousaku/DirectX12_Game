@@ -114,6 +114,17 @@ void GameSystem::Initialize() {
 	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
 #pragma endregion
 
+
+
+
+	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
+	multiLockOnSystem_->Initialize(followCamera_.GetCamera());
+	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
+
+
+
+
+
 	// 天球の生成
 	skydome_.Initialize(models_[5], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
 
@@ -160,6 +171,13 @@ void GameSystem::Update(int& sceneNum) {
 	// 敵のリストを保存
 	aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
 
+
+
+	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
+	multiLockOnSystem_->Update();
+
+
+
 	// 自キャラの更新
 	player_.Update();
 	// 終了した弾を削除
@@ -192,10 +210,17 @@ void GameSystem::Update(int& sceneNum) {
 
 void GameSystem::Draw() {
 	// Blenderで配置したオブジェクト
-	levelManager_->Draw();
+	//levelManager_->Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();
+
+
+
+	multiLockOnSystem_->Draw();
+
+
+
 
 	// 天球
 	skydome_.Draw();

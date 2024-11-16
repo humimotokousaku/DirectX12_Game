@@ -3,6 +3,13 @@
 #include "Player.h"
 
 class AimAssist {
+private:
+	// ロックオン時のレティクル情報
+	struct LockOnReticleData {
+		Vector3 targetPos;		// ロックオン対象の座標
+		Vector3 reticleOffset;	// レティクルの補間
+	};
+
 public:
 	/// 
 	/// Default Method
@@ -80,9 +87,15 @@ private:
 	// カメラの方向ベクトル
 	Vector3* cameraDirVel_;
 
-	// ロックオン中か
-	bool isLockOn_;
+	// ロックオン対象の座標
+	std::array<Vector3, 20> targetPos_;	
 
 	// ロックオン時のレティクルの補間量
 	Vector3 lockOnReticleOffset_;
+
+	// 現在のロックオン数
+	int lockOnCount_;
+
+	// ロックオン中か
+	bool isLockOn_;
 };
