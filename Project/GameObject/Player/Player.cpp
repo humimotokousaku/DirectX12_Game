@@ -120,6 +120,7 @@ void Player::Initialize() {
 
 	// 弾ゲージ量
 	bulletGauge_.value = 0.0f;
+	//bulletGauge_.value = kMaxBulletGauge;
 	bulletGauge_.incrementValue = kIncrementBulletGauge;
 	// 弾ゲージの増加倍率
 	bulletGauge_.magnification = kMagnificationBulletGauge;
@@ -131,7 +132,7 @@ void Player::Initialize() {
 	bulletGauge_.sprite.SetPos(Vector2{ 64.0f, 96.0f });
 	// 青色にする
 	bulletGauge_.sprite.SetColor(Vector4{ 0.0f,0.0f,1.0f,1.0f });
-	//PostEffectManager::GetInstance()->AddSpriteList(&bulletGauge_.sprite);
+	PostEffectManager::GetInstance()->AddSpriteList(&bulletGauge_.sprite);
 #pragma endregion
 
 #pragma region パーティクル
@@ -242,7 +243,7 @@ void Player::Draw() {
 	}
 
 	for (int i = 0; i < boostFire_.size(); i++) {
-		boostFire_[i]->Draw(defaultTexture);
+		//boostFire_[i]->Draw(defaultTexture);
 	}
 
 	// 3Dレティクル
@@ -386,6 +387,7 @@ void Player::JustEvasion() {
 
 	// ジャスト回避の情報のみ初期化
 	if (evasion_.justFrame <= 0) {
+		bulletGauge_.value += 10;
 		evasion_.JustDataReset();
 		return;
 	}
@@ -460,6 +462,8 @@ void Player::Move() {
 	// 回避
 	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_A)) {
 		evasion_.isActive = true;
+		evasionRotSpeedAnim_.ResetData();
+		evasionRotSpeedAnim_.SetIsStart(true);
 	}
 #pragma endregion
 
@@ -570,44 +574,60 @@ void Player::Aim() {
 
 void Player::Attack() {
 	// Rトリガーを押していたら
-	if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER || Input::GetInstance()->PressKey(DIK_SPACE)) {
-		// 弾ゲージが0以外で発射クールタイムが0のとき
-		if (bulletInterval_ <= 0 && bulletGauge_.value >= kDecrementBulletGauge) {
-			// 弾の速度
-			const float kBulletSpeed = 5.0f;
-			Vector3 velocity(0, 0, kBulletSpeed);
-			// 速度ベクトルを自機の向きに合わせて回転させる
-			Vector3 worldPos = GetWorldPosition();
-			velocity = TransformNormal(velocity, object3d_->worldTransform.matWorld_);
-			// 自機から照準オブジェクトへのベクトル
-			Vector3 worldReticlePos = {
-				object3dReticle_[0]->worldTransform.matWorld_.m[3][0], object3dReticle_[0]->worldTransform.matWorld_.m[3][1],
-				object3dReticle_[0]->worldTransform.matWorld_.m[3][2] };
-			velocity = worldReticlePos - worldPos;
-			velocity = Normalize(velocity);
-			velocity *= kBulletSpeed;
+	//if (joyState_.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER || Input::GetInstance()->PressKey(DIK_SPACE)) {
+	//	// 弾ゲージが0以外で発射クールタイムが0のとき
+	//	if (bulletInterval_ <= 0 && bulletGauge_.value >= kDecrementBulletGauge) {
+	//		//for (LockOnData& lockOnPos : lockOnDatas_) {
+	//		//	if (lockOnPos.isActive) { continue; }
+	//		//	lockOnPos.isActive = true;
 
-			// 弾を生成し、初期化
-			PlayerBullet* newBullet = new PlayerBullet();
-			newBullet->SetCamera(camera_);
-			newBullet->Initialize(models_[2], worldPos, velocity);
-			// 弾を登録
-			gameSystem_->AddPlayerBullet(newBullet);
+	//			// 弾の速度
+	//			const float kBulletSpeed = 5.0f;
+	//			Vector3 velocity(0, 0, kBulletSpeed);
+	//			// 自機の座標
+	//			Vector3 worldPos = GetWorldPosition();
 
-			// 弾の発射間隔リセット
-			bulletInterval_ = kBulletInterval;
+	//			// 速度ベクトルを自機の向きに合わせて回転させる
+	//			velocity = TransformNormal(velocity, object3d_->worldTransform.matWorld_);
+	//			// 自機から照準オブジェクトへのベクトル
+	//			//Vector3 targetPos = *lockOnPos.targetPos;
+	//			//velocity = targetPos - worldPos;
+	//			//velocity = Normalize(velocity);
+	//			//velocity *= kBulletSpeed;
 
-			// 弾ゲージを減少させる
-			bulletGauge_.value -= kDecrementBulletGauge;
+	//						// 自機から照準オブジェクトへのベクトル
+	//			Vector3 worldReticlePos = {
+	//				object3dReticle_[0]->worldTransform.matWorld_.m[3][0], object3dReticle_[0]->worldTransform.matWorld_.m[3][1],
+	//				object3dReticle_[0]->worldTransform.matWorld_.m[3][2] };
+	//			velocity = worldReticlePos - worldPos;
+	//			velocity = Normalize(velocity);
+	//			velocity *= kBulletSpeed;
 
-			// 音の再生
-			audio_->SoundPlayWave(shotSE_, false, 0.25f);
-		}
-	}
+	//			// 弾を生成し、初期化
+	//			PlayerBullet* newBullet = new PlayerBullet();
+	//			newBullet->SetCamera(camera_);
+	//			//newBullet->Initialize(models_[2], worldPos, velocity, lockOnPos.targetPos);
+	//			newBullet->Initialize(models_[2], worldPos, velocity);
+	//			// 弾を登録
+	//			gameSystem_->AddPlayerBullet(newBullet);
 
-	bulletInterval_--;
-	// 0未満にならないようにする
-	bulletInterval_ = std::clamp<int>(bulletInterval_, 0, kBulletInterval);
+	//			// 弾の発射間隔リセット
+	//			bulletInterval_ = kBulletInterval;
+
+	//			// 弾ゲージを減少させる
+	//			bulletGauge_.value -= kDecrementBulletGauge;
+
+	//			// 音の再生
+	//			audio_->SoundPlayWave(shotSE_, false, 0.25f);
+
+	//			//if (lockOnPos.isActive) { break; }
+	//		//}
+	//	}
+	//}
+
+	//bulletInterval_--;
+	//// 0未満にならないようにする
+	//bulletInterval_ = std::clamp<int>(bulletInterval_, 0, kBulletInterval);
 }
 
 void Player::OnCollision(Collider* collider) {
@@ -769,6 +789,7 @@ void Player::DeployLockOnReticle() {
 }
 
 void Player::ImGuiParameter() {
+#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -789,8 +810,6 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
-#ifdef _DEBUG
-
 #endif
 }
 
@@ -835,6 +854,7 @@ Vector3 Player::GetDefault3DReticlePosition() {
 void Player::SetParent(const WorldTransform* parent) {
 	// 親子関係を結ぶ
 	object3d_->worldTransform.parent_ = parent;
+	// 残像のオブジェクトにも適用
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
 		afterImageObject3d_[i]->worldTransform.parent_ = parent;
 	}

@@ -1,17 +1,18 @@
 #include "PlayerBullet.h"
-
 #include "CollisionConfig.h"
 #include "Matrix4x4.h"
-
+#include "IEnemy.h"
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {
 	
 }
 
-void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
+void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity, WorldTransform* enemyData) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
+
+	enemyData_ = enemyData;
 
 	// モデルの生成
 	object3d_ = std::make_unique<Object3D>();
@@ -19,7 +20,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->SetModel(model);
 	object3d_->SetCamera(camera_);
 	// colliderの設定
-	object3d_->collider->SetDamage(40);
+	object3d_->collider->SetDamage(1000);
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributePlayer);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
@@ -33,6 +34,9 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 	object3d_->worldTransform.scale = {
 		0.5f,0.5f,2.0f
 	};
+	// 行列を更新
+	object3d_->worldTransform.UpdateMatrix();
+
 	// 緑にする
 	object3d_->SetColor(Vector4{ 0,1,0,1 });
 	
@@ -43,6 +47,11 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, const Vector3& v
 }
 
 void PlayerBullet::Update() {
+	Vector3 toPlayer = enemyData_->GetWorldPosition() - GetWorldPosition();
+	toPlayer = Normalize(toPlayer);
+	velocity_ = Normalize(velocity_);
+	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * 0.6f;
+
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
 	// 横軸方向の長さを求める

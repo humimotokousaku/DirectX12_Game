@@ -101,6 +101,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	std::list<IEnemy*> GetEnemyList() { return enemys_; }
+
+	/// <summary>
+	/// 現在存在している敵の管理番号
+	/// </summary>
+	/// <returns></returns>
+	std::vector<int> GetIdList() { return idList_; }
 #pragma endregion
 
 #pragma region Setter
@@ -147,7 +153,6 @@ public:
 	/// <param name="spawnPoints">敵の出現する場所</param>
 	void SetSpawnPoints(std::vector<LevelData::EnemyPoint> spawnPoints) {
 		spawnPoints_ = spawnPoints;
-		//spawnPointDatas_.resize(spawnPoints_.size());
 	}
 
 	/// <summary>
@@ -157,12 +162,6 @@ public:
 	void SetHitParticle(Particles* particle) {
 		hitParticles_.push_back(particle);
 	}
-
-	/// <summary>
-	/// 追従カメラのワールドトランスフォームの設定
-	/// </summary>
-	/// <param name="worldTransform">カメラのワールドトランスフォームのアドレス</param>
-	//void SetFollowCameraWorldTransform(WorldTransform* worldTransform) { followWorldTransform_ = worldTransform; }
 #pragma endregion
 
 private:// プライベートなメンバ変数
@@ -213,6 +212,9 @@ private:// プライベートなメンバ変数
 
 	// 敵の発生する場所
 	std::vector<LevelData::EnemyPoint> spawnPoints_;
+
+	// 管理番号リスト
+	std::vector<int> idList_;
 
 	// レールカメラの進行度
 	float* railCameraProgress_;

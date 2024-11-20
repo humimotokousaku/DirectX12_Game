@@ -11,6 +11,7 @@
 #include "PlayerConfig.h"
 #include "Sprite.h"
 #include <map>
+#include <tuple>
 
 class AimAssist;
 class GameSystem;
@@ -93,7 +94,7 @@ private:// プライベートなメンバ関数
 	/// <summary>
 	/// HPゲージの更新処理
 	/// </summary>
-	void HPUpdate();	
+	void HPUpdate();
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
@@ -260,6 +261,8 @@ private:// プライベートなメンバ変数
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameSystem* gameSystem_;
+	// マルチロックオンのアドレス
+	//MultiLockOnSystem* multiLockOnSystem_;
 	// エイムアシストのアドレス
 	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス

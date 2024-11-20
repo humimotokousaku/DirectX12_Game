@@ -24,7 +24,7 @@ public:
 
 private:// 定数
 	// 離脱速度
-	const Vector3 kMaxLeaveVelocity = { 0.0f, 4.0f,0.0f };
+	const Vector3 kMaxLeaveVelocity = { 0.0f, 100.0f,-50.0f };
 
 public:
 	FixedTurret* enemy_;

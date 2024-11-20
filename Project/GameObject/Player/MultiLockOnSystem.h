@@ -1,10 +1,8 @@
 #pragma once
-#include "AimAssist/AimAssist.h"
-#include "IEnemy.h"
-#include "PlayerBullet.h"
 #include "Sprite.h"
 #include "PostEffectManager.h"
-#include <set>
+#include "IEnemy.h"
+#include "PlayerConfig.h"
 
 /// <summary>
 /// マルチロックオン機能
@@ -14,9 +12,9 @@ public:// 構造体
 	struct MultiLockOnData {
 		std::shared_ptr<Sprite> reticleSprite;  // 2Dレティクル
 		Animation reticleAnim;					// ロックオン時のアニメーション
-		WorldTransform worldTransform;			// ロックオン対象の3D座標
+		int enemyId;
+		bool isActive;
 	};
-
 public:
 	MultiLockOnSystem() = default;
 	~MultiLockOnSystem() = default;
@@ -24,8 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="camera">カメラのアドレス</param>
-	void Initialize(Camera* camera);
+	void Initialize(Player* player, Camera* camera, std::list<IEnemy*> enemys, GameSystem* gameSystem, Model* model);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -58,10 +55,25 @@ private:// プライベートなメンバ関数
 	/// <returns></returns>
 	bool IsObjectInScreen(Vector3 worldPos);
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="objectPosition"></param>
+	/// <returns></returns>
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
+
+public:// GetterとSetter
+	// ロックオンされている敵の座標を取得
+	std::vector<MultiLockOnData> GetLockOnPosLists() { return multiLockOnDatas_; }
+
+	// 弾リストを取得
+	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
 	// 全敵のアドレスを設定
 	void SetEnemyList(std::list<IEnemy*> enemys) { enemys_ = enemys; }
+
+	// 全敵のIDを設定
+	void SetEnemyIdList(std::vector<int> enemyIdList) { enemyIdList_ = enemyIdList; }
 
 private:// 定数
 	// 同時ロックオン可能数
@@ -79,10 +91,21 @@ private:
 	// 全ての敵
 	std::list<IEnemy*> enemys_;
 
+	// ゲームシステム
+	GameSystem* gameSystem_;
+	// 自機
+	Player* player_;
+	// 弾
+	std::list<PlayerBullet*> bullets_;
+	// 弾の見た目
+	Model* model_;
 
 
 	// マルチロックオンの情報
 	std::vector<MultiLockOnData> multiLockOnDatas_;
 	// ロックオンされている敵のID
 	std::vector<int> IDs_;
+
+	// 敵のIDリスト
+	std::vector<int> enemyIdList_;
 };

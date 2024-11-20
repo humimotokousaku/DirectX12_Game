@@ -1,10 +1,14 @@
 #include "MultiLockOnSystem.h"
+#include "GameSystem.h"
 
-void MultiLockOnSystem::Initialize(Camera* camera) {
+void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEnemy*> enemys, GameSystem* gameSystem, Model* model) {
 	postEffectManager_ = PostEffectManager::GetInstance();
-	aimAssist_ = AimAssist::GetInstance();
 
+	player_ = player;
 	camera_ = camera;
+	enemys_ = enemys;
+	gameSystem_ = gameSystem;
+	model_ = model;
 }
 
 void MultiLockOnSystem::Update() {
@@ -12,13 +16,69 @@ void MultiLockOnSystem::Update() {
 	LockOnUpdate();
 
 	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-		// ロックオンレティクルの座標更新
-		multiLockOnData.reticleSprite->SetPos(ConvertWorld2Screen(multiLockOnData.worldTransform.GetWorldPosition()));
-		// ロックオン対象の座標を更新
-		multiLockOnData.worldTransform.UpdateMatrix();
+		for (IEnemy* obj : enemys_) {
+			// ロックオン対象外の敵ならスキップ
+			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
+
+			// ロックオンレティクルの座標更新
+			multiLockOnData.reticleSprite->SetPos(ConvertWorld2Screen(obj->GetWorldPosition()));
+		}
+
 		// アニメーションの更新
 		multiLockOnData.reticleAnim.Update();
 	}
+
+
+
+	// 弾ゲージが0以外で発射クールタイムが0のとき
+//if (bulletInterval_ <= 0 && bulletGauge_.value >= kDecrementBulletGauge) {
+	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
+		if (multiLockOnData.isActive) { continue; }
+		multiLockOnData.isActive = true;
+		for (IEnemy* obj : enemys_) {
+			// ロックオン対象外の敵ならスキップ
+			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
+
+			// 弾の速度
+			const float kBulletSpeed = 5.0f;
+			Vector3 velocity(0, 0, kBulletSpeed);
+			// 自機の座標
+			Vector3 worldPos = player_->GetWorldPosition();
+
+			Matrix4x4 m = player_->GetWorldTransform()->matWorld_;
+			// 速度ベクトルを自機の向きに合わせて回転させる
+			velocity = TransformNormal(velocity, m);
+			// 自機から照準オブジェクトへのベクトル
+			Vector3 targetPos = obj->GetWorldPosition();
+			velocity = targetPos - worldPos;
+			velocity = Normalize(velocity);
+			velocity *= kBulletSpeed;
+
+			// 弾を生成し、初期化
+			PlayerBullet* newBullet = new PlayerBullet();
+			newBullet->SetCamera(camera_);
+			newBullet->Initialize(model_, worldPos, velocity, obj->GetWorldTransform());
+			// 弾を登録
+			gameSystem_->AddPlayerBullet(newBullet);
+
+			// 弾の発射間隔リセット
+			//bulletInterval_ = kBulletInterval;
+
+			// 弾ゲージを減少させる
+			//bulletGauge_.value -= kDecrementBulletGauge;
+
+			// 音の再生
+			//audio_->SoundPlayWave(shotSE_, false, 0.25f);
+
+			if (multiLockOnData.isActive) { break; }
+		}
+		if (multiLockOnData.isActive) { break; }
+	}
+	//}
+
+	//bulletInterval_--;
+	//// 0未満にならないようにする
+	//bulletInterval_ = std::clamp<int>(bulletInterval_, 0, kBulletInterval);
 }
 
 void MultiLockOnSystem::Draw() {
@@ -43,40 +103,55 @@ void MultiLockOnSystem::LockOnUpdate() {
 		}
 		IDs_.push_back(obj->GetId());
 
+		// ロックオンリストに登録
 		// サイズを変更
 		int size = (int)multiLockOnDatas_.size();
 		multiLockOnDatas_.resize(size + 1);
-		// ロックオンした敵の情報を代入
-		multiLockOnDatas_[size].worldTransform.Initialize();
-		multiLockOnDatas_[size].worldTransform.parent_ = obj->GetWorldTransform();
-		multiLockOnDatas_[size].worldTransform.UpdateMatrix();
 
 		// ロックオンスプライトを作成
 		multiLockOnDatas_[size].reticleSprite = std::make_shared<Sprite>();
 		multiLockOnDatas_[size].reticleSprite->Initialize("", "lockOnReticle.png");
 		// 敵の座標にロックオンレティクルを設置
-		Vector2 enemyPos = ConvertWorld2Screen(multiLockOnDatas_[size].worldTransform.GetWorldPosition());
+		Vector2 enemyPos = ConvertWorld2Screen(obj->GetWorldPosition());
 		multiLockOnDatas_[size].reticleSprite->SetPos(enemyPos);
 
 		// ロックオン時のレティクルのアニメーション
-		multiLockOnDatas_[size].reticleAnim.SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, Easings::EaseInExpo);
+		multiLockOnDatas_[size].reticleAnim.SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 6, Easings::EaseInExpo);
 		multiLockOnDatas_[size].reticleAnim.SetIsStart(true);
+
+		// 敵の管理番号
+		multiLockOnDatas_[size].enemyId = obj->GetId();
 	}
 
-	// 画面外にいる場合、ロックオンリストから削除
+	// ロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
-		// 自機の正面方向に敵いるならreturn
-		if (!IsObjectInOppositeDirection(multiLockOnDatas_[i].worldTransform.GetWorldPosition())) { continue; }
-		// 画面内に敵がいない
-		if (!IsObjectInScreen(multiLockOnDatas_[i].worldTransform.GetWorldPosition())) {
-			multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
+		for (IEnemy* enemyItr : enemys_) {
+			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
+
+			// 画面内に敵がいない
+			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {
+				multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
+				// ロックオン対象のIDを消す
+				IDs_.erase(std::remove(IDs_.begin(), IDs_.end(), enemyItr->GetId()), IDs_.end());
+				break;
+			}
 		}
+	}
+
+	// 存在していない敵をロックオンしていたらロックオンリストから削除
+	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
+		auto result = std::find(enemyIdList_.begin(), enemyIdList_.end(), multiLockOnDatas_[i].enemyId);
+		if (result != enemyIdList_.end()) {
+			continue;
+		}
+		multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
+		IDs_.erase(std::remove(IDs_.begin(), IDs_.end(), multiLockOnDatas_[i].enemyId), IDs_.end());
 	}
 }
 
 Vector2 MultiLockOnSystem::ConvertWorld2Screen(Vector3 worldPos) {
 	Vector3 result = worldPos;
-	result += { 0.000001f,0.000001f ,0.000001f };
+	result += { 0.000001f, 0.000001f, 0.000001f };
 
 	// ビューポート行列
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);

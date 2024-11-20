@@ -484,6 +484,7 @@
     <ClCompile Include="Project\GameSystem.cpp" />
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
     <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\ShotSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -839,6 +840,7 @@
     <ClInclude Include="Project\GameSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\ShotSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

@@ -7,6 +7,7 @@
 /// <summary>
 /// 自キャラの弾
 /// </summary>
+class IEnemy;
 class PlayerBullet{
 public: // メンバ関数
 
@@ -18,7 +19,7 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="pos">初期座標</param>
-	void Initialize(Model* model, const Vector3& pos, const Vector3& velocity);
+	void Initialize(Model* model, const Vector3& pos, const Vector3& velocity, WorldTransform* enemyData);
 
 	/// <summary>
 	/// 更新
@@ -64,14 +65,17 @@ private: // メンバ変数
 	Camera* camera_;
 	// 衝突マネージャー
 	CollisionManager* collisionManager_ = nullptr;
+	// 追尾対象の敵情報
+	WorldTransform* enemyData_;
+
+	// 速度
+	Vector3 velocity_;
 
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 2;
+	static const int32_t kLifeTime = 60 * 1000;
 	// 死亡タイマー
 	int32_t deathTimer_ = kLifeTime;
 	// 死亡フラグ
 	bool isDead_ = false;
 
-	// 速度
-	Vector3 velocity_;
 };

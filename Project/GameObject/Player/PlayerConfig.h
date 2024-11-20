@@ -106,4 +106,19 @@ struct GaugeData {
 	Vector2 size;			// ゲージの大きさ
 	Sprite sprite;			// ゲージの描画
 };
+//struct MultiLockOnData {
+//	std::shared_ptr<Sprite> reticleSprite;  // 2Dレティクル
+//	Animation reticleAnim;					// ロックオン時のアニメーション
+//	WorldTransform* worldTransform;			// ロックオン対象の3D座標
+//	int enemyId;
+//	bool isActive;
+//
+//	bool operator==(MultiLockOnData& other) {
+//		return reticleSprite == other.reticleSprite &&
+//			worldTransform == other.worldTransform &&
+//			enemyId == other.enemyId &&
+//			isActive == other.isActive &&
+//			reticleAnim == other.reticleAnim;
+//	}
+//};
 #pragma endregion

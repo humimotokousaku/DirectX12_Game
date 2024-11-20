@@ -18,7 +18,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = true;
+	isMove_ = false;
 
 	// アドレスを代入
 	isBoost_ = player_->GetIsBoost_P();

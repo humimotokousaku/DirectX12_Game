@@ -61,6 +61,8 @@ void EnemyManager::Update() {
 	enemys_.remove_if([&](IEnemy* enemy) {
 		// 倒したら点数を加算して解放
 		if (enemy->IsDead()) {
+			// 管理番号リストから削除
+			idList_.erase(std::remove(idList_.begin(), idList_.end(), enemy->GetId()), idList_.end());
 			// 割り振られたスコアを加算
 			score_->AddScore(enemy->GetScore());
 			// 死亡SEを再生
@@ -70,6 +72,8 @@ void EnemyManager::Update() {
 		}
 		// 機能停止状態なら解放
 		if (!enemy->GetIsActive()) {
+			// 管理番号リストから削除
+			idList_.erase(std::remove(idList_.begin(), idList_.end(), enemy->GetId()), idList_.end());
 			delete enemy;
 			return true;
 		}
@@ -171,6 +175,9 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	// リストに登録
 	enemys_.push_back(enemy);
 
+	// 管理番号リストに登録
+	idList_.push_back(id_);
+
 	// 管理番号更新
 	id_++;
 
@@ -206,6 +213,9 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	// リストに登録
 	enemys_.push_back(enemy);
 
+	// 管理番号リストに登録
+	idList_.push_back(id_);
+
 	// 管理番号更新
 	id_++;
 
@@ -238,6 +248,9 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	// リストに登録
 	enemys_.push_back(enemy);
 
+	// 管理番号リストに登録
+	idList_.push_back(id_);
+
 	// 管理番号更新
 	id_++;
 
@@ -269,6 +282,9 @@ void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
 	//boss->Initialize(pos, rotate, id_);
 	//// リストに登録
 	//enemy_.push_back(boss);
+
+	//// 管理番号リストに登録
+	//idList_.push_back(id_);
 
 	//// 管理番号更新
 	//id_++;

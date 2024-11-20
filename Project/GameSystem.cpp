@@ -53,6 +53,7 @@ void GameSystem::Initialize() {
 	AddModel(modelManager_->SetModel("", "boostFire.obj"));
 
 	// Blender
+	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
 	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
@@ -118,11 +119,13 @@ void GameSystem::Initialize() {
 
 
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
-	multiLockOnSystem_->Initialize(followCamera_.GetCamera());
+	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList(), this, models_[2]);
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
+	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList());
 
-
-
+	//shotSystem_ = std::make_unique<ShotSystem>();
+	//shotSystem_.Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList(), this, models_[2]);
+	//shotSystem_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
 
 
 	// 天球の生成
@@ -172,12 +175,16 @@ void GameSystem::Update(int& sceneNum) {
 	aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
 
 
-
+	// マルチロックオン
+	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList());
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
 	multiLockOnSystem_->Update();
 
+	//shotSystem_.SetEnemyList(enemyManager_.GetEnemyList());
+	//shotSystem_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
+	//shotSystem_.Update();
 
-
+	//player_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
 	// 自キャラの更新
 	player_.Update();
 	// 終了した弾を削除
@@ -210,17 +217,13 @@ void GameSystem::Update(int& sceneNum) {
 
 void GameSystem::Draw() {
 	// Blenderで配置したオブジェクト
-	//levelManager_->Draw();
+	levelManager_->Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();
 
-
-
+	// ロックオン時のレティクル
 	multiLockOnSystem_->Draw();
-
-
-
 
 	// 天球
 	skydome_.Draw();
