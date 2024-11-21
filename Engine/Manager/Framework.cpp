@@ -119,7 +119,6 @@ void Framework::Run() {
 }
 
 void Framework::Finalize() {
-	ModelManager::GetInstance()->Finalize();
 	// ImGui
 	imGuiManager_->Finalize();
 	textureManager_->Finalize();

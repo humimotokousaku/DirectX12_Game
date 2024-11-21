@@ -81,7 +81,7 @@ Motion LoadAnimationFile(const std::string& directoryPath, const std::string& fi
 Motion LoadAnimationFile(const std::string& filename) {
 	Motion animation;
 	Assimp::Importer importer;
-	std::string filePath = "Engine/resources/" + filename;
+	std::string filePath = filename;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 
 	// アニメーションを再生しない

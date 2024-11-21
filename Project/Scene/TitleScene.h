@@ -1,8 +1,7 @@
 #pragma once
 #include "IScene.h"
-
 #include "Input.h"
-#include "Sprite.h"
+#include "Object3d.h"
 
 class GameManager;
 
@@ -21,8 +20,12 @@ public:
 	void Finalize()override;
 
 private:
-	Input* input_;
+	// ddsテクスチャを張り付けたモデル
+	std::unique_ptr<Object3D> object3d_;
 
-	// UI
-	std::array<std::unique_ptr<Sprite>, 3> guideUI_;
+	// ddsテクスチャ
+	uint32_t ddsTexture_;
+
+	// カメラ
+	std::unique_ptr<Camera> camera_;
 };

@@ -38,19 +38,19 @@ void GameSystem::Initialize() {
 	modelManager_->LoadModel("Level", "skydome.obj");
 
 	// 自機
-	AddModel(modelManager_->SetModel("", "Bob.obj"));
+	AddModel(modelManager_->GetModel("", "Bob.obj"));
 	// 3Dレティクル
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 自機の弾
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 通常敵のモデル
-	AddModel(modelManager_->SetModel("", "Spitfire.obj"));
+	AddModel(modelManager_->GetModel("", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 天球
-	AddModel(modelManager_->SetModel("Level", "skydome.obj"));
+	AddModel(modelManager_->GetModel("Level", "skydome.obj"));
 	// ブーストの炎
-	AddModel(modelManager_->SetModel("", "boostFire.obj"));
+	AddModel(modelManager_->GetModel("", "boostFire.obj"));
 
 	// Blender
 	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);

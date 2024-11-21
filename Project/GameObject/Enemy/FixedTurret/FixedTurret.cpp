@@ -69,24 +69,6 @@ void FixedTurret::OnCollision(Collider* collider) {
 		// 自機陣営に当たった場合のみダメージを受ける
 		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
 			hp_ = hp_ - collider->GetDamage();
-
-			// 被弾時のパーティクルを生成
-			Particles* particles = new Particles();
-			particles->Initialize(GetWorldPosition());
-			particles->SetCamera(camera_);
-			particles->SetEmitterFrequency(1);
-			particles->SetEmitterCount(10);
-			particles->SetEmitterSpawnCount(1);
-			particles->randomScaleLimit = { 0.01f,0.2f };
-			particles->randomVelLimit[0] = { -8.0f,8.0f };
-			particles->randomVelLimit[1] = { 0.0f,0.0f };
-			particles->randomVelLimit[2] = { -8.0f,8.0f };
-			particles->randomColorLimit = { 0.0f,0.0f };
-			particles->randomLifeTimeLimit = { 0.1f,0.2f };
-			particles->particle_.vel.y = 20.0f;
-			particles->particle_.color = { 1.0f,1.0f,1.0f,1.0f };
-			particles->SetParticleUpdate(std::bind(&FixedTurret::HitParticleUpdate, this, std::placeholders::_1));
-			enemyManager_->SetHitParticle(particles);
 		}
 	}
 }

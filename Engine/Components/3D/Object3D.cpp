@@ -230,7 +230,7 @@ void Object3D::CheckVertex() {
 }
 
 void Object3D::SetModel(const std::string& directoryPath, const std::string& filePath) {
-	*model_ = *ModelManager::GetInstance()->SetModel(directoryPath, filePath);
+	*model_ = *ModelManager::GetInstance()->GetModel(directoryPath, filePath);
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
 	Material* materialData;
 	materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();

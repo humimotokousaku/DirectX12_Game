@@ -19,11 +19,11 @@ void PartsManager::Initialize(WorldTransform* object3d, Camera* camera, EnemyMan
 	modelManager_->LoadModel("", "cube.obj");
 	/// モデルの登録
 	// 右手[0]
-	models_.push_back(modelManager_->SetModel("", "cube.obj"));
+	models_.push_back(modelManager_->GetModel("", "cube.obj"));
 	// 左手[1]
-	models_.push_back(modelManager_->SetModel("", "cube.obj"));
+	models_.push_back(modelManager_->GetModel("", "cube.obj"));
 	// 弱点[2]
-	models_.push_back(modelManager_->SetModel("", "cube.obj"));
+	models_.push_back(modelManager_->GetModel("", "cube.obj"));
 
 	/// 体のパーツを作成
 	// 右手

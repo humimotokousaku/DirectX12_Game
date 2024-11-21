@@ -377,7 +377,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 ModelData Model::LoadModelFile(const std::string& fullPath) {
 	ModelData modelData;
 	Assimp::Importer importer;
-	std::string filePath = "Engine/resources/" + fullPath;
+	std::string filePath = fullPath;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate);
 	assert(scene->HasMeshes());
 
