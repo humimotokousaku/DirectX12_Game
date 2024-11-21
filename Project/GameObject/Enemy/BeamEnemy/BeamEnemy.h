@@ -39,9 +39,6 @@ public:
 	/// User Method
 	/// 
 
-	// 被ダメージのパーティクルの更新処理
-	void HitParticleUpdate(Particle& particle);
-
 #pragma region Getter
 
 #pragma endregion

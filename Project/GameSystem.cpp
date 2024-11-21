@@ -53,8 +53,8 @@ void GameSystem::Initialize() {
 	AddModel(modelManager_->SetModel("", "boostFire.obj"));
 
 	// Blender
-	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
-	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
+	//levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
 	// スコアの生成
@@ -217,7 +217,7 @@ void GameSystem::Update(int& sceneNum) {
 
 void GameSystem::Draw() {
 	// Blenderで配置したオブジェクト
-	levelManager_->Draw();
+	//levelManager_->Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();

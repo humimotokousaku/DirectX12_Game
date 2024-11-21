@@ -35,8 +35,6 @@ public:
 	/// User Method
 	/// 
 
-	void ParticleUpdate(Particle& particle);
-
 	/// <summary>
 	/// stateの変更
 	/// </summary>

@@ -28,6 +28,14 @@ public:
 	/// <param name="collider">当たった相手の衝突情報</param>
 	virtual void OnCollision(Collider* collider) = 0;;
 
+	/// <summary>
+	/// 被弾時のパーティクル生成
+	/// </summary>
+	void CreateHitParticle();
+
+	// 被ダメージのパーティクルの更新処理
+	void HitParticleUpdate(Particle& particle);
+
 	///
 	/// User Method
 	/// 

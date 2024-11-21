@@ -251,17 +251,6 @@ void Object3D::SetModel(const std::string& directoryPath, const std::string& fil
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
 		skinCluster_.push_back(skinCluster);
 	}
-
-	//for (int i = 0; i < model_->skeleton_.joints.size(); i++) {
-	//	verteciesName.push_back(model_->skeleton_.joints[i].name.c_str());
-	//}
-
-	//for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
-	//	const char* name1 = "vertex";
-	//	std::string name = name1 + std::to_string(i);
-
-	//	verteciesName.push_back(name.c_str());
-	//}
 }
 
 void Object3D::SetModel(Model* model) {
@@ -286,15 +275,4 @@ void Object3D::SetModel(Model* model) {
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
 		skinCluster_.push_back(skinCluster);
 	}
-
-	/*for (int i = 0; i < model_->skeleton_.joints.size(); i++) {
-		verteciesName.push_back(model_->skeleton_.joints[i].name.c_str());
-	}*/
-
-	/*for (int i = 0; i < model_->GetModelData().vertices.size(); i++) {
-		const char* name1 = "vertex";
-		std::string name = name1 + std::to_string(i);
-
-		verteciesName.push_back(name.c_str());
-	}*/
 }

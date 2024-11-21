@@ -1,11 +1,13 @@
 #pragma once
 #include "IScene.h"
-
 #include "Input.h"
 #include "Sprite.h"
 
 class GameManager;
 
+/// <summary>
+/// タイトルシーン
+/// </summary>
 class TitleScene : public IScene
 {
 public:
