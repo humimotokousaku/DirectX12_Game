@@ -62,14 +62,14 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 
 	// ミニマップの生成
 	DirectX::ScratchImage mipImages{};
-	//// 圧縮フォーマットかを検出
-	//if (DirectX::IsCompressed(image.GetMetadata().format)) {
-	//	mipImages = std::move(image);
-	//}
-	//else {
-	//	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	//}
-	//assert(SUCCEEDED(hr));
+	// 圧縮フォーマットかを検出
+	if (DirectX::IsCompressed(image.GetMetadata().format)) {
+		mipImages = std::move(image);
+	}
+	else {
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+	}
+	assert(SUCCEEDED(hr));
 
 	// 追加したテクスチャデータの参照を取得
 	TextureData& textureData = textureDatas_["Engine/resources/" + filePath];
