@@ -82,7 +82,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\GameObject\AimAssist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\GameObject\AimAssist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -139,7 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>false</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\Components\Camera\RailCamera;$(ProjectDir)Project\Components\Camera;$(ProjectDir)Project\Components\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\GameObject\AimAssist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -171,11 +171,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateWait.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp" />
-    <ClCompile Include="Project\GameObject\AttackAlert.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\ITitanState.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\PartsManager.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\LeftHand.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\IPart.cpp" />
     <ClCompile Include="Project\Collision\Collider.cpp" />
     <ClCompile Include="Engine\Math\Vector2.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.cpp" />
@@ -183,9 +178,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\IEnemy.cpp" />
-    <ClCompile Include="Project\Components\Camera\FollowCamera\FollowCamera.cpp" />
+    <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.cpp" />
-    <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp" />
+    <ClCompile Include="Project\GameObject\AimAssist\AimAssist.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Engine\PostProcess\Dissolve.cpp" />
     <ClCompile Include="engine\PostProcess\Bloom.cpp" />
@@ -205,7 +200,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Components\3D\Primitive\IPrimitive.cpp" />
     <ClCompile Include="Engine\PostProcess\Outline.cpp" />
     <ClCompile Include="Engine\Utility\TimedCall.cpp" />
-    <ClCompile Include="Project\Components\Camera\RailCamera\RailCamera.cpp" />
+    <ClCompile Include="Project\GameObject\Camera\RailCamera\RailCamera.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\Bullet\EnemyBullet.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.cpp" />
@@ -270,16 +265,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Pso\SkyboxPSO.cpp" />
     <ClCompile Include="Project\Components\SceneTransition\SceneTransition.cpp" />
     <ClCompile Include="Project\GameObject\Score\Score.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Titan.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\RightHand.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWaitState.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.cpp" />
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.cpp" />
-    <ClCompile Include="Project\GameObject\Skydome.cpp" />
+    <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp" />
     <ClCompile Include="Engine\Utility\Utility.cpp" />
-    <ClCompile Include="Project\GameObject\Player\ShotSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
@@ -292,20 +279,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateWait.h" />
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.h" />
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.h" />
-    <ClInclude Include="Project\GameObject\AttackAlert.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\ITitanState.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\PartsManager.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\LeftHand.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\IPart.h" />
     <ClInclude Include="Project\Collision\Collider.h" />
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.h" />
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.h" />
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.h" />
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.h" />
     <ClInclude Include="Project\GameObject\Enemy\IEnemy.h" />
-    <ClInclude Include="Project\Components\Camera\FollowCamera\FollowCamera.h" />
+    <ClInclude Include="Project\GameObject\Camera\FollowCamera\FollowCamera.h" />
     <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.h" />
-    <ClInclude Include="Project\Components\AimAssist\AimAssist.h" />
+    <ClInclude Include="Project\GameObject\AimAssist\AimAssist.h" />
     <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h" />
     <ClInclude Include="Engine\PostProcess\Dissolve.h" />
     <ClInclude Include="engine\PostProcess\Bloom.h" />
@@ -325,7 +307,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Components\3D\Primitive\IPrimitive.h" />
     <ClInclude Include="Engine\PostProcess\Outline.h" />
     <ClInclude Include="Engine\Utility\TimedCall.h" />
-    <ClInclude Include="Project\Components\Camera\RailCamera\RailCamera.h" />
+    <ClInclude Include="Project\GameObject\Camera\RailCamera\RailCamera.h" />
     <ClInclude Include="Project\GameObject\Enemy\Bullet\EnemyBullet.h" />
     <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.h" />
     <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.h" />
@@ -396,16 +378,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Pso\SkyboxPSO.h" />
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h" />
     <ClInclude Include="Project\GameObject\Score\Score.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Titan.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\RightHand.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWaitState.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.h" />
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.h" />
-    <ClInclude Include="Project\GameObject\Skydome.h" />
+    <ClInclude Include="Project\GameObject\Skydome\Skydome.h" />
     <ClInclude Include="Engine\Utility\Utility.h" />
-    <ClInclude Include="Project\GameObject\Player\ShotSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />

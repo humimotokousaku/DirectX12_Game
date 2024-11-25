@@ -52,6 +52,10 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void FixedTurret::Update() {
+	if (hp_ <= 0.0f) {
+		isDead_ = true;
+	}
+
 	// 状態遷移
 	state_->Update(this);
 }
@@ -62,17 +66,12 @@ void FixedTurret::Draw() {
 }
 
 void FixedTurret::OnCollision(Collider* collider) {
-	if (hp_ <= 0.0f) {
-		isDead_ = true;
-	}
-	else {
-		// 自機陣営に当たった場合のみダメージを受ける
-		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
-			hp_ = hp_ - collider->GetDamage();
+	// 自機陣営に当たった場合のみダメージを受ける
+	if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+		hp_ = hp_ - collider->GetDamage();
 
-			// 被弾時のパーティクルを生成
-			CreateHitParticle();
-		}
+		// 被弾時のパーティクルを生成
+		CreateHitParticle();
 	}
 }
 

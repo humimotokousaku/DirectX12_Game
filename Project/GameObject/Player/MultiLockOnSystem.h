@@ -37,6 +37,11 @@ public:
 	/// 
 private:// プライベートなメンバ関数
 	/// <summary>
+	/// 弾の発射処理
+	/// </summary>
+	void Shot();
+
+	/// <summary>
 	/// ロックオンの更新処理
 	/// </summary>
 	void LockOnUpdate();
@@ -82,10 +87,12 @@ private:// 定数
 private:// エンジン機能
 	// ポストエフェクト
 	PostEffectManager* postEffectManager_;
+	// オーディオ
+	Audio* audio_;
+	// 入力
+	Input* input_;
 
 private:
-	// ロックオン機能
-	AimAssist* aimAssist_;
 	// カメラのアドレス
 	Camera* camera_;
 	// 全ての敵
@@ -97,15 +104,16 @@ private:
 	Player* player_;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+
 	// 弾の見た目
 	Model* model_;
-
+	// 射撃SE
+	uint32_t shotSE_;
 
 	// マルチロックオンの情報
 	std::vector<MultiLockOnData> multiLockOnDatas_;
 	// ロックオンされている敵のID
-	std::vector<int> IDs_;
-
-	// 敵のIDリスト
+	std::vector<int> lockedEnemyIdList_;
+	// 全敵のIDリスト
 	std::vector<int> enemyIdList_;
 };

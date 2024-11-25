@@ -40,12 +40,6 @@ void EnemyManager::Initialize() {
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 
-	// 攻撃の警告
-	attackAlert_ = AttackAlert::GetInstance();
-	attackAlert_->Initialize();
-	attackAlert_->SetCamera(camera_);
-	attackAlert_->SetPlayer(player_);
-
 	cameraMoveVel_ = railCamera_->GetDirectionVelocity();
 	railCameraProgress_ = railCamera_->GetRailPercentage();
 }
@@ -104,9 +98,6 @@ void EnemyManager::Update() {
 	for (Particles* hitParticle : hitParticles_) {
 		hitParticle->Update();
 	}
-
-	// 攻撃の警告
-	attackAlert_->Update();
 }
 
 void EnemyManager::Draw() {
@@ -265,41 +256,6 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	spawnParticles_.push_back(particle);
 }
 
-void EnemyManager::SpawnTitan(Vector3 pos, Vector3 rotate) {
-	pos;
-	rotate;
-	//Titan* boss = new Titan();
-
-	//// 敵モデルを追加
-	//boss->AddModel(models_[0]);
-	//// 必要なアドレスを設定
-	//boss->SetPlayer(player_);
-	//boss->SetCamera(camera_);
-	//boss->SetEnemyManager(this);
-	//boss->SetParent(&followWorldTransform_);
-	//// 初期化
-	//// カメラの座標が中心なのでspawnPosはカメラとの距離
-	//boss->Initialize(pos, rotate, id_);
-	//// リストに登録
-	//enemy_.push_back(boss);
-
-	//// 管理番号リストに登録
-	//idList_.push_back(id_);
-
-	//// 管理番号更新
-	//id_++;
-
-	//// 出現時のパーティクルを生成
-	//Particles* particle = new Particles();
-	//particle->Initialize(boss->GetWorldPosition() + pos);
-	//particle->SetCamera(camera_);
-	//particle->SetEmitterFrequency(1);
-	//particle->SetEmitterCount(20);
-	//particle->SetEmitterSpawnCount(1);
-	//particle->randomScaleLimit = { 0.3f, 0.4f };
-	//spawnParticles_.push_back(particle);
-}
-
 bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 	// カメラの角度方向ベクトルに変換
 	Vector3 offset{ 0, 0, 1 };
@@ -335,7 +291,7 @@ void EnemyManager::CheckActiveState() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		// カメラの後ろなら敵の描画と機能停止
 		if (IsObjectInOppositeDirection(bullet->GetWorldPosition())) {
-			//bullet->SetIsDead(true);
+			bullet->SetIsDead(true);
 		}
 	}
 }

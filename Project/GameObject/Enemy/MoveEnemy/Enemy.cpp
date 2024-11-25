@@ -49,6 +49,10 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 }
 
 void Enemy::Update() {
+	if (hp_ <= 0.0f) {
+		isDead_ = true;
+	}
+
 	// Catmull-Romスプライン関数で補間された位置を取得
 	Vector3 pos{};
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
@@ -69,18 +73,13 @@ void Enemy::Draw() {
 }
 
 void Enemy::OnCollision(Collider* collider) {
-	if (hp_ <= 0.0f) {
-		isDead_ = true;
-	}
-	else {
-		// 自機陣営に当たった場合のみダメージを受ける
-		if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
-			// HPを減らす
-			hp_ = hp_ - collider->GetDamage();
+	// 自機陣営に当たった場合のみダメージを受ける
+	if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+		// HPを減らす
+		hp_ = hp_ - collider->GetDamage();
 
-			// 被弾時のパーティクルを生成
-			CreateHitParticle();
-		}
+		// 被弾時のパーティクルを生成
+		CreateHitParticle();
 	}
 }
 

@@ -1,8 +1,6 @@
 #pragma once
-#include "AttackAlert.h"
 #include "Audio.h"
 #include "BeamEnemy.h"
-#include "Boss/Titan/Titan.h"
 #include "Camera.h"
 #include "CollisionManager.h"
 #include "Enemy.h"
@@ -70,11 +68,6 @@ private:
 	/// <param name="pos">座標</param>
 	/// <param name="rotate">回転角</param>
 	void SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints);
-	/// <summary>
-	///	巨人の発生(ボス)
-	/// </summary>
-	/// <param name="pos">発生する座標</param>
-	void SpawnTitan(Vector3 pos, Vector3 rotate);
 
 	// カメラの後ろに敵が行ってしまったら機能停止
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
@@ -183,8 +176,6 @@ private:// プライベートなメンバ変数
 
 	// 敵
 	std::list<IEnemy*> enemys_;
-	// 攻撃の警告
-	AttackAlert* attackAlert_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
 	// 出現時のパーティクル

@@ -295,11 +295,8 @@
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Components\AimAssist\AimAssist.cpp">
+    <ClCompile Include="Project\GameObject\AimAssist\AimAssist.cpp">
       <Filter>Project\Components\AimAssist</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\AttackAlert.cpp">
-      <Filter>Project\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy</Filter>
@@ -370,9 +367,6 @@
     <ClCompile Include="Project\GameObject\Score\Score.cpp">
       <Filter>Project\GameObject\Score</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\ITitanState.cpp">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClCompile>
@@ -381,9 +375,6 @@
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.cpp">
       <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\IPart.cpp">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
     </ClCompile>
     <ClCompile Include="engine\Utility\LevelData.cpp">
       <Filter>Engine\Utility</Filter>
@@ -406,41 +397,17 @@
     <ClCompile Include="engine\Pso\PostEffect\PostEffectPSO.cpp">
       <Filter>Engine\Pso\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\LeftHand.cpp">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\RightHand.cpp">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.cpp">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.cpp">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanWaitState.cpp">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.cpp">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Player\Player.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Components\Camera\FollowCamera\FollowCamera.cpp">
+    <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp">
       <Filter>Project\Components\Camera\FollowCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Components\Camera\RailCamera\RailCamera.cpp">
+    <ClCompile Include="Project\GameObject\Camera\RailCamera\RailCamera.cpp">
       <Filter>Project\Components\Camera\RailCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.cpp">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Parts\PartsManager.cpp">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
     </ClCompile>
     <ClCompile Include="engine\PostProcess\RadialBlur.cpp">
       <Filter>Engine\PostProcess</Filter>
@@ -469,22 +436,18 @@
     <ClCompile Include="Engine\Math\Vector2.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Boss\Titan\Titan.cpp">
-      <Filter>Project\GameObject\Boss\Titan</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\IEnemy.cpp">
       <Filter>Project\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Project\Scene\IScene.cpp" />
-    <ClCompile Include="Project\GameObject\Skydome.cpp" />
+    <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp" />
     <ClCompile Include="Engine\Utility\Utility.cpp" />
     <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp" />
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.cpp" />
     <ClCompile Include="Project\GameSystem.cpp" />
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
     <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\ShotSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -706,39 +669,6 @@
     <ClInclude Include="Project\Collision\CollisionConfig.h">
       <Filter>Project\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\WeakPoint.h">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\IPart.h">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\LeftHand.h">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\PartsManager.h">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Parts\RightHand.h">
-      <Filter>Project\GameObject\Boss\Titan\Parts</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWeakPointState.h">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\ITitanState.h">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanBeamAttackState.h">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanHandAttackState.h">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\State\TitanWaitState.h">
-      <Filter>Project\GameObject\Boss\Titan\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Boss\Titan\Titan.h">
-      <Filter>Project\GameObject\Boss\Titan</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.h">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClInclude>
@@ -799,9 +729,6 @@
     <ClInclude Include="Project\GameObject\Player\Player.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\AttackAlert.h">
-      <Filter>Project\GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="project\scene\TitleScene.h">
       <Filter>Project\Scene</Filter>
     </ClInclude>
@@ -820,19 +747,19 @@
     <ClInclude Include="project\scene\IScene.h">
       <Filter>Project\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Components\AimAssist\AimAssist.h">
+    <ClInclude Include="Project\GameObject\AimAssist\AimAssist.h">
       <Filter>Project\Components\AimAssist</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Components\Camera\FollowCamera\FollowCamera.h">
+    <ClInclude Include="Project\GameObject\Camera\FollowCamera\FollowCamera.h">
       <Filter>Project\Components\Camera\FollowCamera</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Components\Camera\RailCamera\RailCamera.h">
+    <ClInclude Include="Project\GameObject\Camera\RailCamera\RailCamera.h">
       <Filter>Project\Components\Camera\RailCamera</Filter>
     </ClInclude>
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
       <Filter>Project\Components\SceneTransition</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Skydome.h" />
+    <ClInclude Include="Project\GameObject\Skydome\Skydome.h" />
     <ClInclude Include="Engine\Utility\Utility.h" />
     <ClInclude Include="Project\GameObject\Player\PlayerConfig.h" />
     <ClInclude Include="Project\Components\LevelManager\LevelManager.h" />
@@ -840,7 +767,6 @@
     <ClInclude Include="Project\GameSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\ShotSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

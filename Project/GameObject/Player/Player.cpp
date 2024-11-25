@@ -25,8 +25,6 @@ void Player::Initialize() {
 	aimAssist_ = AimAssist::GetInstance();
 
 #pragma region 読み込み
-	// 射撃SE
-	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 	TextureManager::GetInstance()->LoadTexture("DefaultTexture", "white.png");
@@ -226,9 +224,6 @@ void Player::Update() {
 	for (int i = 0; i < particles_.size(); i++) {
 		particles_[i]->Update();
 	}
-
-	// 音のこもり具合
-	audio_->SetMuffle(shotSE_, 1.0f);
 
 	// ImGui
 	ImGuiParameter();
@@ -460,7 +455,7 @@ void Player::Move() {
 		move.z += 1.0f;
 	}
 	// 回避
-	if (Input::GetInstance()->GamePadPress(XINPUT_GAMEPAD_A)) {
+	if (input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
 		evasion_.isActive = true;
 		evasionRotSpeedAnim_.ResetData();
 		evasionRotSpeedAnim_.SetIsStart(true);

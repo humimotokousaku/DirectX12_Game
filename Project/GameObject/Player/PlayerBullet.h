@@ -4,10 +4,11 @@
 #include "Object3D.h"
 #include "WorldTransform.h"
 
+class IEnemy;
+class Player;
 /// <summary>
 /// 自キャラの弾
 /// </summary>
-class IEnemy;
 class PlayerBullet{
 public: // メンバ関数
 
@@ -19,7 +20,7 @@ public: // メンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="pos">初期座標</param>
-	void Initialize(Model* model, const Vector3& pos, const Vector3& velocity, WorldTransform* enemyData);
+	void Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData);
 
 	/// <summary>
 	/// 更新
@@ -29,7 +30,6 @@ public: // メンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw();
 
 	///
@@ -53,6 +53,8 @@ public: // メンバ関数
 
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
+	// 自機のアドレス
+	void SetPlayer(Player* player) { player_ = player; }
 
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(Collider* collider);
@@ -61,6 +63,8 @@ private: // メンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;
 
+	// 自機のアドレス
+	Player* player_;
 	// カメラのアドレス
 	Camera* camera_;
 	// 衝突マネージャー
@@ -77,5 +81,4 @@ private: // メンバ変数
 	int32_t deathTimer_ = kLifeTime;
 	// 死亡フラグ
 	bool isDead_ = false;
-
 };

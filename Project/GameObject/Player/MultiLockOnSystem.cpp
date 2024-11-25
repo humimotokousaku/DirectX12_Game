@@ -3,88 +3,79 @@
 
 void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEnemy*> enemys, GameSystem* gameSystem, Model* model) {
 	postEffectManager_ = PostEffectManager::GetInstance();
+	audio_ = Audio::GetInstance();
+	input_ = Input::GetInstance();
 
 	player_ = player;
 	camera_ = camera;
 	enemys_ = enemys;
 	gameSystem_ = gameSystem;
 	model_ = model;
+
+	// 射撃SE
+	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
 }
 
 void MultiLockOnSystem::Update() {
 	// ロックオンの更新処理
 	LockOnUpdate();
 
+	// ロックオンレティクルのスプライト更新
 	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
 		for (IEnemy* obj : enemys_) {
 			// ロックオン対象外の敵ならスキップ
 			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
-
 			// ロックオンレティクルの座標更新
 			multiLockOnData.reticleSprite->SetPos(ConvertWorld2Screen(obj->GetWorldPosition()));
 		}
-
 		// アニメーションの更新
 		multiLockOnData.reticleAnim.Update();
 	}
 
-
-
-	// 弾ゲージが0以外で発射クールタイムが0のとき
-//if (bulletInterval_ <= 0 && bulletGauge_.value >= kDecrementBulletGauge) {
-	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-		if (multiLockOnData.isActive) { continue; }
-		multiLockOnData.isActive = true;
-		for (IEnemy* obj : enemys_) {
-			// ロックオン対象外の敵ならスキップ
-			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
-
-			// 弾の速度
-			const float kBulletSpeed = 5.0f;
-			Vector3 velocity(0, 0, kBulletSpeed);
-			// 自機の座標
-			Vector3 worldPos = player_->GetWorldPosition();
-
-			Matrix4x4 m = player_->GetWorldTransform()->matWorld_;
-			// 速度ベクトルを自機の向きに合わせて回転させる
-			velocity = TransformNormal(velocity, m);
-			// 自機から照準オブジェクトへのベクトル
-			Vector3 targetPos = obj->GetWorldPosition();
-			velocity = targetPos - worldPos;
-			velocity = Normalize(velocity);
-			velocity *= kBulletSpeed;
-
-			// 弾を生成し、初期化
-			PlayerBullet* newBullet = new PlayerBullet();
-			newBullet->SetCamera(camera_);
-			newBullet->Initialize(model_, worldPos, velocity, obj->GetWorldTransform());
-			// 弾を登録
-			gameSystem_->AddPlayerBullet(newBullet);
-
-			// 弾の発射間隔リセット
-			//bulletInterval_ = kBulletInterval;
-
-			// 弾ゲージを減少させる
-			//bulletGauge_.value -= kDecrementBulletGauge;
-
-			// 音の再生
-			//audio_->SoundPlayWave(shotSE_, false, 0.25f);
-
-			if (multiLockOnData.isActive) { break; }
-		}
-		if (multiLockOnData.isActive) { break; }
-	}
-	//}
-
-	//bulletInterval_--;
-	//// 0未満にならないようにする
-	//bulletInterval_ = std::clamp<int>(bulletInterval_, 0, kBulletInterval);
+	// 発射処理
+	Shot();
 }
 
 void MultiLockOnSystem::Draw() {
 	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
 		multiLockOnData.reticleSprite->Draw();
 	}
+}
+
+void MultiLockOnSystem::Shot() {
+	XINPUT_STATE joyState{};
+	// ゲームパッド状態取得
+	if (!input_->GetJoystickState(0, joyState)) { return; }
+
+	// RBトリガーを押すと発射
+	if (input_->GamePadTrigger(XINPUT_GAMEPAD_RIGHT_SHOULDER) || input_->PressKey(DIK_SPACE)) {
+		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
+			// 同じ敵を撃たないようにする
+			if (multiLockOnData.isActive) { continue; }
+			multiLockOnData.isActive = true;
+
+			// 弾を撃つ
+			for (IEnemy* obj : enemys_) {
+				// ロックオン対象外の敵ならスキップ
+				if (obj->GetId() != multiLockOnData.enemyId) { continue; }
+
+				// 弾を生成し、初期化
+				PlayerBullet* newBullet = new PlayerBullet();
+				newBullet->SetCamera(camera_);
+				newBullet->SetPlayer(player_);
+				newBullet->Initialize(model_, player_->GetWorldPosition(), obj->GetWorldTransform());
+
+				// 弾を登録
+				gameSystem_->AddPlayerBullet(newBullet);
+
+				// 音の再生
+				audio_->SoundPlayWave(shotSE_, false, 0.25f);
+			}
+		}
+	}
+
+	// 音のこもり具合
+	//audio_->SetMuffle(shotSE_, 1.0f);
 }
 
 void MultiLockOnSystem::LockOnUpdate() {
@@ -97,11 +88,11 @@ void MultiLockOnSystem::LockOnUpdate() {
 		// 画面内にいる
 		if (!IsObjectInScreen(obj->GetWorldPosition())) { continue; }
 		// ロックオンリストに登録しているなら処理を行わない
-		auto result = std::find(IDs_.begin(), IDs_.end(), obj->GetId());
-		if (result != IDs_.end()) {
+		auto result = std::find(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), obj->GetId());
+		if (result != lockedEnemyIdList_.end()) {
 			continue;
 		}
-		IDs_.push_back(obj->GetId());
+		lockedEnemyIdList_.push_back(obj->GetId());
 
 		// ロックオンリストに登録
 		// サイズを変更
@@ -129,23 +120,22 @@ void MultiLockOnSystem::LockOnUpdate() {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
 
 			// 画面内に敵がいない
-			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {
-				multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
+			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {				
 				// ロックオン対象のIDを消す
-				IDs_.erase(std::remove(IDs_.begin(), IDs_.end(), enemyItr->GetId()), IDs_.end());
+				lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), enemyItr->GetId()), lockedEnemyIdList_.end());
+				multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
 				break;
 			}
 		}
 	}
-
 	// 存在していない敵をロックオンしていたらロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
 		auto result = std::find(enemyIdList_.begin(), enemyIdList_.end(), multiLockOnDatas_[i].enemyId);
 		if (result != enemyIdList_.end()) {
 			continue;
 		}
+		lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), multiLockOnDatas_[i].enemyId), lockedEnemyIdList_.end());
 		multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
-		IDs_.erase(std::remove(IDs_.begin(), IDs_.end(), multiLockOnDatas_[i].enemyId), IDs_.end());
 	}
 }
 

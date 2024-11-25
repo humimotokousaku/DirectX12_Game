@@ -249,13 +249,6 @@ private:// プライベートなメンバ変数
 	uint32_t defaultTexture = 0u;
 #pragma endregion
 
-#pragma region 音
-	// 射撃SE
-	uint32_t shotSE_;
-
-	std::array<uint32_t, 3> dyingSE_;
-#pragma endregion
-
 #pragma region 他のクラスのアドレス
 	// カメラのアドレス
 	Camera* camera_;

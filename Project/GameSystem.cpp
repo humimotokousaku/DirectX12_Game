@@ -38,23 +38,23 @@ void GameSystem::Initialize() {
 	modelManager_->LoadModel("Level", "skydome.obj");
 
 	// 自機
-	AddModel(modelManager_->SetModel("", "Bob.obj"));
+	AddModel(modelManager_->GetModel("", "Bob.obj"));
 	// 3Dレティクル
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 自機の弾
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 通常敵のモデル
-	AddModel(modelManager_->SetModel("", "Spitfire.obj"));
+	AddModel(modelManager_->GetModel("", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel(modelManager_->SetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("", "block.obj"));
 	// 天球
-	AddModel(modelManager_->SetModel("Level", "skydome.obj"));
+	AddModel(modelManager_->GetModel("Level", "skydome.obj"));
 	// ブーストの炎
-	AddModel(modelManager_->SetModel("", "boostFire.obj"));
+	AddModel(modelManager_->GetModel("", "boostFire.obj"));
 
 	// Blender
-	levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
-	//levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
+	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
 	// スコアの生成
@@ -123,11 +123,6 @@ void GameSystem::Initialize() {
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
 	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList());
 
-	//shotSystem_ = std::make_unique<ShotSystem>();
-	//shotSystem_.Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList(), this, models_[2]);
-	//shotSystem_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
-
-
 	// 天球の生成
 	skydome_.Initialize(models_[5], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
 
@@ -180,11 +175,6 @@ void GameSystem::Update(int& sceneNum) {
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
 	multiLockOnSystem_->Update();
 
-	//shotSystem_.SetEnemyList(enemyManager_.GetEnemyList());
-	//shotSystem_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
-	//shotSystem_.Update();
-
-	//player_.SetMultiLockOnSystem(multiLockOnSystem_->GetLockOnPosLists());
 	// 自キャラの更新
 	player_.Update();
 	// 終了した弾を削除
@@ -217,7 +207,7 @@ void GameSystem::Update(int& sceneNum) {
 
 void GameSystem::Draw() {
 	// Blenderで配置したオブジェクト
-	//levelManager_->Draw();
+	levelManager_->Draw();
 
 	// 敵の体、弾を描画
 	enemyManager_.Draw();
