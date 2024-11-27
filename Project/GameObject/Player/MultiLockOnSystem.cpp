@@ -29,8 +29,10 @@ void MultiLockOnSystem::Update() {
 			// ロックオンレティクルの座標更新
 			multiLockOnData.reticleSprite->SetPos(ConvertWorld2Screen(obj->GetWorldPosition()));
 		}
-		// アニメーションの更新
-		multiLockOnData.reticleAnim.Update();
+		// レティクルアニメーションの更新
+		for (Animation& reticleAnim : multiLockOnData.reticleAnim) {
+			reticleAnim.Update();
+		}
 	}
 
 	// 発射処理
@@ -108,8 +110,12 @@ void MultiLockOnSystem::LockOnUpdate() {
 		multiLockOnDatas_[size].reticleSprite->SetPos(enemyPos);
 
 		// ロックオン時のレティクルのアニメーション
-		multiLockOnDatas_[size].reticleAnim.SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 6, Easings::EaseInExpo);
-		multiLockOnDatas_[size].reticleAnim.SetIsStart(true);
+		// レティクルの縮小
+		multiLockOnDatas_[size].reticleAnim[0].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{412.0f,412.0f }, Vector2{86.0f,86.0f}, 12, Easings::EaseOutCubic);
+		multiLockOnDatas_[size].reticleAnim[0].SetIsStart(true);
+		// レティクルの回転
+		multiLockOnDatas_[size].reticleAnim[1].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetRotateP(), Vector3{0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,M_PI / 2 }, 6, Easings::EaseInCubic);
+		multiLockOnDatas_[size].reticleAnim[1].SetIsStart(true);
 
 		// 敵の管理番号
 		multiLockOnDatas_[size].enemyId = obj->GetId();

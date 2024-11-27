@@ -11,7 +11,7 @@ class MultiLockOnSystem {
 public:// 構造体
 	struct MultiLockOnData {
 		std::shared_ptr<Sprite> reticleSprite;  // 2Dレティクル
-		Animation reticleAnim;					// ロックオン時のアニメーション
+		std::array<Animation, 2> reticleAnim;					// ロックオン時のアニメーション
 		int enemyId;
 		bool isActive;
 	};

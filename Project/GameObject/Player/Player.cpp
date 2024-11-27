@@ -159,7 +159,8 @@ void Player::Initialize() {
 #pragma region アニメーションの設定
 	// ロックオン時のレティクルのアニメーション
 	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, Easings::EaseInExpo);
-	// ロックオン時のレティクルのアニメーション
+
+	// ブースト時の自機回転アニメーション
 	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, Easings::EaseOutExpo);
 
 	// 回避時の移動速度のイージング
@@ -812,7 +813,6 @@ void Player::DeployLockOnReticle() {
 }
 
 void Player::ImGuiParameter() {
-#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -821,6 +821,7 @@ void Player::ImGuiParameter() {
 	object3dReticle_[1]->ImGuiParameter("Reticle1");
 	// 体力
 	ImGui::DragFloat("Hp", &hp_.value, 1.0f, 0.0f, 100.0f);
+	ImGui::DragFloat("bulletGauge:Value", &bulletGauge_.value, 1.0f, 0.0f, 100.0f);
 	ImGui::End();
 
 	/// jsonによる数値の変更
@@ -833,6 +834,8 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
+#ifdef _DEBUG
+	
 #endif
 }
 
