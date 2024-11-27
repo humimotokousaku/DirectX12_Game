@@ -43,6 +43,8 @@ public:
 
 	// 自機の弾を追加
 	void AddPlayerBullet(PlayerBullet* playerBullet) { playerBullets_.push_back(playerBullet); }
+	// 自機の弾リストを取得
+	std::list<PlayerBullet*> GetPlayerBulletList() { return playerBullets_; }
 
 private:
 	/// <summary>

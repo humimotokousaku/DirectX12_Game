@@ -86,6 +86,9 @@ private:// プライベートなメンバ関数
 	// 衝突判定
 	void OnCollision(Collider* collider);
 
+	// 軌道パーティクルの更新処理
+	void ParticleUpdate(Particle& particle);
+
 	/// <summary>
 	/// 自機の無敵状態の処理
 	/// </summary>
@@ -145,6 +148,8 @@ public:// GetterとSetter
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 	// 体のワールドトランスフォームを取得
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
+	// 弾ゲージの情報を取得
+	const GaugeData& GetBulletGauge() { return bulletGauge_; }
 	// カメラの移動幅
 	Vector3* GetCameraOffset_P() { return &cameraOffset_; }
 	// カメラの回転幅
@@ -234,6 +239,8 @@ private:// プライベートなメンバ変数
 	Animation evasionSpeedAnim_;
 	// 回避時の回転速度のアニメーション(イージングとして使用)
 	Animation evasionRotSpeedAnim_;
+	// 回避時の細かい座標調整
+	Animation evasionOffsetAnim_;
 	// 残像のα値のアニメーション
 	std::vector<Animation> evasionAlphaAnims_;
 #pragma endregion
@@ -254,8 +261,6 @@ private:// プライベートなメンバ変数
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameSystem* gameSystem_;
-	// マルチロックオンのアドレス
-	//MultiLockOnSystem* multiLockOnSystem_;
 	// エイムアシストのアドレス
 	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス

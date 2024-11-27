@@ -140,6 +140,7 @@ void Player::Initialize() {
 		particles_[i]->Initialize(GetWorldPosition());
 		particles_[i]->SetCamera(camera_);
 		particles_[i]->SetEmitterParent(&object3d_->worldTransform);
+		particles_[i]->SetParticleUpdate(std::bind(&Player::ParticleUpdate, this, std::placeholders::_1));
 		// 発生頻度
 		particles_[i]->SetEmitterFrequency(1.0f / 240.0f);
 		// 一度に発生する個数
@@ -165,6 +166,9 @@ void Player::Initialize() {
 	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{ 0.0f,0.0f }, kMaxEvasionFrame, Easings::EaseOutExpo);
 	// 回避時の回転速度のイージング
 	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, Easings::EaseOutExpo);
+	// 回避時の細かい座標調整
+	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, -0.2f ,0.0f }, 5, Easings::EaseOutExpo);
+	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.05f ,0.0f }, 20, Easings::EaseOutCubic);
 	// 残像のα値のアニメーション
 	evasionAlphaAnims_.resize(afterImageObject3d_.size());
 	evasion_.alphas.resize(evasionAlphaAnims_.size());
@@ -173,6 +177,7 @@ void Player::Initialize() {
 	}
 #pragma endregion
 
+	// ジャスト回避時の文字
 	justSprite_ = std::make_unique<Sprite>();
 	justSprite_->Initialize("Textures/UI", "guide_JUST.png");
 	justSprite_->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, 64.0f });
@@ -256,7 +261,7 @@ void Player::DrawUI() {
 	}
 
 	// 軌道
-	for (int i = 1; i < particles_.size(); i++) {
+	for (int i = 0; i < particles_.size(); i++) {
 		particles_[i]->Draw(defaultTexture);
 	}
 }
@@ -303,7 +308,9 @@ void Player::BoostUpdate(float moveZ) {
 	moveVel_.z += boost_.moveSpeed;
 
 	// 弾ゲージの増加量を適用
-	bulletGauge_.incrementValue = incrementValue;
+	if (!bulletGauge_.isMax) {
+		bulletGauge_.incrementValue = incrementValue;
+	}
 }
 
 void Player::EvasionUpdate(float rotateY, float rotateX) {
@@ -312,6 +319,11 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 
 	// 回避時の回転のイージングを更新
 	evasionRotSpeedAnim_.Update();
+	evasionOffsetAnim_.Update();
+
+	if (evasionOffsetAnim_.GetIsEnd()) {
+		evasion_.offset = { 0,0,0 };
+	}
 
 	// 回避中でなければ終了
 	if (!evasion_.isActive) {
@@ -357,6 +369,7 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 
 	// イージングが終了したら初期化
 	if (evasionSpeedAnim_.GetIsEnd()) {
+		evasionOffsetAnim_.SetIsStart(true);
 		// 残像を消す
 		for (int i = 0; i < afterImageObject3d_.size(); i++) {
 			// アニメーション情報初期化
@@ -526,7 +539,7 @@ void Player::Move() {
 	object3d_->worldTransform.rotate.z = rotateVel_.z + boost_.rotVelZ + evasion_.rotVel.z;
 	// 速度を自機に加算
 	object3d_->worldTransform.translate.x += moveVel_.x;
-	object3d_->worldTransform.translate.y += moveVel_.y;
+	object3d_->worldTransform.translate.y += moveVel_.y + evasion_.offset.y;
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
 
@@ -641,6 +654,10 @@ void Player::OnCollision(Collider* collider) {
 	DecrementHP();
 }
 
+void Player::ParticleUpdate(Particle& particle) {
+
+}
+
 void Player::InvinsibleUpdate() {
 	if (!isInvinsible_) { return; }
 
@@ -700,6 +717,17 @@ void Player::DecrementHP() {
 }
 
 void Player::BulletGaugeUpdate() {
+	// 最大になったらマルチロックオン機能を利用可能にする
+	// 弾ゲージが減りつつづける
+	if (bulletGauge_.value >= kMaxBulletGauge) {
+		bulletGauge_.isMax = true;
+		bulletGauge_.incrementValue = kDecrementBulletGauge;
+	}
+	// 弾ゲージが0になったら時はマルチロックオンできない
+	if(bulletGauge_.value <= 0) {
+		bulletGauge_.isMax = false;
+	}
+
 	// 弾ゲージを増加させる
 	bulletGauge_.value += bulletGauge_.incrementValue;
 	// 0未満にならないようにする
@@ -710,7 +738,7 @@ void Player::BulletGaugeUpdate() {
 }
 
 void Player::DeadAnimation() {
-	if (isDead_) { return; }
+	//if (isDead_) { return; }
 }
 
 void Player::Deploy3DReticle() {

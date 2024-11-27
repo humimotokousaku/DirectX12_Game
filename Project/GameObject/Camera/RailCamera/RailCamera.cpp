@@ -18,7 +18,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = false;
+	isMove_ = true;
 
 	// アドレスを代入
 	isBoost_ = player_->GetIsBoost_P();
@@ -62,10 +62,10 @@ void RailCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
+
+#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
-#ifdef _DEBUG
-
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();

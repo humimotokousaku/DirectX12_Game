@@ -40,9 +40,9 @@ const Vector2 kMaxBulletGaugeSize = { 250.0f, 16.0f };
 // 弾ゲージの最大値
 const float kMaxBulletGauge = 100;
 // 弾ゲージの増加量
-const float kIncrementBulletGauge = 0.05f;
+const float kIncrementBulletGauge = 0.1f;
 // 弾ゲージの減少量
-const float kDecrementBulletGauge = 2.0f;
+const float kDecrementBulletGauge = -0.2f;
 // 弾ゲージの倍率
 const float kMagnificationBulletGauge = 2.0f;
 #pragma endregion
@@ -79,6 +79,8 @@ struct EvasionData {
 	Vector3 rotVel;
 	// 回避速度
 	Vector2 moveSpeed;
+	// 座標の補正
+	Vector3 offset;
 	// 回避の経過時間[frame]
 	int frame = kMaxEvasionFrame;
 	// ジャスト回避の経過時間[frame]
@@ -100,25 +102,11 @@ struct EvasionData {
 };
 // ゲージの情報
 struct GaugeData {
-	float value;			// 値
+	Sprite sprite;			// ゲージの描画
+	Vector2 size;			// ゲージの大きさ
 	float incrementValue;	// ゲージの上昇量
 	float magnification;	// ゲージの上昇倍率
-	Vector2 size;			// ゲージの大きさ
-	Sprite sprite;			// ゲージの描画
+	float value;			// 値
+	bool isMax;				// ゲージが最大までたまっているか
 };
-//struct MultiLockOnData {
-//	std::shared_ptr<Sprite> reticleSprite;  // 2Dレティクル
-//	Animation reticleAnim;					// ロックオン時のアニメーション
-//	WorldTransform* worldTransform;			// ロックオン対象の3D座標
-//	int enemyId;
-//	bool isActive;
-//
-//	bool operator==(MultiLockOnData& other) {
-//		return reticleSprite == other.reticleSprite &&
-//			worldTransform == other.worldTransform &&
-//			enemyId == other.enemyId &&
-//			isActive == other.isActive &&
-//			reticleAnim == other.reticleAnim;
-//	}
-//};
 #pragma endregion

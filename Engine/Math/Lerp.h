@@ -20,6 +20,8 @@ namespace Lerps {
 };
 
 namespace Easings {
+	float EaseInOutSine(float t);
+
 #pragma region Quint
 
 	// だんだん減速(ぎりぎりまで速度が速い)

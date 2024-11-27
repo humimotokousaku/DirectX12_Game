@@ -94,12 +94,14 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	std::list<IEnemy*> GetEnemyList() { return enemys_; }
+	std::list<IEnemy*>* GetEnemyList_P() { return &enemys_; }
 
 	/// <summary>
 	/// 現在存在している敵の管理番号
 	/// </summary>
 	/// <returns></returns>
 	std::vector<int> GetIdList() { return idList_; }
+	std::vector<int>* GetIdList_P() { return &idList_; }
 #pragma endregion
 
 #pragma region Setter

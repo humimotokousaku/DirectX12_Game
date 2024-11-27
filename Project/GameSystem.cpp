@@ -114,14 +114,12 @@ void GameSystem::Initialize() {
 	player_.SetIsLockOn(aimAssist_->GetIsLockOn());
 	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
 #pragma endregion
-
-
-
-
+	
+	// マルチロックオン機能
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
-	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList(), this, models_[2]);
-	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
-	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList());
+	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_[2]);
+	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList_P());
+	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList_P());
 
 	// 天球の生成
 	skydome_.Initialize(models_[5], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
@@ -167,12 +165,9 @@ void GameSystem::Update(int& sceneNum) {
 	enemyManager_.Update();
 
 	// 敵のリストを保存
-	aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
-
+	//aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
 
 	// マルチロックオン
-	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList());
-	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList());
 	multiLockOnSystem_->Update();
 
 	// 自キャラの更新

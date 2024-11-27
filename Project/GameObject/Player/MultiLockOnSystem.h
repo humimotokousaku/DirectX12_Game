@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Player* player, Camera* camera, std::list<IEnemy*> enemys, GameSystem* gameSystem, Model* model);
+	void Initialize(Player* player, Camera* camera, std::list<IEnemy*>* enemys, GameSystem* gameSystem, Model* model);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -68,17 +68,11 @@ private:// プライベートなメンバ関数
 	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
 
 public:// GetterとSetter
-	// ロックオンされている敵の座標を取得
-	std::vector<MultiLockOnData> GetLockOnPosLists() { return multiLockOnDatas_; }
-
-	// 弾リストを取得
-	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
-
 	// 全敵のアドレスを設定
-	void SetEnemyList(std::list<IEnemy*> enemys) { enemys_ = enemys; }
+	void SetEnemyList(std::list<IEnemy*>* enemys) { enemys_ = enemys; }
 
 	// 全敵のIDを設定
-	void SetEnemyIdList(std::vector<int> enemyIdList) { enemyIdList_ = enemyIdList; }
+	void SetEnemyIdList(std::vector<int>* enemyIdList) { enemyIdList_ = enemyIdList; }
 
 private:// 定数
 	// 同時ロックオン可能数
@@ -96,14 +90,11 @@ private:
 	// カメラのアドレス
 	Camera* camera_;
 	// 全ての敵
-	std::list<IEnemy*> enemys_;
-
+	std::list<IEnemy*>* enemys_;
 	// ゲームシステム
 	GameSystem* gameSystem_;
 	// 自機
 	Player* player_;
-	// 弾
-	std::list<PlayerBullet*> bullets_;
 
 	// 弾の見た目
 	Model* model_;
@@ -115,5 +106,5 @@ private:
 	// ロックオンされている敵のID
 	std::vector<int> lockedEnemyIdList_;
 	// 全敵のIDリスト
-	std::vector<int> enemyIdList_;
+	std::vector<int>* enemyIdList_;
 };

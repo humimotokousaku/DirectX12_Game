@@ -1,11 +1,12 @@
 #include "MultiLockOnSystem.h"
 #include "GameSystem.h"
 
-void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEnemy*> enemys, GameSystem* gameSystem, Model* model) {
+void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEnemy*>* enemys, GameSystem* gameSystem, Model* model) {
+	// シングルトンを種痘
 	postEffectManager_ = PostEffectManager::GetInstance();
 	audio_ = Audio::GetInstance();
 	input_ = Input::GetInstance();
-
+	// アドレスを取得
 	player_ = player;
 	camera_ = camera;
 	enemys_ = enemys;
@@ -22,7 +23,7 @@ void MultiLockOnSystem::Update() {
 
 	// ロックオンレティクルのスプライト更新
 	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-		for (IEnemy* obj : enemys_) {
+		for (IEnemy* obj : *enemys_) {
 			// ロックオン対象外の敵ならスキップ
 			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
 			// ロックオンレティクルの座標更新
@@ -43,19 +44,16 @@ void MultiLockOnSystem::Draw() {
 }
 
 void MultiLockOnSystem::Shot() {
-	XINPUT_STATE joyState{};
-	// ゲームパッド状態取得
-	if (!input_->GetJoystickState(0, joyState)) { return; }
-
 	// RBトリガーを押すと発射
-	if (input_->GamePadTrigger(XINPUT_GAMEPAD_RIGHT_SHOULDER) || input_->PressKey(DIK_SPACE)) {
-		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-			// 同じ敵を撃たないようにする
-			if (multiLockOnData.isActive) { continue; }
-			multiLockOnData.isActive = true;
+	if (input_->GamePadTrigger(XINPUT_GAMEPAD_RIGHT_SHOULDER) || input_->TriggerKey(DIK_SPACE)) {
+		// 弾ゲージが最大でなければ弾を撃てない
+		if (!player_->GetBulletGauge().isMax) { return; }
+		// 自機の弾が一つもないときに弾を撃てる
+		if (gameSystem_->GetPlayerBulletList().size() != 0) {return;}
 
-			// 弾を撃つ
-			for (IEnemy* obj : enemys_) {
+		// ロックオンリストに登録されている敵に向けて撃つ
+		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
+			for (IEnemy* obj : *enemys_) {
 				// ロックオン対象外の敵ならスキップ
 				if (obj->GetId() != multiLockOnData.enemyId) { continue; }
 
@@ -64,12 +62,13 @@ void MultiLockOnSystem::Shot() {
 				newBullet->SetCamera(camera_);
 				newBullet->SetPlayer(player_);
 				newBullet->Initialize(model_, player_->GetWorldPosition(), obj->GetWorldTransform());
-
 				// 弾を登録
 				gameSystem_->AddPlayerBullet(newBullet);
 
 				// 音の再生
 				audio_->SoundPlayWave(shotSE_, false, 0.25f);
+
+				multiLockOnData.isActive = true;
 			}
 		}
 	}
@@ -80,7 +79,9 @@ void MultiLockOnSystem::Shot() {
 
 void MultiLockOnSystem::LockOnUpdate() {
 	// ロックオンする敵かを検出
-	for (IEnemy* obj : enemys_) {
+	for (IEnemy* obj : *enemys_) {
+		// 弾ゲージが最大でなければ敵をロックオンリストに追加しない
+		if (!player_->GetBulletGauge().isMax) { break; }
 		// ロックオン数が最大数に達していない場合のみ追加
 		if (multiLockOnDatas_.size() >= kMaxLockOnNum) { continue; }
 		// 自機の正面方向に敵がいないならreturn
@@ -116,7 +117,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 
 	// ロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
-		for (IEnemy* enemyItr : enemys_) {
+		for (IEnemy* enemyItr : *enemys_) {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
 
 			// 画面内に敵がいない
@@ -130,8 +131,8 @@ void MultiLockOnSystem::LockOnUpdate() {
 	}
 	// 存在していない敵をロックオンしていたらロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
-		auto result = std::find(enemyIdList_.begin(), enemyIdList_.end(), multiLockOnDatas_[i].enemyId);
-		if (result != enemyIdList_.end()) {
+		auto result = std::find(enemyIdList_->begin(), enemyIdList_->end(), multiLockOnDatas_[i].enemyId);
+		if (result != enemyIdList_->end()) {
 			continue;
 		}
 		lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), multiLockOnDatas_[i].enemyId), lockedEnemyIdList_.end());

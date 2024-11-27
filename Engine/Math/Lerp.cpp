@@ -123,8 +123,11 @@ namespace Lerps {
 }
 
 namespace Easings {
-#pragma region Cubic
+	float EaseInOutSine(float t) {
+		return std::sin((float)std::numbers::pi * t);
+	}
 
+#pragma region Cubic
 	float EaseInCubic(float x) {
 		return x * x * x;
 	}
@@ -145,7 +148,6 @@ namespace Easings {
 #pragma endregion
 
 #pragma region Quint
-
 	// だんだん早くなる(一気に早くなる)
 	float EaseInQuint(float x) {
 		return x * x * x * x * x;
