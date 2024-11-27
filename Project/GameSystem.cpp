@@ -164,9 +164,6 @@ void GameSystem::Update(int& sceneNum) {
 	// エネミーマネージャ
 	enemyManager_.Update();
 
-	// 敵のリストを保存
-	//aimAssist_->SetEnemyList(enemyManager_.GetEnemyList());
-
 	// マルチロックオン
 	multiLockOnSystem_->Update();
 
