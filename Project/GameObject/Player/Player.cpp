@@ -99,7 +99,7 @@ void Player::Initialize() {
 	sprite2DReticle_[2].Initialize("", "lockOnReticle.png");
 	for (int i = 0; i < 3; i++) {
 		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
-		PostEffectManager::GetInstance()->AddSpriteList(&sprite2DReticle_[i]);
+		//PostEffectManager::GetInstance()->AddSpriteList(&sprite2DReticle_[i]);
 	}
 #pragma endregion
 
@@ -262,7 +262,7 @@ void Player::DrawUI() {
 	}
 
 	// 軌道
-	for (int i = 0; i < particles_.size(); i++) {
+	for (int i = 1; i < particles_.size(); i++) {
 		particles_[i]->Draw(defaultTexture);
 	}
 }
@@ -813,7 +813,8 @@ void Player::DeployLockOnReticle() {
 }
 
 void Player::ImGuiParameter() {
-	object3d_->ImGuiParameter("Player");
+#ifdef _DEBUG
+		object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
 	// レティクルの情報
@@ -834,8 +835,6 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
-#ifdef _DEBUG
-	
 #endif
 }
 
