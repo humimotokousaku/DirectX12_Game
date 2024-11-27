@@ -167,8 +167,8 @@ void Player::Initialize() {
 	// 回避時の回転速度のイージング
 	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, Easings::EaseOutExpo);
 	// 回避時の細かい座標調整
-	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, -0.2f ,0.0f }, 5, Easings::EaseOutExpo);
-	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.05f ,0.0f }, 20, Easings::EaseOutCubic);
+	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, -0.1f ,0.0f }, 5, Easings::EaseOutExpo);
+	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.05f ,0.0f }, 15, Easings::EaseOutCubic);
 	// 残像のα値のアニメーション
 	evasionAlphaAnims_.resize(afterImageObject3d_.size());
 	evasion_.alphas.resize(evasionAlphaAnims_.size());

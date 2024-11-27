@@ -115,7 +115,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 		multiLockOnDatas_[size].enemyId = obj->GetId();
 	}
 
-	// ロックオンリストから削除
+#pragma region ロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
 		for (IEnemy* enemyItr : *enemys_) {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
@@ -129,8 +129,15 @@ void MultiLockOnSystem::LockOnUpdate() {
 			}
 		}
 	}
-	// 存在していない敵をロックオンしていたらロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
+		// 弾ゲージが最大でなければロックオンリストをクリア
+		if (!player_->GetBulletGauge().isMax) {
+			multiLockOnDatas_.clear();
+			lockedEnemyIdList_.clear();
+			break;
+		}
+
+		// 存在していない敵をロックオンしていたらロックオンリストから削除
 		auto result = std::find(enemyIdList_->begin(), enemyIdList_->end(), multiLockOnDatas_[i].enemyId);
 		if (result != enemyIdList_->end()) {
 			continue;
@@ -138,6 +145,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 		lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), multiLockOnDatas_[i].enemyId), lockedEnemyIdList_.end());
 		multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
 	}
+#pragma endregion
 }
 
 Vector2 MultiLockOnSystem::ConvertWorld2Screen(Vector3 worldPos) {
