@@ -33,9 +33,9 @@ void EnemyManager::Initialize() {
 	score_ = Score::GetInstance();
 
 	// テクスチャの読み込み
-	textureManager_->LoadTexture("DefaultTexture", "white.png");
+	textureManager_->LoadTexture("Textures/DefaultTexture", "white.png");
 	textureManager_->LoadTexture("Textures", "hitParticle.png");
-	spawnParticleTex_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
+	spawnParticleTex_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
 	hitParticleTex_ = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
@@ -92,11 +92,11 @@ void EnemyManager::Update() {
 
 	// 出現時のパーティクル
 	for (Particles* particle : spawnParticles_) {
-		particle->Update();
+		//particle->Update();
 	}
 	// 被弾時のパーティクル
 	for (Particles* hitParticle : hitParticles_) {
-		hitParticle->Update();
+		//hitParticle->Update();
 	}
 }
 

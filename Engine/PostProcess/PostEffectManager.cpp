@@ -44,17 +44,25 @@ void PostEffectManager::Initialize() {
 	bloomData_.threshold = 0.3f;
 	bloom_->SetBloomData(bloomData_);
 	postEffect_.push_back(bloom_);
+	// Vigneting
+	vigneting_ = new Vigneting();
+	vigneting_->Initialize();
+	renderTexture_.push_back(vigneting_->GetRenderTexture());
+	vignetingData_.isActive = true;
+	vignetingData_.scale = 16.0f;
+	vigneting_->SetVignetingData(vignetingData_);
+	postEffect_.push_back(vigneting_);
 }
 
 void PostEffectManager::PreDraw() {
 	postEffect_[NORMAL]->PreDrawScene();
-
 }
 
 void PostEffectManager::PostDraw() {
 	radialBlur_->SetRadialBlurData(radialBlurData_);
 	gauss_->SetGaussData(gaussData_);
 	bloom_->SetBloomData(bloomData_);
+	vigneting_->SetVignetingData(vignetingData_);
 
 	postEffect_[NORMAL]->PostDrawScene();
 	for (int i = 0; i < COUNT - 1; i++) {

@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Player.h"
 #include "WorldTransform.h"
+#include "GameTime.h"
 
 class EnemyBullet {
 public:// パブリックなメンバ関数
@@ -19,7 +20,7 @@ public:// パブリックなメンバ関数
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="pos">初期座標</param>
-	void Initialize(Model* model, const Vector3& pos, const Vector3& velocity);
+	void Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData);
 
 	/// <summary>
 	/// 更新
@@ -62,6 +63,15 @@ public:// パブリックなメンバ関数
 	// 角度
 	Vector3 GetRotation();
 
+public:// 定数
+	// 弾が最初にぶ方向
+	const Vector3 kFirstVelocity = { 0.0f,0.0f,1.0f };
+	// 弾の速度
+	const float kBulletSpeed = 2.5f;
+
+	// 追従の精度
+	const float kFollowRate = 0.03f;
+
 private: // プライベートなメンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;
@@ -73,13 +83,18 @@ private: // プライベートなメンバ変数
 	// 衝突マネージャー
 	CollisionManager* collisionManager_ = nullptr;
 
+	// 弾を撃つ敵のワールドトランスフォーム
+	WorldTransform* enemyData_;
+
+	// 速度
+	Vector3 velocity_;
+
+	Vector3 pos_;
+
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 3;
 	// 死亡タイマー
 	int32_t deathTimer_ = kLifeTime;
 	// 弾の有無
 	bool isDead_ = false;
-
-	// 速度
-	Vector3 velocity_;
 };

@@ -2,7 +2,7 @@
 #include "EnemyStateWait.h"
 #include "EnemyStateApproach.h"
 #include "CollisionConfig.h"
-#include "EnemyManager.h" 
+#include "EnemyManager.h"
 
 Enemy::Enemy() {
 	object3d_ = std::make_unique<Object3D>();
@@ -58,7 +58,7 @@ void Enemy::Update() {
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
 	object3d_->worldTransform.translate = pos;
 	// 進行度を進める
-	t_ += 0.005f;
+	t_ += kMoveSpeed * GameTimer::GetInstance()->GetTimeScale();
 
 	// 状態遷移
 	state_->Update(this);
@@ -107,7 +107,7 @@ void Enemy::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->SetCamera(camera_);
 	newBullet->SetPlayer(player_);
-	newBullet->Initialize(models_[1], GetWorldPosition(), velocity);
+	newBullet->Initialize(models_[1], GetWorldPosition(), GetWorldTransform());
 
 	// 弾を登録
 	enemyManager_->AddEnemyBullet(newBullet);

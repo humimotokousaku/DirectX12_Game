@@ -56,6 +56,10 @@ public:
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 #pragma endregion
 
+public:// 定数
+	// 移動速度
+	const float kMoveSpeed = 0.005f;
+
 private:
 	// 敵のテクスチャ
 	uint32_t enemyTexture_;

@@ -21,7 +21,7 @@ void TextureManager::Initialize(SrvManager* srvManager) {
 	srvManager_ = srvManager;
 	textureDatas_.reserve(DirectXCommon::kMaxSRVCount);
 	// モデルを読み込んだ際にテクスチャがないなら白い画像を送る
-	LoadTexture("DefaultTexture/white.png");
+	LoadTexture("Textures/DefaultTexture/white.png");
 }
 
 void TextureManager::Finalize() {
@@ -169,7 +169,7 @@ uint32_t TextureManager::GetSrvIndex(const std::string& filePath) {
 	TextureData& textureData = textureDatas_["Engine/resources/" + filePath];
 	// 何も書いてないならデフォルトテクスチャの番号を返す
 	if (filePath.size() == 0) {
-		textureData = textureDatas_["Engine/resources/DefaultTexture/white.png"];
+		textureData = textureDatas_["Engine/resources/Textures/DefaultTexture/white.png"];
 	}
 	return textureData.srvIndex;
 }
@@ -186,7 +186,7 @@ uint32_t TextureManager::GetSrvIndex(const std::string& directoryPath, const std
 	TextureData& textureData = textureDatas_[filePath];
 	// 何も書いてないならデフォルトテクスチャの番号を返す
 	if (fileName.size() == 0) {
-		textureData = textureDatas_["Engine/resources/DefaultTexture/white.png"];
+		textureData = textureDatas_["Engine/resources/Textures/DefaultTexture/white.png"];
 	}
 	return textureData.srvIndex;
 }

@@ -28,6 +28,9 @@ void WorldTransform::UpdateMatrix() {
 		matWorld_ = Multiply(matWorld_, parent_->matWorld_);
 	}
 
+	// ワールド座標を更新
+	worldPos = GetWorldPosition();
+
 	TransferMatrix();
 }
 

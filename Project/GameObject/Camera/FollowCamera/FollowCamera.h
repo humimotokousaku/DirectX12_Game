@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Player.h"
+#include "Shake.h"
 
 class FollowCamera {
 public:
@@ -14,9 +15,15 @@ public:
 	/// </summary>
 	void Update();
 
+	/// <summary>
+	/// 被弾時の更新処理
+	/// </summary>
+	void HitUpdate();
+
 	// 追従対象からのオフセットを計算する
 	Vector3 TargetOffset() const;
 
+#pragma region Setter
 	// 親子関係を設定
 	void SetParent(const WorldTransform* target) {
 		camera_->worldTransform_.parent_ = target;
@@ -26,10 +33,14 @@ public:
 
 	void SetCameraRotateOffset(Vector3* rotateOffset) { rotateOffset_ = rotateOffset; }
 
+	//void SetCameraShakeOffset(Vector3* shakeOffset) { shakeOffset_ = shakeOffset; }
+
 	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
 
 	void SetFov(float* fov) { fov_ = fov; }
+#pragma endregion
 
+#pragma region Getter
 	/// <summary>
 	/// カメラのアドレスを取得
 	/// </summary>
@@ -51,6 +62,7 @@ public:
 		};
 		return result;
 	}
+#pragma endregion
 
 public:
 	// カメラ補間の精度
@@ -62,8 +74,15 @@ private:
 	// 自機のアドレス
 	Player* player_;
 
+	// ダメージ時に揺らす
+	Shake* hitShake_;
+	// 被弾時のカメラの揺れる範囲
+	Animation shakeRangeAnim_;
+
 	Vector3* offset_;
 	Vector3* rotateOffset_;
+	// 揺れの補正値
+	Vector3 shakeOffset_;
 
 	Vector3 playerPos_;
 	Vector3 interTarget_;

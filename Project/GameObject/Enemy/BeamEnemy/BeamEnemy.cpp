@@ -66,10 +66,10 @@ void BeamEnemy::Update() {
 	pos = Lerps::CatmullRomSpline(controlPoints_, t_);
 	object3d_->worldTransform.translate = pos;
 	// 進行度を進める
-	t_ += 0.005f;
+	t_ += kMoveSpeed * GameTimer::GetInstance()->GetTimeScale();
 
 	// ビームを回転させる
-	beamObject_->worldTransform.rotate.y += 0.1f;
+	beamObject_->worldTransform.rotate.y += 0.1f * GameTimer::GetInstance()->GetTimeScale();
 
 	object3d_->worldTransform.UpdateMatrix();
 }

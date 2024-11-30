@@ -56,7 +56,7 @@ void DirectionalLight::Initialize() {
 	directionalLightData_->intensity = 4.0f;
 }
 
-void DirectionalLight::ImGuiAdjustParameter() {
+void DirectionalLight::ImGuiParameter() {
 	ImGui::SliderFloat3("DirectionalLighting.direction", &directionalLightData_->direction.x, -1, 1);
 	ImGui::ColorEdit3("DirectionalLighting.color", &directionalLightData_->color.x);
 	ImGui::SliderFloat("DirectionalLighting.intensity", &directionalLightData_->intensity, 0, 10);

@@ -41,6 +41,10 @@ private:// プライベートなメンバ関数
 	/// 自機が回避状態の時のカメラ処理
 	/// </summary>
 	void EvasionUpdate();
+	/// <summary>
+	/// 自機がジャスト回避状態の時のカメラ処理
+	/// </summary>
+	void JustEvasionUpdate();
 
 	// カメラの進行状況をリセット
 	void Reset();
@@ -86,9 +90,11 @@ public:// パブリックなメンバ変数
 	static const size_t segmentCount = 500;
 
 	// 加速中のfov増加量の最大値
-	const float kMaxBoostFovIncrease = 30.0f;
-	// 回避中のfov増加長の最大値
-	const float kMaxEvasionFovIncrease = -3.0f;
+	float kMaxBoostFovIncrease = 30.0f;
+	// 回避中のfov増加量の最大値
+	float kMaxEvasionFovIncrease = -3.0f;
+	// ジャスト回避時のfov増加量の最大値
+	float kMaxJustEvasionFovIncrease = -15.0f;
 
 private:
 	// カメラ
@@ -100,6 +106,8 @@ private:
 	Animation boostFovAnim_;
 	// 回避時のFovアニメーション
 	Animation evasionFovAnim_;
+	// ジャスト回避時のFovアニメーション
+	Animation justEvasionFovAnim_;
 
 	// スプライン曲線制御点（通過点）
 	std::vector<Vector3> controlPoints_;
@@ -114,6 +122,8 @@ private:
 	float boostFov_;
 	// 回避中のfovの増加量
 	float evasionFov_;
+	// ジャスト回避中のfovの増加量
+	float justEvasionFov_;
 
 	// 注視点の座標
 	Vector3 target_;

@@ -48,17 +48,22 @@ const float kMagnificationBulletGauge = 2.0f;
 #pragma endregion
 
 // 弾の発射間隔[frame]
-const int kBulletInterval = 5;
+const float kBulletInterval = 5;
 
 // 無敵時間[frame]
-const int kMaxInvinsibleFrame = 60;
+const float kMaxInvinsibleFrame = 60;
 
 // 残像を表示する時間[frame]
-const int kMaxEvasionFrame = 15;
+const float kMaxEvasionFrame = 15;
 // ジャスト回避開始時間[frame]
-const int kStartEvasionJustFrame = 0;
+const float kStartEvasionJustFrame = 0;
 // ジャスト回避猶予時間[frame]
-const int kMaxEvasionJustFrame = 15;
+const float kMaxEvasionJustFrame = 15;
+
+// 死亡演出の時間
+const float kMaxDeadAnimationFrame = 240;
+// 死亡演出時のヒットストップ時間
+const float kMaxDeadHitStopFrame = 33;
 #pragma endregion
 
 #pragma region 構造体
@@ -70,21 +75,31 @@ struct BoostData {
 	float moveSpeed;
 	// 加速モード
 	bool isActive = false;
+
+	// 全ての情報初期化
+	void Reset() {
+		// ブースト中の自機の回転
+		rotVelZ = 0.0f;
+		// ブースト時の移動速度
+		moveSpeed = 0.0f;
+		// 加速モード
+		isActive = false;
+	}
 };
 // 回避時の情報
 struct EvasionData {
-	// 回避した瞬間の移動ベクトル
-	Vector2 moveVel;
 	// 回避した瞬間の回転ベクトル
 	Vector3 rotVel;
-	// 回避速度
-	Vector2 moveSpeed;
 	// 座標の補正
 	Vector3 offset;
+	// 回避速度
+	Vector2 moveSpeed;
+	// 回避方向
+	Vector2 direction;
 	// 回避の経過時間[frame]
-	int frame = kMaxEvasionFrame;
+	float curretFrame = kMaxEvasionFrame;
 	// ジャスト回避の経過時間[frame]
-	int justFrame = kMaxEvasionJustFrame;
+	float justFrame = kMaxEvasionJustFrame;
 	// 回避モード
 	bool isActive = false;
 	// ジャスト回避中か
@@ -92,6 +107,29 @@ struct EvasionData {
 	// 残像のα値
 	std::vector<float> alphas;
 
+	// 全ての情報初期化
+	void Reset() {
+		// 回避した瞬間の回転ベクトル
+		rotVel = { 0,0,0 };
+		// 座標の補正
+		offset = { 0,0,0 };
+		// 回避速度
+		moveSpeed = { 0,0 };
+		// 回避方向
+		direction = { 0,0 };
+		// 回避の経過時間[frame]
+		curretFrame = kMaxEvasionFrame;
+		// ジャスト回避の経過時間[frame]
+		justFrame = kMaxEvasionJustFrame;
+		// 回避モード
+		isActive = false;
+		// ジャスト回避中か
+		isJust = false;
+		// 残像のα値
+		for (float& alpha : alphas) {
+			alpha = 0.0f;
+		}
+	}
 	// ジャスト回避の情報のみ初期化
 	void JustDataReset() {
 		// ジャスト回避の経過時間[frame]
@@ -108,5 +146,13 @@ struct GaugeData {
 	float magnification;	// ゲージの上昇倍率
 	float value;			// 値
 	bool isMax;				// ゲージが最大までたまっているか
+};
+// ゲームオーバー時の演出
+struct DeadAnimationData {
+	Animation animation;// 死亡アニメーション
+	Vector3 velocity;	// 速度
+	Vector3 rotate;		// 回転
+	float currentFrame = kMaxDeadAnimationFrame; // 経過時間
+	bool isEnd;			// アニメーションが終了している
 };
 #pragma endregion

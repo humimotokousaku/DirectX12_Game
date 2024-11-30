@@ -104,7 +104,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 
 		// ロックオンスプライトを作成
 		multiLockOnDatas_[size].reticleSprite = std::make_shared<Sprite>();
-		multiLockOnDatas_[size].reticleSprite->Initialize("", "lockOnReticle.png");
+		multiLockOnDatas_[size].reticleSprite->Initialize("Textures", "lockOnReticle.png");
 		// 敵の座標にロックオンレティクルを設置
 		Vector2 enemyPos = ConvertWorld2Screen(obj->GetWorldPosition());
 		multiLockOnDatas_[size].reticleSprite->SetPos(enemyPos);

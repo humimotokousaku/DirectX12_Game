@@ -3,6 +3,7 @@
 #include "CollisionManager.h"
 #include "Object3D.h"
 #include "WorldTransform.h"
+#include "GameTime.h"
 
 class IEnemy;
 class Player;
@@ -78,7 +79,7 @@ private: // メンバ変数
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 1000;
 	// 死亡タイマー
-	int32_t deathTimer_ = kLifeTime;
+	float deathTimer_ = kLifeTime;
 	// 死亡フラグ
 	bool isDead_ = false;
 };

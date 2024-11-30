@@ -24,7 +24,7 @@ public:
 
 	void Initialize();
 
-	void ImGuiAdjustParameter();
+	void ImGuiParameter();
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetSpotLightResource() { return spotLightResource_.Get(); }
 	void SetSpotLightResource(const Microsoft::WRL::ComPtr<ID3D12Resource>& spotLightResource) { spotLightResource_ = spotLightResource.Get(); }

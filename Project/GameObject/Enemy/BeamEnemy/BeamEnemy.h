@@ -52,7 +52,10 @@ public:
 
 public:// 定数
 	// 初期のビームのサイズ
-	const Vector3 kDefaultBeamSize = { 1.0f, 50.0f, 1.0f };
+	const Vector3 kDefaultBeamSize = { 2.0f, 50.0f, 2.0f };
+
+	// 移動速度
+	const float kMoveSpeed = 0.005f;
 
 private:
 	// ビーム攻撃

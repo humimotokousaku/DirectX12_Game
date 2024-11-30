@@ -3,6 +3,7 @@
 #include "CollisionManager.h"
 #include "SceneTransition/SceneTransition.h"
 #include "LevelManager.h"
+#include "GameTime.h"
 
 class GameManager : public Framework
 {	
@@ -52,5 +53,8 @@ private:
 
 	// 衝突マネージャー
 	CollisionManager* collisionManager_;
+
+	// ゲームタイマー
+	GameTimer* gameTimer_;
 };
 

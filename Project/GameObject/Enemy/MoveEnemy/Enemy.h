@@ -66,6 +66,10 @@ public:
 	void SetParent(const WorldTransform* parent) { object3d_->worldTransform.parent_ = parent; }
 #pragma endregion
 
+public:// 定数
+	// 移動速度
+	const float kMoveSpeed = 0.005f;
+
 private:
 	// 敵のテクスチャ
 	uint32_t enemyTexture_;

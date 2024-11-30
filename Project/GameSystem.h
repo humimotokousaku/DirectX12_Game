@@ -18,6 +18,14 @@
 /// </summary>
 class GameSystem {
 public:
+	// 演出の状態
+	enum EffectState {
+		Normal,
+		JustEvasion,
+		Boost
+	};
+
+public:
 	GameSystem() = default;
 	~GameSystem();
 
@@ -46,6 +54,12 @@ public:
 	// 自機の弾リストを取得
 	std::list<PlayerBullet*> GetPlayerBulletList() { return playerBullets_; }
 
+	/// <summary>
+	/// 演出の状態を設定
+	/// </summary>
+	/// <param name="effectState">演出の状態</param>
+	void SetEffectState(int effectState) { effectState_ = effectState; }
+
 private:
 	/// <summary>
 	/// シーン切り替えの条件
@@ -53,8 +67,18 @@ private:
 	/// <param name="sceneNum">シーン番号</param>
 	void SceneChange(int& sceneNum);
 
+	// 画面演出やライトの演出
+	void EffectUpdate();
+
 	// モデル追加
 	void AddModel(Model* model) { models_.push_back(model); }
+
+public:// 定数
+	// 暗転時のポイントライトの減衰率
+	float kMaxPointLightDecay = 16.0f;
+
+	// ラジアルブラーの強さ
+	float kBlurStrength = 0.01f;
 
 private:// エンジン機能
 	TextureManager* textureManager_;
@@ -94,4 +118,12 @@ private:// プライベートなメンバ変数
 
 	// BGM
 	uint32_t BGM_;
+
+	// ポイントライトの減衰率
+	float lightDecay_;
+	// ブラーの強さ
+	float blurStrength_;
+
+	// 演出の状態
+	int effectState_ = Normal;
 };

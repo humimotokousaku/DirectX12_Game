@@ -145,7 +145,7 @@ void Particles::Draw(uint32_t textureHandle) {
 
 		if (numInstance < kNumMaxInstance) {
 			// WVPとworldMatrixの計算
-			Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);
+			Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate + emitter_.transform.worldPos);
 			instancingData_[numInstance].World = Multiply(worldMatrix, Multiply(camera_->GetViewProjection().matView, camera_->GetViewProjection().matProjection));
 			instancingData_[numInstance].WVP = instancingData_[numInstance].World;
 			++numInstance;
@@ -156,8 +156,6 @@ void Particles::Draw(uint32_t textureHandle) {
 
 		++particleIterator;
 	}
-
-	camera_->Update();
 
 	// コマンドを積む
 	// RootSignatureを設定。PSOに設定しているけど別途設定が必要
@@ -189,7 +187,7 @@ Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& t
 	// 座標
 	std::uniform_real_distribution<float> distribution(randomTranslateLimit.min, randomTranslateLimit.max);
 	Vector3 randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
-	particle.transform.translate = translate + randomTranslate;
+	particle.transform.translate = /*translate + */randomTranslate;
 	// 速度
 	std::uniform_real_distribution<float> distVelX(randomVelLimit[0].min, randomVelLimit[0].max);
 	std::uniform_real_distribution<float> distVelY(randomVelLimit[1].min, randomVelLimit[1].max);
@@ -230,20 +228,11 @@ Particle Particles::MakeNewParticle(const Vector3& translate) {
 
 std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
-	// ランダムの場合
-	//if (emitter.isRandom) {
+
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		//particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
 		particles.push_back(MakeNewParticle(randomEngine, GetEmitterWorldPosition()));
 	}
 	return particles;
-	//}
-
-	/*for (uint32_t count = 0; count < emitter.count; ++count) {
-		particle_.transform.translate = emitter_.transform.translate;
-		particles.push_back(particle_);
-	}*/
-	//return particles;
 }
 
 Vector3 Particles::KelvinToRGB(int kelvin) {
@@ -279,11 +268,6 @@ Vector3 Particles::KelvinToRGB(int kelvin) {
 	color.z = blue / 255.0f;
 
 	return color;
-}
-
-// 線形補完
-Vector3 Particles::Lerp(const Vector3& v1, const Vector3& v2, float t) {
-	return  Add(v1, Multiply(t, Subtract(v2, v1)));
 }
 
 Matrix4x4 Particles::AffineMatrix(const Vector3& scale, const Matrix4x4& rotateMatrix, const Vector3& translate) {

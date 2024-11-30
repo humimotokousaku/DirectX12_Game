@@ -1,8 +1,11 @@
 #include "Animation.h"
 #include "WinApp.h"
 #include "Lerp.h"
+#include <algorithm>
 
 Animation::Animation() {
+	// ゲームタイマーのインスタンス取得
+	gameTimer_ = GameTimer::GetInstance();
 	isStart_ = false;
 	animId_ = 0;
 }
@@ -49,7 +52,10 @@ void Animation::Update() {
 							*targetPtr = Lerps::Lerp(std::get<float>(it->start), std::get<float>(it->end), it->t);
 						}
 						}, (*it).target);
-					it->currentFrame++;
+					it->currentFrame += gameTimer_->GetTimeScale();
+
+					// アニメーション時間の上限を超えないようにする
+					//it->currentFrame = std::clamp<float>(it->currentFrame, 0, it->endFrame);
 				}	
 			}
 		}
@@ -64,7 +70,7 @@ void Animation::Update() {
 	}
 }
 
-void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
+void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 		target,
 		0,
@@ -89,7 +95,7 @@ void Animation::SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, i
 	animId_++;
 }
 
-void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
+void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 	target,
 	0,
@@ -116,7 +122,7 @@ void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, floa
 	animData_.front() = animData;
 }
 
-void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc) {
+void Animation::AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc) {
 	AnimData animData = {
 	target,
 	0,

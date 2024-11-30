@@ -27,7 +27,7 @@ void SpotLight::Initialize() {
 	spotLightData_->cosFalloffStart = std::cos(std::numbers::pi_v<float> / 3.0f);
 }
 
-void SpotLight::ImGuiAdjustParameter() {
+void SpotLight::ImGuiParameter() {
 	ImGui::DragFloat3("spotLighting.pos", &spotLightData_->pos.x,0.1f, -100, 100);
 	ImGui::DragFloat("spotLighting.cosAngle", &spotLightData_->cosAngle,0.01f, 0, 6.28f);
 	ImGui::DragFloat("spotLighting.cosFalloffStart", &spotLightData_->cosFalloffStart, 0.01f, 0, 6.28f);

@@ -11,8 +11,10 @@ Object3D::~Object3D() {
 }
 
 void Object3D::Initialize() {
+	// モデル生成
 	worldTransform.Initialize();
 	model_ = new Model();
+	// デバッグ用
 	sphere_ = std::make_unique<Sphere>();
 	sphere_->Initialize();
 

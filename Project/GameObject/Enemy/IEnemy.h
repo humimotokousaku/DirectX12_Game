@@ -2,6 +2,7 @@
 #include "CollisionManager.h"
 #include "MathStructs.h"
 #include "Player.h"
+#include "GameTime.h"
 
 class EnemyManager;
 class IEnemy {
@@ -138,8 +139,12 @@ protected:
 	// エネミーマネージャ
 	EnemyManager* enemyManager_ = nullptr;
 
-	// 死亡フラグ
-	bool isDead_ = false;
+	// 移動用スプライン曲線制御点（通過点）
+	std::vector<Vector3> controlPoints_;
+	// 線分で描画する用の頂点リスト
+	std::vector<Vector3> pointsDrawing_;
+	// 移動ルートの線(デバッグ用)
+	std::array<std::unique_ptr<Line>, 10> line_;
 
 	// 体力
 	float hp_ = 100;
@@ -163,17 +168,11 @@ protected:
 	// 移動ルートの進行度
 	float t_;
 
-	// 移動用スプライン曲線制御点（通過点）
-	std::vector<Vector3> controlPoints_;
-	// 線分で描画する用の頂点リスト
-	std::vector<Vector3> pointsDrawing_;
-	// 移動ルートの線(デバッグ用)
-	std::array<std::unique_ptr<Line>, 10> line_;
-
 	// カメラの後ろ側にいるなら描画と機能を停止
 	// falseなら機能停止
 	bool isActive_ = true;
-
 	// ロックオンのできる敵か
 	bool isLockOnAvailable_ = true;
+	// 死亡フラグ
+	bool isDead_ = false;
 };

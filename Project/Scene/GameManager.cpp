@@ -21,6 +21,9 @@ void GameManager::Initialize() {
 	// 衝突マネージャーを作成
 	collisionManager_ = CollisionManager::GetInstance();
 
+	// ゲームタイマーの生成
+	gameTimer_ = GameTimer::GetInstance();
+
 	//初期シーンの設定
 	sceneNum_ = TITLE_SCENE;
 	// シーンごとの初期化
@@ -34,6 +37,9 @@ void GameManager::Initialize() {
 void GameManager::Update() {
 	Framework::Update();
 
+	// ゲームタイマー
+	gameTimer_->Update();
+
 	// シーン切り替えの演出
 	sceneTransition_->Update();
 
@@ -43,6 +49,9 @@ void GameManager::Update() {
 
 	// シーン変更チェック
 	if (sceneNum_ != preSceneNum_) {
+		// ポイントライトを初期化
+		PointLight::GetInstance()->Reset();
+
 		// Blenderで読み込んだオブジェクトを初期化
 		levelManager_->Finalize();
 

@@ -25,7 +25,7 @@ public:
 
 	void Initialize();
 
-	void ImGuiAdjustParameter();
+	void ImGuiParameter();
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;

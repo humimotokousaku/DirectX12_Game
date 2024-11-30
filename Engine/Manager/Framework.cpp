@@ -1,7 +1,6 @@
 #include "Framework.h"
 #include "ConvertString.h"
 #include "GlobalVariables.h"
-#include "GameTime.h"
 
 Framework::Framework() {
 
@@ -48,6 +47,9 @@ void Framework::Initialize() {
 	// 入力(キーボードとゲームパッド)
 	input_ = Input::GetInstance();
 	input_->Initialize();
+	// Audioの初期化
+	Audio::GetInstance()->Initialize();
+
 	// ライトの設定
 	directionalLight_ = DirectionalLight::GetInstance();
 	directionalLight_->Initialize();
@@ -57,27 +59,24 @@ void Framework::Initialize() {
 	// スポットライト
 	spotLight_ = SpotLight::GetInstance();
 	spotLight_->Initialize();
-	// Audioの初期化
-	Audio::GetInstance()->Initialize();
 }
 
 void Framework::Update() {
-	GameTimer::GetInstance()->Tick();
+	pointLight_->Update();
+
 #ifdef _DEBUG
-	ImGui::Begin("Light");
-	if (ImGui::TreeNode("PointLight")) {
-		pointLight_->ImGuiAdjustParameter();
+		if (ImGui::TreeNode("PointLight")) {
+		pointLight_->ImGuiParameter();
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("DirectinalLight")) {
-		directionalLight_->ImGuiAdjustParameter();
+		directionalLight_->ImGuiParameter();
 		ImGui::TreePop();
 	}
 	if (ImGui::TreeNode("SpotLight")) {
-		spotLight_->ImGuiAdjustParameter();
+		spotLight_->ImGuiParameter();
 		ImGui::TreePop();
 	}
-	ImGui::End();
 #endif
 }
 

@@ -78,8 +78,8 @@ void FixedTurret::OnCollision(Collider* collider) {
 void FixedTurret::Move() {
 	// Catmull-Romスプライン関数で補間された位置を取得
 	if (targetT_ <= 1.0f) {
-		targetT_ += 0.002f;
-		t_ = targetT_ - 0.001f;
+		targetT_ += kMoveSpeed * GameTimer::GetInstance()->GetTimeScale();
+		t_ = targetT_ - 0.001f * GameTimer::GetInstance()->GetTimeScale();
 	}
 	// 注視点を曲線に沿って移動
 	target_ = Lerps::CatmullRomSpline(controlPoints_, targetT_);
@@ -144,7 +144,7 @@ void FixedTurret::Fire() {
 	EnemyBullet* newBullet = new EnemyBullet();
 	newBullet->SetCamera(camera_);
 	newBullet->SetPlayer(player_);
-	newBullet->Initialize(models_[1], GetWorldPosition(), velocity);
+	newBullet->Initialize(models_[1], GetWorldPosition(), GetWorldTransform());
 
 	// 弾を登録
 	enemyManager_->AddEnemyBullet(newBullet);

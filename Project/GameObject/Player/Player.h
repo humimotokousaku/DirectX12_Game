@@ -10,6 +10,9 @@
 #include "PlayerBullet.h"
 #include "PlayerConfig.h"
 #include "Sprite.h"
+#include "GameTime.h"
+#include "Shake.h"
+#include "HitSystem.h"
 #include <map>
 #include <tuple>
 
@@ -46,6 +49,23 @@ public:// パブリックなメンバ関数
 	/// 
 private:// プライベートなメンバ関数
 	/// <summary>
+	/// キーボードとコントローラーの入力処理
+	/// </summary>
+	void InputUpdate(Vector3& move, Vector3& rotate);
+	/// <summary>
+	/// 移動処理
+	/// </summary>
+	void Move();
+	/// <summary>
+	/// レティクルの配置、移動の処理
+	/// </summary>
+	void Aim();
+	/// <summary>
+	/// 攻撃処理
+	/// </summary>
+	void Attack();
+
+	/// <summary>
 	/// 加速中の更新処理
 	/// </summary>
 	/// <param name="moveZ">Z方向の移動ベクトル</param>
@@ -68,26 +88,11 @@ private:// プライベートなメンバ関数
 	/// <returns></returns>
 	bool IsJustEvasionFrame();
 
-#pragma region 入力処理
-	/// <summary>
-	/// 移動処理
-	/// </summary>
-	void Move();
-	/// <summary>
-	/// レティクルの配置、移動の処理
-	/// </summary>
-	void Aim();
-	/// <summary>
-	/// 攻撃処理
-	/// </summary>
-	void Attack();
-#pragma endregion
-
 	// 衝突判定
 	void OnCollision(Collider* collider);
 
-	// 軌道パーティクルの更新処理
-	void ParticleUpdate(Particle& particle);
+	// ジャスト回避時のパーティクルの更新処理
+	void JustParticleUpdate(Particle& particle);
 
 	/// <summary>
 	/// 自機の無敵状態の処理
@@ -134,15 +139,15 @@ private:// プライベートなメンバ関数
 public:// GetterとSetter
 #pragma region Getter
 	// 3Dレティクルの座標
-	Vector3 GetWorld3DReticlePosition(int index);
+	const Vector3& GetWorld3DReticlePosition(int index);
 	// ロックオンされてない3Dレティクルの座標
-	Vector3 GetDefault3DReticlePosition();
+	const Vector3& GetDefault3DReticlePosition();
 	// 死亡フラグを取得
-	bool GetIsDead() { return isDead_; }
+	const bool& GetIsDead() { return isDead_; }
 	// ワールド座標
-	Vector3 GetWorldPosition();
+	const Vector3& GetWorldPosition();
 	// 角度
-	Vector3 GetRotation();
+	const Vector3& GetRotation();
 
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
@@ -150,6 +155,10 @@ public:// GetterとSetter
 	const WorldTransform* GetWorldTransform() { return &object3d_->worldTransform; }
 	// 弾ゲージの情報を取得
 	const GaugeData& GetBulletGauge() { return bulletGauge_; }
+	// 回避時の情報を取得
+	const EvasionData& GetEvasionData() { return evasion_; }
+	// 死亡演出時の情報を取得
+	const DeadAnimationData& GetDeadAnimationData() { return deadAnim_; }
 	// カメラの移動幅
 	Vector3* GetCameraOffset_P() { return &cameraOffset_; }
 	// カメラの回転幅
@@ -158,8 +167,11 @@ public:// GetterとSetter
 	Vector3* GetMoveVel_P() { return &moveVel_; }
 	// 加速モードかを取得
 	bool* GetIsBoost_P() { return &boost_.isActive; }
+	bool GetIsBoost() { return boost_.isActive; }
 	// 回避中かを取得
-	bool GetIsEvasion() { return evasion_.isActive; }
+	const bool& GetIsEvasion() { return evasion_.isActive; }
+	// 被弾演出中かを取得
+	const bool& GetIsHit() { return hitSystem_->GetIsHit(); }
 #pragma endregion
 
 #pragma region Setter
@@ -192,6 +204,8 @@ public:// GetterとSetter
 #pragma endregion
 
 private:// プライベートなメンバ変数
+	// ゲームタイマー
+	GameTimer* gameTimer_;
 	// キーボード入力
 	Input* input_ = nullptr;
 	// 音
@@ -218,7 +232,11 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Sprite> justSprite_;
 
 	// 自機の軌道パーティクル
-	std::array<std::unique_ptr<Particles>, 3> particles_;
+	std::array<std::unique_ptr<Particles>, 2> particles_;
+	// 死亡時のパーティクル
+	std::unique_ptr<Particles> deadParticle_;
+	// ジャスト回避時のパーティクル
+	std::unique_ptr<Particles> justEvasionParticle_;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
@@ -229,6 +247,12 @@ private:// プライベートなメンバ変数
 
 	// ロックオンしていないときのレティクル座標
 	WorldTransform default3dReticle_;
+
+	// ジャスト回避の判定
+	std::unique_ptr<Collider> justEvasionCollider_;
+
+	// 被弾時の演出
+	std::unique_ptr<HitSystem> hitSystem_;
 
 #pragma region アニメーション
 	// ロックオン時のアニメーション
@@ -243,6 +267,8 @@ private:// プライベートなメンバ変数
 	Animation evasionOffsetAnim_;
 	// 残像のα値のアニメーション
 	std::vector<Animation> evasionAlphaAnims_;
+	// やられアニメーション
+	DeadAnimationData deadAnim_;
 #pragma endregion
 
 #pragma region テクスチャ
@@ -254,6 +280,8 @@ private:// プライベートなメンバ変数
 	uint32_t playerTexture_ = 0u;
 	// パーティクルテクスチャ
 	uint32_t defaultTexture = 0u;
+	// 死亡パーティクルのテクスチャ
+	uint32_t deadParticleTexture = 0u;
 #pragma endregion
 
 #pragma region 他のクラスのアドレス
@@ -280,6 +308,9 @@ private:// プライベートなメンバ変数
 	// レティクルの移動速度
 	Vector3 reticleMoveVel_;
 
+	// 被弾時の自機の角度
+	Vector3 hitRotate_;
+
 	// ロックオン時のレティクルの補間量
 	Vector3* lockOnReticleOffset_;
 	// カメラの移動
@@ -293,11 +324,9 @@ private:// プライベートなメンバ変数
 	GaugeData bulletGauge_;
 
 	// 無敵時間
-	int invinsibleFrame_;
+	float invinsibleFrame_;
 	// ロックオン時のレティクルのサイズ変更に使用するframe
 	int currentFrame_;
-	// 弾の発射間隔
-	int bulletInterval_;
 
 	// ロックオン
 	bool* isLockOn_;
@@ -306,6 +335,6 @@ private:// プライベートなメンバ変数
 	// 死亡フラグ
 	bool isDead_ = true;
 
-
-	int frame_;
+	// ジャスト回避の演出時間
+	float frame_;
 };

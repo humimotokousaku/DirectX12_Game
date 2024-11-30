@@ -448,6 +448,10 @@
     <ClCompile Include="Project\GameSystem.cpp" />
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
     <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp" />
+    <ClCompile Include="Engine\PostProcess\Vigneting.cpp" />
+    <ClCompile Include="Engine\Pso\PostEffect\VignetingPSO.cpp" />
+    <ClCompile Include="Engine\Utility\Shake.cpp" />
+    <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -767,6 +771,10 @@
     <ClInclude Include="Project\GameSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
+    <ClInclude Include="Engine\PostProcess\Vigneting.h" />
+    <ClInclude Include="Engine\Pso\PostEffect\VignetingPSO.h" />
+    <ClInclude Include="Engine\Utility\Shake.h" />
+    <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -854,5 +862,6 @@
     <FxCompile Include="Engine\resources\sharder\PostEffectTestVS.hlsl">
       <Filter>Resources\Sharder</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\VignetingPS.hlsl" />
   </ItemGroup>
 </Project>

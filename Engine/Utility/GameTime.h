@@ -3,45 +3,34 @@
 
 class GameTimer {
 public:
+    // シングルトン
     static GameTimer* GetInstance();
 
-    GameTimer() {
-        m_StartTime = std::chrono::high_resolution_clock::now();
-        m_LastTime = m_StartTime;
-        m_DeltaTime = 0.0;
-    }
-
-    void Reset() {
-        m_StartTime = std::chrono::high_resolution_clock::now();
-        m_LastTime = m_StartTime;
-        m_DeltaTime = 0.0;
-    }
-
-    void Tick() {
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> delta = currentTime - m_LastTime;
-        m_DeltaTime = delta.count();
-        m_LastTime = currentTime;
-    }
-
-    float GetDeltaTime() const {
-        return m_DeltaTime * coefficient;
-    }
-
-    float GetTotalTime() const {
-        std::chrono::duration<float> totalTime = std::chrono::high_resolution_clock::now() - m_StartTime;
-        return totalTime.count();
-    }
+    // コンストラクタ
+    GameTimer() = default;
+    // デストラクタ
+    ~GameTimer() = default;
 
     /// <summary>
-    /// ゲーム速度を設定(1がデフォルト)使用すると少しずつ重くなるのでまだ使えない
+    /// 初期化
     /// </summary>
-    /// <param name="gameSpeed">時間の速さ</param>
-    void SetDeltaTimeMultiply(float gameSpeed) { coefficient = gameSpeed * 60.0f; };
+    void Initialize();
+    /// <summary>
+    /// 更新処理
+    /// </summary>
+    void Update();
+
+#pragma region Setter
+    // 時間の速さを設定
+    void SetTimeScale(float timeScale) { timeScale_ = timeScale; }
+#pragma endregion
+
+#pragma region Getter
+    // 時間の速さを取得
+    float GetTimeScale() { return timeScale_; }
+#pragma endregion
 
 private:
-    std::chrono::high_resolution_clock::time_point m_StartTime;
-    std::chrono::high_resolution_clock::time_point m_LastTime;
-    float m_DeltaTime;
-    float coefficient = 60.0f;
+    // 時間の速さ[1がデフォ]
+    float timeScale_ = 1.0f;
 };

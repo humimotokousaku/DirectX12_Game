@@ -1,6 +1,7 @@
 #include "GameSystem.h"
 #include "SceneTransition/SceneTransition.h"
 #include "IScene.h"
+#include "PointLight.h"
 
 GameSystem::~GameSystem() {
 	// 自機の弾
@@ -21,7 +22,7 @@ void GameSystem::Initialize() {
 
 #pragma region 読み込み
 	// テクスチャの読み込み
-	textureManager_->LoadTexture("", "reticle.png");
+	textureManager_->LoadTexture("Textures", "reticle.png");
 	textureManager_->LoadTexture("Textures", "Bob_Red.png");
 	textureManager_->LoadTexture("Textures", "Spitfire_Purple.png");
 
@@ -30,27 +31,27 @@ void GameSystem::Initialize() {
 	audio_->SoundPlayWave(BGM_, true, 0.1f);
 
 	// 使用するモデルの読み込み
-	modelManager_->LoadModel("", "block.obj");
-	modelManager_->LoadModel("", "Bob.obj");
-	modelManager_->LoadModel("", "Spitfire.obj");
-	modelManager_->LoadModel("", "boostFire.obj");
+	modelManager_->LoadModel("Models", "block.obj");
+	modelManager_->LoadModel("Models", "Bob.obj");
+	modelManager_->LoadModel("Models", "Spitfire.obj");
+	modelManager_->LoadModel("Models", "boostFire.obj");
 	modelManager_->LoadModel("Level", "tail.obj");
 	modelManager_->LoadModel("Level", "skydome.obj");
 
 	// 自機
-	AddModel(modelManager_->GetModel("", "Bob.obj"));
+	AddModel(modelManager_->GetModel("Models", "Bob.obj"));
 	// 3Dレティクル
-	AddModel(modelManager_->GetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("Models", "block.obj"));
 	// 自機の弾
-	AddModel(modelManager_->GetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("Models", "block.obj"));
 	// 通常敵のモデル
-	AddModel(modelManager_->GetModel("", "Spitfire.obj"));
+	AddModel(modelManager_->GetModel("Models", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel(modelManager_->GetModel("", "block.obj"));
+	AddModel(modelManager_->GetModel("Models", "block.obj"));
 	// 天球
 	AddModel(modelManager_->GetModel("Level", "skydome.obj"));
 	// ブーストの炎
-	AddModel(modelManager_->GetModel("", "boostFire.obj"));
+	AddModel(modelManager_->GetModel("Models", "boostFire.obj"));
 
 	// Blender
 	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
@@ -114,7 +115,7 @@ void GameSystem::Initialize() {
 	player_.SetIsLockOn(aimAssist_->GetIsLockOn());
 	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
 #pragma endregion
-	
+
 	// マルチロックオン機能
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
 	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_[2]);
@@ -193,6 +194,9 @@ void GameSystem::Update(int& sceneNum) {
 	// ステージBGM
 	//audio_->SetMuffle(BGM_, 1.0f);
 
+	// ポストエフェクトや暗転などの処理
+	EffectUpdate();
+
 	// シーン切り替えの条件
 	SceneChange(sceneNum);
 }
@@ -232,7 +236,7 @@ void GameSystem::SceneChange(int& sceneNum) {
 		SceneTransition::GetInstance()->Start();
 	}
 	// ゲームオーバ条件
-	if (player_.GetIsDead()) {
+	if (player_.GetDeadAnimationData().isEnd) {
 		SceneTransition::GetInstance()->Start();
 	}
 
@@ -246,5 +250,77 @@ void GameSystem::SceneChange(int& sceneNum) {
 	// ゲームオーバ条件
 	if (player_.GetIsDead()) {
 		sceneNum = GAMEOVER_SCENE;
+	}
+}
+
+void GameSystem::EffectUpdate() {
+	// 演出の状態を決定する
+	effectState_ = Normal;
+
+	// ジャスト回避中
+	if (player_.GetEvasionData().isJust) {
+		effectState_ = JustEvasion;
+	}
+	// 加速中
+	else if (player_.GetIsBoost()) {
+		effectState_ = Boost;
+	}
+	// 自機が死んでいるとき
+	else if (player_.GetIsDead()) {
+		effectState_ = Normal;
+	}
+
+	// 演出を切り替える
+	switch (effectState_) {
+	case Normal:
+		// ライトの減衰率を戻す
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		PointLight::GetInstance()->SetDecay(lightDecay_);
+
+		// ラジアルブラーをけす
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 1.0f, 0.5f);
+		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
+		if (blurStrength_ <= 0.0f) {
+			PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
+		}
+
+		// コントローラーの振動を消す
+		Input::GetInstance()->GamePadVibration(0, 0, 0);
+
+		// 時間の速さを戻す
+		GameTimer::GetInstance()->SetTimeScale(1.0f);
+		break;
+	case JustEvasion:
+		// 暗転
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.1f);
+		PointLight::GetInstance()->SetDecay(lightDecay_);
+
+		// ラジアルブラーをかける
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
+
+		// コントローラーを振動させる
+		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
+
+		// 時間の速さを遅くする
+		GameTimer::GetInstance()->SetTimeScale(0.1f);
+		break;
+	case Boost:
+		// ライトの減衰率を戻す
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		PointLight::GetInstance()->SetDecay(lightDecay_);
+
+		// ラジアルブラーをかける
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
+
+		// コントローラーを振動させる
+		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
+
+		// 時間の速さを戻す
+		GameTimer::GetInstance()->SetTimeScale(1.0f);
+		break;
 	}
 }

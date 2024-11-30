@@ -14,8 +14,8 @@ void Sphere::Initialize() {
 	textureManager_ = TextureManager::GetInstance();
 
 	// テクスチャの読み込み
-	textureManager_->LoadTexture("DefaultTexture", "white.png");
-	defaultTexture_ = textureManager_->GetSrvIndex("DefaultTexture", "white.png");
+	textureManager_->LoadTexture("Textures/DefaultTexture", "white.png");
+	defaultTexture_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
 
 	CreateVertexResource();
 

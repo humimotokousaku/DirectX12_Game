@@ -2,6 +2,8 @@
 #include "RailCamera.h"
 #include "Matrix4x4.h"
 #include "ImGuiManager.h"
+#include "PlayerConfig.h"
+#include "PostEffectManager.h"
 
 void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) {
 	player_ = player;
@@ -15,8 +17,12 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	boostFovAnim_.SetAnimData(&boostFov_, 0.0f, kMaxBoostFovIncrease, 10, Easings::EaseOutBack);
 	// 回避中のfovアニメーション
 	evasionFovAnim_.SetAnimData(&evasionFov_, 0.0f, kMaxEvasionFovIncrease, 5, Easings::EaseOutExpo);
+	// ジャスト回避時のFovアニメーション
+	justEvasionFovAnim_.SetAnimData(&justEvasionFov_, 0.0f, kMaxJustEvasionFovIncrease, 2, Easings::EaseOutExpo);
 
+	// カメラの進行度
 	t_ = 0.0f;
+	// 注視点の進行度
 	targetT_ = 1.0f / segmentCount;
 	isMove_ = true;
 
@@ -51,21 +57,22 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 }
 
 void RailCamera::Update() {
-	Move();			// 移動処理
-	BoostUpdate();	// 加速中のカメラ処理
-	EvasionUpdate();// 回避中のカメラ処理
+	Move();				// 移動処理
+	BoostUpdate();		// 加速中のカメラ処理
+	EvasionUpdate();	// 回避中のカメラ処理
+	JustEvasionUpdate();// ジャスト回避中のカメラ処理
 
 	// fovを適用
-	camera_->viewProjection_.fovAngleY = camera_->kDefaultFov + boostFov_ + evasionFov_;
+	camera_->viewProjection_.fovAngleY = camera_->kDefaultFov + boostFov_ + evasionFov_ + justEvasionFov_;
 
 	// 行列の更新
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
-
-#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
+#ifdef _DEBUG
+
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();
@@ -122,12 +129,12 @@ void RailCamera::Move() {
 void RailCamera::BoostUpdate() {
 	// 加速時はfovを上げる
 	if (*isBoost_) {
-		moveSpeed_ = 0.8f;
+		moveSpeed_ = 0.8f * GameTimer::GetInstance()->GetTimeScale();
 		// fov
 		boostFovAnim_.SetIsStart(true);
 	}
 	else {
-		moveSpeed_ = 0.6f;
+		moveSpeed_ = 0.6f * GameTimer::GetInstance()->GetTimeScale();
 		// fov
 		boostFov_ = Lerps::ExponentialInterpolate(boostFov_, 0.0f, 1.0f, 0.1f);
 		boostFovAnim_.SetIsStart(false);
@@ -148,6 +155,20 @@ void RailCamera::EvasionUpdate() {
 	}
 }
 
+void RailCamera::JustEvasionUpdate() {
+	// ジャスト回避中
+	if (player_->GetEvasionData().isJust) {
+		// fovを下げる
+		justEvasionFovAnim_.SetIsStart(true);
+	}
+	else {
+		justEvasionFovAnim_.SetIsStart(false);
+		justEvasionFov_ = Lerps::ExponentialInterpolate(justEvasionFov_, 0.0f, 1.0f, 0.1f);
+	}
+
+	justEvasionFovAnim_.Update();
+}
+
 void RailCamera::Reset() {
 	t_ = 0.0f;
 	targetT_ = 1.0f / segmentCount;
@@ -158,10 +179,33 @@ void RailCamera::ImGuiParameter() {
 	ImGui::Begin("RailCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
-	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, 0, 200);
+	// Fov
+	if (ImGui::TreeNode("FovData")) {
+		ImGui::DragFloat("Current", &camera_->viewProjection_.fovAngleY, 0.1f, -30, 30);
+		ImGui::DragFloat("Boost", &kMaxBoostFovIncrease, 0.1f, -60, 60);
+		ImGui::DragFloat("NormalEvasion", &kMaxEvasionFovIncrease, 0.1f, -30, 30);
+		ImGui::DragFloat("JustEvasion", &kMaxJustEvasionFovIncrease, 0.1f, -30, 30);
+		ImGui::TreePop();
+
+		// リセットボタンを作成
+		if (ImGui::Button("Regist")) {
+			// 加速中のfovアニメーション
+			boostFovAnim_.SetFirstAnimData(&boostFov_, 0.0f, kMaxBoostFovIncrease, 10, Easings::EaseOutBack);
+			// 回避中のfovアニメーション
+			evasionFovAnim_.SetFirstAnimData(&evasionFov_, 0.0f, kMaxEvasionFovIncrease, 5, Easings::EaseOutExpo);
+			// ジャスト回避時のFovアニメーション
+			justEvasionFovAnim_.SetFirstAnimData(&justEvasionFov_, 0.0f, kMaxJustEvasionFovIncrease, 2, Easings::EaseOutExpo);
+		}
+	}
+	// 速度
+	if (ImGui::TreeNode("VelocityData")) {
+		ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100, 100);
+		ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.1f, -100, 100);
+		ImGui::TreePop();
+	}
+
 	ImGui::Checkbox("isMove", &isMove_);
-	ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100, 100);
-	ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.1f, -100, 100);
+
 	// リセットボタンを作成
 	if (ImGui::Button("Reset")) {
 		// カメラの進行度をリセット

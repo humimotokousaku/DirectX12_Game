@@ -8,7 +8,7 @@ SceneTransition* SceneTransition::GetInstance() {
 void SceneTransition::Initialize() {
 	for (int i = 0; i < sprite_.size(); i++) {
 		for (int j = 0; j < sprite_[0].size(); j++) {
-			sprite_[i][j].Initialize("DefaultTexture", "white.png");
+			sprite_[i][j].Initialize("Textures/DefaultTexture", "white.png");
 			sprite_[i][j].SetSize(Vector2{ 0.0f, 0.0f });
 			sprite_[i][j].worldTransform_.translate.x = 40.0f + j * 80.0f;
 			sprite_[i][j].worldTransform_.translate.y = 40.0f + i * 80.0f;

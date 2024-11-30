@@ -12,14 +12,6 @@
 #include <random>
 #include <functional>
 
-struct Particle {
-	Transform transform;	// 座標
-	Vector3 vel;			// 速度
-	Vector4 color;			// 色
-	float lifeTime;			// 生存時間
-	float currentTime = 0;	// 経過フレーム
-};
-
 // GPUに送る
 struct ParticleForGPU {
 	Matrix4x4 WVP;
@@ -27,6 +19,13 @@ struct ParticleForGPU {
 	Vector4 color;
 };
 
+struct Particle {
+	Transform transform;	// 座標
+	Vector3 vel;			// 速度
+	Vector4 color;			// 色
+	float lifeTime;			// 生存時間
+	float currentTime = 0;	// 経過フレーム
+};
 // Particleを発生させる
 struct Emitter {
 	WorldTransform transform;
@@ -41,15 +40,13 @@ struct AABB {
 	Vector3 min;
 	Vector3 max;
 };
-
 struct AccField {
 	Vector3 acc;  // 加速度
 	AABB area;	  // 範囲
 	bool isActive;// Fieldの活性化
 };
 
-class Particles
-{
+class Particles {
 public:
 	///
 	/// Default Method
@@ -72,8 +69,6 @@ public:
 	/// </summary>
 	/// <param name="textureHandle">使用テクスチャ</param>
 	void Draw(uint32_t textureHandle);
-
-	//ModelData GetModelData() { return modelData_; }
 
 	///
 	/// User Method
@@ -114,16 +109,21 @@ public:
 	/// <param name="count">発生するパーティクルの数</param>
 	void SetEmitterCount(uint32_t count) { emitter_.count = count; }
 	/// <summary>
+	/// パーティクルの発生の残り回数を設定
+	/// </summary>
+	/// <param name="spawnLeft"></param>
+	void SetEmitterSpawnLeft(uint32_t spawnLeft) { emitter_.spawnLeft = spawnLeft; }
+	/// <summary>
 	/// パーティクルの発生回数(0なら無制限に出る)
 	/// </summary>
 	/// <param name="spawnCount">発生回数</param>
-	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount;	}
+	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount; }
 	/// <summary>
 	/// パーティクルが発生する頻度
 	/// </summary>
 	/// <param name="frequency">秒</param>
-	void SetEmitterFrequency(float frequency) { 
-		emitter_.frequency = frequency; 
+	void SetEmitterFrequency(float frequency) {
+		emitter_.frequency = frequency;
 		emitter_.frequencyTime = frequency;
 	}
 	/// <summary>
@@ -136,11 +136,11 @@ public:
 	/// <summary>
 	/// ランダムの上限下限値をすべて0にする
 	/// </summary>
-	void OffRandom() { 
+	void OffRandom() {
 		randomTranslateLimit = Limit{ 0.0f,0.0f };
 		randomScaleLimit = Limit{ 0.0f,0.0f };
 		for (int i = 0; i < 3; i++) {
-			randomVelLimit[i] = Limit{0.0f,0.0f};
+			randomVelLimit[i] = Limit{ 0.0f,0.0f };
 		}
 		randomLifeTimeLimit = Limit{ 0.0f, 0.0f };
 		randomColorLimit = Limit{ 0.0f,0.0f };
@@ -154,9 +154,6 @@ private:
 	std::list<Particle> Emission(const Emitter& emitter, std::mt19937& randomEngine);
 
 	bool IsCollision(const AABB& aabb, const Vector3& point);
-
-	// 線形補完
-	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 	Vector3 KelvinToRGB(int kelvin);
 
@@ -180,9 +177,9 @@ public:
 	// [1]:y
 	// [2]:z
 	Limit randomVelLimit[3] = {
-		{- 1.0f, 1.0f },	// x
-		{- 1.0f, 1.0f },	// y
-		{- 1.0f, 1.0f }		// z
+		{-1.0f, 1.0f },	// x
+		{-1.0f, 1.0f },	// y
+		{-1.0f, 1.0f }		// z
 	};
 	// ランダム生存時間の下限上限
 	Limit randomLifeTimeLimit = { 1.0f, 3.0f };

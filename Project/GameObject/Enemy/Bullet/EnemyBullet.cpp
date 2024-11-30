@@ -11,12 +11,14 @@ EnemyBullet::~EnemyBullet() {
 
 }
 
-void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& velocity) {
+void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData) {
 	// NULLポインタチェック
 	assert(model);
 
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
+
+	enemyData_ = enemyData;
 
 	// モデルを設定
 	object3d_ = std::make_unique<Object3D>();
@@ -26,7 +28,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->worldTransform.translate = pos;
 	// 形状を設定
 	object3d_->worldTransform.scale = {
-		0.25f,0.25f,0.8f
+		2.0f,2.0f,2.0f
 	};
 	// 色を赤色にする
 	object3d_->SetColor(Vector4{ 1.0f,0.0f,0.0f,1.0f });
@@ -35,19 +37,19 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, const Vector3& ve
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
+	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale);
 	object3d_->collider->SetOnCollision(std::bind(&EnemyBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 
-	// 引数で受け取った速度をメンバ変数に代入
-	velocity_ = velocity;
+	// 弾が最初にぶ方向
+	velocity_ = kFirstVelocity;
 }
 
 void EnemyBullet::Update() {
 	Vector3 toPlayer = player_->GetWorldPosition() - GetWorldPosition();
 	toPlayer = Normalize(toPlayer);
 	velocity_ = Normalize(velocity_);
-	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * 1.5f;
-	velocity_.z *= -1.0f;
+	velocity_ = Lerps::Slerp(velocity_, toPlayer, kFollowRate) * kBulletSpeed * GameTimer::GetInstance()->GetTimeScale();
 
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
@@ -58,7 +60,8 @@ void EnemyBullet::Update() {
 	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 
 	// 座標を移動させる
-	object3d_->worldTransform.translate = Add(object3d_->worldTransform.translate, velocity_);
+	pos_ += velocity_;
+	object3d_->worldTransform.translate = enemyData_->GetWorldPosition() + pos_;
 
 	// 行列を更新
 	object3d_->worldTransform.UpdateMatrix();

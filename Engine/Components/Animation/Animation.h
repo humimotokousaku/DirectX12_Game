@@ -1,5 +1,6 @@
 #pragma once
 #include "MathStructs.h"
+#include "GameTime.h"
 #include <list>
 #include <assert.h>
 #include <functional>
@@ -9,16 +10,16 @@ class Animation {
 public: // 構造体
 	// アニメーションを行うときのパラメータ
 	struct AnimData {
-		std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target; // アニメーションの対象
-		uint32_t currentFrame;								   // 現在のフレーム
-		uint32_t startFrame;								   // アニメーション開始フレーム
-		uint32_t endFrame;									   // アニメーション終了フレーム
-		float t;											   // 変化量
-		std::variant<Vector4, Vector3, Vector2, float, int> start;	   // 始めの値
-		std::variant<Vector4, Vector3, Vector2, float, int> end;		   // 終了時の値
-		bool isActive;  									   // アニメーションをしているか
-		int id;												   // アニメーションの番号
-		std::function<float(float)> easeFunc;                  // 使用するイージング関数
+		std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target;	// アニメーションの対象
+		float currentFrame;													// 現在のフレーム
+		float startFrame;													// アニメーション開始フレーム
+		float endFrame;														// アニメーション終了フレーム
+		float t;															// 変化量
+		std::variant<Vector4, Vector3, Vector2, float, int> start;			// 始めの値
+		std::variant<Vector4, Vector3, Vector2, float, int> end;			// 終了時の値
+		bool isActive;  													// アニメーションをしているか
+		int id;																// アニメーションの番号
+		std::function<float(float)> easeFunc;								// 使用するイージング関数
 	};
 
 public: // メンバ関数
@@ -39,14 +40,11 @@ public: // メンバ関数
 	/// </summary>
 	void Update();
 	//void Draw();
-	//void Fianlize();
 
 	///
 	/// User Method
 	/// 
 
-	// 特定のアニメーションを削除
-	//void ClearAnimation(AnimData& animData) {}
 	// 全てのアニメーションを削除
 	void AllClearAnimation() { animData_.clear(); }
 
@@ -92,10 +90,10 @@ public: // メンバ関数
 	/// <param name="end">終了時のパラメータ</param>
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc);
+	void SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
 	// アニメーションに必要なパラメータを先頭のリスト情報を上書き
 	// 無い場合はリストに登録
-	void SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc);
+	void SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
 	/// <summary>
 	/// 任意のアニメーション情報を上書き
 	/// </summary>
@@ -105,8 +103,12 @@ public: // メンバ関数
 	/// <param name="end">終了時のパラメータ</param>
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, uint32_t endFrame, std::function<float(float)> easeFunc);
+	void AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
 #pragma endregion
+
+private:// エンジン機能
+	// ゲームタイマー
+	GameTimer* gameTimer_;
 
 private: // メンバ変数
 	std::list<AnimData> animData_;
