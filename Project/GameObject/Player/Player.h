@@ -17,7 +17,6 @@
 #include <map>
 #include <tuple>
 
-class AimAssist;
 class GameSystem;
 class Player {
 public:// パブリックなメンバ関数
@@ -122,30 +121,12 @@ private:// プライベートなメンバ関数
 	void DeadAnimation();
 
 	/// <summary>
-	/// レティクルの配置
-	/// </summary>
-	void Deploy3DReticle();
-	/// <summary>
-	/// 2Dレティクルの配置
-	/// </summary>
-	void Deploy2DReticle();
-	/// <summary>
-	/// ロックオン時のレティクルの配置
-	/// </summary>
-	void DeployLockOnReticle();
-
-	/// <summary>
 	/// ImGuiの表示
 	/// </summary>
 	void ImGuiParameter();
 
-
 public:// GetterとSetter
 #pragma region Getter
-	// 3Dレティクルの座標
-	const Vector3& GetWorld3DReticlePosition(int index);
-	// ロックオンされてない3Dレティクルの座標
-	const Vector3& GetDefault3DReticlePosition();
 	// 死亡フラグを取得
 	const bool& GetIsDead() { return isDead_; }
 	// ワールド座標
@@ -186,12 +167,6 @@ public:// GetterとSetter
 	// ロックオンフラグのアドレス取得
 	void SetIsLockOn(bool* isLockOn) { isLockOn_ = isLockOn; }
 	/// <summary>
-	/// ロックオン時のレティクルの補間量のアドレスを設定
-	/// </summary>
-	/// <param name="offset"></param>
-	void SetLockOnReticleOffset(Vector3* offset) { lockOnReticleOffset_ = offset; }
-
-	/// <summary>
 	/// 親となるワールドトランスフォームを設定
 	/// </summary>
 	/// <param name="parent">親となるワールドトランスフォーム</param>
@@ -205,6 +180,11 @@ public:// GetterとSetter
 #pragma endregion
 	// 使用するモデルを追加
 	void AddModel(Model* model) { models_.push_back(model); }
+
+	/// <summary>
+	/// 弾ゲージの増加量
+	/// </summary>
+	void IncrementBulletGauge(float value) { bulletGauge_.value += value; }
 
 private:// プライベートなメンバ変数
 	// ゲームタイマー
@@ -225,9 +205,6 @@ private:// プライベートなメンバ変数
 	// 自機の残像
 	std::array<std::unique_ptr<Object3D>, 20> afterImageObject3d_;
 
-	// 2Dレティクル用のスプライト
-	std::array<Sprite, 3> sprite2DReticle_;
-
 	// ジャスト回避時のUI
 	std::unique_ptr<Sprite> justSprite_;
 
@@ -240,14 +217,6 @@ private:// プライベートなメンバ変数
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
-	// 3Dレティクルの座標
-	std::array<std::unique_ptr<Object3D>, 2> object3dReticle_;
-	// ロックオン時の3Dレティクル
-	std::array<std::unique_ptr<Object3D>, 20> lockOn3dReticle_;
-
-	// ロックオンしていないときのレティクル座標
-	WorldTransform default3dReticle_;
-
 	// ジャスト回避の判定
 	std::unique_ptr<Collider> justEvasionCollider_;
 
@@ -257,9 +226,6 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<JustEvasionSystem> justEvasionSystem_;
 
 #pragma region アニメーション
-	// ロックオン時のアニメーション
-	Animation reticleAnim_;
-
 	// ブースト時のアニメーション
 	Animation boostRotAnim_;
 
@@ -292,8 +258,6 @@ private:// プライベートなメンバ変数
 	Camera* camera_;
 	// ゲームシーンのアドレス
 	GameSystem* gameSystem_;
-	// エイムアシストのアドレス
-	AimAssist* aimAssist_;
 	// 衝突マネージャのアドレス
 	CollisionManager* collisionManager_;
 #pragma endregion
@@ -314,8 +278,6 @@ private:// プライベートなメンバ変数
 	// 被弾時の自機の角度
 	Vector3 hitRotate_;
 
-	// ロックオン時のレティクルの補間量
-	Vector3* lockOnReticleOffset_;
 	// カメラの移動
 	Vector3 cameraOffset_;
 	// カメラの回転

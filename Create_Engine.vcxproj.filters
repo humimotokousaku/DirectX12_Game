@@ -295,9 +295,6 @@
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\AimAssist\AimAssist.cpp">
-      <Filter>Project\Components\AimAssist</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy</Filter>
     </ClCompile>
@@ -751,9 +748,6 @@
     </ClInclude>
     <ClInclude Include="project\scene\IScene.h">
       <Filter>Project\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\AimAssist\AimAssist.h">
-      <Filter>Project\Components\AimAssist</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Camera\FollowCamera\FollowCamera.h">
       <Filter>Project\Components\Camera\FollowCamera</Filter>

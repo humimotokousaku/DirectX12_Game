@@ -70,6 +70,9 @@ void JustEvasionSystem::CreateJustParticle() {
 void JustEvasionSystem::CheckBox() {
 	for (JustParticleData& justParticle : justParticles_) {
 		if (108.0f >= justParticle.pos.y && 512.0f >= justParticle.pos.x ) {
+			if (!justParticle.particle->isActive_) { continue; }
+			// 弾ゲージを増加
+			player_->IncrementBulletGauge(1.0f);
 			justParticle.particle->isActive_ = false;
 		}
 	}

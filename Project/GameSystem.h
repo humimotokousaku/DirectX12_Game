@@ -1,5 +1,4 @@
 #pragma once
-#include "AimAssist/AimAssist.h"
 #include "CollisionManager.h"
 #include "LevelManager.h"
 #include "Enemy.h"
@@ -79,6 +78,10 @@ public:// 定数
 
 	// ラジアルブラーの強さ
 	float kBlurStrength = 0.01f;
+	// ヴィネットの大きさ
+	float kMaxVignetteScale = 100.0f;
+	// ヴィネットの初期の大きさ
+	float kDefaultVignetteScale = 1000.0f;
 
 private:// エンジン機能
 	TextureManager* textureManager_;
@@ -89,8 +92,6 @@ private:// エンジン機能
 private:// プライベートなメンバ変数
 	// 登録用のモデル
 	std::vector<Model*> models_;
-	// ロックオン機能
-	AimAssist* aimAssist_;
 	// スコア
 	Score* score_;
 
@@ -123,6 +124,8 @@ private:// プライベートなメンバ変数
 	float lightDecay_;
 	// ブラーの強さ
 	float blurStrength_;
+	// ヴィネットの大きさ
+	float vignetteScale_;
 
 	// 演出の状態
 	int effectState_ = Normal;

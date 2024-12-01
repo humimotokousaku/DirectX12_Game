@@ -15,7 +15,7 @@ const float kMaxSpeed = 1.0f;
 // 自機の最大回転速度
 const Vector3 kMaxRotSpeed = { 1.0f, 1.0f, 1.0f };
 // 自機の最大回避速度
-const Vector2 kMaxEvasionMoveSpeed = { 4.0f, 4.0f };
+const Vector2 kMaxEvasionMoveSpeed = { 6.0f, 6.0f };
 // 回避時の回転数[2π * n回]
 const Vector3 kMaxEvasionRotNum = { 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 2.0f };
 

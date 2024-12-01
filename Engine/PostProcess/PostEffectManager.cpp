@@ -48,8 +48,8 @@ void PostEffectManager::Initialize() {
 	vigneting_ = new Vigneting();
 	vigneting_->Initialize();
 	renderTexture_.push_back(vigneting_->GetRenderTexture());
-	vignetingData_.isActive = true;
-	vignetingData_.scale = 16.0f;
+	vignetingData_.isActive = false;
+	vignetingData_.scale = 100.0f;
 	vigneting_->SetVignetingData(vignetingData_);
 	postEffect_.push_back(vigneting_);
 }

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "AimAssist/AimAssist.h"
 #include "CollisionConfig.h"
 #include "GameSystem.h"
 #include "GameTime.h"
@@ -23,8 +22,6 @@ void Player::Initialize() {
 	audio_ = Audio::GetInstance();
 	collisionManager_ = CollisionManager::GetInstance();
 	gameTimer_ = GameTimer::GetInstance();
-	// エイムアシスト
-	aimAssist_ = AimAssist::GetInstance();
 
 #pragma region 読み込み
 	TextureManager::GetInstance()->LoadTexture("Level", "gray.png");
@@ -33,7 +30,6 @@ void Player::Initialize() {
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
 	deadParticleTexture = TextureManager::GetInstance()->GetSrvIndex("Level", "gray.png");
 	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("Textures/DefaultTexture", "white.png");
-	//defaultTexture = TextureManager::GetInstance()->GetSrvIndex("Textures", "circle.png");
 #pragma endregion
 
 #pragma region 自機モデル作成
@@ -66,37 +62,6 @@ void Player::Initialize() {
 		afterImageObject3d_[i]->SetColor(Vector4{ 0.2f,0.2f,0.2f,0.3f });
 		// 表示をしない
 		afterImageObject3d_[i]->SetIsActive(false);
-	}
-#pragma endregion
-
-#pragma region レティクル
-	// 3Dレティクルモデル作成(デバッグ用)
-	for (int i = 0; i < object3dReticle_.size(); i++) {
-		object3dReticle_[i] = std::make_unique<Object3D>();
-		object3dReticle_[i]->Initialize();
-		object3dReticle_[i]->SetModel(models_[1]);
-		object3dReticle_[i]->SetCamera(camera_);
-	}
-	// ロックオンしてない3Dレティクルの座標
-	default3dReticle_.Initialize();
-	default3dReticle_ = object3dReticle_[0]->worldTransform;
-	// ロックオンしたときの3Dレティクル
-	for (int i = 0; i < lockOn3dReticle_.size(); i++) {
-		lockOn3dReticle_[i] = std::make_unique<Object3D>();
-		lockOn3dReticle_[i]->Initialize();
-		lockOn3dReticle_[i]->SetModel(models_[1]);
-		lockOn3dReticle_[i]->SetCamera(camera_);
-	}
-
-	// 2Dレティクル作成
-	sprite2DReticle_[0].Initialize("Textures", "reticle.png");
-	sprite2DReticle_[0].SetSize(Vector2{ 50.0f,50.0f });
-	sprite2DReticle_[1].Initialize("Textures", "reticle.png");
-	// ロックオン時のレティクル作成
-	sprite2DReticle_[2].Initialize("Textures", "lockOnReticle.png");
-	for (int i = 0; i < 3; i++) {
-		sprite2DReticle_[i].SetPos(Vector2((float)WinApp::kClientWidth_ / 2, (float)WinApp::kClientHeight_ / 2));
-		//PostEffectManager::GetInstance()->AddSpriteList(&sprite2DReticle_[i]);
 	}
 #pragma endregion
 
@@ -197,9 +162,6 @@ void Player::Initialize() {
 #pragma endregion
 
 #pragma region アニメーションの設定
-	// ロックオン時のレティクルのアニメーション
-	reticleAnim_.SetAnimData(sprite2DReticle_[2].GetSizeP(), Vector2{ 256,256 }, Vector2{ 86,86 }, 8, Easings::EaseInExpo);
-
 	// ブースト時の自機回転アニメーション
 	boostRotAnim_.SetAnimData(&boost_.rotVelZ, 0.0f, float{ 4.0f * M_PI }, 90, Easings::EaseOutExpo);
 
@@ -311,21 +273,9 @@ void Player::Draw() {
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
 		afterImageObject3d_[i]->Draw(playerTexture_);
 	}
-
-	// 3Dレティクル
-#ifdef _DEBUG
-	for (int i = 0; i < 2; i++) {
-		object3dReticle_[i]->Draw();
-	}
-#endif // _DEBUG
 }
 
 void Player::DrawUI() {
-	// ロックオン時のレティクル
-	if (*isLockOn_) {
-		sprite2DReticle_[2].Draw();
-	}
-
 	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Draw(defaultTexture);
@@ -427,8 +377,8 @@ void Player::Move() {
 	// 移動をしていない場合
 	if (rotate.y == 0.0f) {
 		// 徐々に速度を落とす
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 3, 0.1f).y * gameTimer_->GetTimeScale();
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 3, 0.1f).z * gameTimer_->GetTimeScale();
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 4, 0.1f).y * gameTimer_->GetTimeScale();
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 4, 0.1f).z * gameTimer_->GetTimeScale();
 		// カメラ演出
 		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * gameTimer_->GetTimeScale(), 0.15f).y;
 		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * gameTimer_->GetTimeScale(), 0.15f).z;
@@ -480,32 +430,6 @@ void Player::Move() {
 }
 
 void Player::Aim() {
-	// 3Dレティクル配置
-	Deploy3DReticle();
-
-	// ロックオン処理(必ず3Dレティクル配置と2Dレティクル配置の間に書く)
-	aimAssist_->LockOn();
-
-	// ロックオンしたら赤くなる
-	if (*isLockOn_) {
-		// 補間量を足す
-		object3dReticle_[0]->worldTransform.translate += *lockOnReticleOffset_;
-		sprite2DReticle_[0].SetColor(Vector4{ 1,0,0,1 });
-		// ロックオンレティクルの配置と挙動
-		DeployLockOnReticle();
-	}
-	else {
-		object3dReticle_[0]->worldTransform.translate += *lockOnReticleOffset_;
-		sprite2DReticle_[0].SetColor(Vector4{ 1,1,1,1 });
-		sprite2DReticle_[2].SetSize(sprite2DReticle_[2].GetStartingSize());
-		sprite2DReticle_[2].SetRotate(Vector3{ 0,0,0 });
-		reticleAnim_.SetIsStart(false);
-	}
-	sprite2DReticle_[2].isActive_ = *isLockOn_;
-	reticleAnim_.Update();
-
-	// 2Dレティクル配置
-	Deploy2DReticle();
 }
 
 void Player::Attack() {
@@ -685,7 +609,6 @@ void Player::JustEvasion() {
 
 	// ジャスト回避の情報のみ初期化
 	if (evasion_.justCurrentFrame <= 0) {
-		bulletGauge_.value += 10;
 		evasion_.JustDataReset();
 		justEvasionParticle_->SetEmitterSpawnLeft(1);
 		return;
@@ -704,20 +627,6 @@ bool Player::IsJustEvasionFrame() {
 
 void Player::OnCollision(Collider* collider) {
 	collider;
-	//// ジャスト回避猶予フレーム中でダメージを食らっていないとき
-	//if (IsJustEvasionFrame() && !isInvinsible_) {
-	//	// ジャスト回避を起動
-	//	evasion_.isJust = true;
-	//	evasion_.justCurrentFrame = kJustEvasionAllFrame;
-	//	// ジャストUIを表示
-	//	justSprite_->isActive_ = true;
-
-	//	justEvasionSystem_->SetIsActive(true);
-
-	//	// 無敵状態にする
-	//	invinsibleFrame_ = kMaxInvinsibleFrame;
-	//	isInvinsible_ = true;
-	//}
 
 	// HP減少処理
 	DecrementHP();
@@ -746,7 +655,6 @@ void Player::JustParticleUpdate(Particle& particle) {
 	Vector3 force = /*-gravityStrength*/Multiply(-1.0f, (distance * distance + 1)); // 距離に反比例する力
 	Vector3 acceleration = force / 10.0f; // F = ma の式から加速度を計算
 	particle.vel += acceleration; // 加速度を速度に反映
-	//particle.transform.translate.x += obj.vx * dt; // 速度を位置に反映
 }
 
 void Player::InvinsibleUpdate() {
@@ -885,82 +793,13 @@ void Player::DeadAnimation() {
 	deadAnim_.currentFrame--;
 }
 
-void Player::Deploy3DReticle() {
-	// 自機から3Dレティクルへのオフセット(Z+向き)
-	Vector3 offset{ 0, 0, kDistanceObject };
-	Vector3 rotate = object3d_->worldTransform.rotate + object3d_->worldTransform.parent_->rotate;
-	rotate.z = 0;
-	// 回転行列を合成
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
-	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, rotateMatrix);
-	// 3Dレティクルの座標を設定
-	object3dReticle_[0]->worldTransform.translate = GetWorldPosition() + offset;
-	object3dReticle_[0]->worldTransform.UpdateMatrix();
-
-	// 自機から3Dレティクルへのオフセット(Z+向き)
-	offset = { 0, 0, kDistanceObject / 3 * 2 };
-	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, rotateMatrix);
-	// 真ん中の3Dレティクルの座標を設定
-	object3dReticle_[1]->worldTransform.translate = GetWorldPosition() + offset;
-	object3dReticle_[1]->worldTransform.UpdateMatrix();
-
-	// 自機から3Dレティクルへのオフセット(Z+向き)
-	offset = { 0, 0, kDistanceObject };
-	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, rotateMatrix);
-	// 真ん中の3Dレティクルの座標を設定
-	default3dReticle_.translate = GetWorldPosition() + offset;
-	default3dReticle_.UpdateMatrix();
-}
-
-void Player::Deploy2DReticle() {
-	// レティクルの座標を更新
-	for (int i = 0; i < 2; i++) {
-		object3dReticle_[i]->worldTransform.UpdateMatrix();
-	}
-
-	// 3Dレティクルのワールド座標を取得
-	Vector3 positionReticle = GetWorld3DReticlePosition(0);
-	// ビューポート行列
-	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, (float)WinApp::kClientWidth_, (float)WinApp::kClientHeight_, 0, 1);
-	// ビュー行列とプロジェクション行列、ビューポート行列を合成する
-	Matrix4x4 matViewProjectionViewport{};
-	matViewProjectionViewport =
-		Multiply(camera_->GetViewProjection().matView, Multiply(camera_->GetViewProjection().matProjection, matViewport));
-	// ワールド→スクリーン座標変換
-	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
-	// スプライトのレティクルに座標を設定
-	sprite2DReticle_[0].SetPos(Vector2(positionReticle.x, positionReticle.y));
-
-	// 真ん中のレティクル
-	// ワールド→スクリーン座標変換
-	positionReticle = GetWorld3DReticlePosition(1);
-	positionReticle = Transforms(positionReticle, matViewProjectionViewport);
-	// スプライトのレティクルに座標設定
-	sprite2DReticle_[1].SetPos(Vector2(positionReticle.x, positionReticle.y));
-}
-
-void Player::DeployLockOnReticle() {
-	// ロックオン時のレティクルの座標を設定
-	sprite2DReticle_[2].SetPos(sprite2DReticle_[0].GetPos());
-
-	// 回転させる
-	Vector3 rotate = {
-		0.0f,0.0f,0.03f
-	};
-	sprite2DReticle_[2].SetRotate(sprite2DReticle_[2].GetRotate() + rotate);
-
-	reticleAnim_.SetIsStart(true);
-}
-
 void Player::ImGuiParameter() {
+
+#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
 	if (ImGui::TreeNode("EvasionData")) {
-
 		ImGui::DragFloat("JustCurrentFrame", &evasion_.justCurrentFrame, 1.0f, 0.0f, 100.0f);
 		ImGui::DragFloat("CurrentFrame", &evasion_.curretFrame, 1.0f, 0.0f, 100.0f);
 		ImGui::DragFloat("JustFrame", &evasion_.justFrame, 1.0f, 0.0f, 100.0f);
@@ -983,8 +822,6 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
-#ifdef _DEBUG
-
 #endif
 }
 
@@ -1000,28 +837,6 @@ const Vector3& Player::GetWorldPosition() {
 	worldPos.x = object3d_->worldTransform.matWorld_.m[3][0];
 	worldPos.y = object3d_->worldTransform.matWorld_.m[3][1];
 	worldPos.z = object3d_->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
-}
-
-const Vector3& Player::GetWorld3DReticlePosition(int index) {
-	// ワールド座標を入れる変数
-	Vector3 worldPos = object3dReticle_[index]->worldTransform.translate;
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = object3dReticle_[index]->worldTransform.matWorld_.m[3][0];
-	worldPos.y = object3dReticle_[index]->worldTransform.matWorld_.m[3][1];
-	worldPos.z = object3dReticle_[index]->worldTransform.matWorld_.m[3][2];
-
-	return worldPos;
-}
-
-const Vector3& Player::GetDefault3DReticlePosition() {
-	// ワールド座標を入れる変数
-	Vector3 worldPos = default3dReticle_.translate;
-	// ワールド行列の平行移動成分を取得
-	worldPos.x = default3dReticle_.matWorld_.m[3][0];
-	worldPos.y = default3dReticle_.matWorld_.m[3][1];
-	worldPos.z = default3dReticle_.matWorld_.m[3][2];
 
 	return worldPos;
 }

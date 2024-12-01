@@ -69,10 +69,10 @@ void RailCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
+
+#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
-#ifdef _DEBUG
-
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();

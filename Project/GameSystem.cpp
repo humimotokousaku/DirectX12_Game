@@ -105,17 +105,6 @@ void GameSystem::Initialize() {
 	enemyManager_.Initialize();
 #pragma endregion
 
-#pragma region 自機のロックオンクラス生成
-	aimAssist_ = AimAssist::GetInstance();
-	aimAssist_->SetCamera(followCamera_.GetCamera());
-	aimAssist_->SetPlayer(&player_);
-	// カメラの方向ベクトルをアドレスで渡す
-	aimAssist_->SetCameraDirectionVelocity(railCamera_.GetDirectionVelocity());
-	// 自機クラスにアドレスを渡す
-	player_.SetIsLockOn(aimAssist_->GetIsLockOn());
-	player_.SetLockOnReticleOffset(aimAssist_->GetLockOnReticleOffset());
-#pragma endregion
-
 	// マルチロックオン機能
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
 	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_[2]);
@@ -277,11 +266,18 @@ void GameSystem::EffectUpdate() {
 		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
 		PointLight::GetInstance()->SetDecay(lightDecay_);
 
-		// ラジアルブラーをけす
+		// ラジアルブラーを消す
 		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 1.0f, 0.5f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
 		if (blurStrength_ <= 0.0f) {
 			PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
+		}
+
+		// ヴィネットを消す		
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
+		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
+			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
 		}
 
 		// コントローラーの振動を消す
@@ -300,6 +296,13 @@ void GameSystem::EffectUpdate() {
 		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
 
+		// ヴィネットを消す		
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
+		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
+			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
+		}
+
 		// コントローラーを振動させる
 		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
 
@@ -315,6 +318,11 @@ void GameSystem::EffectUpdate() {
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
 		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
+
+		// ヴィネットをかける
+		PostEffectManager::GetInstance()->vignetingData_.isActive = true;
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 
 		// コントローラーを振動させる
 		Input::GetInstance()->GamePadVibration(0, 65535, 65535);

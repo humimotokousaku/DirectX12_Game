@@ -37,6 +37,7 @@ enum PostEffectType {
 	BLUR,*/
 	//DISSOLVE,
 	BLOOM,
+	VIGNETTE,
 	COUNT
 };
 
