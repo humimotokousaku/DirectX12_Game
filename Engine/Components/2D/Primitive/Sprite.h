@@ -23,6 +23,11 @@ public:
 	/// <param name="directoryPath"></param>
 	/// <param name="textureFilePath"></param>
 	void Initialize(const std::string& directoryPath, std::string textureFilePath);
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="textureNum">使用するテクスチャ番号</param>
+	void Initialize(uint32_t textureNum);
 
 	//void update();
 
@@ -89,13 +94,14 @@ public:
 	// 画像の切り出しサイズ
 	void SetTextureSize(Vector2 textureSize) { textureSize_ = textureSize; }
 	// 使用するテクスチャの変更
-	void SetTextureIndex(uint32_t textureIndex) { textureIndex_ = textureIndex; }
+	void SetTextureIndex(uint32_t textureNum) { textureNum_ = textureNum; }
 
 	// 画像の切りだしサイズのリセット
 	void ResetTextureSize() { textureSize_ = { 512.0f,512.0f }; }
 
 	// テクスチャのサイズをスプライトに合わせる
 	void AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath);
+	void AdjustTextureSize(uint32_t textureNum);
 
 	// このスプライトを背景として扱う
 	void SetIsBackGround() { worldTransform_.translate.z = 100000; }
@@ -159,6 +165,7 @@ private:
 	// テクスチャの切り出しサイズ
 	Vector2 textureSize_;
 
-	uint32_t textureIndex_;
+	// 使用するテクスチャ番号
+	uint32_t textureNum_;
 };
 

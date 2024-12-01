@@ -51,7 +51,7 @@ void Player::Initialize() {
 	object3d_->collider->SetIsActive(true);
 	// ポイントライトを追従させる
 	PointLight::GetInstance()->SetTargetPosition(&object3d_->worldTransform.worldPos);
-	PointLight::GetInstance()->SetTargetOffset(Vector3{0,2,0});
+	PointLight::GetInstance()->SetTargetOffset(Vector3{ 0,2,0 });
 	PointLight::GetInstance()->SetRadius(1500.0f);
 
 	// 自機の残像オブジェクトを作成
@@ -68,19 +68,6 @@ void Player::Initialize() {
 		afterImageObject3d_[i]->SetIsActive(false);
 	}
 #pragma endregion
-
-	// 
-	for (int i = 0; i < boostFire_.size(); i++) {
-		boostFire_[i] = std::make_unique<Object3D>();
-		boostFire_[i]->Initialize();
-		boostFire_[i]->SetModel(models_[3]);
-		boostFire_[i]->SetCamera(camera_);
-		boostFire_[i]->worldTransform.parent_ = &object3d_->worldTransform;
-		boostFire_[i]->worldTransform.translate = { 0,0,-2 };
-		boostFire_[i]->worldTransform.UpdateMatrix();
-		boostFire_[i]->SetIsLighting(false);
-		boostFire_[i]->SetColor(Vector4{ 1,0,0,0.7f });
-	}
 
 #pragma region レティクル
 	// 3Dレティクルモデル作成(デバッグ用)
@@ -118,13 +105,14 @@ void Player::Initialize() {
 	hp_.value = kMaxHp;
 	// HPバーのサイズ指定
 	hp_.size = kMaxHPSize;
-	hp_.sprite.Initialize("Textures/DefaultTexture", "white.png");
-	hp_.sprite.SetSize(hp_.size);
-	hp_.sprite.SetAnchorPoint(Vector2{ 0.0f,0.5f });
-	hp_.sprite.SetPos(Vector2{ 64.0f, 64.0f });
+	hp_.sprite = std::make_unique<Sprite>();
+	hp_.sprite->Initialize("Textures/DefaultTexture", "white.png");
+	hp_.sprite->SetSize(hp_.size);
+	hp_.sprite->SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	hp_.sprite->SetPos(Vector2{ 64.0f, 64.0f });
 	// 緑色にする
-	hp_.sprite.SetColor(Vector4{ 0.0f,1.0f,0.0f,1.0f });
-	PostEffectManager::GetInstance()->AddSpriteList(&hp_.sprite);
+	hp_.sprite->SetColor(Vector4{ 0.0f,1.0f,0.0f,1.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(hp_.sprite.get());
 
 	// 弾ゲージ量
 	bulletGauge_.value = 0.0f;
@@ -134,13 +122,14 @@ void Player::Initialize() {
 	bulletGauge_.magnification = kMagnificationBulletGauge;
 	// 弾ゲージのサイズ指定
 	bulletGauge_.size = kMaxBulletGaugeSize;
-	bulletGauge_.sprite.Initialize("Textures/DefaultTexture", "white.png");
-	bulletGauge_.sprite.SetSize(bulletGauge_.size);
-	bulletGauge_.sprite.SetAnchorPoint(Vector2{ 0.0f,0.5f });
-	bulletGauge_.sprite.SetPos(Vector2{ 64.0f, 96.0f });
+	bulletGauge_.sprite = std::make_unique<Sprite>();
+	bulletGauge_.sprite->Initialize("Textures/DefaultTexture", "white.png");
+	bulletGauge_.sprite->SetSize(bulletGauge_.size);
+	bulletGauge_.sprite->SetAnchorPoint(Vector2{ 0.0f,0.5f });
+	bulletGauge_.sprite->SetPos(Vector2{ 64.0f, 96.0f });
 	// 青色にする
-	bulletGauge_.sprite.SetColor(Vector4{ 0.0f,0.0f,1.0f,1.0f });
-	PostEffectManager::GetInstance()->AddSpriteList(&bulletGauge_.sprite);
+	bulletGauge_.sprite->SetColor(Vector4{ 0.0f,0.0f,1.0f,1.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(bulletGauge_.sprite.get());
 #pragma endregion
 
 #pragma region パーティクル
@@ -218,15 +207,13 @@ void Player::Initialize() {
 	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{ 0.0f,0.0f }, kMaxEvasionFrame, Easings::EaseOutExpo);
 	// 回避時の回転速度のイージング
 	evasionRotSpeedAnim_.SetAnimData(&evasion_.rotVel, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.0f ,(2.0f * (float)std::numbers::pi) * 4.0f }, 40, Easings::EaseOutExpo);
-	// 回避時の細かい座標調整
-	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, -0.1f ,0.0f }, 5, Easings::EaseOutExpo);
-	evasionOffsetAnim_.SetAnimData(&evasion_.offset, Vector3{ 0.0f,0.0f, 0.0f }, Vector3{ 0.0f, 0.05f ,0.0f }, 15, Easings::EaseOutCubic);
 	// 残像のα値のアニメーション
 	evasionAlphaAnims_.resize(afterImageObject3d_.size());
 	evasion_.alphas.resize(evasionAlphaAnims_.size());
 	for (int i = 0; i < evasionAlphaAnims_.size(); i++) {
 		evasionAlphaAnims_[i].SetAnimData(&evasion_.alphas[i], 1.0f, 0.0f, 20, Easings::EaseOutExpo);
 	}
+
 	// 死亡アニメーション
 	// 自機を下に向ける
 	deadAnim_.animation.SetAnimData(&deadAnim_.rotate.x, 0.0f, (float)std::numbers::pi / 2.0f, 120, Easings::EaseInQuart);
@@ -238,6 +225,20 @@ void Player::Initialize() {
 	justSprite_->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, 64.0f });
 	justSprite_->isActive_ = false;
 	PostEffectManager::GetInstance()->AddSpriteList(justSprite_.get());
+
+	// ジャスト回避
+	justEvasionSystem_ = std::make_unique<JustEvasionSystem>();
+	justEvasionSystem_->Initialize();
+	justEvasionSystem_->SetPlayer(this);
+	justEvasionSystem_->SetCamera(camera_);
+
+	// ジャスト判定
+	justEvasionCollider_ = std::make_unique<Collider>();
+	justEvasionCollider_->SetCollisionPrimitive(kCollisionOBB);
+	justEvasionCollider_->SetCollisionAttribute(kCollisionAttributePlayer);
+	justEvasionCollider_->SetCollisionMask(~kCollisionAttributePlayer);
+	justEvasionCollider_->SetOnCollision(std::bind(&Player::JustOnCollision, this, std::placeholders::_1));
+	justEvasionCollider_->SetIsActive(true);
 
 	// 被弾時の演出
 	hitSystem_ = std::make_unique<HitSystem>();
@@ -267,6 +268,8 @@ void Player::Update() {
 	// 自機が死んでいるなら演出に入る
 	DeadAnimation();
 
+	justEvasionSystem_->Update();
+
 	// 自機が死なないと処理しない
 	if (isDead_) { return; }
 
@@ -279,6 +282,9 @@ void Player::Update() {
 	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
 	// ワールド行列を更新
 	object3d_->worldTransform.UpdateMatrix();
+
+	// z方向にジャスト判定を進める
+	justEvasionCollider_->worldTransform.translate.z = GetWorldPosition().z;
 
 	// 無敵状態の更新処理
 	InvinsibleUpdate();
@@ -312,7 +318,7 @@ void Player::Draw() {
 		object3dReticle_[i]->Draw();
 	}
 #endif // _DEBUG
-	}
+}
 
 void Player::DrawUI() {
 	// ロックオン時のレティクル
@@ -320,15 +326,16 @@ void Player::DrawUI() {
 		sprite2DReticle_[2].Draw();
 	}
 
-	// 軌道
+	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Draw(defaultTexture);
 	}
-
 	// 死亡パーティクル
 	deadParticle_->Draw(deadParticleTexture);
-
+	// ジャスト回避のパーティクル
 	justEvasionParticle_->Draw(deadParticleTexture);
+
+	justEvasionSystem_->Draw();
 }
 
 void Player::InputUpdate(Vector3& move, Vector3& rotate) {
@@ -356,6 +363,7 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 	}
 	// 回避
 	if (input_->TriggerKey(DIK_C)) {
+		justEvasionCollider_->worldTransform.translate = GetWorldPosition();
 		evasion_.isActive = true;
 		evasionRotSpeedAnim_.ResetData();
 		evasionRotSpeedAnim_.SetIsStart(true);
@@ -380,6 +388,7 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 	}
 	// 回避
 	if (input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
+		justEvasionCollider_->worldTransform.translate = GetWorldPosition();
 		evasion_.isActive = true;
 		evasionRotSpeedAnim_.ResetData();
 		evasionRotSpeedAnim_.SetIsStart(true);
@@ -400,48 +409,48 @@ void Player::Move() {
 	InputUpdate(move, rotate);
 
 #pragma region 指数補間で自機とカメラの回転角を徐々に上げる,下げる
-		// 縦移動
-		// 移動をしていない場合
-		if (rotate.x == 0.0f) {
-			// 徐々に速度を落とす
-			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 3, 0.1f).x * gameTimer_->GetTimeScale();
-			// カメラ演出
-			cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.15f).x;
-		}
-		else {
-			// 徐々に速度を上げる
-			rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x, 0.1f).x * gameTimer_->GetTimeScale();
-			// カメラ演出
-			cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.1f).x;
-		}
-		// 横移動
-		// 移動をしていない場合
-		if (rotate.y == 0.0f) {
-			// 徐々に速度を落とす
-			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 3, 0.1f).y * gameTimer_->GetTimeScale();
-			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 3, 0.1f).z * gameTimer_->GetTimeScale();
-			// カメラ演出
-			cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * gameTimer_->GetTimeScale(), 0.15f).y;
-			cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * gameTimer_->GetTimeScale(), 0.15f).z;
-		}
-		else {
-			// 徐々に速度を上げる
-			rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y, 0.1f).y * gameTimer_->GetTimeScale();
-			rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z, 0.1f).z * gameTimer_->GetTimeScale();
-			// カメラ演出
-			cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * gameTimer_->GetTimeScale(), 0.2f).y;
-			cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * gameTimer_->GetTimeScale(), 0.2f).z;
-		}
+	// 縦移動
+	// 移動をしていない場合
+	if (rotate.x == 0.0f) {
+		// 徐々に速度を落とす
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 3, 0.1f).x * gameTimer_->GetTimeScale();
+		// カメラ演出
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.15f).x;
+	}
+	else {
+		// 徐々に速度を上げる
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x, 0.1f).x * gameTimer_->GetTimeScale();
+		// カメラ演出
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.1f).x;
+	}
+	// 横移動
+	// 移動をしていない場合
+	if (rotate.y == 0.0f) {
+		// 徐々に速度を落とす
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 3, 0.1f).y * gameTimer_->GetTimeScale();
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 3, 0.1f).z * gameTimer_->GetTimeScale();
+		// カメラ演出
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * gameTimer_->GetTimeScale(), 0.15f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * gameTimer_->GetTimeScale(), 0.15f).z;
+	}
+	else {
+		// 徐々に速度を上げる
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y, 0.1f).y * gameTimer_->GetTimeScale();
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z, 0.1f).z * gameTimer_->GetTimeScale();
+		// カメラ演出
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * gameTimer_->GetTimeScale(), 0.2f).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * gameTimer_->GetTimeScale(), 0.2f).z;
+	}
 #pragma endregion
 
 #pragma region 向いている方向に移動
-		Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
-		// 現在の回転角を取得
-		Vector3 rot = object3d_->worldTransform.rotate;
-		// 回転行列を求める
-		Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
-		// 方向ベクトルを求める
-		moveVel_ = TransformNormal(velocity, rotMatrix) * 0.8f * gameTimer_->GetTimeScale();
+	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
+	// 現在の回転角を取得
+	Vector3 rot = object3d_->worldTransform.rotate;
+	// 回転行列を求める
+	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
+	// 方向ベクトルを求める
+	moveVel_ = TransformNormal(velocity, rotMatrix) * 0.8f * gameTimer_->GetTimeScale();
 #pragma endregion
 
 	// 加速処理
@@ -596,12 +605,6 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 
 	// 回避時の回転のイージングを更新
 	evasionRotSpeedAnim_.Update();
-	evasionOffsetAnim_.Update();
-
-	// アニメーションが終わったら初期化
-	if (evasionOffsetAnim_.GetIsEnd()) {
-		evasion_.offset = { 0,0,0 };
-	}
 
 	// 回避中でなければ終了
 	if (!evasion_.isActive) {
@@ -644,10 +647,11 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 
 	// 時間を進める
 	evasion_.curretFrame -= gameTimer_->GetTimeScale();
+	// ジャスト猶予時間を進める
+	evasion_.justFrame--;
 
 	// イージングが終了したら初期化
 	if (evasionSpeedAnim_.GetIsEnd()) {
-		//evasionOffsetAnim_.SetIsStart(true);
 		// 残像を消す
 		for (int i = 0; i < afterImageObject3d_.size(); i++) {
 			// アニメーション情報初期化
@@ -657,39 +661,41 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 		// アニメーション情報初期化
 		evasionSpeedAnim_.ResetData();
 		evasion_.curretFrame = kMaxEvasionFrame;
+		// ジャスト回避猶予時間
+		evasion_.justFrame = kMaxJustEvasionFrame;
 		evasion_.isActive = false;
 	}
 }
 
 void Player::JustEvasion() {
-	if (frame_ > 0) {
-		frame_--;
+	if (evasion_.justCurrentFrame > 0) {
+		evasion_.justCurrentFrame--;
 	}
-	else if (frame_ <= 0) {
+	else if (evasion_.justCurrentFrame <= 0) {
 		justSprite_->isActive_ = false;
 		evasion_.isJust = false;
+		justEvasionSystem_->SetIsActive(false);
 	}
 
 	// ジャスト回避ではないならreturn
 	if (!evasion_.isJust) { return; }
 
+	// ジャスト時のパーティクル更新
 	justEvasionParticle_->Update();
 
 	// ジャスト回避の情報のみ初期化
-	if (frame_ <= 0) {
+	if (evasion_.justCurrentFrame <= 0) {
 		bulletGauge_.value += 10;
 		evasion_.JustDataReset();
 		justEvasionParticle_->SetEmitterSpawnLeft(1);
 		return;
 	}
-
-	evasion_.justFrame -= gameTimer_->GetTimeScale();
 }
 
 bool Player::IsJustEvasionFrame() {
 	// ジャスト回避猶予時間のとき
 	if (evasion_.isActive) {
-		if (evasion_.curretFrame <= kMaxEvasionFrame - kStartEvasionJustFrame && evasion_.curretFrame >= kMaxEvasionFrame - kStartEvasionJustFrame - kMaxEvasionJustFrame) {
+		if (evasion_.justFrame >= 0) {
 			return true;
 		}
 	}
@@ -698,22 +704,49 @@ bool Player::IsJustEvasionFrame() {
 
 void Player::OnCollision(Collider* collider) {
 	collider;
-	// ジャスト回避猶予フレーム中でダメージを食らっていないとき
-	if (IsJustEvasionFrame() && !isInvinsible_) {
-		evasion_.isJust = true;
-		// ジャストUIを表示
-		justSprite_->isActive_ = true;
-		// 無敵状態にする
-		isInvinsible_ = true;
-		frame_ = 33;
-	}
+	//// ジャスト回避猶予フレーム中でダメージを食らっていないとき
+	//if (IsJustEvasionFrame() && !isInvinsible_) {
+	//	// ジャスト回避を起動
+	//	evasion_.isJust = true;
+	//	evasion_.justCurrentFrame = kJustEvasionAllFrame;
+	//	// ジャストUIを表示
+	//	justSprite_->isActive_ = true;
+
+	//	justEvasionSystem_->SetIsActive(true);
+
+	//	// 無敵状態にする
+	//	invinsibleFrame_ = kMaxInvinsibleFrame;
+	//	isInvinsible_ = true;
+	//}
 
 	// HP減少処理
 	DecrementHP();
 }
 
-void Player::JustParticleUpdate(Particle& particle) {
+void Player::JustOnCollision(Collider* collider) {
+	// ジャスト回避猶予フレーム中でダメージを食らっていないとき
+	if (IsJustEvasionFrame() && !isInvinsible_) {
+		// ジャスト回避を起動
+		evasion_.isJust = true;
+		evasion_.justCurrentFrame = kJustEvasionAllFrame;
+		// ジャストUIを表示
+		justSprite_->isActive_ = true;
 
+		justEvasionSystem_->SetIsActive(true);
+
+		// 無敵状態にする
+		invinsibleFrame_ = kMaxInvinsibleFrame;
+		isInvinsible_ = true;
+	}
+}
+
+void Player::JustParticleUpdate(Particle& particle) {
+	if (evasion_.justCurrentFrame >= 30) { return; }
+	Vector3 distance = particle.transform.translate; // 左端 (x = 0) までの距離
+	Vector3 force = /*-gravityStrength*/Multiply(-1.0f, (distance * distance + 1)); // 距離に反比例する力
+	Vector3 acceleration = force / 10.0f; // F = ma の式から加速度を計算
+	particle.vel += acceleration; // 加速度を速度に反映
+	//particle.transform.translate.x += obj.vx * dt; // 速度を位置に反映
 }
 
 void Player::InvinsibleUpdate() {
@@ -726,7 +759,7 @@ void Player::InvinsibleUpdate() {
 	else {
 		object3d_->SetColor(Vector4{ 1,1,1,0.1f });
 	}
-	invinsibleFrame_-= gameTimer_->GetTimeScale();
+	invinsibleFrame_ -= gameTimer_->GetTimeScale();
 	invinsibleFrame_ = std::clamp<float>(invinsibleFrame_, 0, kMaxInvinsibleFrame);
 
 	// 無敵時間終了
@@ -739,18 +772,18 @@ void Player::InvinsibleUpdate() {
 void Player::HPUpdate() {
 	// HPバーの長さ計算
 	// 今のHPバーのサイズ = 最大HPの時のバーのサイズ × (今のHP ÷ 最大HP)
-	hp_.sprite.SetSizeX(kMaxHPSize.x * (hp_.value / kMaxHp));
+	hp_.sprite->SetSizeX(kMaxHPSize.x * (hp_.value / kMaxHp));
 
 	// 30%未満なら赤色にする
 	if (hp_.value / kMaxHp <= 30.0f / 100.0f) {
 		// 赤色にする
-		hp_.sprite.SetColor(Vector4{ 1,0,0,1 });
+		hp_.sprite->SetColor(Vector4{ 1,0,0,1 });
 		// 音をこもらせる
 		audio_->soundMuffleValue = -0.9f;
 	}
 	else {
 		// 緑色にする
-		hp_.sprite.SetColor(Vector4{ 0,1,0,1 });
+		hp_.sprite->SetColor(Vector4{ 0,1,0,1 });
 		audio_->soundMuffleValue = 0.0f;
 	}
 }
@@ -786,7 +819,7 @@ void Player::BulletGaugeUpdate() {
 		bulletGauge_.incrementValue = kDecrementBulletGauge;
 	}
 	// 弾ゲージが0になったら時はマルチロックオンできない
-	if(bulletGauge_.value <= 0) {
+	if (bulletGauge_.value <= 0) {
 		bulletGauge_.isMax = false;
 	}
 
@@ -796,7 +829,7 @@ void Player::BulletGaugeUpdate() {
 	bulletGauge_.value = std::clamp<float>(bulletGauge_.value, 0, kMaxBulletGauge);
 
 	// 弾ゲージの長さ計算
-	bulletGauge_.sprite.SetSizeX(kMaxBulletGaugeSize.x * (bulletGauge_.value / kMaxBulletGauge));
+	bulletGauge_.sprite->SetSizeX(kMaxBulletGaugeSize.x * (bulletGauge_.value / kMaxBulletGauge));
 }
 
 void Player::DeadAnimation() {
@@ -807,6 +840,10 @@ void Player::DeadAnimation() {
 	evasion_.Reset();
 	boost_.Reset();
 	justSprite_->isActive_ = false;
+	// 残像オブジェクトの表示を消す
+	for (int i = 0; i < afterImageObject3d_.size(); i++) {
+		afterImageObject3d_[i]->SetIsActive(false);
+	}
 
 	// 死亡パーティクルの更新
 	deadParticle_->Update();
@@ -922,16 +959,19 @@ void Player::ImGuiParameter() {
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
-	// レティクルの情報
-	object3dReticle_[0]->ImGuiParameter("Reticle0");
-	object3dReticle_[1]->ImGuiParameter("Reticle1");
+	if (ImGui::TreeNode("EvasionData")) {
+
+		ImGui::DragFloat("JustCurrentFrame", &evasion_.justCurrentFrame, 1.0f, 0.0f, 100.0f);
+		ImGui::DragFloat("CurrentFrame", &evasion_.curretFrame, 1.0f, 0.0f, 100.0f);
+		ImGui::DragFloat("JustFrame", &evasion_.justFrame, 1.0f, 0.0f, 100.0f);
+		ImGui::Checkbox("IsActive", &evasion_.isActive);
+		ImGui::Checkbox("IsJust", &evasion_.isJust);
+	}
+	ImGui::DragFloat("InvinsibleFrame", &invinsibleFrame_, 1.0f, 0.0f, 100.0f);
 	// 体力
 	ImGui::DragFloat("Hp", &hp_.value, 1.0f, 0.0f, 100.0f);
-	ImGui::DragFloat("bulletGauge:Value", &bulletGauge_.value, 1.0f, 0.0f, 100.0f);
-	if (ImGui::TreeNode("EvasionData")) {
-		ImGui::Checkbox("isActive", &evasion_.isActive);
-		ImGui::Checkbox("isJust", &evasion_.isJust);
-	}
+	ImGui::DragFloat("BulletGauge:Value", &bulletGauge_.value, 1.0f, 0.0f, 100.0f);
+
 	ImGui::End();
 
 	/// jsonによる数値の変更
@@ -944,14 +984,14 @@ void Player::ImGuiParameter() {
 		globalVariables->SaveFile("Player");
 	}
 #ifdef _DEBUG
-	
+
 #endif
 }
 
 const Vector3& Player::GetRotation() {
 	Vector3 rotate = object3d_->worldTransform.rotate;
 	return rotate;
-}	  
+}
 
 const Vector3& Player::GetWorldPosition() {
 	// ワールド座標を入れる変数

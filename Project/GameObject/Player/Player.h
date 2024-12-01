@@ -13,6 +13,7 @@
 #include "GameTime.h"
 #include "Shake.h"
 #include "HitSystem.h"
+#include "JustEvasionSystem.h"
 #include <map>
 #include <tuple>
 
@@ -90,6 +91,8 @@ private:// プライベートなメンバ関数
 
 	// 衝突判定
 	void OnCollision(Collider* collider);
+	// ジャスト回避の判定
+	void JustOnCollision(Collider* collider);
 
 	// ジャスト回避時のパーティクルの更新処理
 	void JustParticleUpdate(Particle& particle);
@@ -136,6 +139,7 @@ private:// プライベートなメンバ関数
 	/// </summary>
 	void ImGuiParameter();
 
+
 public:// GetterとSetter
 #pragma region Getter
 	// 3Dレティクルの座標
@@ -175,9 +179,6 @@ public:// GetterとSetter
 #pragma endregion
 
 #pragma region Setter
-	// 使用するモデルを追加
-	void AddModel(Model* model) { models_.push_back(model); }
-
 	// カメラのアドレスを設定
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// ゲームシステムクラスのアドレスを設定
@@ -202,6 +203,8 @@ public:// GetterとSetter
 	/// <param name="pos"></param>
 	void SetLocalPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
 #pragma endregion
+	// 使用するモデルを追加
+	void AddModel(Model* model) { models_.push_back(model); }
 
 private:// プライベートなメンバ変数
 	// ゲームタイマー
@@ -221,9 +224,6 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Object3D> object3d_;
 	// 自機の残像
 	std::array<std::unique_ptr<Object3D>, 20> afterImageObject3d_;
-
-	// ブースト時の炎
-	std::array<std::unique_ptr<Object3D>, 10> boostFire_;
 
 	// 2Dレティクル用のスプライト
 	std::array<Sprite, 3> sprite2DReticle_;
@@ -254,19 +254,22 @@ private:// プライベートなメンバ変数
 	// 被弾時の演出
 	std::unique_ptr<HitSystem> hitSystem_;
 
+	std::unique_ptr<JustEvasionSystem> justEvasionSystem_;
+
 #pragma region アニメーション
 	// ロックオン時のアニメーション
 	Animation reticleAnim_;
+
 	// ブースト時のアニメーション
 	Animation boostRotAnim_;
+
 	// 回避時の移動速度のアニメーション(イージングとして使用)
 	Animation evasionSpeedAnim_;
 	// 回避時の回転速度のアニメーション(イージングとして使用)
 	Animation evasionRotSpeedAnim_;
-	// 回避時の細かい座標調整
-	Animation evasionOffsetAnim_;
 	// 残像のα値のアニメーション
 	std::vector<Animation> evasionAlphaAnims_;
+
 	// やられアニメーション
 	DeadAnimationData deadAnim_;
 #pragma endregion
@@ -322,6 +325,8 @@ private:// プライベートなメンバ変数
 	GaugeData hp_;
 	// 弾ゲージ
 	GaugeData bulletGauge_;
+	// 弾ゲージのy軸サイズ(アニメーション用)
+	float bulletSizeY_;
 
 	// 無敵時間
 	float invinsibleFrame_;
@@ -334,7 +339,4 @@ private:// プライベートなメンバ変数
 	bool isInvinsible_ = false;
 	// 死亡フラグ
 	bool isDead_ = true;
-
-	// ジャスト回避の演出時間
-	float frame_;
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "MathStructs.h"
 #include "Sprite.h"
+#include "Animation.h"
 #include <numbers>
 
 #pragma region 定数
@@ -55,10 +56,10 @@ const float kMaxInvinsibleFrame = 60;
 
 // 残像を表示する時間[frame]
 const float kMaxEvasionFrame = 15;
-// ジャスト回避開始時間[frame]
-const float kStartEvasionJustFrame = 0;
+// ジャスト回避の全体時間[frame]
+const float kJustEvasionAllFrame = 33;
 // ジャスト回避猶予時間[frame]
-const float kMaxEvasionJustFrame = 15;
+const float kMaxJustEvasionFrame = 8;
 
 // 死亡演出の時間
 const float kMaxDeadAnimationFrame = 240;
@@ -98,8 +99,10 @@ struct EvasionData {
 	Vector2 direction;
 	// 回避の経過時間[frame]
 	float curretFrame = kMaxEvasionFrame;
-	// ジャスト回避の経過時間[frame]
-	float justFrame = kMaxEvasionJustFrame;
+	// ジャスト回避の演出時間[frame]
+	float justCurrentFrame = kJustEvasionAllFrame;
+	// ジャスト回避の猶予時間[frame]
+	float justFrame = kMaxJustEvasionFrame;
 	// 回避モード
 	bool isActive = false;
 	// ジャスト回避中か
@@ -119,8 +122,10 @@ struct EvasionData {
 		direction = { 0,0 };
 		// 回避の経過時間[frame]
 		curretFrame = kMaxEvasionFrame;
-		// ジャスト回避の経過時間[frame]
-		justFrame = kMaxEvasionJustFrame;
+		// ジャスト回避の演出時間[frame]
+		justCurrentFrame = kJustEvasionAllFrame;
+		// ジャスト回避の猶予時間[frame]
+		justFrame = kMaxJustEvasionFrame;
 		// 回避モード
 		isActive = false;
 		// ジャスト回避中か
@@ -132,15 +137,17 @@ struct EvasionData {
 	}
 	// ジャスト回避の情報のみ初期化
 	void JustDataReset() {
-		// ジャスト回避の経過時間[frame]
-		justFrame = kMaxEvasionJustFrame;
+		// ジャスト回避の演出時間[frame]
+		justCurrentFrame = kJustEvasionAllFrame;
+		// ジャスト回避の猶予時間[frame]
+		justFrame = kMaxJustEvasionFrame;
 		// ジャスト回避中か
 		isJust = false;
 	}
 };
 // ゲージの情報
 struct GaugeData {
-	Sprite sprite;			// ゲージの描画
+	std::unique_ptr<Sprite> sprite;			// ゲージの描画
 	Vector2 size;			// ゲージの大きさ
 	float incrementValue;	// ゲージの上昇量
 	float magnification;	// ゲージの上昇倍率

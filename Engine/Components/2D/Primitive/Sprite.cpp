@@ -9,7 +9,7 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	textureManager_ = TextureManager::GetInstance();
 	psoManager_ = PipelineManager::GetInstance();
 	// テクスチャを読み込む
-	TextureManager::GetInstance()->LoadTexture(directoryPath, textureFilePath);
+	textureManager_->LoadTexture(directoryPath, textureFilePath);
 
 	/// メモリ確保
 	// 頂点データ
@@ -45,8 +45,8 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	};
 
 	/// 頂点座標の設定
-	textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(directoryPath, textureFilePath);
-	if (textureIndex_ != UINT32_MAX) {
+	textureNum_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(directoryPath, textureFilePath);
+	if (textureNum_ != UINT32_MAX) {
 		AdjustTextureSize(directoryPath, textureFilePath);
 		size_ = textureSize_;
 		// 初期のテクスチャの大きさ
@@ -72,6 +72,104 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	indexData_[5] = 2;
 
 	ID3D12Resource* textureBuffer = textureManager_->GetTextureResource(directoryPath, textureFilePath).Get();
+	// 指定番号の画像が読み込み済みなら
+	if (textureBuffer) {
+		// テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+		// UVの頂点
+		float tex_left = textureLeftTop_.x / resDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
+		float tex_top = textureLeftTop_.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		// 頂点のUVに反映
+		vertexData_[0].texcoord = { tex_left, tex_bottom };
+		vertexData_[0].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[1].texcoord = { tex_left, tex_top };
+		vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[2].texcoord = { tex_right, tex_bottom };
+		vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[3].texcoord = { tex_right, tex_top };
+		vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
+	}
+
+	// アンカーポイントのスクリーン座標
+	worldTransform_.Initialize();
+	worldTransform_.translate = { 0,0,1 };
+
+	// カメラ
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
+	camera_->GetViewProjection().constMap->projection = MakeOrthographicMatrix(0.0f, 0.0f, float(WinApp::kClientWidth_), float(WinApp::kClientHeight_), 0.0f, 100.0f);
+	cameraPosData_ = camera_->GetTranslate();
+}
+
+void Sprite::Initialize(uint32_t textureNum) {
+	textureManager_ = TextureManager::GetInstance();
+	psoManager_ = PipelineManager::GetInstance();
+
+	// 使用するテクスチャ番号
+	textureNum_ = textureNum;
+
+	/// メモリ確保
+	// 頂点データ
+	CreateVertexResource();
+	CreateVertexBufferView();
+	// Index
+	CreateIndexResource();
+	CreateIndexBufferView();
+	// material
+	CreateMaterialResource();
+
+	// 1つ分のサイズを用意する
+	cameraPosResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Vector3)).Get();
+	// 書き込むためのアドレスを取得
+	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
+
+	// 書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+
+	/// uvの設定
+	// 色
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// Lightingするか
+	materialData_->enableLighting = false;
+	// uvTransform行列の初期化
+	materialData_->uvTransform = MakeIdentity4x4();
+	// uvを動かすための座標
+	uvTransform_ = {
+		{1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f},
+		{0.0f,0.0f,0.0f}
+	};
+
+	/// 頂点座標の設定
+	if (textureNum_ != UINT32_MAX) {
+		AdjustTextureSize(textureNum);
+		size_ = textureSize_;
+		// 初期のテクスチャの大きさ
+		startingSize_ = textureSize_;
+	}
+
+	// アンカーポイントから見た頂点座標
+	float left = (0.0f - anchorPoint_.x) * size_.x;
+	float right = (1.0f - anchorPoint_.x) * size_.x;
+	float top = (0.0f - anchorPoint_.y) * size_.y;
+	float bottom = (1.0f - anchorPoint_.y) * size_.y;
+	// 矩形のデータ
+	vertexData_[0].position = { left,bottom, 0.0f, 1.0f };// 左下
+	vertexData_[1].position = { left,top, 0.0f, 1.0f };// 左上
+	vertexData_[2].position = { right,bottom, 0.0f, 1.0f };// 右下
+	vertexData_[3].position = { right,top, 0.0f, 1.0f };// 右上
+	// Index
+	indexData_[0] = 0;
+	indexData_[1] = 1;
+	indexData_[2] = 2;
+	indexData_[3] = 1;
+	indexData_[4] = 3;
+	indexData_[5] = 2;
+
+	ID3D12Resource* textureBuffer = textureManager_->GetTextureResource(textureNum).Get();
 	// 指定番号の画像が読み込み済みなら
 	if (textureBuffer) {
 		// テクスチャ情報取得
@@ -145,7 +243,7 @@ void Sprite::Draw() {
 
 	/// DescriptorTableの設定
 	// texture
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureIndex_);
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureNum_);
 	// material
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
 	// ライティング
@@ -163,6 +261,15 @@ void Sprite::Release() {
 
 void Sprite::AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath) {
 	Microsoft::WRL::ComPtr<ID3D12Resource> textureBuffer = textureManager_->GetTextureResource(directoryPath, textureFilePath).Get();
+	assert(textureBuffer);
+
+	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+	textureSize_.x = static_cast<float>(resDesc.Width);
+	textureSize_.y = static_cast<float>(resDesc.Height);
+}
+
+void Sprite::AdjustTextureSize(uint32_t textureNum) {
+	Microsoft::WRL::ComPtr<ID3D12Resource> textureBuffer = textureManager_->GetTextureResource(textureNum).Get();
 	assert(textureBuffer);
 
 	D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();

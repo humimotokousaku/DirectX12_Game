@@ -53,13 +53,13 @@ struct Vector2 {
 		return  { x / obj.x, y / obj.y };
 	}
 	Vector2 operator/=(const Vector2& obj) {
-		return *this = *this / obj;;
+		return *this = *this / obj;
 	}
 	Vector2 operator/(float obj)const {
 		return  { x / obj, y / obj };
 	}
 	Vector2 operator/=(float obj) {
-		return *this = *this / obj;;
+		return *this = *this / obj;
 	}
 };
 

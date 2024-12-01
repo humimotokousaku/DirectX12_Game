@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EditAndContinue</DebugInformationFormat>
@@ -273,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Utility\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
     <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />

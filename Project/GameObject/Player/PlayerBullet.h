@@ -77,7 +77,7 @@ private: // メンバ変数
 	Vector3 velocity_;
 
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 1000;
+	static const int32_t kLifeTime = 60 * 3;
 	// 死亡タイマー
 	float deathTimer_ = kLifeTime;
 	// 死亡フラグ

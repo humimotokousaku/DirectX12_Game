@@ -452,6 +452,7 @@
     <ClCompile Include="Engine\Pso\PostEffect\VignetingPSO.cpp" />
     <ClCompile Include="Engine\Utility\Shake.cpp" />
     <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -775,6 +776,7 @@
     <ClInclude Include="Engine\Pso\PostEffect\VignetingPSO.h" />
     <ClInclude Include="Engine\Utility\Shake.h" />
     <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
