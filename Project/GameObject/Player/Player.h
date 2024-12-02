@@ -171,6 +171,11 @@ public:// GetterとSetter
 		else if (isFirstJust_ == kFirstJust) { return true; }
 		else if (isFirstJust_ == kEnd) { return false; }
 	}
+	const int& GetFirstJustEvasionState() {
+		if (isFirstJust_ == kNone) { return 0; }
+		else if (isFirstJust_ == kFirstJust) { return 1; }
+		else if (isFirstJust_ == kEnd) { return 2; }
+	}
 
 #pragma endregion
 
@@ -317,8 +322,8 @@ private:// プライベートなメンバ変数
 	//float justAssistFrame;
 	Vector3 justSize_ = { 1.0f,1.0f,37.0f };
 	// 初めてジャスト回避を行うか
-	//int isFirstJust_ = kNone;
-	int isFirstJust_ = kEnd;
+	int isFirstJust_ = kNone;
+	//int isFirstJust_ = kEnd;
 
 	// ロックオン
 	bool* isLockOn_;

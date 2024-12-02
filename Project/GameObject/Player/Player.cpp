@@ -337,12 +337,14 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 		move.z += 1.0f;
 	}
 	// 回避
-	if (input_->TriggerKey(DIK_C)) {
-		justEvasionCollider_->worldTransform.translate = GetWorldPosition();
-		evasion_.isActive = true;
-		evasionRotSpeedAnim_.ResetData();
-		evasionRotSpeedAnim_.SetIsStart(true);
-		if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
+	if (isFirstJust_ != kNone) {
+		if (input_->TriggerKey(DIK_C)) {
+			justEvasionCollider_->worldTransform.translate = GetWorldPosition();
+			evasion_.isActive = true;
+			evasionRotSpeedAnim_.ResetData();
+			evasionRotSpeedAnim_.SetIsStart(true);
+			if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
+		}
 	}
 #pragma endregion
 
@@ -363,12 +365,14 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 		move.z += 1.0f;
 	}
 	// 回避
-	if (input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
-		justEvasionCollider_->worldTransform.translate = GetWorldPosition();
-		evasion_.isActive = true;
-		evasionRotSpeedAnim_.ResetData();
-		evasionRotSpeedAnim_.SetIsStart(true);
-		if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
+	if (isFirstJust_ != kNone) {
+		if (input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
+			justEvasionCollider_->worldTransform.translate = GetWorldPosition();
+			evasion_.isActive = true;
+			evasionRotSpeedAnim_.ResetData();
+			evasionRotSpeedAnim_.SetIsStart(true);
+			if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
+		}
 	}
 #pragma endregion
 }

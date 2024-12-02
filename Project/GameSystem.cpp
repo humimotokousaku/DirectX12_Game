@@ -200,6 +200,15 @@ void GameSystem::Update(int& sceneNum) {
 }
 
 void GameSystem::Draw() {
+	if (player_.GetFirstJustEvasionState() != 0) {
+		guideUI_[4].isActive_ = true;
+		guideUI_[5].isActive_ = true;
+	}
+	else {
+		guideUI_[4].isActive_ = false;
+		guideUI_[5].isActive_ = false;
+	}
+
 	// Blenderで配置したオブジェクト
 	levelManager_->Draw();
 
