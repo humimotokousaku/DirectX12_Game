@@ -295,6 +295,11 @@ private:// プライベートなメンバ変数
 	// ロックオン時のレティクルのサイズ変更に使用するframe
 	int currentFrame_;
 
+
+	float justFrame_;
+	//float justAssistFrame;
+	Vector3 justSize_ = { 1.0f,1.0f,37.0f };
+
 	// ロックオン
 	bool* isLockOn_;
 	// 無敵中か

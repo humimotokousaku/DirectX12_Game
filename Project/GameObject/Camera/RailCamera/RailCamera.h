@@ -94,7 +94,7 @@ public:// パブリックなメンバ変数
 	// 回避中のfov増加量の最大値
 	float kMaxEvasionFovIncrease = -3.0f;
 	// ジャスト回避時のfov増加量の最大値
-	float kMaxJustEvasionFovIncrease = -15.0f;
+	float kMaxJustEvasionFovIncrease = -20.0f;
 
 private:
 	// カメラ

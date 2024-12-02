@@ -18,7 +18,7 @@ void Score::Initialize() {
 		numSprite_[i] = std::make_unique<Sprite>();
 		numSprite_[i]->Initialize("Textures/UI", "0.png");
 		numSprite_[i]->SetAnchorPoint(Vector2{ 0.5f, 0.5f });
-		numSprite_[i]->SetPos(Vector2{ 1120.0f + 16.0f * i, 192.0f });
+		numSprite_[i]->SetPos(Vector2{ 1120.0f + 16.0f * i, 258.0f });
 		postEffectManager_->AddSpriteList(numSprite_[i].get());
 
 		eachScore_[i] = 0;

@@ -18,7 +18,7 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	// 回避中のfovアニメーション
 	evasionFovAnim_.SetAnimData(&evasionFov_, 0.0f, kMaxEvasionFovIncrease, 5, Easings::EaseOutExpo);
 	// ジャスト回避時のFovアニメーション
-	justEvasionFovAnim_.SetAnimData(&justEvasionFov_, 0.0f, kMaxJustEvasionFovIncrease, 2, Easings::EaseOutExpo);
+	justEvasionFovAnim_.SetAnimData(&justEvasionFov_, 0.0f, kMaxJustEvasionFovIncrease, 6, Easings::EaseOutExpo);
 
 	// カメラの進行度
 	t_ = 0.0f;
@@ -69,10 +69,10 @@ void RailCamera::Update() {
 	camera_->Update();
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
-
-#ifdef _DEBUG
 	// ImGui
 	ImGuiParameter();
+#ifdef _DEBUG
+
 	// デバッグ用のカメラの注視点の座標を更新
 	sphere_.worldTransform.translate = target_;
 	sphere_.worldTransform.UpdateMatrix();

@@ -59,7 +59,9 @@ const float kMaxEvasionFrame = 15;
 // ジャスト回避の全体時間[frame]
 const float kJustEvasionAllFrame = 33;
 // ジャスト回避猶予時間[frame]
-const float kMaxJustEvasionFrame = 8;
+const float kMaxJustEvasionFrame = 4;
+// ジャスト回避を補助する時間[frame]
+const float kMaxJustEvasionAsisstFrame = 8;
 
 // 死亡演出の時間
 const float kMaxDeadAnimationFrame = 240;
@@ -103,6 +105,8 @@ struct EvasionData {
 	float justCurrentFrame = kJustEvasionAllFrame;
 	// ジャスト回避の猶予時間[frame]
 	float justFrame = kMaxJustEvasionFrame;
+	// ジャスト回避を補助する時間[frame]
+	float justAssistFrame = kMaxJustEvasionAsisstFrame;
 	// 回避モード
 	bool isActive = false;
 	// ジャスト回避中か

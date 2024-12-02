@@ -115,7 +115,7 @@ private:// プライベートなメンバ変数
 	// 天球
 	Skydome skydome_;
 	// UI
-	std::array<Sprite, 4> guideUI_;
+	std::array<Sprite, 6> guideUI_;
 
 	// BGM
 	uint32_t BGM_;

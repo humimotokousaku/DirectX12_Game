@@ -54,8 +54,8 @@ void GameSystem::Initialize() {
 	AddModel(modelManager_->GetModel("Models", "boostFire.obj"));
 
 	// Blender
-	//levelManager_->LoadJSONFile("TestLockOn.json", &camera_);
-	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	levelManager_->LoadJSONFile("JustMap_00.json", &camera_);
+	//levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
 	// スコアの生成
@@ -133,6 +133,15 @@ void GameSystem::Initialize() {
 	guideUI_[3].SetSize(Vector2{ 32,32 });
 	guideUI_[3].SetPos(Vector2{ 1132.0f, 128.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[3]);
+	guideUI_[4].Initialize("Textures/UI", "guide_Evasion.png");
+	guideUI_[4].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
+	guideUI_[4].SetPos(Vector2{ 1200.0f, 192.0f });
+	guideUI_[4].SetSize(Vector2{ 64.0f, 64.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[4]);
+	guideUI_[5].Initialize("Textures/UI", "guide_pad_A.png");
+	guideUI_[5].SetSize(Vector2{ 32,32 });
+	guideUI_[5].SetPos(Vector2{ 1132.0f, 192.0f });
+	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[5]);
 #pragma endregion
 
 	//PostEffectManager::GetInstance()->bloomData_.isActive = true;
@@ -288,23 +297,21 @@ void GameSystem::EffectUpdate() {
 		break;
 	case JustEvasion:
 		// 暗転
-		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.1f);
-		PointLight::GetInstance()->SetDecay(lightDecay_);
+		//lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.1f);
+		//PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーをかける
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
 		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
-
-		// ヴィネットを消す		
-		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		
+		// ヴィネットをかける
+		PostEffectManager::GetInstance()->vignetingData_.isActive = true;
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale + 200, 1.0f, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
-		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
-			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
-		}
 
-		// コントローラーを振動させる
-		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
+		// コントローラーの振動を消す
+		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを遅くする
 		GameTimer::GetInstance()->SetTimeScale(0.1f);
