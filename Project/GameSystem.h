@@ -20,6 +20,7 @@ public:
 	// 演出の状態
 	enum EffectState {
 		Normal,
+		FirstJustEvasion,
 		JustEvasion,
 		Boost
 	};
@@ -126,6 +127,8 @@ private:// プライベートなメンバ変数
 	float blurStrength_;
 	// ヴィネットの大きさ
 	float vignetteScale_;
+	// 時間の速さ
+	float timeScale_;
 
 	// 演出の状態
 	int effectState_ = Normal;

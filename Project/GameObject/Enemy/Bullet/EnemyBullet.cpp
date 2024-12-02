@@ -30,8 +30,8 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* e
 	object3d_->worldTransform.scale = {
 		2.0f,2.0f,2.0f
 	};
-	// 色を赤色にする
-	object3d_->SetColor(Vector4{ 1.0f,0.0f,0.0f,1.0f });
+	// オレンジにする
+	object3d_->SetColor(Vector4{ 1.0f,0.27f,0.0f,1.0f });
 
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
@@ -52,12 +52,12 @@ void EnemyBullet::Update() {
 	velocity_ = Lerps::Slerp(velocity_, toPlayer, kFollowRate) * kBulletSpeed * GameTimer::GetInstance()->GetTimeScale();
 
 	// Y軸周り角度(θy)
-	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
+	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z) * GameTimer::GetInstance()->GetTimeScale();
 	// 横軸方向の長さを求める
 	float velocityXZ;
 	velocityXZ = sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
 	// X軸周りの角度(θx)
-	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ);
+	object3d_->worldTransform.rotate.x = std::atan2(-velocity_.y, velocityXZ) * GameTimer::GetInstance()->GetTimeScale();
 
 	// 座標を移動させる
 	pos_ += velocity_;

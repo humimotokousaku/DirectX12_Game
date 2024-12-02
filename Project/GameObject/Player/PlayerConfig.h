@@ -98,7 +98,7 @@ struct EvasionData {
 	// 回避速度
 	Vector2 moveSpeed;
 	// 回避方向
-	Vector2 direction;
+	Vector2 direction = {0.1f, 0.0f};
 	// 回避の経過時間[frame]
 	float curretFrame = kMaxEvasionFrame;
 	// ジャスト回避の演出時間[frame]
@@ -165,5 +165,16 @@ struct DeadAnimationData {
 	Vector3 rotate;		// 回転
 	float currentFrame = kMaxDeadAnimationFrame; // 経過時間
 	bool isEnd;			// アニメーションが終了している
+};
+#pragma endregion
+
+#pragma region 列挙型
+/// <summary>
+/// 初めてジャスト回避を行うときの状態遷移
+/// </summary>
+enum FirstJustState {
+	kNone,		// ジャスト回避したことがない
+	kFirstJust,	// 初のジャスト回避中
+	kEnd		// 終了
 };
 #pragma endregion

@@ -54,8 +54,8 @@ void GameSystem::Initialize() {
 	AddModel(modelManager_->GetModel("Models", "boostFire.obj"));
 
 	// Blender
-	levelManager_->LoadJSONFile("JustMap_00.json", &camera_);
-	//levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	//levelManager_->LoadJSONFile("JustMap_00.json", &camera_);
+	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
 	// スコアの生成
@@ -255,8 +255,12 @@ void GameSystem::EffectUpdate() {
 	// 演出の状態を決定する
 	effectState_ = Normal;
 
+	// 初めてジャスト回避を行うとき
+	if (player_.GetFirstJustEvasion()) {
+		effectState_ = FirstJustEvasion;
+	}
 	// ジャスト回避中
-	if (player_.GetEvasionData().isJust) {
+	else if (player_.GetEvasionData().isJust) {
 		effectState_ = JustEvasion;
 	}
 	// 加速中
@@ -293,12 +297,39 @@ void GameSystem::EffectUpdate() {
 		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを戻す
-		GameTimer::GetInstance()->SetTimeScale(1.0f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 1.0f, 0.5f);
+		GameTimer::GetInstance()->SetTimeScale(timeScale_);
+		break;
+	case FirstJustEvasion:
+		// 暗転
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.01f);
+		PointLight::GetInstance()->SetDecay(lightDecay_);
+
+		// ラジアルブラーを消す
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 1.0f, 0.5f);
+		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
+		if (blurStrength_ <= 0.0f) {
+			PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
+		}
+
+		// ヴィネットを消す		
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
+		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
+			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
+		}
+
+		// コントローラーの振動を消す
+		Input::GetInstance()->GamePadVibration(0, 0, 0);
+
+		// 時間の速さを遅くする
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.0f, 1.0f, 0.8f);
+		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	case JustEvasion:
-		// 暗転
-		//lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.1f);
-		//PointLight::GetInstance()->SetDecay(lightDecay_);
+		// ライトの減衰率を戻す
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーをかける
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
@@ -314,7 +345,8 @@ void GameSystem::EffectUpdate() {
 		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを遅くする
-		GameTimer::GetInstance()->SetTimeScale(0.1f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.1f, 1.0f, 0.1f);
+		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	case Boost:
 		// ライトの減衰率を戻す
@@ -335,7 +367,8 @@ void GameSystem::EffectUpdate() {
 		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
 
 		// 時間の速さを戻す
-		GameTimer::GetInstance()->SetTimeScale(1.0f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 1.0f, 0.5f);
+		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	}
 }

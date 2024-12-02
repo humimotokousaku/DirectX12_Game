@@ -48,7 +48,7 @@ void PlayerBullet::Update() {
 	Vector3 toPlayer = enemyData_->GetWorldPosition() - GetWorldPosition();
 	toPlayer = Normalize(toPlayer);
 	velocity_ = Normalize(velocity_);
-	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * 10.0f * GameTimer::GetInstance()->GetTimeScale();
+	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * 15.0f * GameTimer::GetInstance()->GetTimeScale();
 
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);

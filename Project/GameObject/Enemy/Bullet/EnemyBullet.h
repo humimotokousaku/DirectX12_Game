@@ -67,7 +67,7 @@ public:// 定数
 	// 弾が最初にぶ方向
 	const Vector3 kFirstVelocity = { 0.0f,0.0f,1.0f };
 	// 弾の速度
-	const float kBulletSpeed = 2.5f;
+	const float kBulletSpeed = 4.5f;
 
 	// 追従の精度
 	const float kFollowRate = 0.03f;

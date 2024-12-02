@@ -187,6 +187,13 @@ void Player::Initialize() {
 	justSprite_->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, 64.0f });
 	justSprite_->isActive_ = false;
 	PostEffectManager::GetInstance()->AddSpriteList(justSprite_.get());
+	// 初めてジャスト回避するときのUI
+	firstJustSprite_ = std::make_unique<Sprite>();
+	firstJustSprite_->Initialize("Textures/UI", "guide_pad_A.png");
+	firstJustSprite_->SetSize(Vector2{ 64,64 });
+	firstJustSprite_->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, 200.0f });
+	firstJustSprite_->isActive_ = false;
+	PostEffectManager::GetInstance()->AddSpriteList(firstJustSprite_.get());
 
 	// ジャスト回避
 	justEvasionSystem_ = std::make_unique<JustEvasionSystem>();
@@ -249,7 +256,12 @@ void Player::Update() {
 	object3d_->worldTransform.UpdateMatrix();
 
 	// ジャスト判定を進める
-	justEvasionCollider_->worldTransform.translate = GetWorldPosition();
+	if (!evasion_.isActive) {
+		justEvasionCollider_->worldTransform.translate = GetWorldPosition();
+	}
+	else {
+		justEvasionCollider_->worldTransform.translate.z = GetWorldPosition().z;
+	}
 	justEvasionCollider_->worldTransform.UpdateMatrix();
 	// 何も当たっていないとき補助時間をリセット
 	if (!justEvasionCollider_->GetIsOnCollision()) { evasion_.justAssistFrame = kMaxJustEvasionAsisstFrame; }
@@ -282,6 +294,13 @@ void Player::Draw() {
 }
 
 void Player::DrawUI() {
+	if (isFirstJust_ == kFirstJust) {
+		firstJustSprite_->isActive_ = true;
+	}
+	else {
+		firstJustSprite_->isActive_ = false;
+	}
+
 	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Draw(defaultTexture);
@@ -323,6 +342,7 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 		evasion_.isActive = true;
 		evasionRotSpeedAnim_.ResetData();
 		evasionRotSpeedAnim_.SetIsStart(true);
+		if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
 	}
 #pragma endregion
 
@@ -348,6 +368,7 @@ void Player::InputUpdate(Vector3& move, Vector3& rotate) {
 		evasion_.isActive = true;
 		evasionRotSpeedAnim_.ResetData();
 		evasionRotSpeedAnim_.SetIsStart(true);
+		if (isFirstJust_ == kFirstJust) { isFirstJust_ = kEnd; }
 	}
 #pragma endregion
 }
@@ -539,8 +560,11 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 	// 回避中でなければ終了
 	if (!evasion_.isActive) {
 		// 移動方向に合わせて回避方向を指定
-		evasion_.direction.x = Utility::Sign(rotateY);
-		evasion_.direction.y = Utility::Sign(-rotateX);
+		Vector2 direction = { Utility::Sign(rotateY),Utility::Sign(-rotateX) };
+		if (direction.x != 0.0f) {
+			evasion_.direction.x = direction.x;
+		}
+		evasion_.direction.y = direction.y;
 		return;
 	}
 
@@ -592,7 +616,6 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 		evasionSpeedAnim_.ResetData();
 		evasion_.curretFrame = kMaxEvasionFrame;
 		// ジャスト回避猶予時間
-		
 		evasion_.justFrame = justFrame_;
 		evasion_.isActive = false;
 	}
@@ -632,10 +655,26 @@ bool Player::IsJustEvasionFrame() {
 	return false;
 }
 
+void Player::FirstJustEvasion() {
+
+}
+
 void Player::OnCollision(Collider* collider) {
 	collider;
-	// ジャスト回避猶予フレーム中でダメージを食らっていないとき
-	if (IsJustEvasionFrame() && !isInvinsible_) {
+	// ダメージを食らっていないとき
+	if (isInvinsible_) { return; }
+	// ジャスト回避のチュートリアル中波は処理しない
+	if (isFirstJust_ == kNone) { return; }
+
+	// ジャスト回避を補助するために時間を遅くする
+	if (evasion_.justAssistFrame >= 0.0f) {
+		gameTimer_->SetTimeScale(0.6f);
+	}
+
+	evasion_.justAssistFrame--;
+
+	// ジャスト回避猶予フレーム中
+	if (IsJustEvasionFrame()) {
 		if (evasion_.isJust) { return; }
 
 		// ジャスト回避を起動
@@ -650,6 +689,7 @@ void Player::OnCollision(Collider* collider) {
 		invinsibleFrame_ = kMaxInvinsibleFrame;
 		isInvinsible_ = true;
 	}
+
 	// HP減少処理
 	DecrementHP();
 }
@@ -658,10 +698,15 @@ void Player::JustOnCollision(Collider* collider) {
 	// ダメージを食らっていないとき
 	if (isInvinsible_) { return; }
 
+	// 初めてジャスト回避を行う場合は説明を入れる
+	if (isFirstJust_ == kNone) {
+		isFirstJust_ = kFirstJust;
+	}
 	// ジャスト回避を補助するために時間を遅くする
-	if (evasion_.justAssistFrame >= 0.0f) {
+	if (evasion_.justAssistFrame >= 0.0f && isFirstJust_ == kEnd) {
 		gameTimer_->SetTimeScale(0.6f);
 	}
+
 	evasion_.justAssistFrame--;
 
 	// ジャスト回避猶予フレーム中
@@ -831,6 +876,7 @@ void Player::DeadAnimation() {
 }
 
 void Player::ImGuiParameter() {
+#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -862,8 +908,6 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
-#ifdef _DEBUG
-
 #endif
 }
 

@@ -87,6 +87,10 @@ private:// プライベートなメンバ関数
 	/// </summary>
 	/// <returns></returns>
 	bool IsJustEvasionFrame();
+	/// <summary>
+	/// 初めてジャスト回避を行うときの処理
+	/// </summary>
+	void FirstJustEvasion();
 
 	// 衝突判定
 	void OnCollision(Collider* collider);
@@ -157,6 +161,17 @@ public:// GetterとSetter
 	const bool& GetIsEvasion() { return evasion_.isActive; }
 	// 被弾演出中かを取得
 	const bool& GetIsHit() { return hitSystem_->GetIsHit(); }
+
+	/// <summary>
+	/// 初めてのジャスト回避を行っているか最中か
+	/// </summary>
+	/// <returns></returns>
+	const bool& GetFirstJustEvasion() {
+		if (isFirstJust_ == kNone) { return false; }
+		else if (isFirstJust_ == kFirstJust) { return true; }
+		else if (isFirstJust_ == kEnd) { return false; }
+	}
+
 #pragma endregion
 
 #pragma region Setter
@@ -207,6 +222,8 @@ private:// プライベートなメンバ変数
 
 	// ジャスト回避時のUI
 	std::unique_ptr<Sprite> justSprite_;
+	// 初めてジャスト回避するときのUI
+	std::unique_ptr<Sprite> firstJustSprite_;
 
 	// 自機の軌道パーティクル
 	std::array<std::unique_ptr<Particles>, 2> particles_;
@@ -299,6 +316,9 @@ private:// プライベートなメンバ変数
 	float justFrame_;
 	//float justAssistFrame;
 	Vector3 justSize_ = { 1.0f,1.0f,37.0f };
+	// 初めてジャスト回避を行うか
+	//int isFirstJust_ = kNone;
+	int isFirstJust_ = kEnd;
 
 	// ロックオン
 	bool* isLockOn_;
@@ -306,4 +326,5 @@ private:// プライベートなメンバ変数
 	bool isInvinsible_ = false;
 	// 死亡フラグ
 	bool isDead_ = true;
+
 };
