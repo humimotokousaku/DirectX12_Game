@@ -51,18 +51,21 @@ void Animation::Update() {
 						else if constexpr (std::is_same_v<T, float>) {
 							*targetPtr = Lerps::Lerp(std::get<float>(it->start), std::get<float>(it->end), it->t);
 						}
+						else if constexpr (std::is_same_v<T, int>) {
+							*targetPtr = (int)Lerps::Lerp((float)std::get<int>(it->start), (float)std::get<int>(it->end), it->t);
+						}
 						}, (*it).target);
 					it->currentFrame += gameTimer_->GetTimeScale();
 
 					// アニメーション時間の上限を超えないようにする
 					//it->currentFrame = std::clamp<float>(it->currentFrame, 0, it->endFrame);
-				}	
+				}
 			}
 		}
 	}
-	else if(!isStart_) {
+	else if (!isStart_) {
 		// 全てのデータを初期化
-		for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {		
+		for (std::list<AnimData>::iterator it = animData_.begin(); it != animData_.end(); ++it) {
 			it->t = 0;
 			it->currentFrame = 0;
 			it->isActive = false;
@@ -104,17 +107,13 @@ void Animation::SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, floa
 	0,
 	start,
 	end,
-	false,
+	true,
 	0,
 	easeFunc
 	};
-	// 最初のアニメーションは起動させておく
-	if (animData.id == 0) {
-		animData.isActive = true;
-	}
 
 	// リストが空なら登録
- 	if (animData_.size() == 0) {
+	if (animData_.size() == 0) {
 		animData_.push_back(animData);
 		animId_++;
 		return;

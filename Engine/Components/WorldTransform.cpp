@@ -36,11 +36,11 @@ void WorldTransform::UpdateMatrix() {
 
 Vector3 WorldTransform::GetWorldPosition() {
 	// ワールド行列の平行移動成分を取得
-	Vector3 worldPos = {
+	Vector3 worldPosition = {
 		matWorld_.m[3][0],
 		matWorld_.m[3][1],
 		matWorld_.m[3][2]
 	};
 
-	return worldPos;
+	return worldPosition;
 }

@@ -32,7 +32,7 @@ void Score::Update() {
 	// スコアの挙動確認用
 #ifdef _DEBUG
 	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
-		score_ += 11;
+		AddScore(101);
 	}
 #endif // _DEBUG
 

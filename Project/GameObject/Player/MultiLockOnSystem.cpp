@@ -114,7 +114,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 		multiLockOnDatas_[size].reticleAnim[0].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{412.0f,412.0f }, Vector2{86.0f,86.0f}, 12, Easings::EaseOutCubic);
 		multiLockOnDatas_[size].reticleAnim[0].SetIsStart(true);
 		// レティクルの回転
-		multiLockOnDatas_[size].reticleAnim[1].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetRotateP(), Vector3{0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,M_PI / 2 }, 6, Easings::EaseInCubic);
+		multiLockOnDatas_[size].reticleAnim[1].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetRotateP(), Vector3{0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,(float)std::numbers::pi / 2 }, 6, Easings::EaseInCubic);
 		multiLockOnDatas_[size].reticleAnim[1].SetIsStart(true);
 
 		// 敵の管理番号

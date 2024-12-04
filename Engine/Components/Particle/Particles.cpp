@@ -182,7 +182,7 @@ bool Particles::IsCollision(const AABB& aabb, const Vector3& point) {
 	return false;
 }
 
-Particle Particles::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
+Particle Particles::MakeNewParticle(std::mt19937& randomEngine) {
 	Particle particle{};
 	// 座標
 	std::uniform_real_distribution<float> distribution(randomTranslateLimit.min, randomTranslateLimit.max);
@@ -230,7 +230,7 @@ std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& ra
 	std::list<Particle> particles;
 
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine, GetEmitterWorldPosition()));
+		particles.push_back(MakeNewParticle(randomEngine));
 	}
 	return particles;
 }

@@ -29,12 +29,6 @@ public:
 		camera_->worldTransform_.parent_ = target;
 	}
 
-	void SetCameraOffset(Vector3* offset) { offset_ = offset; }
-
-	void SetCameraRotateOffset(Vector3* rotateOffset) { rotateOffset_ = rotateOffset; }
-
-	//void SetCameraShakeOffset(Vector3* shakeOffset) { shakeOffset_ = shakeOffset; }
-
 	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
 
 	void SetFov(float* fov) { fov_ = fov; }
@@ -79,8 +73,6 @@ private:
 	// 被弾時のカメラの揺れる範囲
 	Animation shakeRangeAnim_;
 
-	Vector3* offset_;
-	Vector3* rotateOffset_;
 	// 揺れの補正値
 	Vector3 shakeOffset_;
 

@@ -26,9 +26,6 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	targetT_ = 1.0f / segmentCount;
 	isMove_ = true;
 
-	// アドレスを代入
-	isBoost_ = player_->GetIsBoost_P();
-
 #pragma region デバッグ用
 	// 線分の数+1個分の頂点座標の計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {
@@ -128,7 +125,7 @@ void RailCamera::Move() {
 
 void RailCamera::BoostUpdate() {
 	// 加速時はfovを上げる
-	if (*isBoost_) {
+	if (player_->GetIsBoost()) {
 		moveSpeed_ = 0.8f * GameTimer::GetInstance()->GetTimeScale();
 		// fov
 		boostFovAnim_.SetIsStart(true);

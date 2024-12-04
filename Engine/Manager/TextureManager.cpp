@@ -246,7 +246,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(con
 
 	// Resourceの生成
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = DirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
+	HRESULT hr{};
+	hr = DirectXCommon::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProperties,
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,

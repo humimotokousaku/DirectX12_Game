@@ -20,33 +20,33 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 	colliderB->worldTransform.UpdateMatrix();
 
 	/// 球体同士の判定
-	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
-		// 座標AとBの距離を求める
-		Vector3 a2b = {
-			colliderA->GetWorldPosition().x - colliderB->GetWorldPosition().x,
-			colliderA->GetWorldPosition().y - colliderB->GetWorldPosition().y,
-			colliderA->GetWorldPosition().z - colliderB->GetWorldPosition().z
-		};
-		float a2bR = colliderA->GetRadius() + colliderB->GetRadius();
-		// 球と球の交差判定
-		if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
-			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderB);
-			colliderA->worldTransform.UpdateMatrix();
-			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderA);
-			colliderB->worldTransform.UpdateMatrix();
+	//if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
+	//	// 座標AとBの距離を求める
+	//	Vector3 a2b = {
+	//		colliderA->GetWorldPosition().x - colliderB->GetWorldPosition().x,
+	//		colliderA->GetWorldPosition().y - colliderB->GetWorldPosition().y,
+	//		colliderA->GetWorldPosition().z - colliderB->GetWorldPosition().z
+	//	};
+	//	float a2bR = colliderA->GetRadius() + colliderB->GetRadius();
+	//	// 球と球の交差判定
+	//	if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
+	//		// コライダーAの衝突時コールバックを呼び出す
+	//		colliderA->OnCollision(colliderB);
+	//		colliderA->worldTransform.UpdateMatrix();
+	//		// コライダーBの衝突時コールバックを呼び出す
+	//		colliderB->OnCollision(colliderA);
+	//		colliderB->worldTransform.UpdateMatrix();
 
-			// 今当たっている
-			colliderA->SetIsOnCollision(true);
-			colliderB->SetIsOnCollision(true);
-		}
-		else {
-			// 今は当たっていない
-			colliderA->SetIsOnCollision(false);
-			colliderB->SetIsOnCollision(false);
-		}
-	}
+	//		// 今当たっている
+	//		colliderA->SetIsOnCollision(true);
+	//		colliderB->SetIsOnCollision(true);
+	//	}
+	//	else {
+	//		// 今は当たっていない
+	//		colliderA->SetIsOnCollision(false);
+	//		colliderB->SetIsOnCollision(false);
+	//	}
+	//}
 	/// OBB同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionOBB && colliderB->GetCollisionPrimitive() == kCollisionOBB) {
 		colliderA->SetOBBCenterPos(colliderA->GetWorldPosition());

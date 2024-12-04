@@ -92,11 +92,11 @@ void EnemyManager::Update() {
 
 	// 出現時のパーティクル
 	for (Particles* particle : spawnParticles_) {
-		//particle->Update();
+		particle->Update();
 	}
 	// 被弾時のパーティクル
 	for (Particles* hitParticle : hitParticles_) {
-		//hitParticle->Update();
+		hitParticle->Update();
 	}
 }
 

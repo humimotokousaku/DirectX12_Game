@@ -9,6 +9,7 @@ void JustEvasionSystem::Initialize() {
 	// インスタンスを取得
 	textureManager_ = TextureManager::GetInstance();
 	postEffectManager_ = PostEffectManager::GetInstance();
+	score_ = Score::GetInstance();
 
 	justParticleTexture_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
 }
@@ -74,6 +75,8 @@ void JustEvasionSystem::CheckBox() {
 			// 弾ゲージを増加
 			player_->IncrementBulletGauge(1.0f);
 			justParticle.particle->isActive_ = false;
+			// スコア加算
+			score_->AddScore(100);
 		}
 	}
 }

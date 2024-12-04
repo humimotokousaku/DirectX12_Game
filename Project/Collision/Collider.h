@@ -32,11 +32,11 @@ public:
 	OBB GetOBB() { return obb_; }
 
 	// 衝突属性(自分)を取得
-	uint32_t GetCollisionAttribute() { return collisionAttribute_; }
+	const uint32_t& GetCollisionAttribute() { return collisionAttribute_; }
 	// 衝突マスク(相手)を取得
-	uint32_t GetCollisionMask() { return collisionMask_; }
+	const uint32_t& GetCollisionMask() { return collisionMask_; }
 	// 当たり判定の形状を取得
-	uint32_t GetCollisionPrimitive() { return collisionPrimitive_; }
+	const uint32_t& GetCollisionPrimitive() { return collisionPrimitive_; }
 
 	// ワールド座標を取得
 	Vector3 GetWorldPosition() {
@@ -85,11 +85,11 @@ public:
 	}
 
 	// 衝突属性(自分)を設定
-	void SetCollisionAttribute(uint32_t collisionAttribute) { collisionAttribute_ = collisionAttribute; }
+	void SetCollisionAttribute(const uint32_t& collisionAttribute) { collisionAttribute_ = collisionAttribute; }
 	// 衝突マスク(相手)を設定
-	void SetCollisionMask(uint32_t collisionMask) { collisionMask_ = collisionMask; }
+	void SetCollisionMask(const uint32_t& collisionMask) { collisionMask_ = collisionMask; }
 	// 当たり判定の形状を設定
-	void SetCollisionPrimitive(uint32_t collisionPrimitive) { collisionPrimitive_ = collisionPrimitive; }
+	void SetCollisionPrimitive(const uint32_t& collisionPrimitive) { collisionPrimitive_ = collisionPrimitive; }
 
 	// 今当たっているかを設定
 	void SetIsOnCollision(bool isOnCollision) { isOnCollision_ = isOnCollision; }

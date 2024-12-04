@@ -19,10 +19,6 @@ void FollowCamera::Initialize(Player* player) {
 	const Vector3 end = { 0.3f, 0.3f,0.0f };
 	shakeRangeAnim_.SetAnimData(hitShake_->GetRange_P(), hitShake_->GetRange(), end, endFrame, Easings::EaseInExpo);
 	shakeRangeAnim_.SetAnimData(hitShake_->GetRange_P(), end, Vector3{ 0,0,0 }, hitShake_->GetEndFrame() - endFrame, Easings::EaseInCubic);
-
-	// 
-	offset_ = player_->GetCameraOffset_P();
-	rotateOffset_ = player_->GetCameraRotateOffset_P();
 }
 
 void FollowCamera::Update() {
@@ -38,7 +34,7 @@ void FollowCamera::Update() {
 	// 座標をコピーしてオフセット分ずらす
 	camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset + shakeOffset_;
 	// 演出用のoffsetを加算
-	camera_->worldTransform_.rotate += (*rotateOffset_);
+	camera_->worldTransform_.rotate += player_->GetCameraRotateOffset();
 
 	// fov
 	camera_->viewProjection_.fovAngleY = *fov_;
@@ -87,7 +83,7 @@ void FollowCamera::HitUpdate() {
 Vector3 FollowCamera::TargetOffset() const {
 	// 追従対象からのオフセット
 	Vector3 offset = { 0, 5, -20 };
-	offset += (*offset_);
+	offset += player_->GetCameraOffset();
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate);
 

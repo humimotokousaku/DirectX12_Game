@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "PostEffectManager.h"
 #include "PlayerConfig.h"
+#include "Score.h"
 #include <vector>
 #include <random>
 
@@ -89,6 +90,7 @@ private:// エンジン機能
 private:
 	Player* player_;
 	Camera* camera_;
+	Score* score_;
 
 	// ジャスト時に出るパーティクル
 	std::vector<JustParticleData> justParticles_;

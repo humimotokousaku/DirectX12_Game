@@ -371,7 +371,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencilTextureR
 
 	// Resourceの生成
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = device_->CreateCommittedResource(
+	HRESULT hr{};
+	hr = device_->CreateCommittedResource(
 		&heapProperties,				  // Heapの設定
 		D3D12_HEAP_FLAG_NONE,			  // Heapの特殊な設定。特になし
 		&resourceDesc,					  // Resourceの設定

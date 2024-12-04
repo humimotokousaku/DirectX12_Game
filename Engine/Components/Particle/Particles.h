@@ -148,7 +148,7 @@ public:
 
 private:
 	// particleの座標と速度のランダム生成
-	Particle MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+	Particle MakeNewParticle(std::mt19937& randomEngine);
 	Particle MakeNewParticle(const Vector3& translate);
 
 	std::list<Particle> Emission(const Emitter& emitter, std::mt19937& randomEngine);

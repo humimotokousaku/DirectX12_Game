@@ -78,8 +78,10 @@ void EnemyBullet::Draw() {
 }
 
 void EnemyBullet::OnCollision(Collider* collider) {
-	collider;
-	isDead_ = true;
+	// 自機陣営に当たった場合のみダメージを受ける
+	if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
+		isDead_ = true;
+	}
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {

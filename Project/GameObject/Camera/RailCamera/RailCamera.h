@@ -77,12 +77,6 @@ public:// GetterとSetter
 	/// </summary>
 	/// <param name="pos"></param>
 	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
-
-	/// <summary>
-	/// 加速モードかを設定
-	/// </summary>
-	/// <param name="isBoost"></param>
-	void SetIsBoost(bool* isBoost) { isBoost_ = isBoost; }
 #pragma endregion
 
 public:// パブリックなメンバ変数
@@ -139,8 +133,6 @@ private:
 	bool isMove_;
 	// ゲームクリア
 	bool isGameClear_;
-	// 加速モード(自機の加速フラグのアドレスをもらう)
-	bool* isBoost_;
 
 #pragma region デバッグ用
 	// 線分で描画する用の頂点リスト

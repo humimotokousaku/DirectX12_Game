@@ -107,7 +107,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Boss;$(ProjectDir)Project\GameObject\Boss\Titan;$(ProjectDir)Project\GameObject\Boss\Titan\Parts;$(ProjectDir)Project\GameObject\Boss\Titan\State;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\GameObject\AimAssist;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
@@ -159,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp">
@@ -273,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Utility\Shake.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />
     <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
     <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
     <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />

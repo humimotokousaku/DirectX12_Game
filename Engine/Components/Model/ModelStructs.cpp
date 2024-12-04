@@ -282,7 +282,7 @@ SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelDa
 	skinCluster.srvIndex = SrvManager::GetInstance()->Allocate();
 	skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(skinCluster.srvIndex);
 	skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(skinCluster.srvIndex);
-	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(skinCluster.srvIndex, skinCluster.paletteResource.Get(), skeleton.joints.size(), sizeof(WellForGPU));
+	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(skinCluster.srvIndex, skinCluster.paletteResource.Get(), (UINT)skeleton.joints.size(), sizeof(WellForGPU));
 #pragma endregion
 
 #pragma region Influence用のResourceを確保

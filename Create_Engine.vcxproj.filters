@@ -450,6 +450,7 @@
     <ClCompile Include="Engine\Utility\Shake.cpp" />
     <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -771,6 +772,7 @@
     <ClInclude Include="Engine\Utility\Shake.h" />
     <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
     <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

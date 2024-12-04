@@ -51,7 +51,7 @@ void Plane::Initialize() {
 	materialData_->shininess = 20;
 }
 
-void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection, int fillMode) {
+void Plane::Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection) {
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
