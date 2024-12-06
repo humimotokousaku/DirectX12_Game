@@ -4,6 +4,9 @@
 #include <random>
 #include <variant>
 
+/// <summary>
+/// 揺れを引き起こす
+/// </summary>
 class Shake {
 public:
 	Shake() = default;

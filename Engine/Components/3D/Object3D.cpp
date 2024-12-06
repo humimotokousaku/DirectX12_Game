@@ -2,6 +2,7 @@
 #include "PipelineManager.h"
 #include "ModelManager.h"
 #include <array>
+#include <Utility.h>
 
 Object3D::~Object3D() {
 	worldTransform.constBuff_.ReleaseAndGetAddressOf();
@@ -56,11 +57,11 @@ void Object3D::Draw(uint32_t textureNum, int fillMode) {
 			if (model_->animation_.isLoop) {
 				// 通常
 				if (model_->animation_.playBackSpeed >= 0.0f) {
-					animationTime_ = Custom_fmod(animationTime_, model_->animation_.duration, 0);
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, 0);
 				}
 				// 逆再生
 				else if (model_->animation_.playBackSpeed < 0.0f) {
-					animationTime_ = Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
 				}
 			}
 
@@ -114,11 +115,11 @@ void Object3D::Draw(int fillMode) {
 			if (model_->animation_.isLoop) {
 				// 通常
 				if (model_->animation_.playBackSpeed >= 0.0f) {
-					animationTime_ = Custom_fmod(animationTime_, model_->animation_.duration, 0);
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, 0);
 				}
 				// 逆再生
 				else if (model_->animation_.playBackSpeed < 0.0f) {
-					animationTime_ = Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
 				}
 			}
 

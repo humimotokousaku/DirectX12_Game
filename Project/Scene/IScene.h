@@ -11,6 +11,9 @@ enum Scene {
 	GAMEOVER_SCENE
 };
 
+/// <summary>
+/// シーンの基底クラス
+/// </summary>
 class IScene
 {
 public:

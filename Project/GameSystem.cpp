@@ -114,6 +114,14 @@ void GameSystem::Initialize() {
 	// 天球の生成
 	skydome_.Initialize(models_[5], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
 
+	// スタート演出
+	startEvent_ = std::make_unique<StartEvent>();
+	startEvent_->Initialize(&player_, &followCamera_);
+	// レールカメラ
+	railCamera_.Update();
+	// 追従カメラ
+	followCamera_.Update();
+
 #pragma region UIスプライトを作成
 	guideUI_[0].Initialize("Textures/UI", "guide_Attack.png");
 	guideUI_[0].SetAnchorPoint(Vector2{ 0.5f, 0.5f });
@@ -159,6 +167,15 @@ void GameSystem::Update(int& sceneNum) {
 		sceneNum = GAMECLEAR_SCENE;
 	}
 #endif // _DEBUG
+	// スターと演出
+	startEvent_->Update();
+
+	// スタート演出中は処理しない
+	if (startEvent_->GetIsActive()) { return; }
+	else {
+		railCamera_.SetIsMove(true);
+		followCamera_.SetParent(&railCamera_.GetWorldTransform());
+	}
 
 	// エネミーマネージャ
 	enemyManager_.Update();

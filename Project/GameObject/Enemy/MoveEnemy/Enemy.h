@@ -5,6 +5,9 @@
 #include "EnemyBullet.h"
 #include <vector>
 
+/// <summary>
+/// 移動する敵
+/// </summary>
 class Enemy : public IEnemy
 {
 public:

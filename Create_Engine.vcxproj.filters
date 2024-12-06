@@ -298,9 +298,6 @@
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateHorizontal.cpp">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateVertical.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClCompile>
@@ -451,6 +448,9 @@
     <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
     <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
+    <ClCompile Include="Project\Event\StartEvent.cpp" />
+    <ClCompile Include="Project\Event\TitleEvent.cpp" />
+    <ClCompile Include="Project\Event\ClearEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -675,9 +675,6 @@
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.h">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateHorizontal.h">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateVertical.h">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClInclude>
@@ -773,6 +770,9 @@
     <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
     <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
     <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />
+    <ClInclude Include="Project\Event\StartEvent.h" />
+    <ClInclude Include="Project\Event\TitleEvent.h" />
+    <ClInclude Include="Project\Event\ClearEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

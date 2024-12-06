@@ -237,8 +237,9 @@ bool EvasionSystem::IsJustEvasionFrame() {
 }
 
 void EvasionSystem::JustOnCollision(Collider* collider) {
-	collider;
-	// ダメージを食らっていないとき
+	// 自機との判定はとらない
+	if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) { return; }
+	// ジャストの無敵中なら終了
 	if (isInvinsible_) { return; }
 
 	// 初めてジャスト回避を行う場合は説明を入れる

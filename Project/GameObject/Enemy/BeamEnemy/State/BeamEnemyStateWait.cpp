@@ -1,6 +1,5 @@
 #include "BeamEnemyStateWait.h"
 #include "BeamEnemyStateVertical.h"
-#include "BeamEnemyStateHorizontal.h"
 #include "BeamEnemy.h"
 
 BeamEnemyStateWait::BeamEnemyStateWait(BeamEnemy* enemy, Player* player) {

@@ -2,7 +2,10 @@
 #include "IEnemyState.h"
 #include "TimedCall.h"
 
-class Enemy; // 前方宣言
+class Enemy;
+/// <summary>
+/// 移動する敵の待機状態
+/// </summary>
 class EnemyStateWait : public IEnemyState {
 public:
 	~EnemyStateWait()override = default;

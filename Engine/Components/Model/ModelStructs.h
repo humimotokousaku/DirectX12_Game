@@ -185,12 +185,3 @@ void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 void AnimationUpdate(SkinCluster& skinCluster, Skeleton& skeleton, Motion& animation, float& animationTime);
 
 Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
-
-/// <summary>
-/// std::fmodを使用して指定した値に初期化
-/// </summary>
-/// <param name="dividend">剰余を求めたい値</param>
-/// <param name="divisor">割る数</param>
-/// <param name="initValue">剰余が0のときの値</param>
-/// <returns></returns>
-float Custom_fmod(float dividend, float divisor, float initValue);

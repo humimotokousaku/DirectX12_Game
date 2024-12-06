@@ -3,6 +3,9 @@
 #include "GameSystem.h"
 
 class GameManager;
+/// <summary>
+/// ゲームシーン
+/// </summary>
 class GameScene : public IScene
 {
 public:

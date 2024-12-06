@@ -18,6 +18,9 @@ void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEn
 }
 
 void MultiLockOnSystem::Update() {
+	// 自機が死んでいるなら処理しない
+	if (player_->GetIsDead()) { return; }
+
 	// ロックオンの更新処理
 	LockOnUpdate();
 

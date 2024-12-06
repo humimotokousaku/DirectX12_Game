@@ -5,6 +5,9 @@
 #include <algorithm>
 
 class FixedTurret;
+/// <summary>
+/// 弾を撃つ敵の離脱状態
+/// </summary>
 class FixedTurretLeaveState : public IFixedTurretState {
 public:
 	FixedTurretLeaveState(FixedTurret* enemy, Player* player);

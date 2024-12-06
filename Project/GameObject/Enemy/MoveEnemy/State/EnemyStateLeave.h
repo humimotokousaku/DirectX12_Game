@@ -2,8 +2,9 @@
 #include "IEnemyState.h"
 
 class Enemy;
-
-// 離脱フェーズのクラス
+/// <summary>
+/// 移動する敵の離脱状態
+/// </summary>
 class EnemyStateLeave : public IEnemyState {
 public:
 	~EnemyStateLeave()override = default;

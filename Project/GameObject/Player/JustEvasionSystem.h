@@ -8,6 +8,9 @@
 #include <random>
 
 class Player;
+/// <summary>
+/// ジャスト回避時の演出を行うクラス
+/// </summary>
 class JustEvasionSystem {
 public:
 	struct JustParticleData {

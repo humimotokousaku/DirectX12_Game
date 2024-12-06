@@ -4,6 +4,9 @@
 
 #include "Animation.h"
 
+/// <summary>
+/// ビームを撃つ敵
+/// </summary>
 class BeamEnemy : public IEnemy {
 public:
 	BeamEnemy();

@@ -4,6 +4,9 @@
 #include <map>
 #include <string>
 
+/// <summary>
+/// 数値をjsonファイルで保存、読み込みをするクラス
+/// </summary>
 class GlobalVariables {
 public:
 	static GlobalVariables* GetInstance();

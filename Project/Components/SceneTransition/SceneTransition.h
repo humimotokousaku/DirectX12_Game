@@ -3,6 +3,9 @@
 #include "Sprite.h"
 #include "PostEffectManager.h"
 
+/// <summary>
+/// シーン遷移演出
+/// </summary>
 class SceneTransition {
 public:
 	static SceneTransition* GetInstance();

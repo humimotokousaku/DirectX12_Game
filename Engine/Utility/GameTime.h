@@ -1,6 +1,9 @@
 #pragma once
 #include <chrono>
 
+/// <summary>
+/// 時間の速さを管理するクラス
+/// </summary>
 class GameTimer {
 public:
     // シングルトン

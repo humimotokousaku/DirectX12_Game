@@ -11,6 +11,7 @@
 #include "Score.h"
 #include "Skydome/Skydome.h"
 #include "MultiLockOnSystem.h"
+#include "StartEvent.h"
 
 /// <summary>
 /// ゲームシーンで行われる処理をまとめたクラス
@@ -115,6 +116,10 @@ private:// プライベートなメンバ変数
 
 	// 天球
 	Skydome skydome_;
+
+	// スタート演出
+	std::unique_ptr<StartEvent> startEvent_;
+
 	// UI
 	std::array<Sprite, 6> guideUI_;
 

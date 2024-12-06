@@ -1,5 +1,6 @@
 #include "ModelStructs.h"
 #include "SrvManager.h"
+#include "Utility.h"
 #include <cassert>
 #include <assimp/Importer.hpp>
 
@@ -356,11 +357,11 @@ void AnimationUpdate(SkinCluster& skinCluster, Skeleton& skeleton, Motion& anima
 	if (animation.isLoop) {
 		// 通常
 		if (animation.playBackSpeed > 0.0f) {
-			animationTime = Custom_fmod(animationTime, animation.duration, 0);
+			animationTime = Utility::Custom_fmod(animationTime, animation.duration, 0);
 		}
 		// 逆再生
 		else {
-			animationTime = Custom_fmod(animationTime, animation.duration, animation.duration);
+			animationTime = Utility::Custom_fmod(animationTime, animation.duration, animation.duration);
 		}
 
 	}
@@ -391,24 +392,4 @@ Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL
 	assert(SUCCEEDED(hr));
 
 	return vertexResource;
-}
-
-float Custom_fmod(float dividend, float divisor, float initValue) {
-	float result;
-
-	// 既定数値以上になったら指定した値に初期化
-
-	// divisorが-の場合
-	if (dividend < 0.0f || dividend >= divisor) {
-		result = initValue;
-		return result;
-	}
-	// divisorが+の場合
-	//if () {
-	//	result = initValue;
-	//	return result;
-	//}
-
-	result = dividend;
-	return result;
 }

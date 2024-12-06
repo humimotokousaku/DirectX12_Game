@@ -1,9 +1,10 @@
 #pragma once
 #include "Player.h"
 
-class Enemy; // 前方宣言
-
-// 基底クラス
+class Enemy;
+/// <summary>
+/// 移動する敵の状態の基底クラス
+/// </summary>
 class IEnemyState {
 public:
 	// 純粋仮想関数

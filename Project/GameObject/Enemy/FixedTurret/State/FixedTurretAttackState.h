@@ -2,10 +2,9 @@
 #include "IFixedTurretState.h"
 #include "TimedCall.h"
 
-class FixedTurret; // 前方宣言
-
+class FixedTurret;
 /// <summary>
-/// 射撃状態のクラス
+/// 弾を撃つ敵の射撃状態
 /// </summary>
 class FixedTurretAttackState : public IFixedTurretState {
 public:

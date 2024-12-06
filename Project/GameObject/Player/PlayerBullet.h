@@ -8,7 +8,7 @@
 class IEnemy;
 class Player;
 /// <summary>
-/// 自キャラの弾
+/// 自機の弾
 /// </summary>
 class PlayerBullet{
 public: // メンバ関数

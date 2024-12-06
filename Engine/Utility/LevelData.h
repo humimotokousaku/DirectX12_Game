@@ -2,6 +2,9 @@
 #include "ModelStructs.h"
 #include <vector>
 
+/// <summary>
+/// ブレンダーで読み取るオブジェクトと数値をまとめたクラス
+/// </summary>
 class LevelData {
 public:
 	// 障害物

@@ -3,11 +3,12 @@
 #include "Input.h"
 #include "PostEffectManager.h"
 #include "Sprite.h"
-
 #include <array>
 
-// スコアクラス
-// 注意点:スコアの加算をするときは1フレームだけ加算関数を呼び出すこと
+/// <summary>
+/// スコアクラス
+/// 注意点:スコアの加算をするときは1フレームだけ加算関数を呼び出すこと
+/// </summary>
 class Score {
 public:
 	/// 

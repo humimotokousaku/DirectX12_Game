@@ -1,7 +1,10 @@
 #pragma once
 #include "IBeamEnemyState.h"
 
-class BeamEnemy; // 前方宣言
+class BeamEnemy;
+/// <summary>
+/// ビームを撃つ敵の攻撃状態
+/// </summary>
 class BeamEnemyStateVertical : public IBeamEnemyState {
 public:
 	BeamEnemyStateVertical(BeamEnemy* enemy, Player* player);

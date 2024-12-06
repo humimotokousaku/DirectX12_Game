@@ -7,6 +7,9 @@
 #include "Vector3.h"
 #include "WorldTransform.h"
 
+/// <summary>
+/// レールカメラ
+/// </summary>
 class RailCamera {
 public:
 	/// <summary>
@@ -77,6 +80,8 @@ public:// GetterとSetter
 	/// </summary>
 	/// <param name="pos"></param>
 	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
+	
+	void SetIsMove(bool isMove) { isMove_ = isMove; }
 #pragma endregion
 
 public:// パブリックなメンバ変数

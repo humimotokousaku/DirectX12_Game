@@ -3,6 +3,9 @@
 #include "Collider.h"
 #include <list>
 
+/// <summary>
+/// 衝突を検知するクラス
+/// </summary>
 class CollisionManager {
 public:
 	~CollisionManager();

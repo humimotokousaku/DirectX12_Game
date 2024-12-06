@@ -5,6 +5,9 @@
 #include "EnemyBullet.h"
 #include <vector>
 
+/// <summary>
+/// 弾を撃つ敵
+/// </summary>
 class FixedTurret : public IEnemy {
 public:
 	FixedTurret();

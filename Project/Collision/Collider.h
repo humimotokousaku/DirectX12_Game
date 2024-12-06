@@ -6,6 +6,9 @@
 #include <cstdint>
 
 class CollisionManager;
+/// <summary>
+/// 当たり判定
+/// </summary>
 class Collider {
 public:
 	Collider();

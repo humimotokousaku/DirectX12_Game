@@ -5,6 +5,9 @@
 #include "LevelManager.h"
 #include "GameTime.h"
 
+/// <summary>
+/// アプリケーションを管理するクラス
+/// </summary>
 class GameManager : public Framework
 {	
 public:

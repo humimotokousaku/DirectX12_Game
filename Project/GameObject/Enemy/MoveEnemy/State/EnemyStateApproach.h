@@ -2,9 +2,10 @@
 #include "IEnemyState.h"
 #include "TimedCall.h"
 
-class Enemy; // 前方宣言
-
-// 接近フェーズのクラス
+class Enemy;
+/// <summary>
+/// 移動する敵の接近状態
+/// </summary>
 class EnemyStateApproach : public IEnemyState {
 public:
 	~EnemyStateApproach()override;

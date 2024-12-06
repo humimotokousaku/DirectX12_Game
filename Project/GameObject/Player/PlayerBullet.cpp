@@ -6,7 +6,7 @@
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {
-	
+
 }
 
 void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData) {
@@ -40,7 +40,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* 
 
 	// 緑にする
 	object3d_->SetColor(Vector4{ 0,1,0,1 });
-	
+
 	isDead_ = false;
 }
 
@@ -65,7 +65,7 @@ void PlayerBullet::Update() {
 	object3d_->worldTransform.UpdateMatrix();
 
 	// 時間経過で死ぬ
-	deathTimer_-= 1 * GameTimer::GetInstance()->GetTimeScale();
+	deathTimer_ -= 1 * GameTimer::GetInstance()->GetTimeScale();
 	if (deathTimer_ <= 0) {
 		isDead_ = true;
 	}
@@ -77,10 +77,12 @@ void PlayerBullet::Draw() {
 }
 
 void PlayerBullet::OnCollision(Collider* collider) {
-	// 障害物以外に当たっているなら弾を消す
-	if (kCollisionAttributeObstacles != collider->GetCollisionAttribute()) {
-		isDead_ = true;
-	}
+	// 障害物に当たっているなら処理しない
+	if (kCollisionAttributeObstacles == collider->GetCollisionAttribute()) { return; }
+	// ジャスト回避の判定に当たっているなら処理しない
+	if (kCollisionAttributeJustEvasion == collider->GetCollisionAttribute()) { return; }
+
+	isDead_ = true;
 }
 
 Vector3 PlayerBullet::GetRotation()

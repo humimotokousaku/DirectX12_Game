@@ -95,7 +95,6 @@ private:
 	// マテリアル
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
-
 	// テクスチャ
 	uint32_t texHandle_;
 

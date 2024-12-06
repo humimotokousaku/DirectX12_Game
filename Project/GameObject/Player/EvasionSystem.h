@@ -8,6 +8,9 @@
 #include "Particles.h"
 
 class Player;
+/// <summary>
+/// 自機の回避システム
+/// </summary>
 class EvasionSystem {
 public:
 	EvasionSystem() = default;
@@ -89,6 +92,12 @@ public:
 			afterImageObject3d_[i]->worldTransform.parent_ = parent;
 		}
 	}
+
+	/// <summary>
+	/// ジャスト回避の判定のとるかを設定
+	/// </summary>
+	/// <param name="isActive"></param>
+	void SetIsActiveJustCollider(const bool& isActive) { justEvasionCollider_->SetIsActive(isActive); }
 #pragma endregion
 
 #pragma region Getter

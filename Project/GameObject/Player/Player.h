@@ -13,12 +13,14 @@
 #include "GameTime.h"
 #include "Shake.h"
 #include "HitSystem.h"
-//#include "JustEvasionSystem.h"
 #include "EvasionSystem.h"
 #include <map>
 #include <tuple>
 
 class GameSystem;
+/// <summary>
+/// 自機
+/// </summary>
 class Player {
 public:// パブリックなメンバ関数
 	/// 
@@ -48,6 +50,16 @@ public:// パブリックなメンバ関数
 	///
 	/// User Method
 	/// 
+	
+	/// <summary>
+	/// タイトル演出時の挙動
+	/// </summary>
+	void TitleEffect(bool& isEnd);
+	/// <summary>
+	/// クリア演出時の挙動
+	/// </summary>
+	void ClearEffect(bool& isEnd);
+
 private:// プライベートなメンバ関数
 	/// <summary>
 	/// キーボードとコントローラーの入力処理
@@ -220,6 +232,11 @@ private:// プライベートなメンバ変数
 
 	// やられアニメーション
 	DeadAnimationData deadAnim_;
+
+	// タイトルシーンからゲームシーンになるまでのアニメーション
+	Animation titleAnim_;
+	// クリア時のアニメーション
+	Animation clearAnim_;
 #pragma endregion
 
 #pragma region テクスチャ

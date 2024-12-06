@@ -11,6 +11,9 @@
 #include "RailCamera.h"
 #include "Score.h"
 
+/// <summary>
+/// 敵の管理クラス
+/// </summary>
 class EnemyManager {
 public:
 	struct SpawnPointData {

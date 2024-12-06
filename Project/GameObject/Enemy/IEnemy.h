@@ -5,6 +5,9 @@
 #include "GameTime.h"
 
 class EnemyManager;
+/// <summary>
+/// 敵の基底クラス
+/// </summary>
 class IEnemy {
 public:
 	IEnemy() = default;

@@ -1,7 +1,10 @@
 #pragma once
 #include "Player.h"
 
-class FixedTurret; // 前方宣言
+class FixedTurret;
+/// <summary>
+/// 弾を撃つ敵の状態の基底クラス
+/// </summary>
 class IFixedTurretState {
 public:
 	// 純粋仮想関数

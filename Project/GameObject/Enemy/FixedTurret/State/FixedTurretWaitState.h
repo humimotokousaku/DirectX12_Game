@@ -4,6 +4,9 @@
 #include <algorithm>
 
 class FixedTurret;
+/// <summary>
+/// 弾を撃つ敵の待機状態
+/// </summary>
 class FixedTurretWaitState : public IFixedTurretState {
 public:
 	FixedTurretWaitState(FixedTurret* enemy, Player* player);

@@ -24,8 +24,8 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	t_ = 0.0f;
 	// 注視点の進行度
 	targetT_ = 1.0f / segmentCount;
-	isMove_ = true;
-
+	isMove_ = false;
+	
 #pragma region デバッグ用
 	// 線分の数+1個分の頂点座標の計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {

@@ -63,6 +63,7 @@ void Player::Initialize() {
 	hp_.sprite->SetPos(Vector2{ 64.0f, 64.0f });
 	// 緑色にする
 	hp_.sprite->SetColor(Vector4{ 0.0f,1.0f,0.0f,1.0f });
+	hp_.sprite->isActive_ = false;
 	PostEffectManager::GetInstance()->AddSpriteList(hp_.sprite.get());
 
 	// 弾ゲージ量
@@ -80,6 +81,7 @@ void Player::Initialize() {
 	bulletGauge_.sprite->SetPos(Vector2{ 64.0f, 96.0f });
 	// 青色にする
 	bulletGauge_.sprite->SetColor(Vector4{ 0.0f,0.0f,1.0f,1.0f });
+	bulletGauge_.sprite->isActive_ = false;
 	PostEffectManager::GetInstance()->AddSpriteList(bulletGauge_.sprite.get());
 #pragma endregion
 
@@ -133,6 +135,12 @@ void Player::Initialize() {
 	// 死亡アニメーション
 	// 自機を下に向ける
 	deadAnim_.animation.SetAnimData(&deadAnim_.rotate.x, 0.0f, (float)std::numbers::pi / 2.0f, 120, Easings::EaseInQuart);
+
+	// タイトルシーンからゲームシーンになるまでのアニメーション
+	titleAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, (float)std::numbers::pi * 2.0f }, 60, Easings::EaseOutExpo);
+	titleAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 4.0f, 0.0f, 0.0f }, 60, Easings::EaseInExpo);
+	// クリア時のアニメーション
+	clearAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, (float)std::numbers::pi * 2.0f }, 60, Easings::EaseOutExpo);
 #pragma endregion
 
 	// 回避システム
@@ -208,6 +216,9 @@ void Player::Draw() {
 }
 
 void Player::DrawUI() {
+	hp_.sprite->isActive_ = true;
+	bulletGauge_.sprite->isActive_ = true;
+
 	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Draw(defaultTexture);
@@ -216,6 +227,38 @@ void Player::DrawUI() {
 	deadParticle_->Draw(deadParticleTexture);
 
 	evasionSystem_->DrawUI();
+}
+
+void Player::TitleEffect(bool& isEnd) {
+	titleAnim_.SetIsStart(true);
+	titleAnim_.Update();
+
+#pragma region 向いている方向に移動
+	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
+	// 現在の回転角を取得(z軸は0にして見た目のみ回転させる)
+	Vector3 rot = object3d_->worldTransform.rotate;
+	rot.z = 0.0f;
+	// 回転行列を求める
+	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
+	// 方向ベクトルを求める
+	moveVel_ = TransformNormal(velocity, rotMatrix) * 5.0f * gameTimer_->GetTimeScale();
+#pragma endregion
+
+	// 速度を自機に加算
+	object3d_->worldTransform.translate += moveVel_;
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
+
+	// アニメーションが終わり次第タイトル演出を終了する
+	if (titleAnim_.GetIsEnd()) {
+		isEnd = true;
+	}
+}
+
+void Player::ClearEffect(bool& isEnd) {
+	if (clearAnim_.GetIsEnd()) {
+		isEnd = true;
+	}
 }
 
 void Player::InputUpdate(Vector3& move, Vector3& rotate) {
@@ -391,10 +434,11 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 }
 
 void Player::OnCollision(Collider* collider) {
-	collider;
+	if (collider->GetCollisionAttribute() == kCollisionAttributeJustEvasion) { return; }
+
 	// ダメージを食らっていないとき
 	if (isInvinsible_ || evasionSystem_->GetIsInvisible()) { return; }
-
+	evasionSystem_->SetIsActiveJustCollider(false);
 	// HP減少処理
 	DecrementHP();
 }
@@ -408,6 +452,8 @@ void Player::InvinsibleUpdate() {
 	if (invinsibleFrame_ <= 0) {
 		isInvinsible_ = false;
 		object3d_->SetColor(Vector4{ 1,1,1,1 });
+		// ジャスト回避可能にする
+		evasionSystem_->SetIsActiveJustCollider(true);
 	}
 
 	// 3フレームごとに点滅

@@ -2,6 +2,9 @@
 #include "Object3D.h"
 #include <memory>
 
+/// <summary>
+/// 天球
+/// </summary>
 class Skydome {
 public:
 	Skydome() = default;
@@ -13,7 +16,7 @@ public:
 	/// <param name="model">見た目のモデル</param>
 	/// <param name="camera">カメラのアドレス</param>
 	/// <param name="parent">自機のワールドトランスフォーム</param>
-	void Initialize(Model* model, Camera* camera, const WorldTransform* parent);
+	void Initialize(Model* model, Camera* camera, const WorldTransform* parent = nullptr);
 
 	/// <summary>
 	/// 描画

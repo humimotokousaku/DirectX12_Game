@@ -3,8 +3,14 @@
 #include "Player.h"
 #include "Shake.h"
 
+/// <summary>
+/// 追従カメラ
+/// </summary>
 class FollowCamera {
 public:
+	FollowCamera();
+	~FollowCamera() = default;
+
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -20,8 +26,16 @@ public:
 	/// </summary>
 	void HitUpdate();
 
-	// 追従対象からのオフセットを計算する
+	/// <summary>
+	/// 追従対象からのオフセットを計算する
+	/// </summary>
+	/// <returns></returns>
 	Vector3 TargetOffset() const;
+
+	/// <summary>
+	/// 座標を固定する
+	/// </summary>
+	void PositionLock(const Vector3& lockTarget);
 
 #pragma region Setter
 	// 親子関係を設定
@@ -29,8 +43,22 @@ public:
 		camera_->worldTransform_.parent_ = target;
 	}
 
-	void SetPlayerPos(Vector3 pos) { playerPos_ = pos; }
+	/// <summary>
+	/// 自機の座標を設定
+	/// </summary>
+	/// <param name="pos">座標</param>
+	void SetPlayerPos(const Vector3& pos) { playerPos_ = pos; }
 
+	/// <summary>
+	/// 追従対象との距離を設定
+	/// </summary>
+	/// <param name="offset">距離</param>
+	void SetTargetOffset(const Vector3& offset) { targetOffset_ = offset; }
+
+	/// <summary>
+	/// 視野角を設定
+	/// </summary>
+	/// <param name="fov">視野角</param>
 	void SetFov(float* fov) { fov_ = fov; }
 #pragma endregion
 
@@ -43,12 +71,11 @@ public:
 
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
-
 	/// <summary>
 	/// カメラのワールド座標を取得
 	/// </summary>
 	/// <returns>ワールド座標</returns>
-	Vector3 GetWorldPosition(){
+	Vector3 GetWorldPosition() {
 		Vector3 result = {
 			camera_->worldTransform_.matWorld_.m[3][0],
 			camera_->worldTransform_.matWorld_.m[3][1],
@@ -56,11 +83,19 @@ public:
 		};
 		return result;
 	}
+	/// <summary>
+	/// 追従対象との距離
+	/// </summary>
+	/// <returns></returns>
+	const Vector3& GetTargetOffset() { return targetOffset_; }
 #pragma endregion
 
 public:
 	// カメラ補間の精度
 	const float followRate = 0.1f;
+
+	// 初期オフセット
+	const Vector3 kDefaultOffset = { 0,-5,-20 };
 
 private:
 	// カメラ
@@ -70,6 +105,7 @@ private:
 
 	// ダメージ時に揺らす
 	Shake* hitShake_;
+
 	// 被弾時のカメラの揺れる範囲
 	Animation shakeRangeAnim_;
 
@@ -78,6 +114,8 @@ private:
 
 	Vector3 playerPos_;
 	Vector3 interTarget_;
+
+	Vector3 targetOffset_;
 
 	float* fov_;
 };
