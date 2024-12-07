@@ -202,6 +202,7 @@ void RailCamera::ImGuiParameter() {
 	}
 
 	ImGui::Checkbox("isMove", &isMove_);
+	ImGui::Checkbox("isGameClear", &isGameClear_);
 
 	// リセットボタンを作成
 	if (ImGui::Button("Reset")) {

@@ -59,6 +59,10 @@ public:// パブリックなメンバ関数
 	/// クリア演出時の挙動
 	/// </summary>
 	void ClearEffect(bool& isEnd);
+	/// <summary>
+	/// ゲームオーバー時のアニメーション
+	/// </summary>
+	void DeadEffect(bool& isEnd);
 
 private:// プライベートなメンバ関数
 	/// <summary>
@@ -104,11 +108,6 @@ private:// プライベートなメンバ関数
 	/// 弾ゲージの更新処理
 	/// </summary>
 	void BulletGaugeUpdate();
-
-	/// <summary>
-	/// ゲームオーバー時のアニメーション
-	/// </summary>
-	void DeadAnimation();
 
 	/// <summary>
 	/// ImGuiの表示
@@ -175,7 +174,19 @@ public:// GetterとSetter
 	/// ローカル座標を設定
 	/// </summary>
 	/// <param name="pos"></param>
-	void SetLocalPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	void SetLocalPosition(const Vector3& pos) { object3d_->worldTransform.translate = pos; }
+
+	/// <summary>
+	/// カメラの移動幅の設定
+	/// </summary>
+	/// <param name="cameraOffset">カメラのオフセット</param>
+	void SetCameraOffset(const Vector3& cameraOffset) { cameraOffset_ = cameraOffset; }
+
+	/// <summary>
+	/// 自機の当たり判定をとるかを設定
+	/// </summary>
+	/// <param name="isActive"></param>
+	void SetIsCollion(const bool& isActive) { object3d_->collider->SetIsActive(isActive); }
 #pragma endregion
 	// 使用するモデルを追加
 	void AddModel(Model* model) { models_.push_back(model); }
@@ -184,6 +195,14 @@ public:// GetterとSetter
 	/// 弾ゲージの増加量
 	/// </summary>
 	void IncrementBulletGauge(float value) { bulletGauge_.value += value; }
+
+	/// <summary>
+	/// 自機の角度を0にする
+	/// </summary>
+	void ResetAngle() {
+		object3d_->worldTransform.rotate = { 0,0,0 };
+		object3d_->worldTransform.UpdateMatrix();
+	}
 
 private:// プライベートなメンバ変数
 	// ゲームタイマー

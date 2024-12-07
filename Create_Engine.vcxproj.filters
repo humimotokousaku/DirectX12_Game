@@ -451,6 +451,7 @@
     <ClCompile Include="Project\Event\StartEvent.cpp" />
     <ClCompile Include="Project\Event\TitleEvent.cpp" />
     <ClCompile Include="Project\Event\ClearEvent.cpp" />
+    <ClCompile Include="Project\Event\DeadEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -773,6 +774,7 @@
     <ClInclude Include="Project\Event\StartEvent.h" />
     <ClInclude Include="Project\Event\TitleEvent.h" />
     <ClInclude Include="Project\Event\ClearEvent.h" />
+    <ClInclude Include="Project\Event\DeadEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

@@ -8,7 +8,7 @@ Framework::Framework() {
 
 void Framework::Initialize() {
 	// タイトル名を入力
-	const char kWindowTitle[] = "LE3B_フミモト_コウサク_SpeedShooter";
+	const char kWindowTitle[] = "LE3A_フミモト_コウサク_SpeedShooter";
 	// タイトルバーの変換
 	auto&& titleString = ConvertString(kWindowTitle);
 

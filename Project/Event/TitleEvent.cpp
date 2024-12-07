@@ -120,6 +120,8 @@ void TitleEvent::TitleSceneToGameSceneEffect() {
 		followObject_.UpdateMatrix();
 
 		player_->TitleEffect(isEnd_);
+		// 演出がすべて終了したら演出中フラグを切る
+		if (isEnd_) { isActive_ = false; }
 	}
 }
 

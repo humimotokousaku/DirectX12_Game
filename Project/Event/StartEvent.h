@@ -27,6 +27,11 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	const bool& GetIsActive() { return isActive_; }
+	/// <summary>
+	/// 全ての開始演出が終了したかを取得
+	/// </summary>
+	/// <returns></returns>
+	const bool& GetIsEnd() { return isEnd_; }
 #pragma endregion
 
 #pragma region Setter
@@ -45,4 +50,5 @@ private:
 	Vector3 cameraOffset_;
 
 	bool isActive_;
+	bool isEnd_;
 };

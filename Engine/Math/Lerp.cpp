@@ -127,8 +127,14 @@ namespace Lerps {
 }
 
 namespace Easings {
+	float EaseInSine(float t) {
+		return 1 - std::cos((t * (float)std::numbers::pi) / 2.0f);
+	}
+	float EaseOutSine(float t) {
+		return std::sin((t * (float)std::numbers::pi) / 2.0f);
+	}
 	float EaseInOutSine(float t) {
-		return std::sin((float)std::numbers::pi * t);
+		return -(std::cos((float)std::numbers::pi * t) - 1.0f) / 2.0f;
 	}
 
 #pragma region Cubic

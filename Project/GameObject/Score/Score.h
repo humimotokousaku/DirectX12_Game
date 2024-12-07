@@ -45,6 +45,16 @@ public:
 	/// </summary>
 	/// <param name="value">加算量</param>
 	void AddScore(int value);
+
+	/// <summary>
+	/// スコアの描画を行うかを設定
+	/// </summary>
+	/// <param name="isDraw">描画をするか</param>
+	void SetIsDraw(const bool& isDraw) {
+		for (int i = 0; i < numSprite_.size();i++) {
+			numSprite_[i]->isActive_ = isDraw;
+		}
+	}
 #pragma endregion
 
 private:

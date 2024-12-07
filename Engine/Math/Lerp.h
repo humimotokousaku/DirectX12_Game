@@ -21,6 +21,8 @@ namespace Lerps {
 };
 
 namespace Easings {
+	float EaseInSine(float t);
+	float EaseOutSine(float t);
 	float EaseInOutSine(float t);
 
 #pragma region Quint

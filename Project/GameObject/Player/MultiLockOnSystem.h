@@ -46,6 +46,11 @@ private:// プライベートなメンバ関数
 	/// </summary>
 	void LockOnUpdate();
 
+	/// <summary>
+	/// ロックオンされた敵を削除する処理
+	/// </summary>
+	void EraseLockedList();
+
 	/// </summary>
 	/// ワールド座標からスクリーン座標に変換
 	/// </summary>
@@ -70,9 +75,14 @@ private:// プライベートなメンバ関数
 public:// GetterとSetter
 	// 全敵のアドレスを設定
 	void SetEnemyList(std::list<IEnemy*>* enemys) { enemys_ = enemys; }
-
 	// 全敵のIDを設定
 	void SetEnemyIdList(std::vector<int>* enemyIdList) { enemyIdList_ = enemyIdList; }
+
+	/// <summary>
+	/// ロックオン可能状態かを取得する
+	/// </summary>
+	/// <returns></returns>
+	const bool& GetIsActive() { return player_->GetBulletGauge().isMax; }
 
 private:// 定数
 	// 同時ロックオン可能数

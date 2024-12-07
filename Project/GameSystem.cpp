@@ -54,7 +54,7 @@ void GameSystem::Initialize() {
 	AddModel(modelManager_->GetModel("Models", "boostFire.obj"));
 
 	// Blender
-	//levelManager_->LoadJSONFile("JustMap_00.json", &camera_);
+	//levelManager_->LoadJSONFile("TestGoalMap.json", &camera_);
 	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
 #pragma endregion
 
@@ -117,6 +117,13 @@ void GameSystem::Initialize() {
 	// スタート演出
 	startEvent_ = std::make_unique<StartEvent>();
 	startEvent_->Initialize(&player_, &followCamera_);
+	// クリア演出
+	clearEvent_ = std::make_unique<ClearEvent>();
+	clearEvent_->Initialize(&player_, &followCamera_);
+	// 死亡演出
+	deadEvent_ = std::make_unique<DeadEvent>();
+	deadEvent_->Initialize(&player_, &followCamera_, &railCamera_);
+
 	// レールカメラ
 	railCamera_.Update();
 	// 追従カメラ
@@ -151,37 +158,33 @@ void GameSystem::Initialize() {
 	guideUI_[5].SetPos(Vector2{ 1132.0f, 192.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[5]);
 #pragma endregion
-
-	//PostEffectManager::GetInstance()->bloomData_.isActive = true;
 }
 
 void GameSystem::Update(int& sceneNum) {
-#ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_1)) {
-		sceneNum = TITLE_SCENE;
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_2)) {
-		sceneNum = GAMEOVER_SCENE;
-	}
-	if (Input::GetInstance()->TriggerKey(DIK_3)) {
-		sceneNum = GAMECLEAR_SCENE;
-	}
-#endif // _DEBUG
-	// スターと演出
+	// スタート演出
 	startEvent_->Update();
+	// クリア演出
+	clearEvent_->Update();
+	// 死亡演出
+	deadEvent_->Update();
 
-	// スタート演出中は処理しない
-	if (startEvent_->GetIsActive()) { return; }
-	else {
-		railCamera_.SetIsMove(true);
-		followCamera_.SetParent(&railCamera_.GetWorldTransform());
-	}
+	// シーン切り替えの条件
+	SceneChange(sceneNum);
 
 	// エネミーマネージャ
 	enemyManager_.Update();
 
 	// マルチロックオン
 	multiLockOnSystem_->Update();
+
+	// スタート演出中、クリア演出中, 死亡演出中は処理しない
+	if (startEvent_->GetIsActive() && !startEvent_->GetIsEnd() || clearEvent_->GetIsActive() || clearEvent_->GetIsEnd() || deadEvent_->GetIsActive() || deadEvent_->GetIsEnd()) { return; }
+	
+	// スタート演出終了したら追従カメラの親子関係をもとに戻す
+	if(startEvent_->GetIsEnd() && !clearEvent_->GetIsEnd()) {
+		railCamera_.SetIsMove(true);
+		followCamera_.SetParent(&railCamera_.GetWorldTransform());
+	}
 
 	// 自キャラの更新
 	player_.Update();
@@ -211,21 +214,9 @@ void GameSystem::Update(int& sceneNum) {
 
 	// ポストエフェクトや暗転などの処理
 	EffectUpdate();
-
-	// シーン切り替えの条件
-	SceneChange(sceneNum);
 }
 
 void GameSystem::Draw() {
-	if (player_.GetFirstJustEvasionState() != 0) {
-		guideUI_[4].isActive_ = true;
-		guideUI_[5].isActive_ = true;
-	}
-	else {
-		guideUI_[4].isActive_ = false;
-		guideUI_[5].isActive_ = false;
-	}
-
 	// Blenderで配置したオブジェクト
 	levelManager_->Draw();
 
@@ -244,36 +235,85 @@ void GameSystem::Draw() {
 	for (PlayerBullet* bullet : playerBullets_) {
 		bullet->Draw();
 	}
-	// 自機のレティクルとHP
-	player_.DrawUI();
 
 	// 敵に関するパーティクル
 	enemyManager_.DrawParticle();
+
+	// 操作UIを非表示にする
+	for (Sprite& UI : guideUI_) {
+		UI.isActive_ = false;
+	}
+
+	// スコアを非表示にする
+	score_->SetIsDraw(false);
+
+	// 開始演出、クリア演出、死亡演出中はボタンやゲージのUIを表示しない
+	if (startEvent_->GetIsActive() || clearEvent_->GetIsActive() || clearEvent_->GetIsEnd() || deadEvent_->GetIsActive() || deadEvent_->GetIsEnd()) { return; }
+
+	// 操作UI
+	for (Sprite& UI : guideUI_) {
+		UI.isActive_ = true;
+	}
+
+	// ロックオン可能状態なら攻撃UIを明るく表示
+	if (multiLockOnSystem_->GetIsActive()) {
+		guideUI_[0].SetColor(Vector4{1.0f,1.0f,1.0f,1.0f});
+		guideUI_[1].SetColor(Vector4{1.0f,1.0f,1.0f,1.0f});
+	}
+	else {
+		guideUI_[0].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
+		guideUI_[1].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
+	}
+	// ジャスト回避のチュートリアルが終わるまで回避UIを出さない
+	if (player_.GetFirstJustEvasionState() != 0) {
+		guideUI_[4].isActive_ = true;
+		guideUI_[5].isActive_ = true;
+	}
+	else {
+		guideUI_[4].isActive_ = false;
+		guideUI_[5].isActive_ = false;
+	}
+
+	// スコアを表示する
+	score_->SetIsDraw(true);
+
+	// 自機のレティクルとHP
+	player_.DrawUI();
 
 	// レールカメラの移動ルート
 	//railCamera_.MoveRouteDraw();
 }
 
 void GameSystem::SceneChange(int& sceneNum) {
-	// クリア条件
-	if (railCamera_.GetIsGameClear()) {
+	// 死亡演出開始
+	if (player_.GetIsDead()) {
+		deadEvent_->Start();
+	}
+	// クリア演出開始
+	else if (railCamera_.GetIsGameClear()) {
+		clearEvent_->Start();
+		railCamera_.SetIsMove(false);
+	}
+
+	// ゲームオーバ演出がすべて終了したらシーン遷移演出開始
+	if (deadEvent_->GetIsEnd()) {
 		SceneTransition::GetInstance()->Start();
 	}
-	// ゲームオーバ条件
-	if (player_.GetDeadAnimationData().isEnd) {
+	// クリア演出が終了したらシーン遷移演出開始
+	if (clearEvent_->GetIsEnd()) {
 		SceneTransition::GetInstance()->Start();
 	}
 
-	// シーン切り替え可能信号が出てないなら終了
+	// シーン切り替え可能信号が出てないなら遷移しない
 	if (!SceneTransition::GetInstance()->GetSceneTransitionSignal()) { return; }
 
 	// クリア条件
-	if (railCamera_.GetIsGameClear()) {
-		sceneNum = GAMECLEAR_SCENE;
+	if (clearEvent_->GetIsEnd()) {
+		sceneNum = TITLE_SCENE;
 	}
 	// ゲームオーバ条件
-	if (player_.GetIsDead()) {
-		sceneNum = GAMEOVER_SCENE;
+	if (deadEvent_->GetIsEnd()) {
+		sceneNum = TITLE_SCENE;
 	}
 }
 

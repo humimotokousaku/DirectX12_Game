@@ -22,14 +22,39 @@ public:
 
 #pragma region Setter
 	/// <summary>
-	/// ゲーム開始演出を行うかを設定
+	/// クリア演出を行う
 	/// </summary>
-	void SetIsActive(const bool& isActive) { 
-		isActive_ = isActive; 
+	void Start() {
+		if (isActive_ || isEnd_) { return; }
+
+		isActive_ = true;
+		// 当たり判定を消す
+		player_->SetIsCollion(false);
+		player_->SetCameraOffset(Vector3{ 0,0,0 });
+		// 角度を0にする
+		player_->ResetAngle();
+		gameClear_->isActive_ = true;
+
 		// クリア時のUIアニメーション
-		gameClearUIAnim_.SetIsStart(isActive_);
+		gameClearUIAnim_.SetIsStart(true);
 		// クリア時にカメラを自機の後ろに移動するアニメーション
-		gameClearCameraOffsetAnim_.SetIsStart(isActive_);
+		cameraOffset_ = followCamera_->GetTargetOffset();
+		gameClearCameraOffsetAnim_.SetIsStart(true);
+		// クリア時にカメラを回転させるアニメーション
+		gameClearCameraAngleAnim_.SetIsStart(true);
+
+		followObject_.translate = player_->GetWorldPosition();
+		followObject_.UpdateMatrix();
+		followCamera_->SetParent(&followObject_);
+
+		// ラジアルブラーを消す
+		PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
+		// ヴィネットを消す
+		PostEffectManager::GetInstance()->vignetingData_.isActive = false;
+		// コントローラーの振動を消す
+		Input::GetInstance()->GamePadVibration(0, 0, 0);
+		// 時間の速さを戻す
+		GameTimer::GetInstance()->SetTimeScale(1.0f);
 	}
 #pragma endregion
 
@@ -65,9 +90,14 @@ private:
 	Animation gameClearUIAnim_;
 	// クリア時にカメラを自機の後ろに移動するアニメーション
 	Animation gameClearCameraOffsetAnim_;
+	// クリア時にカメラを回転させるアニメーション
+	Animation gameClearCameraAngleAnim_;
 
 	// 自機とカメラの距離
 	Vector3 cameraOffset_;
+	Vector3 cameraAngle_;
+	Vector3 cameraPos_;
+
 	Vector3 velocity_;
 
 	// 開始演出を行うか

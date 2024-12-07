@@ -12,6 +12,8 @@
 #include "Skydome/Skydome.h"
 #include "MultiLockOnSystem.h"
 #include "StartEvent.h"
+#include "ClearEvent.h"
+#include "DeadEvent.h"
 
 /// <summary>
 /// ゲームシーンで行われる処理をまとめたクラス
@@ -119,6 +121,10 @@ private:// プライベートなメンバ変数
 
 	// スタート演出
 	std::unique_ptr<StartEvent> startEvent_;
+	// クリア演出
+	std::unique_ptr<ClearEvent> clearEvent_;
+	// 死亡演出
+	std::unique_ptr<DeadEvent> deadEvent_;
 
 	// UI
 	std::array<Sprite, 6> guideUI_;

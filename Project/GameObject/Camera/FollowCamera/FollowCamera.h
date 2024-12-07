@@ -118,4 +118,7 @@ private:
 	Vector3 targetOffset_;
 
 	float* fov_;
+
+	// 座標を動かないようにするか
+	bool isLockPos_;
 };

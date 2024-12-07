@@ -140,7 +140,8 @@ void Player::Initialize() {
 	titleAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, (float)std::numbers::pi * 2.0f }, 60, Easings::EaseOutExpo);
 	titleAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 4.0f, 0.0f, 0.0f }, 60, Easings::EaseInExpo);
 	// クリア時のアニメーション
-	clearAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 10.0f, 0.0f, (float)std::numbers::pi * 2.0f }, 60, Easings::EaseOutExpo);
+	clearAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ 0.0f, 0.0f, 0.0f }, Vector3{ -(float)std::numbers::pi / 4.0f, -(float)std::numbers::pi / 3.0f, (float)std::numbers::pi / 10.0f }, 60, Easings::EaseInExpo);
+	clearAnim_.SetAnimData(&object3d_->worldTransform.rotate, Vector3{ -(float)std::numbers::pi / 10.0f, -(float)std::numbers::pi / 3.0f, (float)std::numbers::pi / 10.0f }, Vector3{ -(float)std::numbers::pi / 5.0f, -(float)std::numbers::pi / 2.0f, (float)std::numbers::pi / 10.0f }, 60, Easings::EaseOutExpo);
 #pragma endregion
 
 	// 回避システム
@@ -172,13 +173,12 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
-	// 自機が死んでいるなら演出に入る
-	DeadAnimation();
+	// DrawUI関数が呼ばれていないときはゲージ系を表示しないようにする
+	hp_.sprite->isActive_ = false;
+	bulletGauge_.sprite->isActive_ = false;
 
-	// 自機が死なないと処理しない
-	if (isDead_) { return; }
-
-	Move();	  // 移動処理
+	// 移動処理
+	Move();	  
 
 	// 自機が移動範囲を超えないようにする処理
 	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
@@ -212,19 +212,21 @@ void Player::Draw() {
 	// 自機
 	object3d_->Draw(playerTexture_);
 
-	evasionSystem_->Draw();
-}
-
-void Player::DrawUI() {
-	hp_.sprite->isActive_ = true;
-	bulletGauge_.sprite->isActive_ = true;
-
 	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Draw(defaultTexture);
 	}
 	// 死亡パーティクル
 	deadParticle_->Draw(deadParticleTexture);
+
+}
+
+void Player::DrawUI() {
+	hp_.sprite->isActive_ = true;
+	bulletGauge_.sprite->isActive_ = true;
+
+	// 回避時のエフェクト描画
+	evasionSystem_->Draw();
 
 	evasionSystem_->DrawUI();
 }
@@ -256,9 +258,80 @@ void Player::TitleEffect(bool& isEnd) {
 }
 
 void Player::ClearEffect(bool& isEnd) {
+	clearAnim_.SetIsStart(true);
+	clearAnim_.Update();
+
+#pragma region 向いている方向に移動
+	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
+	// 現在の回転角を取得(z軸は0にして見た目のみ回転させる)
+	Vector3 rot = object3d_->worldTransform.rotate;
+	// 回転行列を求める
+	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
+	// 方向ベクトルを求める
+	moveVel_ = TransformNormal(velocity, rotMatrix) * 4.0f * gameTimer_->GetTimeScale();
+#pragma endregion
+
+	// 速度を自機に加算
+	object3d_->worldTransform.translate += moveVel_;
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
+
+	// クリアアニメーションが終わったら終了
 	if (clearAnim_.GetIsEnd()) {
 		isEnd = true;
 	}
+}
+
+void Player::DeadEffect(bool& isEnd) {
+	// 自機が死なないと処理しない
+	if (!isDead_) { return; }
+
+	// 全ての状態初期化
+	evasionSystem_->Reset();
+	boost_.Reset();
+
+	// 死亡パーティクルの更新
+	deadParticle_->Update();
+
+	// 死亡演出時間が過ぎたら終了
+	if (deadAnim_.currentFrame <= 0) {
+		deadAnim_.isEnd = true;
+		isEnd = true;
+		return;
+	}
+	// 死亡演出のヒットストップ時間中なら時間を止めて処理を行わない
+	if (deadAnim_.currentFrame >= kMaxDeadAnimationFrame - kMaxDeadHitStopFrame && deadAnim_.currentFrame <= kMaxDeadAnimationFrame) {
+		gameTimer_->SetTimeScale(0.0f);
+	}
+	else {
+		gameTimer_->SetTimeScale(1.0f);
+	}
+
+	// 死亡アニメーション開始
+	deadAnim_.animation.SetIsStart(true);
+	// z軸方向に回転させる
+	deadAnim_.rotate.z += 0.1f * gameTimer_->GetTimeScale();
+
+	// 向いている方向に移動
+	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
+	// 現在の回転角を取得
+	Vector3 rot = deadAnim_.rotate;
+	rot.z = 0.0f;
+	// 回転行列を求める
+	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
+	// 方向ベクトルを求める
+	deadAnim_.velocity = TransformNormal(velocity, rotMatrix) * 0.2f;
+
+	// アニメーション更新
+	deadAnim_.animation.Update();
+
+	// 角度を更新
+	object3d_->worldTransform.rotate = deadAnim_.rotate;
+	// 座標を更新
+	object3d_->worldTransform.translate += deadAnim_.velocity * gameTimer_->GetTimeScale();
+	object3d_->worldTransform.UpdateMatrix();
+
+	deadAnim_.currentFrame--;
 }
 
 void Player::InputUpdate(Vector3& move, Vector3& rotate) {
@@ -438,7 +511,9 @@ void Player::OnCollision(Collider* collider) {
 
 	// ダメージを食らっていないとき
 	if (isInvinsible_ || evasionSystem_->GetIsInvisible()) { return; }
+	// ジャスト回避の判定を消す
 	evasionSystem_->SetIsActiveJustCollider(false);
+
 	// HP減少処理
 	DecrementHP();
 }
@@ -526,54 +601,6 @@ void Player::BulletGaugeUpdate() {
 
 	// 弾ゲージの長さ計算
 	bulletGauge_.sprite->SetSizeX(kMaxBulletGaugeSize.x * (bulletGauge_.value / kMaxBulletGauge));
-}
-
-void Player::DeadAnimation() {
-	// 自機が死なないと処理しない
-	if (!isDead_) { return; }
-
-	// 全ての状態初期化
-	evasionSystem_->Reset();
-	boost_.Reset();
-
-	// 死亡パーティクルの更新
-	deadParticle_->Update();
-
-	// 死亡演出時間が過ぎたら終了
-	if (deadAnim_.currentFrame <= 0) {
-		deadAnim_.isEnd = true;
-		return;
-	}
-	// 死亡演出のヒットストップ時間中なら時間を止めて処理を行わない
-	if (deadAnim_.currentFrame >= kMaxDeadAnimationFrame - kMaxDeadHitStopFrame && deadAnim_.currentFrame <= kMaxDeadAnimationFrame) {
-		gameTimer_->SetTimeScale(0.0f);
-	}
-
-	// 死亡アニメーション開始
-	deadAnim_.animation.SetIsStart(true);
-	// z軸方向に回転させる
-	deadAnim_.rotate.z += 0.1f * gameTimer_->GetTimeScale();
-
-	// 向いている方向に移動
-	Vector3 velocity = { 0.0f, 0.0f, kMaxSpeed };
-	// 現在の回転角を取得
-	Vector3 rot = deadAnim_.rotate;
-	rot.z = 0.0f;
-	// 回転行列を求める
-	Matrix4x4 rotMatrix = MakeRotateMatrix(rot);
-	// 方向ベクトルを求める
-	deadAnim_.velocity = TransformNormal(velocity, rotMatrix) * 0.2f;
-
-	// アニメーション更新
-	deadAnim_.animation.Update();
-
-	// 角度を更新
-	object3d_->worldTransform.rotate = deadAnim_.rotate;
-	// 座標を更新
-	object3d_->worldTransform.translate += deadAnim_.velocity * gameTimer_->GetTimeScale();
-	object3d_->worldTransform.UpdateMatrix();
-
-	deadAnim_.currentFrame--;
 }
 
 void Player::ImGuiParameter() {

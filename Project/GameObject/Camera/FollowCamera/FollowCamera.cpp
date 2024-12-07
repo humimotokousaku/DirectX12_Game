@@ -38,7 +38,9 @@ void FollowCamera::Update() {
 	Vector3 offset = TargetOffset();
 
 	// 座標をコピーしてオフセット分ずらす
-	camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset + shakeOffset_;
+	if (!isLockPos_) {
+		camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset + shakeOffset_;
+	}
 	// 演出用のoffsetを加算
 	camera_->worldTransform_.rotate += player_->GetCameraRotateOffset();
 
@@ -55,6 +57,7 @@ void FollowCamera::Update() {
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
 	camera_->SetViewMatrix(Inverse(camera_->worldTransform_.matWorld_));
 
+#ifdef _DEBUG
 	// ImGui
 	ImGui::Begin("FollowCamera");
 	ImGui::DragFloat3("translation", &camera_->worldTransform_.translate.x, 0.1f);
@@ -63,8 +66,6 @@ void FollowCamera::Update() {
 	ImGui::DragFloat("fov", &camera_->viewProjection_.fovAngleY, 0.1f, -200, 200);
 	hitShake_->ImGuiParameter();
 	ImGui::End();
-#ifdef _DEBUG
-
 #endif // _DEBUG
 }
 
@@ -95,8 +96,7 @@ void FollowCamera::HitUpdate() {
 
 Vector3 FollowCamera::TargetOffset() const {
 	// 追従対象からのオフセット
-	Vector3 offset = targetOffset_;
-	offset += player_->GetCameraOffset();
+	Vector3 offset = targetOffset_ + player_->GetCameraOffset();
 	// 回転行列を合成
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.rotate);
 
@@ -108,5 +108,6 @@ Vector3 FollowCamera::TargetOffset() const {
 
 void FollowCamera::PositionLock(const Vector3& lockTarget) {
 	camera_->worldTransform_.translate = lockTarget;
-	camera_->worldTransform_.UpdateMatrix();
+	camera_->Update();
+	isLockPos_ = true;
 }

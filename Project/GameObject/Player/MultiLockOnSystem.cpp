@@ -19,7 +19,13 @@ void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEn
 
 void MultiLockOnSystem::Update() {
 	// 自機が死んでいるなら処理しない
-	if (player_->GetIsDead()) { return; }
+	if (player_->GetIsDead()) {
+		// マルチロックオンの情報
+		multiLockOnDatas_.clear();
+		// ロックオンされている敵のID
+		lockedEnemyIdList_.clear();
+		return;
+	}
 
 	// ロックオンの更新処理
 	LockOnUpdate();
@@ -54,7 +60,7 @@ void MultiLockOnSystem::Shot() {
 		// 弾ゲージが最大でなければ弾を撃てない
 		if (!player_->GetBulletGauge().isMax) { return; }
 		// 自機の弾が一つもないときに弾を撃てる
-		if (gameSystem_->GetPlayerBulletList().size() != 0) {return;}
+		if (gameSystem_->GetPlayerBulletList().size() != 0) { return; }
 
 		// ロックオンリストに登録されている敵に向けて撃つ
 		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
@@ -114,23 +120,28 @@ void MultiLockOnSystem::LockOnUpdate() {
 
 		// ロックオン時のレティクルのアニメーション
 		// レティクルの縮小
-		multiLockOnDatas_[size].reticleAnim[0].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{412.0f,412.0f }, Vector2{86.0f,86.0f}, 12, Easings::EaseOutCubic);
+		multiLockOnDatas_[size].reticleAnim[0].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetSizeP(), Vector2{ 412.0f,412.0f }, Vector2{ 86.0f,86.0f }, 12, Easings::EaseOutCubic);
 		multiLockOnDatas_[size].reticleAnim[0].SetIsStart(true);
 		// レティクルの回転
-		multiLockOnDatas_[size].reticleAnim[1].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetRotateP(), Vector3{0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,(float)std::numbers::pi / 2 }, 6, Easings::EaseInCubic);
+		multiLockOnDatas_[size].reticleAnim[1].SetAnimData(multiLockOnDatas_[size].reticleSprite->GetRotateP(), Vector3{ 0.0f,0.0f,0.0f }, Vector3{ 0.0f,0.0f,(float)std::numbers::pi / 2 }, 6, Easings::EaseInCubic);
 		multiLockOnDatas_[size].reticleAnim[1].SetIsStart(true);
 
 		// 敵の管理番号
 		multiLockOnDatas_[size].enemyId = obj->GetId();
 	}
 
+	// ロックオンリストから削除
+	EraseLockedList();
+}
+
+void MultiLockOnSystem::EraseLockedList() {
 #pragma region ロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
 		for (IEnemy* enemyItr : *enemys_) {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
 
 			// 画面内に敵がいない
-			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {				
+			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {
 				// ロックオン対象のIDを消す
 				lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), enemyItr->GetId()), lockedEnemyIdList_.end());
 				multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
