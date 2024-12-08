@@ -762,6 +762,7 @@ void Player::DeployLockOnReticle() {
 }
 
 void Player::ImGuiParameter() {
+#ifdef _DEBUG
 	object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -782,8 +783,6 @@ void Player::ImGuiParameter() {
 	if (globalVariables->GetInstance()->GetIsSave()) {
 		globalVariables->SaveFile("Player");
 	}
-#ifdef _DEBUG
-
 #endif
 }
 
