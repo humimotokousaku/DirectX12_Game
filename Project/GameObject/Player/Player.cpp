@@ -173,10 +173,6 @@ void Player::Initialize() {
 }
 
 void Player::Update() {
-	// DrawUI関数が呼ばれていないときはゲージ系を表示しないようにする
-	hp_.sprite->isActive_ = false;
-	bulletGauge_.sprite->isActive_ = false;
-
 	// 移動処理
 	Move();	  
 
@@ -219,10 +215,15 @@ void Player::Draw() {
 	// 死亡パーティクル
 	deadParticle_->Draw(deadParticleTexture);
 
+	// DrawUI関数が呼ばれていないときはゲージ系を表示しないようにする
+	hp_.sprite->isActive_ = false;
+	bulletGauge_.sprite->isActive_ = false;
 }
 
 void Player::DrawUI() {
+	// HPゲージ
 	hp_.sprite->isActive_ = true;
+	// 弾ゲージ
 	bulletGauge_.sprite->isActive_ = true;
 
 	// 回避時のエフェクト描画
