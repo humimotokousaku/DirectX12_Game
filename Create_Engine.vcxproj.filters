@@ -26,18 +26,6 @@
     <Filter Include="Project\GameObject">
       <UniqueIdentifier>{fd5285eb-957a-4c1d-8a69-9aec74ad1233}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Project\GameObject\Boss">
-      <UniqueIdentifier>{d807ec32-8136-42e5-98c6-e5d51db266e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameObject\Boss\Titan">
-      <UniqueIdentifier>{4f23e7f1-bad5-41c1-a1e5-fbb1eb0f6b09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameObject\Boss\Titan\Parts">
-      <UniqueIdentifier>{4b212a9a-62b5-4259-9ff0-236a164df601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\GameObject\Boss\Titan\State">
-      <UniqueIdentifier>{d88aad2c-f7e2-4be3-a63a-0351ab7ba728}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Project\GameObject\Enemy">
       <UniqueIdentifier>{34b75425-4947-4549-9a12-518c516a46ab}</UniqueIdentifier>
     </Filter>
@@ -70,18 +58,6 @@
     </Filter>
     <Filter Include="Project\Components">
       <UniqueIdentifier>{dd53da0c-994f-42af-863f-39d6f73a4a72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Components\AimAssist">
-      <UniqueIdentifier>{7195b08a-0773-4e90-85df-0a33d8cccd00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Components\Camera">
-      <UniqueIdentifier>{1eb9e188-2148-4c31-b604-6bf3f263f457}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Components\Camera\FollowCamera">
-      <UniqueIdentifier>{53011a37-2929-40ce-94e4-a0e3727f6900}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project\Components\Camera\RailCamera">
-      <UniqueIdentifier>{474773be-8e80-41da-8c97-284575234342}</UniqueIdentifier>
     </Filter>
     <Filter Include="Project\Components\SceneTransition">
       <UniqueIdentifier>{819b43b3-1c9b-4b9a-bbb5-9e349adc4346}</UniqueIdentifier>
@@ -145,6 +121,24 @@
     </Filter>
     <Filter Include="Engine\Utility">
       <UniqueIdentifier>{d46d68d6-a7e4-4ad7-aeb6-37424d639113}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Event">
+      <UniqueIdentifier>{9cf4ed84-8b7c-4ff4-97c7-139b54bf5ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Skydome">
+      <UniqueIdentifier>{ed9cfc5f-69d6-4634-818c-2e1c2d7f6c28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Camera">
+      <UniqueIdentifier>{1eb9e188-2148-4c31-b604-6bf3f263f457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Camera\FollowCamera">
+      <UniqueIdentifier>{53011a37-2929-40ce-94e4-a0e3727f6900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Camera\RailCamera">
+      <UniqueIdentifier>{474773be-8e80-41da-8c97-284575234342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\Components\LevelManager">
+      <UniqueIdentifier>{d4aeb386-b5ba-47c3-a022-d9689b288cd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -398,10 +392,10 @@
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp">
-      <Filter>Project\Components\Camera\FollowCamera</Filter>
+      <Filter>Project\GameObject\Camera\FollowCamera</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Camera\RailCamera\RailCamera.cpp">
-      <Filter>Project\Components\Camera\RailCamera</Filter>
+      <Filter>Project\GameObject\Camera\RailCamera</Filter>
     </ClCompile>
     <ClCompile Include="engine\PostProcess\RadialBlur.cpp">
       <Filter>Engine\PostProcess</Filter>
@@ -434,24 +428,60 @@
       <Filter>Project\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Project\Scene\IScene.cpp" />
-    <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp" />
-    <ClCompile Include="Engine\Utility\Utility.cpp" />
-    <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp" />
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.cpp" />
-    <ClCompile Include="Project\GameSystem.cpp" />
-    <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
-    <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp" />
-    <ClCompile Include="Engine\PostProcess\Vigneting.cpp" />
-    <ClCompile Include="Engine\Pso\PostEffect\VignetingPSO.cpp" />
-    <ClCompile Include="Engine\Utility\Shake.cpp" />
-    <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
-    <ClCompile Include="Project\Event\StartEvent.cpp" />
-    <ClCompile Include="Project\Event\TitleEvent.cpp" />
-    <ClCompile Include="Project\Event\ClearEvent.cpp" />
-    <ClCompile Include="Project\Event\DeadEvent.cpp" />
+    <ClCompile Include="Project\Event\ClearEvent.cpp">
+      <Filter>Project\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Event\DeadEvent.cpp">
+      <Filter>Project\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Pso\PostEffect\VignetingPSO.cpp">
+      <Filter>Engine\Pso\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PostProcess\Vigneting.cpp">
+      <Filter>Engine\PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\Utility.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Event\StartEvent.cpp">
+      <Filter>Project\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Scene\IScene.cpp">
+      <Filter>Project\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp">
+      <Filter>Project\GameObject\Skydome</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameSystem.cpp">
+      <Filter>Project</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\HitSystem.cpp">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Event\TitleEvent.cpp">
+      <Filter>Project\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\3D\IObject3D.cpp">
+      <Filter>Engine\Components\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.cpp">
+      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\Shake.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp">
+      <Filter>Project\Components\LevelManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -749,32 +779,68 @@
       <Filter>Project\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Camera\FollowCamera\FollowCamera.h">
-      <Filter>Project\Components\Camera\FollowCamera</Filter>
+      <Filter>Project\GameObject\Camera\FollowCamera</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Camera\RailCamera\RailCamera.h">
-      <Filter>Project\Components\Camera\RailCamera</Filter>
+      <Filter>Project\GameObject\Camera\RailCamera</Filter>
     </ClInclude>
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
       <Filter>Project\Components\SceneTransition</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Skydome\Skydome.h" />
-    <ClInclude Include="Engine\Utility\Utility.h" />
-    <ClInclude Include="Project\GameObject\Player\PlayerConfig.h" />
-    <ClInclude Include="Project\Components\LevelManager\LevelManager.h" />
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.h" />
-    <ClInclude Include="Project\GameSystem.h" />
-    <ClInclude Include="Engine\Components\3D\IObject3D.h" />
-    <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
-    <ClInclude Include="Engine\PostProcess\Vigneting.h" />
-    <ClInclude Include="Engine\Pso\PostEffect\VignetingPSO.h" />
-    <ClInclude Include="Engine\Utility\Shake.h" />
-    <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />
-    <ClInclude Include="Project\Event\StartEvent.h" />
-    <ClInclude Include="Project\Event\TitleEvent.h" />
-    <ClInclude Include="Project\Event\ClearEvent.h" />
-    <ClInclude Include="Project\Event\DeadEvent.h" />
+    <ClInclude Include="Project\Event\ClearEvent.h">
+      <Filter>Project\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Event\DeadEvent.h">
+      <Filter>Project\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Pso\PostEffect\VignetingPSO.h">
+      <Filter>Engine\Pso\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostProcess\Vigneting.h">
+      <Filter>Engine\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\Utility.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Event\StartEvent.h">
+      <Filter>Project\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Skydome\Skydome.h">
+      <Filter>Project\GameObject\Skydome</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameSystem.h">
+      <Filter>Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\HitSystem.h">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Event\TitleEvent.h">
+      <Filter>Project\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\PlayerConfig.h">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\3D\IObject3D.h">
+      <Filter>Engine\Components\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.h">
+      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\Shake.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\Components\LevelManager\LevelManager.h">
+      <Filter>Project\Components\LevelManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -862,6 +928,8 @@
     <FxCompile Include="Engine\resources\sharder\PostEffectTestVS.hlsl">
       <Filter>Resources\Sharder</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resources\sharder\VignetingPS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\VignetingPS.hlsl">
+      <Filter>Resources\Sharder</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
