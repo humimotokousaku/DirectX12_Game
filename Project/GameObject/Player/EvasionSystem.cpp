@@ -248,7 +248,7 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 	}
 	// ジャスト回避を補助するために時間を遅くする
 	if (evasion_.justAssistFrame >= 0.0f && firstJustState_ == kEnd) {
-		gameTimer_->SetTimeScale(0.6f);
+		gameTimer_->SetTimeScale(0.1f);
 	}
 
 	evasion_.justAssistFrame--;

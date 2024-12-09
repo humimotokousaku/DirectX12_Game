@@ -263,19 +263,23 @@ bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.parent_->rotate);
 	// 自機のワールド行列の回転を反映する
 	offset = TransformNormal(offset, rotateMatrix);
+	offset = Normalize(offset);
 
 	// 自機と敵の方向ベクトルを算出
 	Vector3 p2eDirVel = Normalize(objectPosition - camera_->GetWorldPosition());
 
 	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
-	float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
-	float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
-	float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
-	angleXZ = Radian2Degree(angleXZ);
-
-	if ((angleXZ) < (90.0f)) {
+	if (dotXZ < 0.0f) {
 		return false;
 	}
+	//float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
+	//float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
+	//float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
+	//angleXZ = Radian2Degree(angleXZ);
+
+	//if ((angleXZ) < (90.0f)) {
+	//	return false;
+	//}
 	// カメラの映らないところにいる
 	return true;
 }

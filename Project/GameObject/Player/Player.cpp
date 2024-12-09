@@ -404,33 +404,33 @@ void Player::Move() {
 	// 移動をしていない場合
 	if (rotate.x == 0.0f) {
 		// 徐々に速度を落とす
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 3, 0.1f).x * gameTimer_->GetTimeScale();
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 0.3f).x * gameTimer_->GetTimeScale();
 		// カメラ演出
-		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.15f).x;
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * 0.15f * gameTimer_->GetTimeScale()).x;
 	}
 	else {
 		// 徐々に速度を上げる
-		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 2, 0.1f).x * gameTimer_->GetTimeScale();
+		rotateVel_.x = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.x * 0.2f).x * gameTimer_->GetTimeScale();
 		// カメラ演出
-		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * gameTimer_->GetTimeScale(), 0.1f).x;
+		cameraRotateOffset_.x = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.x * 0.1f * gameTimer_->GetTimeScale()).x;
 	}
 	// 横移動
 	// 移動をしていない場合
 	if (rotate.y == 0.0f) {
 		// 徐々に速度を落とす
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 4, 0.1f).y * gameTimer_->GetTimeScale();
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 4, 0.1f).z * gameTimer_->GetTimeScale();
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 0.4f).y * gameTimer_->GetTimeScale();
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 0.4f).z * gameTimer_->GetTimeScale();
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * 0.5f * gameTimer_->GetTimeScale(), 0.15f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * 0.5f * gameTimer_->GetTimeScale(), 0.15f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * 0.075f * gameTimer_->GetTimeScale()).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * 0.075f * gameTimer_->GetTimeScale()).z;
 	}
 	else {
 		// 徐々に速度を上げる
-		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 2, 0.1f).y * gameTimer_->GetTimeScale();
-		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 2, 0.1f).z * gameTimer_->GetTimeScale();
+		rotateVel_.y = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.y * 0.2f).y * gameTimer_->GetTimeScale();
+		rotateVel_.z = Lerps::ExponentialInterpolate(rotateVel_, rotate, kRotateSpeedDecayRate.z * 0.2f).z * gameTimer_->GetTimeScale();
 		// カメラ演出
-		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * 0.5f * gameTimer_->GetTimeScale(), 0.2f).y;
-		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * 0.5f * gameTimer_->GetTimeScale(), 0.2f).z;
+		cameraRotateOffset_.y = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.y * 0.1f * gameTimer_->GetTimeScale()).y;
+		cameraRotateOffset_.z = Lerps::ExponentialInterpolate(cameraRotateOffset_, kMaxCameraRotDirection * rotate, kRotateSpeedDecayRate.z * 0.1f * gameTimer_->GetTimeScale()).z;
 	}
 #pragma endregion
 
@@ -480,18 +480,18 @@ void Player::BoostUpdate(float moveZ) {
 	// 加速中なら速度を上げる
 	if (boost_.isActive) {
 		// 徐々に速度を上げる
-		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z, 1.0f) * gameTimer_->GetTimeScale();
+		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z) * gameTimer_->GetTimeScale();
 		// 自機を徐々に前に出す
-		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 10.0f, kMoveSpeedDecayRate.z, 1.0f);
+		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 10.0f, kMoveSpeedDecayRate.z);
 
 		// 弾ゲージを上昇量を増加
 		incrementValue *= bulletGauge_.magnification;
 	}
 	else {
 		// 徐々に速度を下げる
-		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z, 1.0f) * gameTimer_->GetTimeScale();
+		boost_.moveSpeed = Lerps::ExponentialInterpolate(boost_.moveSpeed, moveZ, kMoveSpeedDecayRate.z) * gameTimer_->GetTimeScale();
 		// 自機をもとの位置徐々に戻す
-		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 0.0f, kMoveSpeedDecayRate.z, 1.0f);
+		object3d_->worldTransform.translate.z = Lerps::ExponentialInterpolate(object3d_->worldTransform.translate.z, 0.0f, kMoveSpeedDecayRate.z);
 	}
 
 	// 速度を加算

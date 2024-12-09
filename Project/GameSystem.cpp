@@ -179,9 +179,9 @@ void GameSystem::Update(int& sceneNum) {
 
 	// スタート演出中、クリア演出中, 死亡演出中は処理しない
 	if (startEvent_->GetIsActive() && !startEvent_->GetIsEnd() || clearEvent_->GetIsActive() || clearEvent_->GetIsEnd() || deadEvent_->GetIsActive() || deadEvent_->GetIsEnd()) { return; }
-	
+
 	// スタート演出終了したら追従カメラの親子関係をもとに戻す
-	if(startEvent_->GetIsEnd() && !clearEvent_->GetIsEnd()) {
+	if (startEvent_->GetIsEnd() && !clearEvent_->GetIsEnd()) {
 		railCamera_.SetIsMove(true);
 		followCamera_.SetParent(&railCamera_.GetWorldTransform());
 	}
@@ -257,8 +257,8 @@ void GameSystem::Draw() {
 
 	// ロックオン可能状態なら攻撃UIを明るく表示
 	if (multiLockOnSystem_->GetIsActive()) {
-		guideUI_[0].SetColor(Vector4{1.0f,1.0f,1.0f,1.0f});
-		guideUI_[1].SetColor(Vector4{1.0f,1.0f,1.0f,1.0f});
+		guideUI_[0].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+		guideUI_[1].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
 	}
 	else {
 		guideUI_[0].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
@@ -342,18 +342,18 @@ void GameSystem::EffectUpdate() {
 	switch (effectState_) {
 	case Normal:
 		// ライトの減衰率を戻す
-		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 0.7f);
 		PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーを消す
-		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 1.0f, 0.5f);
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 0.5f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
 		if (blurStrength_ <= 0.0f) {
 			PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
 		}
 
 		// ヴィネットを消す		
-		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
 			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
@@ -363,23 +363,23 @@ void GameSystem::EffectUpdate() {
 		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを戻す
-		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 1.0f, 0.5f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 0.5f);
 		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	case FirstJustEvasion:
 		// 暗転
-		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 1.0f, 0.01f);
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, kMaxPointLightDecay, 0.01f);
 		PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーを消す
-		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 1.0f, 0.5f);
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, 0.0f, 0.5f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
 		if (blurStrength_ <= 0.0f) {
 			PostEffectManager::GetInstance()->radialBlurData_.isActive = false;
 		}
 
 		// ヴィネットを消す		
-		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 1.0f, 0.1f);
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kDefaultVignetteScale, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 		if (vignetteScale_ >= kDefaultVignetteScale - 1) {
 			PostEffectManager::GetInstance()->vignetingData_.isActive = false;
@@ -389,51 +389,51 @@ void GameSystem::EffectUpdate() {
 		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを遅くする
-		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.0f, 1.0f, 0.8f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.0f, 0.8f);
 		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	case JustEvasion:
 		// ライトの減衰率を戻す
-		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 0.7f);
 		PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーをかける
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
-		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 0.1f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
-		
+
 		// ヴィネットをかける
 		PostEffectManager::GetInstance()->vignetingData_.isActive = true;
-		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale + 200, 1.0f, 0.1f);
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale + 200, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 
 		// コントローラーの振動を消す
 		Input::GetInstance()->GamePadVibration(0, 0, 0);
 
 		// 時間の速さを遅くする
-		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.1f, 1.0f, 0.1f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.1f, 0.1f);
 		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	case Boost:
 		// ライトの減衰率を戻す
-		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 1.0f, 0.7f);
+		lightDecay_ = Lerps::ExponentialInterpolate(lightDecay_, 1.0f, 0.7f);
 		PointLight::GetInstance()->SetDecay(lightDecay_);
 
 		// ラジアルブラーをかける
 		PostEffectManager::GetInstance()->radialBlurData_.isActive = true;
-		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 1.0f, 0.1f);
+		blurStrength_ = Lerps::ExponentialInterpolate(blurStrength_, kBlurStrength, 0.1f);
 		PostEffectManager::GetInstance()->radialBlurData_.blurWidth = blurStrength_;
 
 		// ヴィネットをかける
 		PostEffectManager::GetInstance()->vignetingData_.isActive = true;
-		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale, 1.0f, 0.1f);
+		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 
 		// コントローラーを振動させる
 		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
 
 		// 時間の速さを戻す
-		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 1.0f, 0.5f);
+		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 0.5f);
 		GameTimer::GetInstance()->SetTimeScale(timeScale_);
 		break;
 	}

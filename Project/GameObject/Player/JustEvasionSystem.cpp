@@ -38,7 +38,7 @@ void JustEvasionSystem::JustParticleUpdate() {
 	if (!isActive_) { return; }
 
 	for (JustParticleData& justParticle : justParticles_) {
-		justParticle.velocity = Lerps::ExponentialInterpolate(justParticle.velocity, Vector2{ 0.0f,0.0f }, 1.0f, 0.01f);
+		justParticle.velocity = Lerps::ExponentialInterpolate(justParticle.velocity, Vector2{ 0.0f,0.0f }, 0.01f);
 		// 弾ゲージにパーティクルを寄せる
 		if (player_->GetEvasionData().justCurrentFrame <= 25) {
 			// 弾ゲージとの方向ベクトル

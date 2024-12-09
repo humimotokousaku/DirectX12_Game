@@ -133,7 +133,7 @@ void RailCamera::BoostUpdate() {
 	else {
 		moveSpeed_ = 0.6f * GameTimer::GetInstance()->GetTimeScale();
 		// fov
-		boostFov_ = Lerps::ExponentialInterpolate(boostFov_, 0.0f, 1.0f, 0.1f);
+		boostFov_ = Lerps::ExponentialInterpolate(boostFov_, 0.0f, 0.1f);
 		boostFovAnim_.SetIsStart(false);
 	}
 	boostFovAnim_.Update();
@@ -148,7 +148,7 @@ void RailCamera::EvasionUpdate() {
 
 	// 回避のアニメーションが終了したとき
 	if (evasionFovAnim_.GetIsEnd()) {
-		evasionFov_ = Lerps::ExponentialInterpolate(evasionFov_, 0.0f, 1.0f, 0.1f);
+		evasionFov_ = Lerps::ExponentialInterpolate(evasionFov_, 0.0f, 0.1f);
 	}
 }
 
@@ -160,7 +160,7 @@ void RailCamera::JustEvasionUpdate() {
 	}
 	else {
 		justEvasionFovAnim_.SetIsStart(false);
-		justEvasionFov_ = Lerps::ExponentialInterpolate(justEvasionFov_, 0.0f, 1.0f, 0.1f);
+		justEvasionFov_ = Lerps::ExponentialInterpolate(justEvasionFov_, 0.0f, 0.1f);
 	}
 
 	justEvasionFovAnim_.Update();
