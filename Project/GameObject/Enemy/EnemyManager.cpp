@@ -288,14 +288,14 @@ void EnemyManager::CheckActiveState() {
 	for (IEnemy* enemy : enemys_) {
 		// カメラの後ろなら敵の描画と機能停止
 		if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-			enemy->SetIsActive(false);
+			//enemy->SetIsActive(false);
 		}
 	}
 
 	for (EnemyBullet* bullet : enemyBullets_) {
 		// カメラの後ろなら敵の描画と機能停止
 		if (IsObjectInOppositeDirection(bullet->GetWorldPosition())) {
-			bullet->SetIsDead(true);
+			//bullet->SetIsDead(true);
 		}
 	}
 }

@@ -30,7 +30,7 @@ public:
 	/// 衝突応答
 	/// </summary>
 	/// <param name="collider">当たった相手の衝突情報</param>
-	virtual void OnCollision(Collider* collider) = 0;;
+	virtual void OnCollision(Collider* collider) = 0;
 
 	/// <summary>
 	/// 被弾時のパーティクル生成

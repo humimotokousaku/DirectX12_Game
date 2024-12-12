@@ -70,8 +70,17 @@ public:
 #pragma endregion
 
 public:// 定数
+	// 体の大きさ
+	const Vector3 kBodySize = { 1.5f,1.5f,1.5f };
+	
 	// 移動速度
 	const float kMoveSpeed = 0.005f;
+
+	// 最大体力
+	const float kMaxHp = 100.0f;
+
+	// 自機に与える体のダメージ
+	const float kBodyDamage = 30.0f;
 
 private:
 	// 敵のテクスチャ

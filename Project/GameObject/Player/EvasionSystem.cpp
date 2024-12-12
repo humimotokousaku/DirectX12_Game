@@ -17,7 +17,7 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 		afterImageObject3d_[i]->Initialize();
 		afterImageObject3d_[i]->SetModel(model);
 		afterImageObject3d_[i]->SetCamera(camera);
-		afterImageObject3d_[i]->worldTransform.scale = { 0.5f,0.5f,0.5f };
+		afterImageObject3d_[i]->worldTransform.scale = kAfterImageSize;
 		afterImageObject3d_[i]->worldTransform.UpdateMatrix();
 		// 透明にする
 		afterImageObject3d_[i]->SetColor(Vector4{ 0.2f,0.2f,0.2f,0.3f });
@@ -48,8 +48,6 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	// ジャスト判定
 	justEvasionCollider_ = std::make_unique<Collider>();
 	justEvasionCollider_->SetCollisionPrimitive(kCollisionOBB);
-	//justEvasionCollider_->SetCollisionAttribute(kCollisionAttributePlayer);
-	//justEvasionCollider_->SetCollisionMask(~kCollisionAttributePlayer);
 	justEvasionCollider_->SetCollisionAttribute(kCollisionAttributeJustEvasion);
 	justEvasionCollider_->SetCollisionMask(~kCollisionAttributeJustEvasion);
 	justEvasionCollider_->SetOBBLength(Vector3{ 1.0f,1.0f,37.0f });
@@ -156,6 +154,7 @@ void EvasionSystem::Update(float rotateY, float rotateX, Vector3& moveVel) {
 		}
 		// アニメーション情報初期化
 		evasionSpeedAnim_.ResetData();
+		// 回避の経過時間
 		evasion_.curretFrame = kMaxEvasionFrame;
 		// ジャスト回避猶予時間
 		evasion_.justFrame = kMaxJustEvasionFrame;
@@ -203,14 +202,7 @@ void EvasionSystem::JustEvasion() {
 	justEvasionSystem_->Update();
 
 	// ジャスト回避演出時間を進める
-	if (evasion_.justCurrentFrame > 0) {
-		evasion_.justCurrentFrame--;
-	}
-	else if (evasion_.justCurrentFrame <= 0) {
-		justSprite_->isActive_ = false;
-		evasion_.isJust = false;
-		justEvasionSystem_->SetIsActive(false);
-	}
+	evasion_.justCurrentFrame--;
 
 	// ジャスト回避中ではないならreturn
 	if (!evasion_.isJust) { return; }
@@ -220,6 +212,9 @@ void EvasionSystem::JustEvasion() {
 
 	// ジャスト回避の情報のみ初期化
 	if (evasion_.justCurrentFrame <= 0) {
+		justSprite_->isActive_ = false;
+		evasion_.isJust = false;
+		justEvasionSystem_->SetIsActive(false);
 		evasion_.JustDataReset();
 		justEvasionParticle_->SetEmitterSpawnLeft(1);
 		return;
@@ -246,11 +241,12 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 	if (firstJustState_ == kNone) {
 		firstJustState_ = kFirstJust;
 	}
+
 	// ジャスト回避を補助するために時間を遅くする
 	if (evasion_.justAssistFrame >= 0.0f && firstJustState_ == kEnd) {
-		gameTimer_->SetTimeScale(0.1f);
+		gameTimer_->SetTimeScale(0.6f);
 	}
-
+	// ジャスト回避をアシストする時間を進める
 	evasion_.justAssistFrame--;
 
 	// ジャスト回避猶予フレーム中
@@ -263,6 +259,7 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 		// ジャストUIを表示
 		justSprite_->isActive_ = true;
 
+		// ジャスト回避演出を出す
 		justEvasionSystem_->SetIsActive(true);
 
 		// 無敵状態にする

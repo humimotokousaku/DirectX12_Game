@@ -60,6 +60,17 @@ public: // メンバ関数
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision(Collider* collider);
 
+private:// 定数
+	// 弾が最初にぶ方向
+	const Vector3 kFirstVelocity = { 0.0f,0.0f,1.0f };
+	// 弾の速度
+	const float kBulletSpeed = 15.0f;
+
+	// 弾の大きさ
+	const Vector3 kBulletSize = { 2.0f,2.0f,2.0f };
+	// 弾のダメージ
+	const float kBulletDamage = 1000.0f;
+
 private: // メンバ変数
 	// モデル
 	std::unique_ptr<Object3D> object3d_ = nullptr;

@@ -9,7 +9,8 @@ void FixedTurretLeaveState::Initialize(FixedTurret* enemy, Player* player) {
 	enemy_ = enemy;
 	player_ = player;
 
-	leaveAnim_.SetAnimData(&leaveVel_, Vector3{ 0,0,0 }, kMaxLeaveVelocity, 30, Easings::EaseInBack);
+	leaveAnim_.SetAnimData(&leaveVel_, Vector3{ 0,0,0 }, kMaxLeaveVelocity, 40, Easings::EaseInExpo);
+	leaveAnim_.SetAnimData(&leaveVel_, Vector3{ 0,0,0 }, Vector3{0,0,0}, 180, Easings::EaseInExpo);
 	leaveAnim_.SetIsStart(true);
 }
 

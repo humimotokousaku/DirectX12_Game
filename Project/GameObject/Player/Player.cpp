@@ -508,6 +508,7 @@ void Player::EvasionUpdate(float rotateY, float rotateX) {
 }
 
 void Player::OnCollision(Collider* collider) {
+	// 衝突した相手がジャスト回避の判定なら処理しない
 	if (collider->GetCollisionAttribute() == kCollisionAttributeJustEvasion) { return; }
 
 	// ダメージを食らっていないとき
@@ -516,7 +517,7 @@ void Player::OnCollision(Collider* collider) {
 	evasionSystem_->SetIsActiveJustCollider(false);
 
 	// HP減少処理
-	DecrementHP();
+	DecrementHP(collider);
 }
 
 void Player::InvinsibleUpdate() {
@@ -547,20 +548,20 @@ void Player::HPUpdate() {
 	hp_.sprite->SetSizeX(kMaxHPSize.x * (hp_.value / kMaxHp));
 
 	// 30%未満なら赤色にする
-	if (hp_.value / kMaxHp <= 30.0f / 100.0f) {
+	if (hp_.value / kMaxHp <= kLowHp / kMaxHp) {
 		// 赤色にする
 		hp_.sprite->SetColor(Vector4{ 1,0,0,1 });
 		// 音をこもらせる
-		audio_->soundMuffleValue = -0.9f;
+		//audio_->soundMuffleValue = -0.9f;
 	}
 	else {
 		// 緑色にする
 		hp_.sprite->SetColor(Vector4{ 0,1,0,1 });
-		audio_->soundMuffleValue = 0.0f;
+		//audio_->soundMuffleValue = 0.0f;
 	}
 }
 
-void Player::DecrementHP() {
+void Player::DecrementHP(Collider* collider) {
 	// 今無敵か
 	if (!isInvinsible_) {
 		if (object3d_->collider->PressOnCollision()) {
@@ -568,7 +569,7 @@ void Player::DecrementHP() {
 			hitSystem_->Start();
 
 			// とりあえず固定で30ダメ食らう
-			hp_.value -= 30;
+			hp_.value -= collider->GetDamage();
 
 			// 死んでいる
 			if (hp_.value <= 0.0f) {

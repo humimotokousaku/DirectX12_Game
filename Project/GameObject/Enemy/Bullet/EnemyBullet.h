@@ -33,7 +33,6 @@ public:// パブリックなメンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw();
 
 	///
@@ -72,6 +71,12 @@ public:// 定数
 	// 弾の速度
 	const float kBulletSpeed = 4.5f;
 
+	// 弾の大きさ
+	const Vector3 kBulletSize = { 2.0f,2.0f,2.0f };
+
+	// 弾のダメージ
+	const float kBulletDamage = 30.0f;
+
 	// 追従の精度
 	const float kFollowRate = 0.03f;
 
@@ -95,7 +100,7 @@ private: // プライベートなメンバ変数
 	Vector3 pos_;
 
 	// 寿命<frm>
-	static const int32_t kLifeTime = 60 * 3;
+	static const int32_t kLifeTime = 60 * 2;
 	// 死亡タイマー
 	int32_t deathTimer_ = kLifeTime;
 	// 弾の有無

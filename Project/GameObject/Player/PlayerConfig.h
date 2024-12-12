@@ -34,7 +34,9 @@ const float kDistanceObject = 50.0f;
 // HPスプライトの最大サイズ
 const Vector2 kMaxHPSize = { 300.0f, 32.0f };
 // HPの最大値
-const float kMaxHp = 100;
+const float kMaxHp = 100.0f;
+// 低体力の基準値
+const float kLowHp = 30.0f;
 
 // 弾ゲージの最大サイズ
 const Vector2 kMaxBulletGaugeSize = { 250.0f, 16.0f };

@@ -126,16 +126,21 @@ void RailCamera::Move() {
 void RailCamera::BoostUpdate() {
 	// 加速時はfovを上げる
 	if (player_->GetIsBoost()) {
-		moveSpeed_ = 0.8f * GameTimer::GetInstance()->GetTimeScale();
-		// fov
+		// 移動速度
+		moveSpeed_ = kBoostMoveSpeed * GameTimer::GetInstance()->GetTimeScale();
+		// fovアニメーション開始
 		boostFovAnim_.SetIsStart(true);
 	}
 	else {
-		moveSpeed_ = 0.6f * GameTimer::GetInstance()->GetTimeScale();
+		// 移動速度
+		moveSpeed_ = kNormalMoveSpeed * GameTimer::GetInstance()->GetTimeScale();
 		// fov
 		boostFov_ = Lerps::ExponentialInterpolate(boostFov_, 0.0f, 0.1f);
+		// fovアニメーション終了
 		boostFovAnim_.SetIsStart(false);
 	}
+
+	// 加速時の視野角のアニメーション
 	boostFovAnim_.Update();
 }
 
@@ -196,8 +201,14 @@ void RailCamera::ImGuiParameter() {
 	}
 	// 速度
 	if (ImGui::TreeNode("VelocityData")) {
-		ImGui::DragFloat3("vel", &debugVel_.x, 0.01f, -100, 100);
-		ImGui::DragFloat("moveSpeed", &moveSpeed_, 0.1f, -100, 100);
+		ImGui::DragFloat3("Offset", &debugVel_.x, 0.01f, -100, 100);
+
+		if (ImGui::TreeNode("MoveSpeed")) {
+			ImGui::DragFloat("Current", &moveSpeed_, 0.0f, -100, 100);
+			ImGui::DragFloat("Normal", &kNormalMoveSpeed, 0.0f, -100, 100);
+			ImGui::DragFloat("Boost", &kBoostMoveSpeed, 0.0f, -100, 100);
+			ImGui::TreePop();
+		}
 		ImGui::TreePop();
 	}
 

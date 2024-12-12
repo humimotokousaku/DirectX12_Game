@@ -102,7 +102,7 @@ private:// プライベートなメンバ関数
 	/// <summary>
 	/// HPの減少処理
 	/// </summary>
-	void DecrementHP();
+	void DecrementHP(Collider* collider);
 
 	/// <summary>
 	/// 弾ゲージの更新処理

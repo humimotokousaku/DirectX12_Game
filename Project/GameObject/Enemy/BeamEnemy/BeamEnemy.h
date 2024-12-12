@@ -60,6 +60,14 @@ public:// 定数
 	// 移動速度
 	const float kMoveSpeed = 0.005f;
 
+	// 最大体力
+	const float kMaxHp = 100.0f;
+
+	// 自機に与えるビームのダメージ
+	const float kBeamDamage = 30.0f;
+	// 自機に与える体のダメージ
+	const float kBodyDamage = 30.0f;
+
 private:
 	// ビーム攻撃
 	std::unique_ptr<Object3D> beamObject_;

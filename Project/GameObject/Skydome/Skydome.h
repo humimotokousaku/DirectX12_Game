@@ -23,6 +23,10 @@ public:
 	/// </summary>
 	void Draw();
 
+private:// 定数
+	// 天球のサイズ
+	const Vector3 kSize = { 1000.0f,1000.0f,1000.0f };
+
 private:
 	// 3Dオブジェクト
 	std::unique_ptr<Object3D> object3d_;

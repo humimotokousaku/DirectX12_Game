@@ -23,6 +23,7 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	object3d_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
 #pragma endregion
 
@@ -31,7 +32,7 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	beamObject_->Initialize();
 	beamObject_->SetCamera(camera_);
 	beamObject_->SetModel(models_[1]);
-	beamObject_->worldTransform.translate.y = -50;
+	beamObject_->worldTransform.translate.y = -kDefaultBeamSize.y;
 	beamObject_->worldTransform.scale = kDefaultBeamSize;
 	beamObject_->worldTransform.UpdateMatrix();
 	beamObject_->worldTransform.parent_ = &object3d_->worldTransform;
@@ -40,7 +41,7 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	beamObject_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	beamObject_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	beamObject_->collider->SetOBBLength(beamObject_->worldTransform.scale);
-	beamObject_->collider->SetDamage(30);
+	beamObject_->collider->SetDamage(kBeamDamage);
 	beamObject_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
 	beamObject_->collider->SetIsActive(true);
 #pragma endregion
@@ -50,7 +51,7 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	state_->Initialize();
 
 	// 体力
-	hp_ = 100;
+	hp_ = kMaxHp;
 
 	// 管理番号
 	id_ = id;

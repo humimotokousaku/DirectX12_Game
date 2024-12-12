@@ -20,9 +20,8 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;
-	object3d_->worldTransform.translate = { 0,0,10 };
 	object3d_->worldTransform.rotate = rotate;
-	object3d_->worldTransform.scale = { 1.5f, 1.5f, 1.5f };
+	object3d_->worldTransform.scale = kBodySize;
 	object3d_->worldTransform.UpdateMatrix();
 
 	// colliderの設定
@@ -30,6 +29,7 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
 	object3d_->collider->SetOnCollision(std::bind(&FixedTurret::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
 
 	// 敵の行動状態
@@ -37,13 +37,13 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	state_->Initialize(this, player_);
 
 	// HP
-	hp_ = 50;
+	hp_ = kMaxHp;
 
 	// 管理番号
 	id_ = id;
 
 	// スコア
-	score_ = 50;
+	score_ = kScoreValue;
 
 	// 自機と制御点の距離を測ってローカル座標に代入
 	for (Vector3& controlPoint : controlPoints_) {

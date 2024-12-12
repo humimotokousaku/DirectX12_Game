@@ -6,7 +6,7 @@ void Skydome::Initialize(Model* model, Camera* camera, const WorldTransform* par
 	object3d_->Initialize();
 	object3d_->SetModel(model);
 	object3d_->SetCamera(camera);
-	object3d_->worldTransform.scale = { 1000.0f,1000.0f ,1000.0f };
+	object3d_->worldTransform.scale = kSize;
 	object3d_->worldTransform.parent_ = parent;
 	// ライティングをしない
 	object3d_->SetIsLighting(true);

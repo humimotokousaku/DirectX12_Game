@@ -27,9 +27,7 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* e
 	object3d_->SetModel(model);
 	object3d_->worldTransform.translate = pos;
 	// 形状を設定
-	object3d_->worldTransform.scale = {
-		2.0f,2.0f,2.0f
-	};
+	object3d_->worldTransform.scale = kBulletSize;
 	// オレンジにする
 	object3d_->SetColor(Vector4{ 1.0f,0.27f,0.0f,1.0f });
 
@@ -40,12 +38,14 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* e
 	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale);
 	object3d_->collider->SetOnCollision(std::bind(&EnemyBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
+	object3d_->collider->SetDamage(kBulletDamage);
 
 	// 弾が最初にぶ方向
 	velocity_ = kFirstVelocity;
 }
 
 void EnemyBullet::Update() {
+	// 見ている方向に弾を進める
 	Vector3 toPlayer = player_->GetWorldPosition() - GetWorldPosition();
 	toPlayer = Normalize(toPlayer);
 	velocity_ = Normalize(velocity_);

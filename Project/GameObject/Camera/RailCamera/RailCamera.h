@@ -68,19 +68,17 @@ public:// GetterとSetter
 	Vector3* GetDirectionVelocity() { return &velocity_; }
 	// レールの何パーセント進んだかを取得
 	float* GetRailPercentage() { return &t_; }
-	// Fov
+	// 視野角を取得
 	float* GetFov() { return &camera_->viewProjection_.fovAngleY; }
 	// レールカメラが終点についたかを取得
 	bool GetIsGameClear() { return isGameClear_; }
 #pragma endregion
 
 #pragma region Setter
-	/// <summary>
-	/// カメラの座標を設定
-	/// </summary>
-	/// <param name="pos"></param>
+	///カメラの座標を設定
 	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
 	
+	// 移動中かを設定
 	void SetIsMove(bool isMove) { isMove_ = isMove; }
 #pragma endregion
 
@@ -94,6 +92,11 @@ public:// パブリックなメンバ変数
 	float kMaxEvasionFovIncrease = -3.0f;
 	// ジャスト回避時のfov増加量の最大値
 	float kMaxJustEvasionFovIncrease = -20.0f;
+
+	// 通常の移動速度
+	float kNormalMoveSpeed = 0.6f;
+	// 加速時の移動速度
+	float kBoostMoveSpeed = 0.8f;
 
 private:
 	// カメラ

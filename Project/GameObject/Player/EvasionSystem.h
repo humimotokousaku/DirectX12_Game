@@ -124,7 +124,11 @@ public:
 	}
 #pragma endregion
 
-private:
+private:// 定数
+	// 残像オブジェクトのサイズ
+	const Vector3 kAfterImageSize = { 0.5f,0.5f,0.5f };
+
+private:// エンジン機能
 	// テクスチャマネージャ
 	TextureManager* textureManager_;
 
