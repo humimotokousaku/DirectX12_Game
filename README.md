@@ -1,3 +1,4 @@
+[![DebugBuild](https://github.com/humimotokousaku/DirectX12_Game/actions/workflows/DebugBuild.yml/badge.svg)](https://github.com/humimotokousaku/DirectX12_Game/actions/workflows/DebugBuild.yml)
 # 就職作品について
 ## 3Dルート固定レールシューティング
 スターフォックス64やEx-zodiacのような動かしているだけで気持ちいい自機の操作性や、障害物をぎりぎりでよける緊張感を目指して製作に取り組んでいます
