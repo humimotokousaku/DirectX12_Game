@@ -83,7 +83,7 @@ void BeamEnemy::Draw() {
 	beamObject_->Draw();
 }
 
-void BeamEnemy::ChangeState(IBeamEnemyState* pState) {
+void BeamEnemy::ChangeState(BaseBeamEnemyState* pState) {
 	delete state_;
 	state_ = pState;
 }

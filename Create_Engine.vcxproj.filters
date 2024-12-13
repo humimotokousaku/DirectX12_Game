@@ -319,16 +319,16 @@
     <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp">
       <Filter>Project\GameObject\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateApproach.cpp">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateWait.cpp">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateLeave.cpp">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\Enemy.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\MoveEnemy.cpp">
       <Filter>Project\GameObject\Enemy\MoveEnemy</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.cpp">
@@ -355,13 +355,13 @@
     <ClCompile Include="Project\GameObject\Score\Score.cpp">
       <Filter>Project\GameObject\Score</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BaseBeamEnemyState.cpp">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\IEnemyState.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\BaseMoveEnemyState.cpp">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\BaseFixedTurretState.cpp">
       <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
     </ClCompile>
     <ClCompile Include="engine\Utility\LevelData.cpp">
@@ -421,7 +421,7 @@
     <ClCompile Include="Engine\Math\Vector2.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\IEnemy.cpp">
+    <ClCompile Include="Project\GameObject\Enemy\BaseEnemy.cpp">
       <Filter>Project\GameObject\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
@@ -703,7 +703,7 @@
     <ClInclude Include="Project\Collision\CollisionConfig.h">
       <Filter>Project\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\IBeamEnemyState.h">
+    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BaseBeamEnemyState.h">
       <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateVertical.h">
@@ -718,7 +718,7 @@
     <ClInclude Include="Project\GameObject\Enemy\Bullet\EnemyBullet.h">
       <Filter>Project\GameObject\Enemy\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\IFixedTurretState.h">
+    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\BaseFixedTurretState.h">
       <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.h">
@@ -730,22 +730,22 @@
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.h">
       <Filter>Project\GameObject\Enemy\FixedTurret</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\IEnemyState.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\BaseMoveEnemyState.h">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateApproach.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateApproach.h">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateLeave.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateLeave.h">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\EnemyStateWait.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateWait.h">
       <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\Enemy.h">
+    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\MoveEnemy.h">
       <Filter>Project\GameObject\Enemy\MoveEnemy</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\IEnemy.h">
+    <ClInclude Include="Project\GameObject\Enemy\BaseEnemy.h">
       <Filter>Project\GameObject\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h">

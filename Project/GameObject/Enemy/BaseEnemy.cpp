@@ -1,7 +1,7 @@
-#include "IEnemy.h"
+#include "BaseEnemy.h"
 #include "EnemyManager.h"
 
-void IEnemy::CreateHitParticle() {
+void BaseEnemy::CreateHitParticle() {
 	// パーティクルを生成
 	Particles* particles = new Particles();
 	particles->Initialize(GetWorldPosition());
@@ -20,10 +20,10 @@ void IEnemy::CreateHitParticle() {
 	particles->randomLifeTimeLimit = { 0.1f,0.2f };
 	particles->particle_.vel.y = 20.0f;
 	particles->particle_.color = { 1.0f,1.0f,1.0f,1.0f };
-	particles->SetParticleUpdate(std::bind(&IEnemy::HitParticleUpdate, this, std::placeholders::_1));
+	particles->SetParticleUpdate(std::bind(&BaseEnemy::HitParticleUpdate, this, std::placeholders::_1));
 	enemyManager_->SetHitParticle(particles);
 }
 
-void IEnemy::HitParticleUpdate(Particle& particle) {
+void BaseEnemy::HitParticleUpdate(Particle& particle) {
 	particle.vel.y -= 2.0f;
 }

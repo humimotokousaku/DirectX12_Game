@@ -2,7 +2,7 @@
 
 EnemyManager::~EnemyManager() {
 	// 敵
-	for (IEnemy* enemy : enemys_) {
+	for (BaseEnemy* enemy : enemys_) {
 		delete enemy;
 	}
 	enemys_.clear();
@@ -52,7 +52,7 @@ void EnemyManager::Update() {
 	CheckActiveState();
 
 	// 敵の削除
-	enemys_.remove_if([&](IEnemy* enemy) {
+	enemys_.remove_if([&](BaseEnemy* enemy) {
 		// 倒したら点数を加算して解放
 		if (enemy->IsDead()) {
 			// 管理番号リストから削除
@@ -74,7 +74,7 @@ void EnemyManager::Update() {
 		return false;
 		});
 	// enemyの更新
-	for (IEnemy* enemy : enemys_) {
+	for (BaseEnemy* enemy : enemys_) {
 		enemy->Update();
 	}
 	// 弾の更新
@@ -102,7 +102,7 @@ void EnemyManager::Update() {
 
 void EnemyManager::Draw() {
 	// 敵
-	for (IEnemy* enemy : enemys_) {
+	for (BaseEnemy* enemy : enemys_) {
 		enemy->Draw();
 	}
 	// 通常敵の弾
@@ -147,7 +147,7 @@ void EnemyManager::CheckSpawn() {
 }
 
 void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, std::vector<Vector3> controlPoints) {
-	Enemy* enemy = new Enemy();
+	MoveEnemy* enemy = new MoveEnemy();
 
 	// 敵モデルを追加
 	enemy->AddModel(models_[0]);
@@ -285,7 +285,7 @@ bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
 }
 
 void EnemyManager::CheckActiveState() {
-	for (IEnemy* enemy : enemys_) {
+	for (BaseEnemy* enemy : enemys_) {
 		// カメラの後ろなら敵の描画と機能停止
 		if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
 			//enemy->SetIsActive(false);

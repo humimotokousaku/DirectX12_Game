@@ -5,10 +5,10 @@ class FixedTurret;
 /// <summary>
 /// 弾を撃つ敵の状態の基底クラス
 /// </summary>
-class IFixedTurretState {
+class BaseFixedTurretState {
 public:
 	// 純粋仮想関数
-	virtual ~IFixedTurretState() = default;
+	virtual ~BaseFixedTurretState() = default;
 	virtual void Initialize(FixedTurret* enemy, Player* player) = 0;
 	virtual void Update(FixedTurret* enemy) = 0;
 

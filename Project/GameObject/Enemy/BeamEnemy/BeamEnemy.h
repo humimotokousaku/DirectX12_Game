@@ -1,13 +1,12 @@
 #pragma once
-#include "IEnemy.h"
-#include "IBeamEnemyState.h"
-
+#include "BaseEnemy.h"
+#include "BaseBeamEnemyState.h"
 #include "Animation.h"
 
 /// <summary>
 /// ビームを撃つ敵
 /// </summary>
-class BeamEnemy : public IEnemy {
+class BeamEnemy : public BaseEnemy {
 public:
 	BeamEnemy();
 	~BeamEnemy() override;
@@ -33,7 +32,7 @@ public:
 	/// stateの変更
 	/// </summary>
 	/// <param name="pState">state</param>
-	void ChangeState(IBeamEnemyState* pState);
+	void ChangeState(BaseBeamEnemyState* pState);
 
 	// 衝突判定
 	void OnCollision(Collider* collider) override;
@@ -76,5 +75,5 @@ private:
 	Animation beamAnim_;
 
 	// 行動の状態
-	IBeamEnemyState* state_;
+	BaseBeamEnemyState* state_;
 };

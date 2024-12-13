@@ -3,9 +3,10 @@
 #include "BeamEnemy.h"
 #include "Camera.h"
 #include "CollisionManager.h"
-#include "Enemy.h"
-#include "EnemyBullet.h"
+#include "BaseEnemy.h"
+#include "MoveEnemy.h"
 #include "FixedTurret.h"
+#include "EnemyBullet.h"
 #include "Particles.h"
 #include "Player.h"
 #include "RailCamera.h"
@@ -21,10 +22,6 @@ public:
 		bool isActive;
 	};
 public:
-	///
-	/// Default Method
-	/// 
-
 	// コンストラクタ
 	EnemyManager() = default;
 	// デストラクタ
@@ -47,9 +44,6 @@ public:
 	/// </summary>
 	void DrawParticle();
 
-	///
-	/// User Method
-	/// 
 private:
 	/// <summary>
 	/// 発生条件
@@ -96,8 +90,8 @@ public:
 	/// 全敵のアドレスを取得
 	/// </summary>
 	/// <returns></returns>
-	std::list<IEnemy*> GetEnemyList() { return enemys_; }
-	std::list<IEnemy*>* GetEnemyList_P() { return &enemys_; }
+	std::list<BaseEnemy*> GetEnemyList() { return enemys_; }
+	std::list<BaseEnemy*>* GetEnemyList_P() { return &enemys_; }
 
 	/// <summary>
 	/// 現在存在している敵の管理番号
@@ -180,7 +174,7 @@ private:// プライベートなメンバ変数
 	Score* score_;
 
 	// 敵
-	std::list<IEnemy*> enemys_;
+	std::list<BaseEnemy*> enemys_;
 	// 敵弾
 	std::list<EnemyBullet*> enemyBullets_;
 	// 出現時のパーティクル

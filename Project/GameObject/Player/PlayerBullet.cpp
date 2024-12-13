@@ -1,7 +1,7 @@
 #include "PlayerBullet.h"
 #include "CollisionConfig.h"
 #include "Matrix4x4.h"
-#include "IEnemy.h"
+#include "BaseEnemy.h"
 #include "Player.h"
 #include <cassert>
 

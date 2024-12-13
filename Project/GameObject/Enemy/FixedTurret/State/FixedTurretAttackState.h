@@ -1,12 +1,12 @@
 #pragma once
-#include "IFixedTurretState.h"
+#include "BaseFixedTurretState.h"
 #include "TimedCall.h"
 
 class FixedTurret;
 /// <summary>
 /// 弾を撃つ敵の射撃状態
 /// </summary>
-class FixedTurretAttackState : public IFixedTurretState {
+class FixedTurretAttackState : public BaseFixedTurretState {
 public:
 	FixedTurretAttackState(FixedTurret* enemy, Player* player);
 	~FixedTurretAttackState()override;

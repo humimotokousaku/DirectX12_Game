@@ -1,14 +1,14 @@
 #pragma once
 #include "Collider.h"
-#include "IFixedTurretState.h"
-#include "IEnemy.h"
+#include "BaseFixedTurretState.h"
+#include "BaseEnemy.h"
 #include "EnemyBullet.h"
 #include <vector>
 
 /// <summary>
 /// 弾を撃つ敵
 /// </summary>
-class FixedTurret : public IEnemy {
+class FixedTurret : public BaseEnemy {
 public:
 	FixedTurret();
 	~FixedTurret() override;
@@ -52,7 +52,7 @@ public:
 	/// </summary>
 	void Fire();
 
-	void ChangeState(IFixedTurretState* pState);
+	void ChangeState(BaseFixedTurretState* pState);
 
 #pragma region Getter
 	// 弾リストを取得
@@ -83,6 +83,6 @@ private:
 	std::list<EnemyBullet*> bullets_;
 
 	// 状態遷移
-	IFixedTurretState* state_;
+	BaseFixedTurretState* state_;
 };
 

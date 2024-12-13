@@ -176,12 +176,8 @@ void Player::Update() {
 	// 移動処理
 	Move();	  
 
-	// 自機が移動範囲を超えないようにする処理
-	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
-	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -5.0f, kMoveLimit.y);
-	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
-	// ワールド行列を更新
-	object3d_->worldTransform.UpdateMatrix();
+	// 自機の移動制限
+	MoveLimit();
 
 	// ジャスト判定を進める
 	evasionSystem_->JustColliderUpdate();
@@ -468,6 +464,15 @@ void Player::Move() {
 	cameraOffset_.x = std::clamp<float>(cameraOffset_.x, -19.5f, 19.5f);
 	cameraOffset_.y = std::clamp<float>(cameraOffset_.y, -5.5f, 5.5f);
 	cameraOffset_.z = 0.0f;
+}
+
+void Player::MoveLimit() {
+	// 自機が移動範囲を超えないようにする処理
+	object3d_->worldTransform.translate.x = std::clamp<float>(object3d_->worldTransform.translate.x, -kMoveLimit.x, kMoveLimit.x);
+	object3d_->worldTransform.translate.y = std::clamp<float>(object3d_->worldTransform.translate.y, -5.0f, kMoveLimit.y);
+	object3d_->worldTransform.translate.z = std::clamp<float>(object3d_->worldTransform.translate.z, -kMoveLimit.z, kMoveLimit.z);
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
 }
 
 void Player::BoostUpdate(float moveZ) {

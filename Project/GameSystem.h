@@ -1,7 +1,6 @@
 #pragma once
 #include "CollisionManager.h"
 #include "LevelManager.h"
-#include "Enemy.h"
 #include "EnemyBullet.h"
 #include "EnemyManager.h"
 #include "FollowCamera.h"

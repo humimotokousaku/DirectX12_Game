@@ -1,5 +1,5 @@
 #pragma once
-#include "IFixedTurretState.h"
+#include "BaseFixedTurretState.h"
 #include "TimedCall.h"
 #include "Animation.h"
 #include <algorithm>
@@ -8,7 +8,7 @@ class FixedTurret;
 /// <summary>
 /// 弾を撃つ敵の離脱状態
 /// </summary>
-class FixedTurretLeaveState : public IFixedTurretState {
+class FixedTurretLeaveState : public BaseFixedTurretState {
 public:
 	FixedTurretLeaveState(FixedTurret* enemy, Player* player);
 	~FixedTurretLeaveState()override = default;
