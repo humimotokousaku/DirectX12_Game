@@ -29,9 +29,9 @@ struct Particle {
 // Particleを発生させる
 struct Emitter {
 	WorldTransform transform;
-	uint32_t count;
-	uint32_t spawnCount;
-	uint32_t spawnLeft = 1;	// 発生の残り回数 
+	int32_t count;
+	int32_t spawnCount;
+	int32_t spawnLeft = 1;	// 発生の残り回数 
 	float frequency;
 	float frequencyTime;
 };

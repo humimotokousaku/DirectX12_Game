@@ -33,11 +33,9 @@ void TitleEvent::Initialize() {
 	// 自機の生成
 	player_ = std::make_unique<Player>();
 	// 自機モデル
-	player_->AddModel(modelManager_->GetModel("Models", "Bob.obj"));
-	// 3Dレティクルモデル
-	player_->AddModel(modelManager_->GetModel("Models", "block.obj"));
+	player_->AddModel("PlayerBody",modelManager_->GetModel("Models", "Bob.obj"));
 	// 弾モデル
-	player_->AddModel(modelManager_->GetModel("Models", "block.obj"));
+	player_->AddModel("PlayerBullet", modelManager_->GetModel("Models", "block.obj"));
 	// 必要なクラスのアドレスをセットする
 	player_->SetCamera(followCamera_->GetCamera());
 	player_->Initialize();
@@ -45,8 +43,7 @@ void TitleEvent::Initialize() {
 	// 追従対象
 	followObject_.Initialize();
 	followObject_.translate.z = -0.01f;
-	followObject_.rotate.x = (float)std::numbers::pi / 6.0f;
-	followObject_.rotate.y = (float)std::numbers::pi;
+	followObject_.rotate = kStartCameraRotate;
 	followObject_.UpdateMatrix();
 
 	// タイトルシーンからゲームシーンになるまでのカメラアニメーション
@@ -55,13 +52,11 @@ void TitleEvent::Initialize() {
 	// 追従カメラの初期化
 	followCamera_->Initialize(player_.get());
 	followCamera_->SetParent(&followObject_);
-	followCamera_->SetTargetOffset(Vector3{ 0.0f,0.0f,-10.0f });
+	followCamera_->SetTargetOffset(kStartCameraOffset);
 
 	// 天球の生成
 	skydome_ = std::make_unique<Skydome>();
 	skydome_->Initialize(modelManager_->GetModel("Level", "skydome.obj"),followCamera_->GetCamera());
-
-	velocity_ = { 0,0,1 };
 
 	isActive_ = false;
 	isEnd_ = false;

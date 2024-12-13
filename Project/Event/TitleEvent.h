@@ -56,6 +56,12 @@ public:
 	const bool& GetIsEnd() { return isEnd_; }
 #pragma endregion
 
+private:// 定数
+	// 開始時のカメラオフセット
+	const Vector3 kStartCameraOffset = { 0.0f,0.0f,-10.0f };
+	// 開始時のカメラの角度
+	const Vector3 kStartCameraRotate = { (float)std::numbers::pi / 6.0f, (float)std::numbers::pi, 0.0f };
+
 private:// エンジン機能
 	TextureManager* textureManager_;
 	ModelManager* modelManager_;

@@ -14,6 +14,7 @@
 #include "Shake.h"
 #include "HitSystem.h"
 #include "EvasionSystem.h"
+#include "GlobalVariables.h"
 #include <map>
 #include <tuple>
 
@@ -115,6 +116,11 @@ private:// プライベートなメンバ関数
 	void BulletGaugeUpdate();
 
 	/// <summary>
+	/// 全てのパーティクル情報を読み込む
+	/// </summary>
+	void LoadParticlesData();
+
+	/// <summary>
 	/// ImGuiの表示
 	/// </summary>
 	void ImGuiParameter();
@@ -194,7 +200,7 @@ public:// GetterとSetter
 	void SetIsCollion(const bool& isActive) { object3d_->collider->SetIsActive(isActive); }
 #pragma endregion
 	// 使用するモデルを追加
-	void AddModel(Model* model) { models_.push_back(model); }
+	void AddModel(std::string modelName, Model* model) { models_.insert(std::make_pair(modelName, std::move(model))); }
 
 	/// <summary>
 	/// 弾ゲージの増加量
@@ -218,9 +224,8 @@ private:// プライベートなメンバ変数
 	Audio* audio_;
 	// ゲームパッド
 	XINPUT_STATE joyState_;
-
-	// 使用するモデル
-	std::vector<Model*> models_;
+	// jsonファイルに保存したデータ
+	GlobalVariables* globalVariables_;
 
 private:// プライベートなメンバ変数
 #pragma region 他のクラスのアドレス
@@ -236,11 +241,14 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<Object3D> object3d_;
 
 	// 自機の軌道パーティクル
-	std::array<std::unique_ptr<Particles>, 2> particles_;
+	std::array<std::unique_ptr<Particles>, kMaxOrbitNum> particles_;
 	// 死亡時のパーティクル
 	std::unique_ptr<Particles> deadParticle_;
 	// 弾
 	std::list<PlayerBullet*> bullets_;
+
+	// 使用するモデル
+	std::map<std::string, Model*> models_;
 
 	// 被弾時の演出
 	std::unique_ptr<HitSystem> hitSystem_;

@@ -208,6 +208,7 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 			newObject->collider->SetCollisionPrimitive(kCollisionOBB);
 			newObject->collider->SetCollisionAttribute(kCollisionAttributeObstacles);
 			newObject->collider->SetCollisionMask(~kCollisionAttributeObstacles);
+			newObject->collider->SetDamage(30.0f);
 			newObject->collider->SetIsActive(true);
 			// 当たり判定の大きさを代入
 			newObject->collider->SetOBBLength(objectData.colliderSize);

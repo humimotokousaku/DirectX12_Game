@@ -106,7 +106,7 @@ public:
 	/// モデルの追加
 	/// </summary>
 	/// <param name="model">モデル</param>
-	void AddModel(Model* model) { models_.push_back(model); }
+	void AddModel(std::string modelName, Model* model) { models_.insert(std::make_pair(modelName, std::move(model))); }
 
 	/// <summary>
 	/// カメラのアドレスを設定
@@ -183,7 +183,7 @@ private:// プライベートなメンバ変数
 	std::vector<Particles*> hitParticles_;
 
 	// 使用するモデル
-	std::vector<Model*> models_;
+	std::map<std::string,Model*> models_;
 
 	// 出現時のパーティクルのテクスチャ
 	uint32_t spawnParticleTex_;

@@ -39,19 +39,18 @@ void GameSystem::Initialize() {
 	modelManager_->LoadModel("Level", "skydome.obj");
 
 	// 自機
-	AddModel(modelManager_->GetModel("Models", "Bob.obj"));
-	// 3Dレティクル
-	AddModel(modelManager_->GetModel("Models", "block.obj"));
+	AddModel("PlayerBody", modelManager_->GetModel("Models", "Bob.obj"));
 	// 自機の弾
-	AddModel(modelManager_->GetModel("Models", "block.obj"));
+	AddModel("PlayerBullet", modelManager_->GetModel("Models", "block.obj"));
+	// デバッグ用
+	// ロックオン時のマーカー用オブジェクト
+	AddModel("RockOnObject", modelManager_->GetModel("Models", "block.obj"));
 	// 通常敵のモデル
-	AddModel(modelManager_->GetModel("Models", "Spitfire.obj"));
+	AddModel("EnemyBody", modelManager_->GetModel("Models", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel(modelManager_->GetModel("Models", "block.obj"));
+	AddModel("EnemyBullet", modelManager_->GetModel("Models", "block.obj"));
 	// 天球
-	AddModel(modelManager_->GetModel("Level", "skydome.obj"));
-	// ブーストの炎
-	AddModel(modelManager_->GetModel("Models", "boostFire.obj"));
+	AddModel("Skydome", modelManager_->GetModel("Level", "skydome.obj"));
 
 	// Blender
 	//levelManager_->LoadJSONFile("TestGoalMap.json", &camera_);
@@ -76,13 +75,7 @@ void GameSystem::Initialize() {
 
 #pragma region 自機の作成
 	// 自機モデル
-	player_.AddModel(models_[0]);
-	// 3Dレティクルモデル
-	player_.AddModel(models_[1]);
-	// 弾モデル
-	player_.AddModel(models_[2]);
-	// 弾モデル
-	player_.AddModel(models_[6]);
+	player_.AddModel("PlayerBody",models_["PlayerBody"]);
 	// 必要なクラスのアドレスをセットする
 	player_.SetCamera(followCamera_.GetCamera());
 	player_.SetGameScene(this);
@@ -93,9 +86,9 @@ void GameSystem::Initialize() {
 
 #pragma region エネミーマネージャの生成
 	// 通常敵の体
-	enemyManager_.AddModel(models_[3]);
+	enemyManager_.AddModel("EnemyBody",models_["EnemyBody"]);
 	// 通常敵の弾
-	enemyManager_.AddModel(models_[4]);
+	enemyManager_.AddModel("EnemyBullet",models_["EnemyBullet"]);
 	// アドレスを設定
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetRailCamera(&railCamera_);
@@ -107,12 +100,12 @@ void GameSystem::Initialize() {
 
 	// マルチロックオン機能
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
-	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_[2]);
+	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_["RockOnObject"]);
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList_P());
 	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList_P());
 
 	// 天球の生成
-	skydome_.Initialize(models_[5], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
+	skydome_.Initialize(models_["Skydome"], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
 
 	// スタート演出
 	startEvent_ = std::make_unique<StartEvent>();
