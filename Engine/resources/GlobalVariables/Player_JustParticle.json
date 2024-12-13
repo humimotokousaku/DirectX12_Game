@@ -1,0 +1,25 @@
+{
+    "Player_JustParticle": {
+        "Just_Color": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+        ],
+        "Just_Count": 40,
+        "Just_Frequency": 0.004166666883975267,
+        "Just_Random_Range_Max_Color": 0.0,
+        "Just_Random_Range_Max_Scale": 0.30000001192092896,
+        "Just_Random_Range_Max_Translate": 0.30000001192092896,
+        "Just_Random_Range_Max_Velocity.x": 2.0,
+        "Just_Random_Range_Max_Velocity.y": 2.0,
+        "Just_Random_Range_Max_Velocity.z": 2.0,
+        "Just_Random_Range_Min_Color": 0.0,
+        "Just_Random_Range_Min_Scale": 0.10000000149011612,
+        "Just_Random_Range_Min_Translate": 0.10000000149011612,
+        "Just_Random_Range_Min_Velocity.x": -2.0,
+        "Just_Random_Range_Min_Velocity.y": -2.0,
+        "Just_Random_Range_Min_Velocity.z": -2.0,
+        "Just_SpawnCount": 1
+    }
+}

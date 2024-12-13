@@ -2,7 +2,6 @@
 #include "CollisionConfig.h"
 #include "GameSystem.h"
 #include "GameTime.h"
-#include "GlobalVariables.h"
 #include "Input.h"
 #include "ImGuiManager.h"
 #include "PostEffectManager.h"
@@ -22,6 +21,7 @@ void Player::Initialize() {
 	audio_ = Audio::GetInstance();
 	collisionManager_ = CollisionManager::GetInstance();
 	gameTimer_ = GameTimer::GetInstance();
+	globalVariables_ = GlobalVariables::GetInstance();
 
 #pragma region 読み込み
 	TextureManager::GetInstance()->LoadTexture("Level", "gray.png");
@@ -35,7 +35,7 @@ void Player::Initialize() {
 #pragma region 自機モデル作成
 	object3d_ = std::make_unique<Object3D>();
 	object3d_->Initialize();
-	object3d_->SetModel(models_[0]);
+	object3d_->SetModel(models_["PlayerBody"]);
 	object3d_->SetCamera(camera_);
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	object3d_->worldTransform.UpdateMatrix();
@@ -111,21 +111,9 @@ void Player::Initialize() {
 	deadParticle_->Initialize(GetWorldPosition());
 	deadParticle_->SetCamera(camera_);
 	deadParticle_->SetEmitterParent(&object3d_->worldTransform);
-	// 発生頻度
-	deadParticle_->SetEmitterFrequency(1.0f / 240.0f);
-	// 一度に発生する個数
-	deadParticle_->SetEmitterCount(40);
-	// ランダムを切る
-	// パーティクル一粒の詳細設定
-	deadParticle_->SetEmitterSpawnCount(0);
-	deadParticle_->particle_.vel = { 0.0f,0.0f,10.0f };
-	deadParticle_->randomScaleLimit = { 0.1f,0.3f };
-	deadParticle_->randomVelLimit[0] = { -2.0f,2.0f };
-	deadParticle_->randomVelLimit[1] = { 0.0f,5.0f };
-	deadParticle_->randomColorLimit = { 0.0f,0.0f };
-	deadParticle_->randomLifeTimeLimit = { 1.1f,2.2f };
-	float color = 1.0f;
-	deadParticle_->particle_.color = { color,color,color,1.0f };
+
+	// 全てのパーティクルの詳細な設定を読み込む
+	LoadParticlesData();
 #pragma endregion
 
 #pragma region アニメーションの設定
@@ -146,7 +134,7 @@ void Player::Initialize() {
 
 	// 回避システム
 	evasionSystem_ = std::make_unique<EvasionSystem>();
-	evasionSystem_->Initialize(this, camera_, models_[0]);
+	evasionSystem_->Initialize(this, camera_, models_["PlayerBody"]);
 
 	// 被弾時の演出
 	hitSystem_ = std::make_unique<HitSystem>();
@@ -160,21 +148,11 @@ void Player::Initialize() {
 	isInvinsible_ = false;
 	// 無敵時間
 	invinsibleFrame_ = kMaxInvinsibleFrame;
-
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	// グループを追加
-	GlobalVariables::GetInstance()->CreateGroup(groupName);
-	globalVariables->AddItem(groupName, "ParticleEmitterPos_RightWing", particles_[0]->emitter_.transform.translate);
-	globalVariables->AddItem(groupName, "ParticleEmitterPos_LeftWing", particles_[1]->emitter_.transform.translate);
-
-	particles_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
-	particles_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
 }
 
 void Player::Update() {
 	// 移動処理
-	Move();	  
+	Move();
 
 	// 自機の移動制限
 	MoveLimit();
@@ -610,6 +588,51 @@ void Player::BulletGaugeUpdate() {
 	bulletGauge_.sprite->SetSizeX(kMaxBulletGaugeSize.x * (bulletGauge_.value / kMaxBulletGauge));
 }
 
+void Player::LoadParticlesData() {
+	// 軌道パーティクルのグループを追加
+	globalVariables_->CreateGroup(orbitPartileGroupName);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_RightWing_Emitter_Pos", particles_[0]->emitter_.transform.translate);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_LeftWing_Emitter_Pos", particles_[1]->emitter_.transform.translate);
+	// 死亡パーティクルのグループを追加
+	globalVariables_->CreateGroup(deadParticleGroupName);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Emitter_Frequency", deadParticle_->emitter_.frequency);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Emitter_Count", deadParticle_->emitter_.count);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Emitter_SpawnCount", deadParticle_->emitter_.spawnCount);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Velocity", deadParticle_->particle_.vel);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Color", deadParticle_->particle_.color);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Max_Scale", deadParticle_->randomScaleLimit.max);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Min_Scale", deadParticle_->randomScaleLimit.min);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.x", deadParticle_->randomVelLimit[0].max);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.x", deadParticle_->randomVelLimit[0].min);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.y", deadParticle_->randomVelLimit[1].max);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.y", deadParticle_->randomVelLimit[1].min);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Max_Color", deadParticle_->randomColorLimit.max);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Min_Color", deadParticle_->randomColorLimit.min);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Max_LifeTime", deadParticle_->randomLifeTimeLimit.max);
+	globalVariables_->AddItem(deadParticleGroupName, "Dead_Random_Range_Min_LifeTime", deadParticle_->randomLifeTimeLimit.min);
+
+	// 軌道パーティクルの情報を読み込む
+	particles_[0]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_RightWing_Emitter_Pos");
+	particles_[1]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_LeftWing_Emitter_Pos");
+	// 死亡パーティクルの情報を読み込む
+	deadParticle_->emitter_.frequency = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
+	deadParticle_->emitter_.frequencyTime = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
+	deadParticle_->emitter_.count = globalVariables_->GetIntValue(deadParticleGroupName, "Dead_Emitter_Count");
+	deadParticle_->emitter_.spawnCount = globalVariables_->GetIntValue(deadParticleGroupName, "Dead_Emitter_SpawnCount");
+	deadParticle_->particle_.vel = globalVariables_->GetVector3Value(deadParticleGroupName, "Dead_Velocity");
+	deadParticle_->particle_.color = globalVariables_->GetVector4Value(deadParticleGroupName, "Dead_Color");
+	deadParticle_->randomScaleLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Scale");
+	deadParticle_->randomScaleLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Scale");
+	deadParticle_->randomVelLimit[0].max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.x");
+	deadParticle_->randomVelLimit[0].min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.x");
+	deadParticle_->randomVelLimit[1].max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.y");
+	deadParticle_->randomVelLimit[1].min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.y");
+	deadParticle_->randomColorLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Color");
+	deadParticle_->randomColorLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Color");
+	deadParticle_->randomLifeTimeLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_LifeTime");
+	deadParticle_->randomLifeTimeLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_LifeTime");
+}
+
 void Player::ImGuiParameter() {
 #ifdef _DEBUG
 	//object3d_->ImGuiParameter("Player");
@@ -633,13 +656,32 @@ void Player::ImGuiParameter() {
 	ImGui::End();
 
 	/// jsonによる数値の変更
-	GlobalVariables* globalVariables = GlobalVariables::GetInstance();
-	const char* groupName = "Player";
-	particles_[0]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_RightWing");
-	particles_[1]->emitter_.transform.translate = globalVariables->GetVector3Value(groupName, "ParticleEmitterPos_LeftWing");
+	// 軌道パーティクル
+	particles_[0]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_RightWing_Emitter_Pos");
+	particles_[1]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_LeftWing_Emitter_Pos");
+
+	// 死亡パーティクル
+	deadParticle_->emitter_.frequency = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
+	deadParticle_->emitter_.frequencyTime = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
+	deadParticle_->emitter_.count = globalVariables_->GetIntValue(deadParticleGroupName, "Dead_Emitter_Count");
+	deadParticle_->emitter_.spawnCount = globalVariables_->GetIntValue(deadParticleGroupName, "Dead_Emitter_SpawnCount");
+	deadParticle_->particle_.vel = globalVariables_->GetVector3Value(deadParticleGroupName, "Dead_Velocity");
+	deadParticle_->particle_.color = globalVariables_->GetVector4Value(deadParticleGroupName, "Dead_Color");
+	deadParticle_->randomScaleLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Scale");
+	deadParticle_->randomScaleLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Scale");
+	deadParticle_->randomVelLimit[0].max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.x");
+	deadParticle_->randomVelLimit[0].min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.x");
+	deadParticle_->randomVelLimit[1].max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Velocity.y");
+	deadParticle_->randomVelLimit[1].min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Velocity.y");
+	deadParticle_->randomColorLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_Color");
+	deadParticle_->randomColorLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_Color");
+	deadParticle_->randomLifeTimeLimit.max = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Max_LifeTime");
+	deadParticle_->randomLifeTimeLimit.min = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Random_Range_Min_LifeTime");
+
 	// ボタンを押したらsave
-	if (globalVariables->GetInstance()->GetIsSave()) {
-		globalVariables->SaveFile("Player");
+	if (globalVariables_->GetIsSave()) {
+		//globalVariables_->SaveFile(orbitPartileGroupName);
+		globalVariables_->SaveFile(deadParticleGroupName);
 	}
 #endif
 }

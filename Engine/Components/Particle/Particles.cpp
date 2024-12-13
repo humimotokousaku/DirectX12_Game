@@ -229,7 +229,7 @@ Particle Particles::MakeNewParticle(const Vector3& translate) {
 std::list<Particle> Particles::Emission(const Emitter& emitter, std::mt19937& randomEngine) {
 	std::list<Particle> particles;
 
-	for (uint32_t count = 0; count < emitter.count; ++count) {
+	for (int32_t count = 0; count < emitter.count; ++count) {
 		particles.push_back(MakeNewParticle(randomEngine));
 	}
 	return particles;

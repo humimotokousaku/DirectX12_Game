@@ -73,7 +73,7 @@ private:
 	void EffectUpdate();
 
 	// モデル追加
-	void AddModel(Model* model) { models_.push_back(model); }
+	void AddModel(std::string modelName,Model* model) { models_.insert(std::make_pair(modelName, std::move(model))); }
 
 public:// 定数
 	// 暗転時のポイントライトの減衰率
@@ -86,6 +86,9 @@ public:// 定数
 	// ヴィネットの初期の大きさ
 	float kDefaultVignetteScale = 1000.0f;
 
+	// 操作UIの数
+	const static uint32_t kMaxGuideUINum = 6;
+
 private:// エンジン機能
 	TextureManager* textureManager_;
 	ModelManager* modelManager_;
@@ -94,7 +97,7 @@ private:// エンジン機能
 
 private:// プライベートなメンバ変数
 	// 登録用のモデル
-	std::vector<Model*> models_;
+	std::map<std::string, Model*> models_;
 	// スコア
 	Score* score_;
 
@@ -126,7 +129,7 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<DeadEvent> deadEvent_;
 
 	// UI
-	std::array<Sprite, 6> guideUI_;
+	std::array<Sprite, kMaxGuideUINum> guideUI_;
 
 	// BGM
 	uint32_t BGM_;

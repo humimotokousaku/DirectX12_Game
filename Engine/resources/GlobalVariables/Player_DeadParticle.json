@@ -1,0 +1,28 @@
+{
+    "Player_DeadParticle": {
+        "Dead_Color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "Dead_Emitter_Count": 40,
+        "Dead_Emitter_Frequency": 0.004166666883975267,
+        "Dead_Emitter_SpawnCount": 0,
+        "Dead_Random_Range_Max_Color": 0.0,
+        "Dead_Random_Range_Max_LifeTime": 2.200000047683716,
+        "Dead_Random_Range_Max_Scale": 0.30000001192092896,
+        "Dead_Random_Range_Max_Velocity.x": 2.0,
+        "Dead_Random_Range_Max_Velocity.y": 5.0,
+        "Dead_Random_Range_Min_Color": 0.0,
+        "Dead_Random_Range_Min_LifeTime": 1.100000023841858,
+        "Dead_Random_Range_Min_Scale": 0.10000000149011612,
+        "Dead_Random_Range_Min_Velocity.x": -2.0,
+        "Dead_Random_Range_Min_Velocity.y": 0.0,
+        "Dead_Velocity": [
+            0.0,
+            0.0,
+            10.0
+        ]
+    }
+}

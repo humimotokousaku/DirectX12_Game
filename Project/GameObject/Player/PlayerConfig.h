@@ -48,6 +48,9 @@ const float kIncrementBulletGauge = 0.1f;
 const float kDecrementBulletGauge = -0.2f;
 // 弾ゲージの倍率
 const float kMagnificationBulletGauge = 2.0f;
+
+// 軌跡パーティクルのエミッター数
+const static uint32_t kMaxOrbitNum = 2;
 #pragma endregion
 
 // 弾の発射間隔[frame]
@@ -69,6 +72,11 @@ const float kMaxJustEvasionAsisstFrame = 8;
 const float kMaxDeadAnimationFrame = 240;
 // 死亡演出時のヒットストップ時間
 const float kMaxDeadHitStopFrame = 33;
+
+// 軌道パーティクルのjsonファイルの名前
+const std::string orbitPartileGroupName = "Player_OrbitParticle";
+// 死亡パーティクルのjsonファイルの名前
+const std::string deadParticleGroupName = "Player_DeadParticle";
 #pragma endregion
 
 #pragma region 構造体

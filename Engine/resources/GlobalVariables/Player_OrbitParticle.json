@@ -1,0 +1,14 @@
+{
+    "Player_OrbitParticle": {
+        "Orbit_LeftWing_Emitter_Pos": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Orbit_RightWing_Emitter_Pos": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    }
+}

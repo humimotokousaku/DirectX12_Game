@@ -6,6 +6,7 @@
 #include "GameTime.h"
 #include "JustEvasionSystem.h"
 #include "Particles.h"
+#include "GlobalVariables.h"
 
 class Player;
 /// <summary>
@@ -60,6 +61,11 @@ private:
 	/// </summary>
 	/// <param name="collider"></param>
 	void JustOnCollision(Collider* collider);
+
+	/// <summary>
+	/// jsonファイルからジャスト回避時のパーティクル情報を読み込む
+	/// </summary>
+	void LoadJustParticleData();
 	/// <summary>
 	/// ジャスト回避時のパーティクルの更新処理
 	/// </summary>
@@ -128,9 +134,18 @@ private:// 定数
 	// 残像オブジェクトのサイズ
 	const Vector3 kAfterImageSize = { 0.5f,0.5f,0.5f };
 
+	// ジャスト回避のアシストのために遅くする時間の値
+	const float kJustAssistTimeScale = 0.6f;
+
+	// ジャストパーティクルのjsonファイルの名前
+	const std::string kJustParticleGroupName = "Player_JustParticle";
+
 private:// エンジン機能
 	// テクスチャマネージャ
 	TextureManager* textureManager_;
+
+	// jsonファイルから読み込む
+	GlobalVariables* globalVariables_;
 
 private:
 	// 自機のアドレスを取得

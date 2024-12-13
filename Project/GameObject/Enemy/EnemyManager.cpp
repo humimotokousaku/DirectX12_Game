@@ -150,9 +150,9 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	MoveEnemy* enemy = new MoveEnemy();
 
 	// 敵モデルを追加
-	enemy->AddModel(models_[0]);
+	enemy->AddModel(models_["EnemyBody"]);
 	// 弾のモデルを追加
-	enemy->AddModel(models_[1]);
+	enemy->AddModel(models_["EnemyBullet"]);
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
@@ -187,9 +187,9 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	FixedTurret* enemy = new FixedTurret();
 
 	// 敵モデルを追加
-	enemy->AddModel(models_[0]);
+	enemy->AddModel(models_["EnemyBody"]);
 	// 弾のモデルを追加
-	enemy->AddModel(models_[1]);
+	enemy->AddModel(models_["EnemyBullet"]);
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);
@@ -225,9 +225,9 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	BeamEnemy* enemy = new BeamEnemy();
 
 	// 敵モデルを追加
-	enemy->AddModel(models_[0]);
+	enemy->AddModel(models_["EnemyBody"]);
 	// ビームのモデルを追加
-	enemy->AddModel(models_[1]);
+	enemy->AddModel(models_["EnemyBullet"]);
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);

@@ -5,6 +5,7 @@
 void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	gameTimer_ = GameTimer::GetInstance();
 	textureManager_ = TextureManager::GetInstance();
+	globalVariables_ = GlobalVariables::GetInstance();
 
 	// 残像オブジェクトに貼るテクスチャ
 	afterImageTexture_ = textureManager_->GetSrvIndex("Textures", "Bob_Red.png");
@@ -60,20 +61,8 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	justEvasionParticle_->SetCamera(camera);
 	justEvasionParticle_->SetEmitterParent(player_->GetWorldTransform());
 	justEvasionParticle_->SetParticleUpdate(std::bind(&EvasionSystem::JustParticleUpdate, this, std::placeholders::_1));
-	// 発生頻度
-	justEvasionParticle_->SetEmitterFrequency(1.0f / 240.0f);
-	// 一度に発生する個数
-	justEvasionParticle_->SetEmitterCount(40);
-	// パーティクル一粒の詳細設定
-	justEvasionParticle_->SetEmitterSpawnCount(1);
-	justEvasionParticle_->randomScaleLimit = { 0.1f,0.3f };
-	justEvasionParticle_->randomTranslateLimit = { -1.0f,1.0f };
-	justEvasionParticle_->randomVelLimit[0] = { -2.0f,2.0f };
-	justEvasionParticle_->randomVelLimit[1] = { -2.0f,2.0f };
-	justEvasionParticle_->randomVelLimit[2] = { -2.0f,2.0f };
-	justEvasionParticle_->randomColorLimit = { 0.0f,0.0f };
-	justEvasionParticle_->randomLifeTimeLimit = { 10.1f,20.2f };
-	justEvasionParticle_->particle_.color = { 0.0f,0.0f,1.0f,1.0f };
+	// ジャストパーティクルの詳細設定
+	LoadJustParticleData();
 
 	// 回避時の移動速度のイージング
 	evasionSpeedAnim_.SetAnimData(&evasion_.moveSpeed, kMaxEvasionMoveSpeed, Vector2{ 0.0f,0.0f }, kMaxEvasionFrame, Easings::EaseOutExpo);
@@ -244,7 +233,7 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 
 	// ジャスト回避を補助するために時間を遅くする
 	if (evasion_.justAssistFrame >= 0.0f && firstJustState_ == kEnd) {
-		gameTimer_->SetTimeScale(0.6f);
+		gameTimer_->SetTimeScale(kJustAssistTimeScale);
 	}
 	// ジャスト回避をアシストする時間を進める
 	evasion_.justAssistFrame--;
@@ -266,6 +255,44 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 		invinsibleFrame_ = kMaxInvinsibleFrame;
 		isInvinsible_ = true;
 	}
+}
+
+void EvasionSystem::LoadJustParticleData() {
+	// 死亡パーティクルのグループを追加
+	globalVariables_->CreateGroup(kJustParticleGroupName);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Frequency", justEvasionParticle_->emitter_.frequency);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Count", justEvasionParticle_->emitter_.count);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_SpawnCount", justEvasionParticle_->emitter_.spawnCount);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Color", justEvasionParticle_->particle_.color);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Translate", justEvasionParticle_->randomScaleLimit.max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Translate", justEvasionParticle_->randomScaleLimit.min);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Scale", justEvasionParticle_->randomScaleLimit.max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Scale", justEvasionParticle_->randomScaleLimit.min);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.x", justEvasionParticle_->randomVelLimit[0].max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.x", justEvasionParticle_->randomVelLimit[0].min);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.y", justEvasionParticle_->randomVelLimit[1].max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.y", justEvasionParticle_->randomVelLimit[1].min);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.z", justEvasionParticle_->randomVelLimit[2].max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.z", justEvasionParticle_->randomVelLimit[2].min);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Max_Color", justEvasionParticle_->randomColorLimit.max);
+	globalVariables_->AddItem(kJustParticleGroupName, "Just_Random_Range_Min_Color", justEvasionParticle_->randomColorLimit.min);
+	// 読みこんだ情報をセット
+	justEvasionParticle_->emitter_.frequency = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Frequency");
+	justEvasionParticle_->emitter_.count = globalVariables_->GetIntValue(kJustParticleGroupName, "Just_Count");
+	justEvasionParticle_->emitter_.spawnCount = globalVariables_->GetIntValue(kJustParticleGroupName, "Just_SpawnCount");
+	justEvasionParticle_->particle_.color = globalVariables_->GetVector4Value(kJustParticleGroupName, "Just_Color");
+	justEvasionParticle_->randomTranslateLimit.max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Translate");
+	justEvasionParticle_->randomTranslateLimit.min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Translate");
+	justEvasionParticle_->randomScaleLimit.max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Scale");
+	justEvasionParticle_->randomScaleLimit.min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Scale");
+	justEvasionParticle_->randomVelLimit[0].max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.x");
+	justEvasionParticle_->randomVelLimit[0].min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.x");
+	justEvasionParticle_->randomVelLimit[1].max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.y");
+	justEvasionParticle_->randomVelLimit[1].min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.y");
+	justEvasionParticle_->randomVelLimit[2].max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Velocity.z");
+	justEvasionParticle_->randomVelLimit[2].min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Velocity.z");
+	justEvasionParticle_->randomColorLimit.max = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Max_Color");
+	justEvasionParticle_->randomColorLimit.min = globalVariables_->GetFloatValue(kJustParticleGroupName, "Just_Random_Range_Min_Color");
 }
 
 void EvasionSystem::JustParticleUpdate(Particle& particle) {
