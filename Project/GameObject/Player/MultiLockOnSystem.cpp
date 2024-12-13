@@ -1,7 +1,7 @@
 #include "MultiLockOnSystem.h"
 #include "GameSystem.h"
 
-void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<IEnemy*>* enemys, GameSystem* gameSystem, Model* model) {
+void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<BaseEnemy*>* enemys, GameSystem* gameSystem, Model* model) {
 	// シングルトンを種痘
 	postEffectManager_ = PostEffectManager::GetInstance();
 	audio_ = Audio::GetInstance();
@@ -32,7 +32,7 @@ void MultiLockOnSystem::Update() {
 
 	// ロックオンレティクルのスプライト更新
 	for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-		for (IEnemy* obj : *enemys_) {
+		for (BaseEnemy* obj : *enemys_) {
 			// ロックオン対象外の敵ならスキップ
 			if (obj->GetId() != multiLockOnData.enemyId) { continue; }
 			// ロックオンレティクルの座標更新
@@ -64,7 +64,7 @@ void MultiLockOnSystem::Shot() {
 
 		// ロックオンリストに登録されている敵に向けて撃つ
 		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-			for (IEnemy* obj : *enemys_) {
+			for (BaseEnemy* obj : *enemys_) {
 				// ロックオン対象外の敵ならスキップ
 				if (obj->GetId() != multiLockOnData.enemyId) { continue; }
 
@@ -90,7 +90,7 @@ void MultiLockOnSystem::Shot() {
 
 void MultiLockOnSystem::LockOnUpdate() {
 	// ロックオンする敵かを検出
-	for (IEnemy* obj : *enemys_) {
+	for (BaseEnemy* obj : *enemys_) {
 		// 弾ゲージが最大でなければ敵をロックオンリストに追加しない
 		if (!player_->GetBulletGauge().isMax) { break; }
 		// ロックオン数が最大数に達していない場合のみ追加
@@ -137,7 +137,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 void MultiLockOnSystem::EraseLockedList() {
 #pragma region ロックオンリストから削除
 	for (int i = 0; i < multiLockOnDatas_.size(); i++) {
-		for (IEnemy* enemyItr : *enemys_) {
+		for (BaseEnemy* enemyItr : *enemys_) {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
 
 			// 画面内に敵がいない

@@ -1,18 +1,18 @@
-#include "Enemy.h"
-#include "EnemyStateWait.h"
-#include "EnemyStateApproach.h"
+#include "MoveEnemy.h"
+#include "MoveEnemyStateWait.h"
+#include "MoveEnemyStateApproach.h"
 #include "CollisionConfig.h"
 #include "EnemyManager.h"
 
-Enemy::Enemy() {
+MoveEnemy::MoveEnemy() {
 	object3d_ = std::make_unique<Object3D>();
 	object3d_->Initialize();
 }
-Enemy::~Enemy() {
+MoveEnemy::~MoveEnemy() {
 	models_.clear();
 }
 
-void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
+void MoveEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 衝突マネージャーのインスタンスを取得
 	collisionManager_ = CollisionManager::GetInstance();
 
@@ -29,14 +29,14 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
 	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
-	object3d_->collider->SetOnCollision(std::bind(&Enemy::OnCollision, this, std::placeholders::_1));
+	object3d_->collider->SetOnCollision(std::bind(&MoveEnemy::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
 	// 状態遷移
-	state_ = new EnemyStateApproach();
+	state_ = new MoveEnemyStateApproach();
 	state_->Initialize(this, player_);
 
 	// HP
@@ -49,7 +49,7 @@ void Enemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	score_ = 100;
 }
 
-void Enemy::Update() {
+void MoveEnemy::Update() {
 	if (hp_ <= 0.0f) {
 		isDead_ = true;
 	}
@@ -68,12 +68,12 @@ void Enemy::Update() {
 	object3d_->worldTransform.UpdateMatrix();
 }
 
-void Enemy::Draw() {
+void MoveEnemy::Draw() {
 	// Enemy
 	object3d_->Draw(enemyTexture_);
 }
 
-void Enemy::OnCollision(Collider* collider) {
+void MoveEnemy::OnCollision(Collider* collider) {
 	// 自機陣営に当たった場合のみダメージを受ける
 	if (collider->GetCollisionAttribute() == kCollisionAttributePlayer) {
 		// HPを減らす
@@ -84,18 +84,18 @@ void Enemy::OnCollision(Collider* collider) {
 	}
 }
 
-void Enemy::ChangeState(IEnemyState* pState) {
+void MoveEnemy::ChangeState(BaseMoveEnemyState* pState) {
 	delete state_;
 	state_ = pState;
 }
 
-void Enemy::Move(const Vector3 velocity) {
+void MoveEnemy::Move(const Vector3 velocity) {
 	Vector3 dirVel = TargetOffset(velocity, object3d_->worldTransform.rotate);
 	object3d_->worldTransform.translate = object3d_->worldTransform.translate + dirVel;
 	object3d_->worldTransform.UpdateMatrix();
 }
 
-void Enemy::Fire() {
+void MoveEnemy::Fire() {
 	assert(player_);
 
 	// 弾の速度(正の数だと敵の後ろから弾が飛ぶ)

@@ -150,7 +150,7 @@ void FixedTurret::Fire() {
 	enemyManager_->AddEnemyBullet(newBullet);
 }
 
-void FixedTurret::ChangeState(IFixedTurretState* pState) {
+void FixedTurret::ChangeState(BaseFixedTurretState* pState) {
 	delete state_;
 	state_ = pState;
 }

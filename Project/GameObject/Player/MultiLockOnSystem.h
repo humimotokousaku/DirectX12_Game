@@ -1,7 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "PostEffectManager.h"
-#include "IEnemy.h"
+#include "BaseEnemy.h"
 #include "PlayerConfig.h"
 
 /// <summary>
@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Player* player, Camera* camera, std::list<IEnemy*>* enemys, GameSystem* gameSystem, Model* model);
+	void Initialize(Player* player, Camera* camera, std::list<BaseEnemy*>* enemys, GameSystem* gameSystem, Model* model);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -74,7 +74,7 @@ private:// プライベートなメンバ関数
 
 public:// GetterとSetter
 	// 全敵のアドレスを設定
-	void SetEnemyList(std::list<IEnemy*>* enemys) { enemys_ = enemys; }
+	void SetEnemyList(std::list<BaseEnemy*>* enemys) { enemys_ = enemys; }
 	// 全敵のIDを設定
 	void SetEnemyIdList(std::vector<int>* enemyIdList) { enemyIdList_ = enemyIdList; }
 
@@ -100,7 +100,7 @@ private:
 	// カメラのアドレス
 	Camera* camera_;
 	// 全ての敵
-	std::list<IEnemy*>* enemys_;
+	std::list<BaseEnemy*>* enemys_;
 	// ゲームシステム
 	GameSystem* gameSystem_;
 	// 自機

@@ -1,18 +1,18 @@
 #pragma once
 #include "Collider.h"
-#include "IEnemyState.h"
-#include "IEnemy.h"
+#include "BaseMoveEnemyState.h"
+#include "BaseEnemy.h"
 #include "EnemyBullet.h"
 #include <vector>
 
 /// <summary>
 /// 移動する敵
 /// </summary>
-class Enemy : public IEnemy
+class MoveEnemy : public BaseEnemy
 {
 public:
-	Enemy();
-	~Enemy() override;
+	MoveEnemy();
+	~MoveEnemy() override;
 
 	///
 	/// 純粋仮想関数
@@ -42,7 +42,7 @@ public:
 	/// stateの変更
 	/// </summary>
 	/// <param name="pState">state</param>
-	void ChangeState(IEnemyState* pState);
+	void ChangeState(BaseMoveEnemyState* pState);
 
 	/// <summary>
 	/// 移動処理
@@ -90,6 +90,6 @@ private:
 	std::list<EnemyBullet*> bullets_;
 
 	// 状態遷移
-	IEnemyState* state_;
+	BaseMoveEnemyState* state_;
 };
 

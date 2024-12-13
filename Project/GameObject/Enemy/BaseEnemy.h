@@ -8,10 +8,10 @@ class EnemyManager;
 /// <summary>
 /// 敵の基底クラス
 /// </summary>
-class IEnemy {
+class BaseEnemy {
 public:
-	IEnemy() = default;
-	virtual ~IEnemy() = default;
+	BaseEnemy() = default;
+	virtual ~BaseEnemy() = default;
 
 	/// <summary>
 	/// 初期化

@@ -75,6 +75,11 @@ private:// プライベートなメンバ関数
 	void Move();
 
 	/// <summary>
+	/// 自機の移動制限
+	/// </summary>
+	void MoveLimit();
+
+	/// <summary>
 	/// 加速中の更新処理
 	/// </summary>
 	/// <param name="moveZ">Z方向の移動ベクトル</param>

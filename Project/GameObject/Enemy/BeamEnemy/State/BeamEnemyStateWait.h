@@ -1,11 +1,11 @@
 #pragma once
-#include "IBeamEnemyState.h"
+#include "BaseBeamEnemyState.h"
 
 class BeamEnemy;
 /// <summary>
 /// ビームを撃つ敵の待機状態
 /// </summary>
-class BeamEnemyStateWait : public IBeamEnemyState {
+class BeamEnemyStateWait : public BaseBeamEnemyState {
 public:
 	BeamEnemyStateWait(BeamEnemy* enemy, Player* player);
 	~BeamEnemyStateWait()override = default;

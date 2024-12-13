@@ -5,10 +5,10 @@ class BeamEnemy;
 /// <summary>
 /// ビームを撃つ敵の状態の基底クラス
 /// </summary>
-class IBeamEnemyState {
+class BaseBeamEnemyState {
 public:
 	// 純粋仮想関数
-	virtual ~IBeamEnemyState() = default;
+	virtual ~BaseBeamEnemyState() = default;
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 
