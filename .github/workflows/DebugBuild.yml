@@ -4,7 +4,7 @@ on:
     branches:
       - master
 env: 
-  SOLUTION_FILE_PATH: Create_Engine.sln
+  SOLUTION_FILE_PATH: ./Create_Engine.sln
   CONFIGURATION: Debug
 
 jobs: 
@@ -15,11 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Add MsBuild to PATH
+      - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
         with:
           msbuild-architecture: x64
 
       - name: Build
-        run: |
-          msbuild ${{ env.SOLUTION_FILE_PATH }} /p:Platform=x64,Configuration=${{ env.CONFIGURATION }}
+        run: | 
+          msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}
