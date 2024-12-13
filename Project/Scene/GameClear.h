@@ -2,6 +2,9 @@
 #include "IScene.h"
 
 class GameManager;
+/// <summary>
+/// ゲームクリア
+/// </summary>
 class GameClear : public IScene
 {
 public:

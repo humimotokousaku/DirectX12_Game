@@ -68,4 +68,3 @@ private:// プライベートなメンバ変数
 	// カメラ
 	Camera* camera_;
 };
-

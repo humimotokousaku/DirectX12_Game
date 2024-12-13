@@ -6,6 +6,7 @@
 #include "Gauss.h"
 #include "Dissolve.h"
 #include "Outline.h"
+#include "Vigneting.h"
 #include "Sprite.h"
 #include <list>
 
@@ -37,12 +38,14 @@ public:
 		radialBlurData_.isActive = false;
 		gaussData_.isActive = false;
 		bloomData_.isActive = false;
+		vignetingData_.isActive = false;
 	}
 
 public:
 	RadialBlur::RadialBlurData radialBlurData_;
 	Gauss::GaussData gaussData_;
 	Bloom::BloomData bloomData_;
+	Vigneting::VignetingData vignetingData_;
 
 private:
 	std::vector<IPostEffect*> postEffect_;
@@ -56,4 +59,6 @@ private:
 	Gauss* gauss_;
 	// Bloom
 	Bloom* bloom_;
+	// Vigneting
+	Vigneting* vigneting_;
 };

@@ -21,7 +21,7 @@ public:
 	void Initialize();
 
 	// 描画処理
-	void Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection, int fillMode = kFillModeSolid);
+	void Draw(uint32_t textureHandle, const WorldTransform& worldTransform, const ViewProjection& viewProjection);
 
 	// ImGuiをまとめた関数
 	void ImGuiAdjustParameter();

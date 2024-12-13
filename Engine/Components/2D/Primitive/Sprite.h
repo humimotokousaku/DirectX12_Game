@@ -20,16 +20,20 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	/// <param name="size">画像の縦幅、横幅</param>
+	/// <param name="directoryPath"></param>
+	/// <param name="textureFilePath"></param>
 	void Initialize(const std::string& directoryPath, std::string textureFilePath);
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="textureNum">使用するテクスチャ番号</param>
+	void Initialize(uint32_t textureNum);
 
 	//void update();
 
 	/// <summary>
 	/// 描画処理
 	/// </summary>
-	/// <param name="size">縦幅、横幅を入力</param>
-	/// <param name="textureNum">textureManagerで登録したenum型の番号を入れる</param>
 	void Draw();
 
 	// 解放処理
@@ -90,13 +94,14 @@ public:
 	// 画像の切り出しサイズ
 	void SetTextureSize(Vector2 textureSize) { textureSize_ = textureSize; }
 	// 使用するテクスチャの変更
-	void SetTextureIndex(uint32_t textureIndex) { textureIndex_ = textureIndex; }
+	void SetTextureIndex(uint32_t textureNum) { textureNum_ = textureNum; }
 
 	// 画像の切りだしサイズのリセット
 	void ResetTextureSize() { textureSize_ = { 512.0f,512.0f }; }
 
 	// テクスチャのサイズをスプライトに合わせる
 	void AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath);
+	void AdjustTextureSize(uint32_t textureNum);
 
 	// このスプライトを背景として扱う
 	void SetIsBackGround() { worldTransform_.translate.z = 100000; }
@@ -118,8 +123,10 @@ protected:
 	void CreateMaterialResource();
 
 public:
-	// Sprite
+	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
+	// uv座標
+	Transform uvTransform_;
 
 	// 描画をするか
 	bool isActive_ = true;
@@ -135,7 +142,6 @@ private:
 	// Material
 	Material* materialData_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-	Transform uvTransform_;
 	Matrix4x4 uvTransformMatrix_;
 	// Vertex
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
@@ -159,6 +165,7 @@ private:
 	// テクスチャの切り出しサイズ
 	Vector2 textureSize_;
 
-	uint32_t textureIndex_;
+	// 使用するテクスチャ番号
+	uint32_t textureNum_;
 };
 

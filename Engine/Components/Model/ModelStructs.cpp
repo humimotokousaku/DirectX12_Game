@@ -1,5 +1,6 @@
 #include "ModelStructs.h"
 #include "SrvManager.h"
+#include "Utility.h"
 #include <cassert>
 #include <assimp/Importer.hpp>
 
@@ -41,7 +42,7 @@ Motion LoadAnimationFile(const std::string& directoryPath, const std::string& fi
 	// アニメーションの再生速度
 	animation.playBackSpeed = 1.0f;
 	// ループ再生
-	animation.isLoop = true;
+	animation.isLoop = false;
 
 	aiAnimation* animationAssimp = scene->mAnimations[0];
 	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond); // 時間の単位を秒に変換
@@ -93,7 +94,7 @@ Motion LoadAnimationFile(const std::string& filename) {
 	// アニメーションの再生速度
 	animation.playBackSpeed = 1.0f;
 	// ループ再生
-	animation.isLoop = true;
+	animation.isLoop = false;
 
 	aiAnimation* animationAssimp = scene->mAnimations[0];
 	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond); // 時間の単位を秒に変換
@@ -282,7 +283,7 @@ SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelDa
 	skinCluster.srvIndex = SrvManager::GetInstance()->Allocate();
 	skinCluster.paletteSrvHandle.first = SrvManager::GetInstance()->GetCPUDescriptorHandle(skinCluster.srvIndex);
 	skinCluster.paletteSrvHandle.second = SrvManager::GetInstance()->GetGPUDescriptorHandle(skinCluster.srvIndex);
-	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(skinCluster.srvIndex, skinCluster.paletteResource.Get(), skeleton.joints.size(), sizeof(WellForGPU));
+	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(skinCluster.srvIndex, skinCluster.paletteResource.Get(), (UINT)skeleton.joints.size(), sizeof(WellForGPU));
 #pragma endregion
 
 #pragma region Influence用のResourceを確保
@@ -356,11 +357,11 @@ void AnimationUpdate(SkinCluster& skinCluster, Skeleton& skeleton, Motion& anima
 	if (animation.isLoop) {
 		// 通常
 		if (animation.playBackSpeed > 0.0f) {
-			animationTime = Custom_fmod(animationTime, animation.duration, 0);
+			animationTime = Utility::Custom_fmod(animationTime, animation.duration, 0);
 		}
 		// 逆再生
 		else {
-			animationTime = Custom_fmod(animationTime, animation.duration, animation.duration);
+			animationTime = Utility::Custom_fmod(animationTime, animation.duration, animation.duration);
 		}
 
 	}
@@ -391,24 +392,4 @@ Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL
 	assert(SUCCEEDED(hr));
 
 	return vertexResource;
-}
-
-float Custom_fmod(float dividend, float divisor, float initValue) {
-	float result;
-
-	// 既定数値以上になったら指定した値に初期化
-
-	// divisorが-の場合
-	if (dividend < 0.0f || dividend >= divisor) {
-		result = initValue;
-		return result;
-	}
-	// divisorが+の場合
-	//if () {
-	//	result = initValue;
-	//	return result;
-	//}
-
-	result = dividend;
-	return result;
 }

@@ -5,6 +5,7 @@
 #include "ModelManager.h"
 #include "Sphere.h"
 #include "PipelineManager.h"
+#include "Collider.h"
 
 class Object3D {
 public:
@@ -52,6 +53,8 @@ public:
 #pragma region Getter
 	// モデル
 	Model* GetModel() { return model_; }
+	// カメラを取得
+	Camera* GetCamera() { return camera_; }
 #pragma endregion
 
 #pragma region Setter
@@ -62,52 +65,8 @@ public:
 	}
 
 	// モデルのセット
-	void SetModel(const std::string& directoryPath, const std::string& filePath) { 
-		*model_ = *ModelManager::GetInstance()->SetModel(directoryPath, filePath);
-		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
-		Material* materialData;
-		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();	
-		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-		model_->SetMaterialResource(materialResource);
-		materialData->enableLighting = true;
-		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
-		materialData->uvTransform = MakeIdentity4x4();
-		model_->materialData_ = materialData;
-		
-		Motion animation = model_->animation_;
-		// アニメーション
-		animation_.push_back(animation);
-		// スケルトン
-		skeleton_ = model_->skeleton_;
-		// スキンクラスタがあるなら作る
-		if (model_->GetModelData().isSkinClusterData) {
-			SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
-			skinCluster_.push_back(skinCluster);
-		}
-	}
-	void SetModel(Model* model) {
-		*model_ = *model;
-		Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
-		Material* materialData;
-		materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
-		materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-		model_->SetMaterialResource(materialResource);
-		materialData->enableLighting = true;
-		materialData->color = { 1.0f,1.0f,1.0f,1.0f };
-		materialData->uvTransform = MakeIdentity4x4();
-		model_->materialData_ = materialData;
-
-		Motion animation = model_->animation_;
-		// アニメーション
-		animation_.push_back(animation);
-		// スケルトン
-		skeleton_ = model_->skeleton_;
-		// スキンクラスタがあるなら作る
-		if (model_->GetModelData().isSkinClusterData) {		
-			SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
-			skinCluster_.push_back(skinCluster);
-		}
-	}
+	void SetModel(const std::string& directoryPath, const std::string& filePath);
+	void SetModel(Model* model);
 
 #pragma region アニメーション
 	// アニメーション追加
@@ -146,8 +105,8 @@ public:
 	void StartAnim(const char* animName) {
 		for (int i = 0; i < animation_.size(); i++) {
 			if (animation_[i].name == animName) {
+				animation_[i].time = 0.0f;
 				animation_[i].isActive = true;
-				//model_->animation_.isActive = animation_[i].isActive;
 				model_->animation_ = animation_[i];
 				if (model_->GetModelData().isSkinClusterData) {
 					model_->skinCluster_ = skinCluster_[i];
@@ -161,8 +120,8 @@ public:
 	void StartAnim(const int index) {
 		for (int i = 0; i < animation_.size(); i++) {
 			if (i == index) {
+				animation_[i].time = 0.0f;
 				animation_[i].isActive = true;
-				//model_->animation_.isActive = animation_[i].isActive;
 				model_->animation_ = animation_[i];
 				if (model_->GetModelData().isSkinClusterData) {
 					model_->skinCluster_ = skinCluster_[i];
@@ -191,24 +150,41 @@ public:
 	void SetAnimSpeed(float speed) { model_->animation_.playBackSpeed = speed; }
 #pragma endregion
 
+	// エディターモードを起動するかの設定
+	void SetIsEditor(bool isActive) { isEditor_ = isActive; }
+
 	// ライティングの設定
 	void SetIsLighting(bool isActive) { model_->SetIsLighting(isActive); }
 	// 鏡面反射の輝度の設定
 	void SetShininess(float shininess) { model_->SetShininess(shininess); }
 	// 色の設定
 	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
+	// α値の設定
+	void SetAlpha(float alpha) { model_->materialData_->color.w = alpha; }
+	// UV座標の設定
+	void SetUVTranslate(Vector3 translate) { model_->uvTransform.translate = translate; }
+	// UVの角度の設定
+	void SetUVRotate(Vector3 rotate) { model_->uvTransform.rotate = rotate; }
+	// UVのスケールの設定
+	void SetUVScale(Vector3 scale) { model_->uvTransform.scale = scale; }
+
 	// 描画をするかの設定
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
 #pragma endregion
 
 public:// パブリックな変数
+	// ワールドトランスフォーム
 	WorldTransform worldTransform;
+	// 衝突判定(初期設定は判定をとらない)
+	std::unique_ptr<Collider> collider;
 
 private:// プライベートな変数
 	// カメラ
 	Camera* camera_;
+
 	// モデル
 	Model* model_;
+
 	// アニメーション
 	std::vector<Motion> animation_;
 	float animationTime_ = 0.0f;
@@ -220,9 +196,10 @@ private:// プライベートな変数
 	// 選択された頂点表示用の球体
 	std::unique_ptr<Sphere> sphere_;
 	// エディターモード起動
-	bool isEditor_;
+	bool isEditor_ = false;
 	int selectVertex_ = -1;
-	//const char* verteciesName_[];
+	//std::vector<const char*> verteciesName;
+	//const char* selectedVertexName;
 
 	// 描画するか
 	bool isActive_ = true;

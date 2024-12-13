@@ -81,6 +81,9 @@ public:
 	// スキンクラスタ
 	SkinCluster skinCluster_;
 
+	// UVTransform
+	Transform uvTransform;
+	Matrix4x4 uvTransformMatrix;
 private:
 #pragma region エンジン機能
 	// DirectX
@@ -91,8 +94,6 @@ private:
 
 	// マテリアル
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
-	Transform uvTransform_;
-	Matrix4x4 uvTransformMatrix_;
 
 	// テクスチャ
 	uint32_t texHandle_;

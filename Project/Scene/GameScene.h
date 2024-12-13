@@ -1,10 +1,11 @@
 #pragma once
 #include "IScene.h"
-#include "Audio.h"
-#include "TextureManager.h"
-#include "ModelManager.h"
+#include "GameSystem.h"
 
 class GameManager;
+/// <summary>
+/// ゲームシーン
+/// </summary>
 class GameScene : public IScene
 {
 public:
@@ -36,9 +37,7 @@ public:
 	void Finalize()override;
 
 private:// プライベートなメンバ変数
-	// 基本機能
-	TextureManager* textureManager_;
-	ModelManager* modelManager_;
-	Audio* audio_;
+	// ゲームシステム
+	std::unique_ptr<GameSystem> gameSystem_;
 };
 

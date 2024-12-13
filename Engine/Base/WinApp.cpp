@@ -104,7 +104,6 @@ void WinApp::Log(const std::string& message) {
 #pragma region メンバ変数
 
 // ウィンドウクラス登録用
-
 int32_t WinApp::kClientWidth_;
 int32_t WinApp::kClientHeight_;
 

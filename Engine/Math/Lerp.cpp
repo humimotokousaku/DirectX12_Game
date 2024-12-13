@@ -112,19 +112,32 @@ namespace Lerps {
 		return CatmullRomSpline(points[0], points[1], points[2], points[3], t_2);
 	}
 
-	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping, float deltaTime) {
-		float factor = 1.0f - std::exp(-damping * deltaTime);
+	Vector3 ExponentialInterpolate(const Vector3& current, const Vector3& target, float damping) {
+		float factor = 1.0f - std::exp(-damping);
 		return current + (target - current) * factor;
 	}
-	float ExponentialInterpolate(const float& current, const float& target, float damping, float deltaTime) {
-		float factor = 1.0f - std::exp(-damping * deltaTime);
+	Vector2 ExponentialInterpolate(const Vector2& current, const Vector2& target, float damping) {
+		float factor = 1.0f - std::exp(-damping);
+		return current + (target - current) * factor;
+	}
+	float ExponentialInterpolate(const float& current, const float& target, float damping) {
+		float factor = 1.0f - std::exp(-damping);
 		return current + (target - current) * factor;
 	}
 }
 
 namespace Easings {
-#pragma region Cubic
+	float EaseInSine(float t) {
+		return 1 - std::cos((t * (float)std::numbers::pi) / 2.0f);
+	}
+	float EaseOutSine(float t) {
+		return std::sin((t * (float)std::numbers::pi) / 2.0f);
+	}
+	float EaseInOutSine(float t) {
+		return -(std::cos((float)std::numbers::pi * t) - 1.0f) / 2.0f;
+	}
 
+#pragma region Cubic
 	float EaseInCubic(float x) {
 		return x * x * x;
 	}
@@ -145,7 +158,6 @@ namespace Easings {
 #pragma endregion
 
 #pragma region Quint
-
 	// だんだん早くなる(一気に早くなる)
 	float EaseInQuint(float x) {
 		return x * x * x * x * x;

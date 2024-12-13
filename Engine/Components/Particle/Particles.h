@@ -12,14 +12,6 @@
 #include <random>
 #include <functional>
 
-struct Particle {
-	Transform transform;	// 座標
-	Vector3 vel;			// 速度
-	Vector4 color;			// 色
-	float lifeTime;			// 生存時間
-	float currentTime = 0;	// 経過フレーム
-};
-
 // GPUに送る
 struct ParticleForGPU {
 	Matrix4x4 WVP;
@@ -27,9 +19,16 @@ struct ParticleForGPU {
 	Vector4 color;
 };
 
+struct Particle {
+	Transform transform;	// 座標
+	Vector3 vel;			// 速度
+	Vector4 color;			// 色
+	float lifeTime;			// 生存時間
+	float currentTime = 0;	// 経過フレーム
+};
 // Particleを発生させる
 struct Emitter {
-	Transform transform;
+	WorldTransform transform;
 	uint32_t count;
 	uint32_t spawnCount;
 	uint32_t spawnLeft = 1;	// 発生の残り回数 
@@ -41,21 +40,19 @@ struct AABB {
 	Vector3 min;
 	Vector3 max;
 };
-
 struct AccField {
 	Vector3 acc;  // 加速度
 	AABB area;	  // 範囲
 	bool isActive;// Fieldの活性化
 };
 
-class Particles
-{
+class Particles {
 public:
 	///
 	/// Default Method
 	///
 
-	Particles() = default;
+	Particles();
 	~Particles();
 
 	/// <summary>
@@ -73,11 +70,21 @@ public:
 	/// <param name="textureHandle">使用テクスチャ</param>
 	void Draw(uint32_t textureHandle);
 
-	//ModelData GetModelData() { return modelData_; }
-
 	///
 	/// User Method
 	///
+
+#pragma region Getter
+	// ワールド座標を取得
+	Vector3 GetEmitterWorldPosition() {
+		Vector3 worldPos = {
+			emitter_.transform.matWorld_.m[3][0],
+			emitter_.transform.matWorld_.m[3][1],
+			emitter_.transform.matWorld_.m[3][2]
+		};
+		return worldPos;
+	}
+#pragma endregion
 
 #pragma region Setter	
 	// カメラ
@@ -87,6 +94,10 @@ public:
 	/// </summary>
 	/// <param name="updateFunc">void (Particle＆);の関数</param>
 	void SetParticleUpdate(std::function<void(Particle&)> updateFunc) { updateFunc_ = updateFunc; }
+	/// <summary>
+	/// エミッターのワールドトランスフォームとペアレントする
+	/// </summary>
+	void SetEmitterParent(const WorldTransform* parent) { emitter_.transform.parent_ = parent; }
 	/// <summary>
 	/// パーティクルの発生源の座標
 	/// </summary>
@@ -98,16 +109,21 @@ public:
 	/// <param name="count">発生するパーティクルの数</param>
 	void SetEmitterCount(uint32_t count) { emitter_.count = count; }
 	/// <summary>
+	/// パーティクルの発生の残り回数を設定
+	/// </summary>
+	/// <param name="spawnLeft"></param>
+	void SetEmitterSpawnLeft(uint32_t spawnLeft) { emitter_.spawnLeft = spawnLeft; }
+	/// <summary>
 	/// パーティクルの発生回数(0なら無制限に出る)
 	/// </summary>
 	/// <param name="spawnCount">発生回数</param>
-	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount;	}
+	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount; }
 	/// <summary>
 	/// パーティクルが発生する頻度
 	/// </summary>
 	/// <param name="frequency">秒</param>
-	void SetEmitterFrequency(float frequency) { 
-		emitter_.frequency = frequency; 
+	void SetEmitterFrequency(float frequency) {
+		emitter_.frequency = frequency;
 		emitter_.frequencyTime = frequency;
 	}
 	/// <summary>
@@ -120,11 +136,11 @@ public:
 	/// <summary>
 	/// ランダムの上限下限値をすべて0にする
 	/// </summary>
-	void OffRandom() { 
+	void OffRandom() {
 		randomTranslateLimit = Limit{ 0.0f,0.0f };
 		randomScaleLimit = Limit{ 0.0f,0.0f };
 		for (int i = 0; i < 3; i++) {
-			randomVelLimit[i] = Limit{0.0f,0.0f};
+			randomVelLimit[i] = Limit{ 0.0f,0.0f };
 		}
 		randomLifeTimeLimit = Limit{ 0.0f, 0.0f };
 		randomColorLimit = Limit{ 0.0f,0.0f };
@@ -132,15 +148,12 @@ public:
 
 private:
 	// particleの座標と速度のランダム生成
-	Particle MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+	Particle MakeNewParticle(std::mt19937& randomEngine);
 	Particle MakeNewParticle(const Vector3& translate);
 
 	std::list<Particle> Emission(const Emitter& emitter, std::mt19937& randomEngine);
 
 	bool IsCollision(const AABB& aabb, const Vector3& point);
-
-	// 線形補完
-	Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
 	Vector3 KelvinToRGB(int kelvin);
 
@@ -164,9 +177,9 @@ public:
 	// [1]:y
 	// [2]:z
 	Limit randomVelLimit[3] = {
-		{- 1.0f, 1.0f },	// x
-		{- 1.0f, 1.0f },	// y
-		{- 1.0f, 1.0f }		// z
+		{-1.0f, 1.0f },	// x
+		{-1.0f, 1.0f },	// y
+		{-1.0f, 1.0f }		// z
 	};
 	// ランダム生存時間の下限上限
 	Limit randomLifeTimeLimit = { 1.0f, 3.0f };
@@ -175,6 +188,9 @@ public:
 	// パーティクル一粒の詳細設定
 	// 座標と速度は自動的にランダムが適応されている
 	Particle particle_;
+
+	// エミッタ
+	Emitter emitter_;
 
 private:// 定数
 	// 1フレームで進む時間
@@ -191,8 +207,6 @@ private:
 	// パーティクルの挙動
 	std::function<void(Particle&)> updateFunc_;
 
-	// エミッタ
-	Emitter emitter_;
 	// フィールド
 	AccField accField_;
 

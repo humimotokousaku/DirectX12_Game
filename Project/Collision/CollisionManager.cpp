@@ -5,39 +5,48 @@ CollisionManager::~CollisionManager() {
 	ClearColliderList();
 }
 
+CollisionManager* CollisionManager::GetInstance() {
+	static CollisionManager instance;
+	return &instance;
+}
+
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
 	// 衝突フィルタリング
 	if ((colliderA->GetCollisionAttribute() & colliderB->GetCollisionMask()) == 0 ||
 		(colliderB->GetCollisionAttribute() & colliderA->GetCollisionMask()) == 0) {
 		return;
 	}
+	colliderA->worldTransform.UpdateMatrix();
+	colliderB->worldTransform.UpdateMatrix();
 
 	/// 球体同士の判定
-	if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
-		// 座標AとBの距離を求める
-		Vector3 a2b = {
-			colliderA->GetWorldPosition().x - colliderB->GetWorldPosition().x,
-			colliderA->GetWorldPosition().y - colliderB->GetWorldPosition().y,
-			colliderA->GetWorldPosition().z - colliderB->GetWorldPosition().z
-		};
-		float a2bR = colliderA->GetRadius() + colliderB->GetRadius();
-		// 球と球の交差判定
-		if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
-			// コライダーAの衝突時コールバックを呼び出す
-			colliderA->OnCollision(colliderB);
-			// コライダーBの衝突時コールバックを呼び出す
-			colliderB->OnCollision(colliderA);
+	//if (colliderA->GetCollisionPrimitive() == kCollisionSphere && colliderB->GetCollisionPrimitive() == kCollisionSphere) {
+	//	// 座標AとBの距離を求める
+	//	Vector3 a2b = {
+	//		colliderA->GetWorldPosition().x - colliderB->GetWorldPosition().x,
+	//		colliderA->GetWorldPosition().y - colliderB->GetWorldPosition().y,
+	//		colliderA->GetWorldPosition().z - colliderB->GetWorldPosition().z
+	//	};
+	//	float a2bR = colliderA->GetRadius() + colliderB->GetRadius();
+	//	// 球と球の交差判定
+	//	if ((a2b.x * a2b.x) + (a2b.y * a2b.y) + (a2b.z * a2b.z) <= (a2bR * a2bR)) {
+	//		// コライダーAの衝突時コールバックを呼び出す
+	//		colliderA->OnCollision(colliderB);
+	//		colliderA->worldTransform.UpdateMatrix();
+	//		// コライダーBの衝突時コールバックを呼び出す
+	//		colliderB->OnCollision(colliderA);
+	//		colliderB->worldTransform.UpdateMatrix();
 
-			// 今当たっている
-			colliderA->SetIsOnCollision(true);
-			colliderB->SetIsOnCollision(true);
-		}
-		else {
-			// 今は当たっていない
-			colliderA->SetIsOnCollision(false);
-			colliderB->SetIsOnCollision(false);
-		}
-	}
+	//		// 今当たっている
+	//		colliderA->SetIsOnCollision(true);
+	//		colliderB->SetIsOnCollision(true);
+	//	}
+	//	else {
+	//		// 今は当たっていない
+	//		colliderA->SetIsOnCollision(false);
+	//		colliderB->SetIsOnCollision(false);
+	//	}
+	//}
 	/// OBB同士の判定
 	if (colliderA->GetCollisionPrimitive() == kCollisionOBB && colliderB->GetCollisionPrimitive() == kCollisionOBB) {
 		colliderA->SetOBBCenterPos(colliderA->GetWorldPosition());
@@ -52,8 +61,10 @@ void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* collide
 			colliderB->SetIsOnCollision(true);
 			// コライダーAの衝突時コールバックを呼び出す
 			colliderA->OnCollision(colliderB);
+			colliderA->worldTransform.UpdateMatrix();
 			// コライダーBの衝突時コールバックを呼び出す
 			colliderB->OnCollision(colliderA);
+			colliderB->worldTransform.UpdateMatrix();
 		}
 		else {
 			// 今は当たっていない
@@ -72,13 +83,14 @@ void CollisionManager::CheckAllCollisions() {
 	std::list<Collider*>::iterator itrA = colliders_.begin();
 	for (; itrA != colliders_.end(); ++itrA) {
 		Collider* colliderA = *itrA;
-
+		if (!colliderA->GetIsActive()) { continue; }
 		// イテレータBはイテレータAの次の要素から回す(重複判定を回避)
 		std::list<Collider*>::iterator itrB = itrA;
 		itrB++;
 
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
+			if (!colliderB->GetIsActive()) { continue; }
 			// 当たり判定と応答(フレンドリーファイアしないように設定)
 			CheckCollisionPair(colliderA, colliderB);
 		}
@@ -87,7 +99,7 @@ void CollisionManager::CheckAllCollisions() {
 
 bool CollisionManager::ColOBBs(const OBB& obb1, const OBB& obb2) {
 	// 各方向ベクトルの確保
-	// （N***:標準化方向ベクトル）
+	// N***:標準化方向ベクトル
 	Vector3 NAe1 = obb1.m_NormaDirect[0], Ae1 = Multiply(obb1.m_fLength.x, NAe1);
 	Vector3 NAe2 = obb1.m_NormaDirect[1], Ae2 = Multiply(obb1.m_fLength.y, NAe2);
 	Vector3 NAe3 = obb1.m_NormaDirect[2], Ae3 = Multiply(obb1.m_fLength.z, NAe3);

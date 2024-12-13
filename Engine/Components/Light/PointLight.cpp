@@ -17,10 +17,30 @@ void PointLight::Initialize() {
 
 	// PointLightingのデフォ値
 	pointLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	pointLightData_->pos = { 0.0f, 2.0f, 20.0f };
+	pointLightData_->pos = { 0.0f, 0.0f, 0.0f };
 	pointLightData_->intensity = 1.0f;
-	pointLightData_->radius = 10.0f;
+	pointLightData_->radius = 10000.0f;
 	pointLightData_->decay = 1.0f;
+}
+
+void PointLight::Update() {
+	// 追従対象がいる場合
+	if (targetPos_) {
+		pointLightData_->pos = *targetPos_ + targetOffset_;
+	}
+}
+
+void PointLight::Reset() {
+	// PointLightingのデフォ値
+	pointLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	pointLightData_->pos = { 0.0f, 0.0f, 0.0f };
+	pointLightData_->intensity = 1.0f;
+	pointLightData_->radius = 10000.0f;
+	pointLightData_->decay = 1.0f;
+
+	// 追従対象
+	targetPos_ = nullptr;
+	targetOffset_ = { 0,0,0 };
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> PointLight::CreateBufferResource(size_t sizeInBytes) {
@@ -58,12 +78,11 @@ void PointLight::CreatePointLightResource() {
 	pointLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&pointLightData_));
 }
 
+void PointLight::ImGuiParameter() {
 
-
-void PointLight::ImGuiAdjustParameter() {
-	ImGui::DragFloat3("PointLighting.pos", &pointLightData_->pos.x, 0.1f, -100, 100);
+	ImGui::DragFloat3("PointLighting.pos", &pointLightData_->pos.x, 0.1f, -10000, 10000);
 	ImGui::ColorEdit3("PointLighting.color", &pointLightData_->color.x);
 	ImGui::DragFloat("PointLighting.intensity", &pointLightData_->intensity,0.01f, 0, 1);
-	ImGui::DragFloat("PointLighting.radius", &pointLightData_->radius, 0.1f, 0, 1000);
+	ImGui::DragFloat("PointLighting.radius", &pointLightData_->radius, 0.1f, 0, 100000);
 	ImGui::DragFloat("PointLighting.decay", &pointLightData_->decay,0.01f, 0, 100);
 }

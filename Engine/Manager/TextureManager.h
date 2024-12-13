@@ -98,6 +98,24 @@ public:
 		TextureData& textureData = textureDatas_[filePath];
 		return textureData.resource;
 	}
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetTextureResource(uint32_t textureNum) {
+		std::string filePath = FindTextureBySrvIndex(textureNum);
+		TextureData& textureData = textureDatas_[filePath];
+		return textureData.resource;
+	}
+
+	// テクスチャのsrvIndexからテクスチャ名を見つける
+	std::string FindTextureBySrvIndex(uint32_t targetSrvIndex) {
+		// 各要素をループで確認
+		for (const auto& [key, value] : textureDatas_) {
+			if (value.srvIndex == targetSrvIndex) {
+				// 一致するものが見つかったらキーを返す
+				return key;
+			}
+		}
+		// 見つからなければ空文字を返す
+		return "";
+	}
 
 private:
 	// DirectX12のTextureResourceを作る

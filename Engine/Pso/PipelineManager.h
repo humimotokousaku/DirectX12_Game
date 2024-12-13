@@ -16,12 +16,13 @@
 #include "RadialBlurPSO.h"
 #include "BloomPSO.h"
 #include "PostEffectPSO.h"
-
+#include "VignetingPSO.h"
+#include <array>
 #include <dxcapi.h>
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
-#include <array>
+
 
 /// <summary>
 /// 使用できるポストエフェクトの種類
@@ -36,6 +37,7 @@ enum PostEffectType {
 	BLUR,*/
 	//DISSOLVE,
 	BLOOM,
+	VIGNETTE,
 	COUNT
 };
 

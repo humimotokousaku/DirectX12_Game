@@ -1,0 +1,220 @@
+{
+    "name": "scene",
+    "objects": [
+        {
+            "type": "LIGHT",
+            "name": "Light"
+        },
+        {
+            "type": "CAMERA",
+            "name": "Camera"
+        },
+        {
+            "type": "MESH",
+            "name": "平面.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -9.799606323242188,
+                    -7.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    500.0,
+                    500.0,
+                    1.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "tail.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.008",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -58.86572265625,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.007",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -138.86572265625,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.006",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -298.86572265625,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.005",
+            "transform": {
+                "translation": [
+                    0.0,
+                    -218.86572265625,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.004",
+            "transform": {
+                "translation": [
+                    0.0,
+                    101.13427734375,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.003",
+            "transform": {
+                "translation": [
+                    0.0,
+                    21.13427734375,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.002",
+            "transform": {
+                "translation": [
+                    0.0,
+                    181.13427734375,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        },
+        {
+            "type": "MESH",
+            "name": "Street_Straight_Cube.001",
+            "transform": {
+                "translation": [
+                    0.0,
+                    261.13427734375,
+                    -1.5490217208862305
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
+                ],
+                "scaling": [
+                    10.0,
+                    10.0,
+                    10.0
+                ]
+            },
+            "skydome": 0,
+            "file_name": "Street_Straight.obj"
+        }
+    ]
+}

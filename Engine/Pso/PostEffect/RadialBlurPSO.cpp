@@ -56,9 +56,9 @@ void RadialBlurPSO::CreateRootSignature() {
 #pragma region sampler
 	psoData_.staticSamplers_.resize(1);
 	psoData_.staticSamplers_[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	psoData_.staticSamplers_[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	psoData_.staticSamplers_[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-	psoData_.staticSamplers_[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	psoData_.staticSamplers_[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	psoData_.staticSamplers_[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	psoData_.staticSamplers_[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 	psoData_.staticSamplers_[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 	psoData_.staticSamplers_[0].MaxLOD = D3D12_FLOAT32_MAX;
 	psoData_.staticSamplers_[0].ShaderRegister = 0;

@@ -4,6 +4,9 @@
 #include <map>
 #include <string>
 
+/// <summary>
+/// 数値をjsonファイルで保存、読み込みをするクラス
+/// </summary>
 class GlobalVariables {
 public:
 	static GlobalVariables* GetInstance();
@@ -90,7 +93,7 @@ public:
 	std::map<std::string, Group> datas_;
 
 	// グローバル変数の保存先ファイルパス
-	const std::string kDirectoryPath = "resources/GlobalVariables/";
+	const std::string kDirectoryPath = "engine/resources/GlobalVariables/";
 
 	bool isSave_;
 };

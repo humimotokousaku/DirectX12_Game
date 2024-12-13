@@ -20,9 +20,13 @@ struct WorldTransform {
 	// マッピング済みアドレス
 	ConstBufferDataWorldTransform* constMap = nullptr;
 
+	// ローカル座標
 	Vector3 translate;
-	Vector2 translate2d;
+	// ワールド座標
+	Vector3 worldPos;
+	// 回転角
 	Vector3 rotate;
+	// 大きさ
 	Vector3 scale = { 1,1,1 };
 
 	// ローカル → ワールド変換行列
@@ -48,4 +52,7 @@ struct WorldTransform {
 	void TransferMatrix();
 
 	void UpdateMatrix();
+
+	// ワールド座標を取得
+	Vector3 GetWorldPosition();
 };

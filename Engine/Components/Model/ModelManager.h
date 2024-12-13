@@ -15,9 +15,6 @@ public:
 	void LoadModel(const std::string& directoryPath, const std::string& filePath);
 	void LoadModel(const std::string& fileFullPath);
 
-	// 終了
-	void Finalize();
-
 	/// 
 	/// User Method
 	/// 
@@ -35,7 +32,8 @@ public:
 	/// Setter
 
 	// モデルをセット
-	Model* SetModel(const std::string& directoryPath, const std::string& filePath);
+	Model* GetModel(const std::string& directoryPath, const std::string& filePath);
+	Model* GetModel(const std::string& filePath);
 
 private:
 	//static ModelManager* instance;

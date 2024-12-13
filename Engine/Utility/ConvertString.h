@@ -1,3 +1,4 @@
+///	文字の変換関数をまとめたファイル
 #pragma once
 #include <string>
 

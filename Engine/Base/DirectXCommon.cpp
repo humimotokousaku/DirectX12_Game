@@ -11,6 +11,7 @@
 #include "../../externals/ImGui/imgui.h"
 #include "../../externals/ImGui/imgui_impl_dx12.h"
 #include "../../externals/ImGui/imgui_impl_win32.h"
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 const uint32_t DirectXCommon::kMaxSRVCount = 512;
@@ -30,10 +31,13 @@ void DirectXCommon::Initialize(HWND hwnd) {
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 	assert(SUCCEEDED(hr));
 
+	// 使用するアダプタを決める
 	GetAdapter();
 
+	// D3D12Deviceの生成
 	CreateD3D12Device();
 
+	// デバッグレイヤー
 	StopError();
 
 	// コマンドリストの作成
@@ -54,7 +58,6 @@ void DirectXCommon::Initialize(HWND hwnd) {
 	CreateRTV();
 
 #pragma region FenceとEventを生成する
-
 	// 初期値0でFenceを作る
 	fence_ = nullptr;
 	fenceValue_ = 0;
@@ -64,9 +67,7 @@ void DirectXCommon::Initialize(HWND hwnd) {
 	// FenceのSignalを待つためのイベントを作成する
 	fenceEvent_ = CreateEvent(NULL, FALSE, FALSE, NULL);
 	assert(fenceEvent_ != nullptr);
-
 #pragma endregion
-
 }
 
 void DirectXCommon::PreDraw() {
@@ -371,7 +372,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateDepthStencilTextureR
 
 	// Resourceの生成
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr;
-	HRESULT hr = device_->CreateCommittedResource(
+	HRESULT hr{};
+	hr = device_->CreateCommittedResource(
 		&heapProperties,				  // Heapの設定
 		D3D12_HEAP_FLAG_NONE,			  // Heapの特殊な設定。特になし
 		&resourceDesc,					  // Resourceの設定

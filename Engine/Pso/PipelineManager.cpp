@@ -75,6 +75,9 @@ void PipelineManager::Initialize() {
 	// Bloom
 	BloomPSO* bloom = new BloomPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "BloomPS.hlsl");
 	postEffect_.push_back(bloom);
+	// Vigneting
+	VignetingPSO* vigneting = new VignetingPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "VignetingPS.hlsl");
+	postEffect_.push_back(vigneting);
 #pragma endregion
 
 	// ビューポートの生成

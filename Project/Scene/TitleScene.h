@@ -1,8 +1,14 @@
 #pragma once
 #include "IScene.h"
+#include "Input.h"
+#include "Sprite.h"
+#include "TitleEvent.h"
 
 class GameManager;
 
+/// <summary>
+/// タイトルシーン
+/// </summary>
 class TitleScene : public IScene
 {
 public:
@@ -17,6 +23,13 @@ public:
 	// 解放処理
 	void Finalize()override;
 
-private:
+private:// エンジン機能
 	Input* input_;
+
+private:
+	// タイトル演出
+	std::unique_ptr<TitleEvent> titleEvent_;
+
+	// UI
+	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
 };

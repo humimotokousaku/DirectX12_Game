@@ -1,4 +1,18 @@
 #include "Collider.h"
+#include "CollisionManager.h"
+
+Collider::Collider() {
+	// 衝突マネージャーのインスタンスを取得
+	collisionManager_ = CollisionManager::GetInstance();
+	// コライダーリスト登録
+	collisionManager_->SetColliderList(this);
+	// 当たり判定のワールドトランスフォームの初期化
+	worldTransform.Initialize();
+}
+
+Collider::~Collider() {
+	collisionManager_->ClearColliderList(this);
+}
 
 bool Collider::TriggerOnCollision() {
 	if (!isPreOnCollision_ && isOnCollision_) {

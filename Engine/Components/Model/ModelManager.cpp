@@ -29,24 +29,17 @@ void ModelManager::LoadModel(const std::string& directoryPath, const std::string
 
 void ModelManager::LoadModel(const std::string& fileFullPath) {
 	// 読み込み済みモデルを検索
-	if (models_.contains(fileFullPath)) {
+	if (models_.contains("Engine/resources/" + fileFullPath)) {
 		// 読み込み済みなら
 		return;
 	}
 
 	// モデル生成とファイル読み込み
 	std::unique_ptr<Model> model = std::make_unique<Model>();
-	model->Initialize(fileFullPath);
+	model->Initialize("Engine/resources/" + fileFullPath);
 
 	// モデルをmapコンテナに格納
-	models_.insert(std::make_pair(fileFullPath, std::move(model)));
-}
-
-void ModelManager::Finalize() {
-	//models_.clear();
-	//delete instance;
-	//instance = nullptr;
-	//
+	models_.insert(std::make_pair("Engine/resources/" + fileFullPath, std::move(model)));
 }
 
 Model* ModelManager::FindModel(const std::string& directoryPath, const std::string& filePath) {
@@ -62,9 +55,9 @@ Model* ModelManager::FindModel(const std::string& directoryPath, const std::stri
 }
 Model* ModelManager::FindModel(const std::string& fileFullPath) {
 	// 読み込み済みモデルを検索
-	if (models_.contains(fileFullPath)) {
+	if (models_.contains("Engine/resources/" + fileFullPath)) {
 		// 読み込み済みモデルを返す
-		return models_.at(fileFullPath).get();
+		return models_.at("Engine/resources/" + fileFullPath).get();
 	}
 
 	// 該当ファイルなし
@@ -72,6 +65,11 @@ Model* ModelManager::FindModel(const std::string& fileFullPath) {
 	return nullptr;
 }
 
-Model* ModelManager::SetModel(const std::string& directoryPath, const std::string& filePath) {
+Model* ModelManager::GetModel(const std::string& directoryPath, const std::string& filePath) {
 	return ModelManager::GetInstance()->FindModel(directoryPath, filePath);
+}
+
+Model* ModelManager::GetModel(const std::string& filePath)
+{
+	return ModelManager::GetInstance()->FindModel(filePath);
 }

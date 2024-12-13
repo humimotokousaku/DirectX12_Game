@@ -81,11 +81,14 @@ Vector3 Multiply(const float& scalar, const Vector3& v);
 
 // 内積
 float Dot(const Vector3& v1, const Vector3& v2);
+float Dot(const float& v1, const float& v2);
 // 長さ(ノルム)
 float Length(const Vector3& v);
+float Length(const float& v);
 
 // 正規化
 Vector3 Normalize(const Vector3& v);
+float Normalize(const float& v);
 
 // クロス積
 Vector3 Cross(const Vector3& v1, const Vector3& v2);

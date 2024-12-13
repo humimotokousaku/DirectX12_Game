@@ -33,15 +33,15 @@ PixelShaderOutput main(VertexShaderOutput input)
         const int32_t kNumSamples = 10;
         const float32_t kBlurWidth = 0.01f;
         float32_t2 direction = input.texcoord - gRadialBlurData.center;
-        float32_t4 outputColor = float32_t4(0.0f, 0.0f, 0.0f, 0.0f);
+        float32_t3 outputColor = float32_t3(0.0f, 0.0f, 0.0f);
         for (int32_t sampleIndex = 0; sampleIndex < kNumSamples; ++sampleIndex)
         {
             float32_t2 texcoord = input.texcoord + direction * gRadialBlurData.blurWidth * float32_t(sampleIndex);
-            outputColor += gTexture.Sample(gSampler, texcoord);
+            outputColor.rgb += gTexture.Sample(gSampler, texcoord).rgb;
         }
 		// 平均化
         outputColor *= rcp(kNumSamples);
-        output.color = outputColor;
+        output.color.rgb = outputColor;
         output.color.a = 1.0f;
         return output;
     }

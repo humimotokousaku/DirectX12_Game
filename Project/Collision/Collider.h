@@ -1,11 +1,19 @@
 #pragma once
-#include "Vector3.h"
 #include "CollisionConfig.h"
 #include "MathStructs.h"
+#include "WorldTransform.h"
+#include <functional>
 #include <cstdint>
 
+class CollisionManager;
+/// <summary>
+/// 当たり判定
+/// </summary>
 class Collider {
 public:
+	Collider();
+	~Collider();
+
 	// 当たった瞬間を取得
 	bool TriggerOnCollision();
 	// 離れた瞬間を取得
@@ -13,73 +21,112 @@ public:
 	// 当たっているときを取得
 	bool PressOnCollision();
 
-	///
-	/// Getter
-	/// 
-
+#pragma region Getter
 	// ダメージを取得
 	float GetDamage() { return damage_; }
 
+	// 力を取得
+	Vector3 GetPower() { return power_; }
+
 	// 半径の取得
 	float GetRadius() { return radius_; }
+
 	// OBBの取得
 	OBB GetOBB() { return obb_; }
 
 	// 衝突属性(自分)を取得
-	uint32_t GetCollisionAttribute() { return collisionAttribute_; }
+	const uint32_t& GetCollisionAttribute() { return collisionAttribute_; }
 	// 衝突マスク(相手)を取得
-	uint32_t GetCollisionMask() { return collisionMask_; }
+	const uint32_t& GetCollisionMask() { return collisionMask_; }
 	// 当たり判定の形状を取得
-	uint32_t GetCollisionPrimitive() { return collisionPrimitive_; }
+	const uint32_t& GetCollisionPrimitive() { return collisionPrimitive_; }
 
-	// 今当たっているかを設定
+	// ワールド座標を取得
+	Vector3 GetWorldPosition() {
+		worldTransform.UpdateMatrix();
+		Vector3 worldPos = {
+			worldTransform.constMap->matWorld.m[3][0],
+			worldTransform.constMap->matWorld.m[3][1],
+			worldTransform.constMap->matWorld.m[3][2]
+		};
+		return worldPos;
+	}
+	// 角度を取得
+	Vector3 GetRotation() { 
+		Vector3 rot = worldTransform.rotate;
+		if (worldTransform.parent_) {
+			rot += worldTransform.parent_->rotate;
+		}
+		return rot;
+	}
+
+	// 今当たっているかを取得
 	bool GetIsOnCollision() { return isOnCollision_; }
-	// 今当たっているかを設定
+	// 今当たっているかを取得
 	bool GetIsPreOnCollision() { return isPreOnCollision_; }
+	// 当たり判定を使用するかを取得
+	bool GetIsActive() { return isActive_; }
+#pragma endregion
 
-	///
-	/// Setter
-	///
-
+#pragma region Setter
 	// ダメージを設定
 	void SetDamage(float damage) { damage_ = damage; }
 
+	// 力を設定
+	void SetPower(Vector3 power) { power_ = power; }
+
 	// 半径の設定
 	void SetRadius(float radius) { radius_ = radius; }
+
 	// OBBの設定
 	void SetOBB(OBB obb) { obb_ = obb; }
 	void SetOBBCenterPos(Vector3 centerPos) { obb_.m_Pos = centerPos; }
-	void SetOBBDirect(int index) { 
-		Vector3 rotateResult = TransformNormal(obb_.m_NormaDirect[index], MakeRotateMatrix(GetRotation()));
-		obb_.m_NormaDirect[index] = Normalize(rotateResult);
+	void SetOBBLength(Vector3 length) { obb_.m_fLength = length; }
+	void SetOBBDirect(int index) {
+		Matrix4x4 rotate = MakeRotateMatrix(GetRotation());
+		obb_.m_NormaDirect[index] = { rotate.m[index][0], rotate.m[index][1], rotate.m[index][2] };
 	}
 
 	// 衝突属性(自分)を設定
-	void SetCollisionAttribute(uint32_t collisionAttribute) { collisionAttribute_ = collisionAttribute; }
+	void SetCollisionAttribute(const uint32_t& collisionAttribute) { collisionAttribute_ = collisionAttribute; }
 	// 衝突マスク(相手)を設定
-	void SetCollisionMask(uint32_t collisionMask) { collisionMask_ = collisionMask; }
+	void SetCollisionMask(const uint32_t& collisionMask) { collisionMask_ = collisionMask; }
 	// 当たり判定の形状を設定
-	void SetCollisionPrimitive(uint32_t collisionPrimitive) { collisionPrimitive_ = collisionPrimitive; }
+	void SetCollisionPrimitive(const uint32_t& collisionPrimitive) { collisionPrimitive_ = collisionPrimitive; }
 
 	// 今当たっているかを設定
 	void SetIsOnCollision(bool isOnCollision) { isOnCollision_ = isOnCollision; }
 	// 今当たっているかを設定
 	void SetIsPreOnCollision(bool isPreOnCollision) { isPreOnCollision_ = isPreOnCollision; }
+	// 当たり判定を使用するかを設定
+	void SetIsActive(bool isActive) { isActive_ = isActive; }
 
-	///
-	/// 純粋仮想関数
-	/// 
+	// 衝突応答を設定
+	void SetOnCollision(std::function<void(Collider*)> onCollision) { onCollision_ = onCollision; }
+#pragma endregion
+	
+	// 衝突時に呼ばれる関数(ユーザーの使用禁止)
+	void OnCollision(Collider* collider) { 
+		if (!onCollision_) { return; }
+		onCollision_(collider); 
+	}
 
-	// 衝突時に呼ばれる関数
-	virtual void OnCollision(Collider* collider) = 0;
-	// ワールド座標を取得
-	virtual Vector3 GetWorldPosition() = 0;
-	// 角度を取得
-	virtual Vector3 GetRotation() = 0;
+public:// パブリックな変数
+	WorldTransform worldTransform;
 
-private:
+private:// エンジン機能
+	// 衝突マネージャー
+	CollisionManager* collisionManager_;
+
+private:// プライベートな変数
+	// 衝突応答
+	std::function<void(Collider*)> onCollision_;
+
 	// ダメージ
 	float damage_;
+
+	// 力
+	Vector3 power_;
 
 	// 衝突半径
 	float radius_ = 1.0f;
@@ -106,4 +153,6 @@ private:
 	bool isOnCollision_ = false;
 	// 前に当たっている
 	bool isPreOnCollision_ = false;
+	// 当たり判定を使用
+	bool isActive_ = true;
 };

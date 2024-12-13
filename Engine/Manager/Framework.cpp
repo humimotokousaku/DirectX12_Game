@@ -1,7 +1,6 @@
 #include "Framework.h"
 #include "ConvertString.h"
 #include "GlobalVariables.h"
-#include "GameTime.h"
 
 Framework::Framework() {
 
@@ -9,7 +8,7 @@ Framework::Framework() {
 
 void Framework::Initialize() {
 	// タイトル名を入力
-	const char kWindowTitle[] = "LE3B_フミモト_コウサク_SpeedShooter";
+	const char kWindowTitle[] = "LE3A_フミモト_コウサク_SpeedShooter";
 	// タイトルバーの変換
 	auto&& titleString = ConvertString(kWindowTitle);
 
@@ -34,7 +33,7 @@ void Framework::Initialize() {
 	ModelManager::GetInstance()->Initialize();
 
 	// ブローバル変数の読み込み
-	//GlobalVariables::GetInstance()->LoadFiles();
+	GlobalVariables::GetInstance()->LoadFiles();
 	
 	// PSOの初期化
 	pipelineManager_ = PipelineManager::GetInstance();
@@ -48,6 +47,9 @@ void Framework::Initialize() {
 	// 入力(キーボードとゲームパッド)
 	input_ = Input::GetInstance();
 	input_->Initialize();
+	// Audioの初期化
+	Audio::GetInstance()->Initialize();
+
 	// ライトの設定
 	directionalLight_ = DirectionalLight::GetInstance();
 	directionalLight_->Initialize();
@@ -57,27 +59,24 @@ void Framework::Initialize() {
 	// スポットライト
 	spotLight_ = SpotLight::GetInstance();
 	spotLight_->Initialize();
-	// Audioの初期化
-	Audio::GetInstance()->Initialize();
 }
 
 void Framework::Update() {
-	//GameTimer::GetInstance()->Tick();
+	pointLight_->Update();
+
 #ifdef _DEBUG
-	//ImGui::Begin("Light");
-	//if (ImGui::TreeNode("PointLight")) {
-	//	pointLight_->ImGuiAdjustParameter();
-	//	ImGui::TreePop();
-	//}
-	//if (ImGui::TreeNode("DirectinalLight")) {
-	//	directionalLight_->ImGuiAdjustParameter();
-	//	ImGui::TreePop();
-	//}
-	//if (ImGui::TreeNode("SpotLight")) {
-	//	spotLight_->ImGuiAdjustParameter();
-	//	ImGui::TreePop();
-	//}
-	//ImGui::End();
+		if (ImGui::TreeNode("PointLight")) {
+		pointLight_->ImGuiParameter();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("DirectinalLight")) {
+		directionalLight_->ImGuiParameter();
+		ImGui::TreePop();
+	}
+	if (ImGui::TreeNode("SpotLight")) {
+		spotLight_->ImGuiParameter();
+		ImGui::TreePop();
+	}
 #endif
 }
 
@@ -119,7 +118,6 @@ void Framework::Run() {
 }
 
 void Framework::Finalize() {
-	ModelManager::GetInstance()->Finalize();
 	// ImGui
 	imGuiManager_->Finalize();
 	textureManager_->Finalize();
@@ -140,6 +138,9 @@ void Framework::BeginFrame() {
 	imGuiManager_->PreDraw();
 	// グローバル変数の更新
 	//GlobalVariables::GetInstance()->Update();
+#ifdef _DEBUG
+
+#endif // _DEBUG
 }
 
 void Framework::EndFrame() {

@@ -151,7 +151,7 @@ void DissolvePSO::CreatePSO() {
 
 	// rootSignature
 	psoData_.graphicsPipelineStateDescs_.pRootSignature = psoData_.rootSignature_.Get();
-	// InputLayout
+	// inputLayout
 	psoData_.graphicsPipelineStateDescs_.InputLayout = psoData_.inputLayoutDesc_;
 	// vertexShader
 	psoData_.graphicsPipelineStateDescs_.VS = { psoData_.vertexShaderBlob_->GetBufferPointer(),

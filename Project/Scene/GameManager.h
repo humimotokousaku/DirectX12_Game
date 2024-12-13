@@ -1,7 +1,13 @@
 #pragma once
 #include "Framework.h"
+#include "CollisionManager.h"
 #include "SceneTransition/SceneTransition.h"
+#include "LevelManager.h"
+#include "GameTime.h"
 
+/// <summary>
+/// アプリケーションを管理するクラス
+/// </summary>
 class GameManager : public Framework
 {	
 public:
@@ -42,6 +48,16 @@ private:
 	int sceneNum_;
 	int preSceneNum_;
 
+	// レベルマネージャー
+	LevelManager* levelManager_;
+
+	// シーン遷移
 	SceneTransition* sceneTransition_;
+
+	// 衝突マネージャー
+	CollisionManager* collisionManager_;
+
+	// ゲームタイマー
+	GameTimer* gameTimer_;
 };
 

@@ -45,7 +45,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	// インデックスのリソース作成
 	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * modelData_.indices.size();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 	// 書き込むためのアドレスを取得
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
@@ -65,7 +65,7 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();
-	uvTransform_ = {
+	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
@@ -93,7 +93,7 @@ void Model::Initialize() {
 	// インデックスのリソース作成
 	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * modelData_.indices.size();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 	// 書き込むためのアドレスを取得
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
@@ -114,7 +114,7 @@ void Model::Initialize() {
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();
-	uvTransform_ = {
+	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
@@ -151,7 +151,7 @@ void Model::Initialize(const std::string& filename) {
 	// インデックスのリソース作成
 	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = sizeof(uint32_t) * modelData_.indices.size();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 	// 書き込むためのアドレスを取得
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
@@ -171,7 +171,7 @@ void Model::Initialize(const std::string& filename) {
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// uvTransform行列の初期化
 	materialData_->uvTransform = MakeIdentity4x4();
-	uvTransform_ = {
+	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
@@ -179,6 +179,13 @@ void Model::Initialize(const std::string& filename) {
 }
 
 void Model::Draw(const ViewProjection& viewProjection, uint32_t textureHandle) {
+	// UVTransformの計算
+	uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+	materialData_->uvTransform = uvTransformMatrix;
+
+	// コマンドを積む
 	if (modelData_.isSkinClusterData) {
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 			vertexBufferView_,
@@ -214,6 +221,13 @@ void Model::Draw(const ViewProjection& viewProjection, uint32_t textureHandle) {
 }
 
 void Model::Draw(const ViewProjection& viewProjection) {
+	// UVTransformの計算
+	uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
+	uvTransformMatrix = Multiply(uvTransformMatrix, MakeTranslateMatrix(uvTransform.translate));
+	materialData_->uvTransform = uvTransformMatrix;
+
+	// コマンドを積む
 	if (modelData_.isSkinClusterData) {
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 			vertexBufferView_,
