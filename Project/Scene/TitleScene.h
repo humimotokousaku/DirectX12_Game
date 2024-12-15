@@ -5,7 +5,6 @@
 #include "TitleEvent.h"
 
 class GameManager;
-
 /// <summary>
 /// タイトルシーン
 /// </summary>

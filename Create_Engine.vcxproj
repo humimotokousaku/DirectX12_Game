@@ -159,6 +159,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\GameObjectManager.cpp" />
+    <ClCompile Include="Project\GaugeUI.cpp" />
     <ClCompile Include="Project\Event\DeadEvent.cpp" />
     <ClCompile Include="Project\Event\ClearEvent.cpp" />
     <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
@@ -277,6 +279,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\Event\TitleEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\GameObjectManager.h" />
+    <ClInclude Include="Project\GaugeUI.h" />
     <ClInclude Include="Project\Event\DeadEvent.h" />
     <ClInclude Include="Project\Event\ClearEvent.h" />
     <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />

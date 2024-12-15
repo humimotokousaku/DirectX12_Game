@@ -1,6 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "GameSystem.h"
+#include "GameObjectManager.h"
 
 class GameManager;
 /// <summary>
@@ -39,5 +40,8 @@ public:
 private:// プライベートなメンバ変数
 	// ゲームシステム
 	std::unique_ptr<GameSystem> gameSystem_;
+
+	// ゲームオブジェクトマネージャー
+	GameObjectManager* gameObjectManager_;
 };
 

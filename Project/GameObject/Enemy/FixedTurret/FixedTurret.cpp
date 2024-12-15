@@ -1,6 +1,7 @@
 #include "FixedTurret.h"
 #include "FixedTurretWaitState.h"
 #include "EnemyManager.h"
+#include "GameObjectManager.h"
 
 FixedTurret::FixedTurret() {
 	// 体のオブジェクト作成
@@ -31,6 +32,9 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetOnCollision(std::bind(&FixedTurret::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
+
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
 	// 敵の行動状態
 	state_ = new FixedTurretWaitState(this, player_);

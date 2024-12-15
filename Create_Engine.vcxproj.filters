@@ -479,9 +479,8 @@
     <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp">
       <Filter>Project\Components\LevelManager</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\PlayerBullet.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
+    <ClCompile Include="Project\GaugeUI.cpp" />
+    <ClCompile Include="Project\GameObject\GameObjectManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -841,6 +840,8 @@
     <ClInclude Include="Project\Components\LevelManager\LevelManager.h">
       <Filter>Project\Components\LevelManager</Filter>
     </ClInclude>
+    <ClInclude Include="Project\GaugeUI.h" />
+    <ClInclude Include="Project\GameObject\GameObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

@@ -13,6 +13,7 @@
 #include "StartEvent.h"
 #include "ClearEvent.h"
 #include "DeadEvent.h"
+#include "GameObjectManager.h"
 
 /// <summary>
 /// ゲームシーンで行われる処理をまとめたクラス
@@ -98,8 +99,12 @@ private:// エンジン機能
 private:// プライベートなメンバ変数
 	// 登録用のモデル
 	std::map<std::string, Model*> models_;
+
 	// スコア
 	Score* score_;
+
+	// ゲームオブジェクトマネージャー
+	GameObjectManager* gameObjectManager_;
 
 	// エネミーマネージャ
 	EnemyManager enemyManager_;

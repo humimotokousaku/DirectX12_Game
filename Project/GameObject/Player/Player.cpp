@@ -8,6 +8,7 @@
 #include "TextureManager.h"
 #include "Utility.h"
 #include "PointLight.h"
+#include "GameObjectManager.h"
 #include <numbers>
 
 Player::Player() {}
@@ -45,11 +46,12 @@ void Player::Initialize() {
 	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
 	object3d_->collider->SetOnCollision(std::bind(&Player::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
+#pragma endregion
+
 	// ポイントライトを追従させる
 	PointLight::GetInstance()->SetTargetPosition(&object3d_->worldTransform.worldPos);
 	PointLight::GetInstance()->SetTargetOffset(Vector3{ 0,2,0 });
 	PointLight::GetInstance()->SetRadius(1500.0f);
-#pragma endregion
 
 #pragma region ゲージ系のUI作成
 	// HP量
@@ -92,18 +94,8 @@ void Player::Initialize() {
 		particles_[i]->Initialize(GetWorldPosition());
 		particles_[i]->SetCamera(camera_);
 		particles_[i]->SetEmitterParent(&object3d_->worldTransform);
-		// 発生頻度
-		particles_[i]->SetEmitterFrequency(1.0f / 240.0f);
-		// 一度に発生する個数
-		particles_[i]->SetEmitterCount(1);
 		// ランダムを切る
 		particles_[i]->OffRandom();
-		// パーティクル一粒の詳細設定
-		particles_[i]->particle_.color = { 1,1,1,0.6f };
-		particles_[i]->particle_.lifeTime = 30.0f;
-		particles_[i]->particle_.transform.translate = { 0.0f,0.0f,0.0f };
-		particles_[i]->particle_.transform.scale = { 0.1f,0.1f,0.1f };
-		particles_[i]->particle_.vel = { 0.0f,0.0f,1.0f };
 	}
 
 	// 死亡時のパーティクル
@@ -171,7 +163,7 @@ void Player::Update() {
 
 	// 自機の軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
-		particles_[i]->Update();
+		//particles_[i]->Update();
 	}
 
 	// ImGui
@@ -593,6 +585,11 @@ void Player::LoadParticlesData() {
 	globalVariables_->CreateGroup(orbitPartileGroupName);
 	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_RightWing_Emitter_Pos", particles_[0]->emitter_.transform.translate);
 	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_LeftWing_Emitter_Pos", particles_[1]->emitter_.transform.translate);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_LifeTime", particles_[0]->particle_.lifeTime);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_Translate", particles_[0]->particle_.transform.translate);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_Scale", particles_[0]->particle_.transform.scale);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_Velocity", particles_[0]->particle_.vel);
+	globalVariables_->AddItem(orbitPartileGroupName, "Orbit_Color", particles_[0]->particle_.color);
 	// 死亡パーティクルのグループを追加
 	globalVariables_->CreateGroup(deadParticleGroupName);
 	globalVariables_->AddItem(deadParticleGroupName, "Dead_Emitter_Frequency", deadParticle_->emitter_.frequency);
@@ -614,6 +611,13 @@ void Player::LoadParticlesData() {
 	// 軌道パーティクルの情報を読み込む
 	particles_[0]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_RightWing_Emitter_Pos");
 	particles_[1]->emitter_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_LeftWing_Emitter_Pos");
+	for (int i = 0; i < particles_.size(); i++) {
+		particles_[i]->particle_.lifeTime = globalVariables_->GetFloatValue(orbitPartileGroupName, "Orbit_LifeTime");
+		particles_[i]->particle_.transform.translate = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_Translate");
+		particles_[i]->particle_.transform.scale = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_Scale");
+		particles_[i]->particle_.vel = globalVariables_->GetVector3Value(orbitPartileGroupName, "Orbit_Velocity");
+		particles_[i]->particle_.color = globalVariables_->GetVector4Value(orbitPartileGroupName, "Orbit_Color");
+	}
 	// 死亡パーティクルの情報を読み込む
 	deadParticle_->emitter_.frequency = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
 	deadParticle_->emitter_.frequencyTime = globalVariables_->GetFloatValue(deadParticleGroupName, "Dead_Emitter_Frequency");
@@ -634,7 +638,6 @@ void Player::LoadParticlesData() {
 }
 
 void Player::ImGuiParameter() {
-#ifdef _DEBUG
 	//object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
@@ -680,9 +683,11 @@ void Player::ImGuiParameter() {
 
 	// ボタンを押したらsave
 	if (globalVariables_->GetIsSave()) {
-		//globalVariables_->SaveFile(orbitPartileGroupName);
-		globalVariables_->SaveFile(deadParticleGroupName);
+		globalVariables_->SaveFile(orbitPartileGroupName);
+		//globalVariables_->SaveFile(deadParticleGroupName);
 	}
+#ifdef _DEBUG
+
 #endif
 }
 

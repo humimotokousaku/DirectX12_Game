@@ -1,14 +1,36 @@
 {
     "Player_OrbitParticle": {
+        "Orbit_Color": [
+            1.0,
+            1.0,
+            1.0,
+            0.6000000238418579
+        ],
         "Orbit_LeftWing_Emitter_Pos": [
             0.0,
             0.0,
             0.0
         ],
+        "Orbit_LifeTime": 30.0,
         "Orbit_RightWing_Emitter_Pos": [
             0.0,
             0.0,
             0.0
+        ],
+        "Orbit_Scale": [
+            0.10000000149011612,
+            0.10000000149011612,
+            0.10000000149011612
+        ],
+        "Orbit_Translate": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "Orbit_Velocity": [
+            0.0,
+            0.0,
+            1.0
         ]
     }
 }

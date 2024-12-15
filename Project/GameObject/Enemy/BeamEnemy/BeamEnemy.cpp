@@ -1,6 +1,7 @@
 #include "BeamEnemy.h"
 #include "BeamEnemyStateWait.h"
 #include "EnemyManager.h" 
+#include "GameObjectManager.h"
 
 BeamEnemy::BeamEnemy() {
 	object3d_ = std::make_unique<Object3D>();
@@ -25,6 +26,8 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 #pragma endregion
 
 #pragma region ビームオブジェクト生成
@@ -44,6 +47,8 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	beamObject_->collider->SetDamage(kBeamDamage);
 	beamObject_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
 	beamObject_->collider->SetIsActive(true);
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(beamObject_.get());
 #pragma endregion
 
 	// 状態遷移

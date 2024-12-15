@@ -3,6 +3,7 @@
 #include "MoveEnemyStateApproach.h"
 #include "CollisionConfig.h"
 #include "EnemyManager.h"
+#include "GameObjectManager.h"
 
 MoveEnemy::MoveEnemy() {
 	object3d_ = std::make_unique<Object3D>();
@@ -32,6 +33,9 @@ void MoveEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->collider->SetOnCollision(std::bind(&MoveEnemy::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);
+
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
