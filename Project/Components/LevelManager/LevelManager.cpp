@@ -1,4 +1,5 @@
 #include "LevelManager.h"
+#include "GameObjectManager.h"
 
 LevelManager* LevelManager::GetInstance() {
 	static LevelManager instance;
@@ -215,6 +216,9 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		}
 
 		objects.push_back(newObject);
+
+		// ゲームオブジェクトマネージャーに追加
+		GameObjectManager::GetInstance()->AddGameObject(newObject);
 	}
 
 	levelObjects_ = objects;

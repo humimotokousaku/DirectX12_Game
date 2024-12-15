@@ -218,6 +218,27 @@ void Sprite::Draw() {
 	vertexData_[3].position = { right,top, 0.0f, 1.0f };// 右上
 #pragma endregion
 
+	ID3D12Resource* textureBuffer = textureManager_->GetTextureResource(textureNum_).Get();
+	// 指定番号の画像が読み込み済みなら
+	if (textureBuffer) {
+		// テクスチャ情報取得
+		D3D12_RESOURCE_DESC resDesc = textureBuffer->GetDesc();
+		// UVの頂点
+		float tex_left = textureLeftTop_.x / resDesc.Width;
+		float tex_right = (textureLeftTop_.x + textureSize_.x) / resDesc.Width;
+		float tex_top = textureLeftTop_.y / resDesc.Height;
+		float tex_bottom = (textureLeftTop_.y + textureSize_.y) / resDesc.Height;
+		// 頂点のUVに反映
+		vertexData_[0].texcoord = { tex_left, tex_bottom };
+		vertexData_[0].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[1].texcoord = { tex_left, tex_top };
+		vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[2].texcoord = { tex_right, tex_bottom };
+		vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
+		vertexData_[3].texcoord = { tex_right, tex_top };
+		vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
+	}
+
 #pragma region UV座標
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -281,10 +302,14 @@ void Sprite::ImGuiAdjustParameter() {
 	// ウィンドウの初期サイズを指定
 	ImGui::Begin("Sprite");
 	ImGui::DragFloat3("Translate", &worldTransform_.translate.x, 0.5f, 0, 1280, "%.1f");
-	ImGui::DragFloat3("Scale", &worldTransform_.scale.x, 0.1f, -5, 5, "%.1f");
-	ImGui::DragFloat3("Rotate.z", &worldTransform_.rotate.x, 0.1f, -6.28f, 6.28f, "%.1f");
+	ImGui::DragFloat3("Scale", &worldTransform_.scale.x, 0.01f, -5, 5, "%.1f");
+	ImGui::DragFloat3("Rotate.z", &worldTransform_.rotate.x, 0.01f, -6.28f, 6.28f, "%.1f");
 	ImGui::DragFloat2("AnchorPoint", &anchorPoint_.x, 0.01f, -1.0f, 1.0f, "%.2f");
-	ImGui::DragFloat2("Size", &size_.x, 0.1f, 0, 1280, "%.1f");
+	ImGui::DragFloat2("TextureLeftTop", &textureLeftTop_.x, 0.1f, -1000.0f, 1000.0f, "%.2f");
+	ImGui::DragFloat2("TextureSize", &textureSize_.x, 0.1f, -1000.0f, 1000.0f, "%.2f");
+	ImGui::DragFloat3("UvTranslate", &uvTransform_.translate.x, 0.1f, -1000.0f, 1000.0f, "%.2f");
+	ImGui::DragFloat3("UvScale", &uvTransform_.scale.x, 0.1f, -1000.0f, 1000.0f, "%.2f");
+	ImGui::DragFloat2("Size", &size_.x, 0.01f, 0, 1280, "%.1f");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::End();
 }

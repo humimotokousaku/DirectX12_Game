@@ -4,6 +4,7 @@
 #include "PointLight.h"
 
 GameSystem::~GameSystem() {
+	gameObjectManager_->Finalize();
 	// 自機の弾
 	for (PlayerBullet* bullet : playerBullets_) {
 		delete bullet;
@@ -16,6 +17,7 @@ void GameSystem::Initialize() {
 	modelManager_ = ModelManager::GetInstance();
 	audio_ = Audio::GetInstance();
 	levelManager_ = LevelManager::GetInstance();
+	gameObjectManager_ = GameObjectManager::GetInstance();
 
 	// カメラの生成
 	camera_.Initialize();
@@ -83,6 +85,8 @@ void GameSystem::Initialize() {
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_.SetParent(&railCamera_.GetWorldTransform());
 #pragma endregion
+	// ゲームオブジェクトマネージャーに設定
+	gameObjectManager_->SetPlayer(&player_);
 
 #pragma region エネミーマネージャの生成
 	// 通常敵の体
@@ -272,9 +276,6 @@ void GameSystem::Draw() {
 
 	// 自機のレティクルとHP
 	player_.DrawUI();
-
-	// レールカメラの移動ルート
-	//railCamera_.MoveRouteDraw();
 }
 
 void GameSystem::SceneChange(int& sceneNum) {

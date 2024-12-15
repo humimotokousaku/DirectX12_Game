@@ -7,10 +7,10 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	textureManager_ = TextureManager::GetInstance();
 	globalVariables_ = GlobalVariables::GetInstance();
 
+	player_ = player;
+
 	// 残像オブジェクトに貼るテクスチャ
 	afterImageTexture_ = textureManager_->GetSrvIndex("Textures", "Bob_Red.png");
-
-	player_ = player;
 
 	// 自機の残像オブジェクトを作成
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {

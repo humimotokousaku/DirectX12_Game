@@ -1,10 +1,10 @@
 #include "EnemyBullet.h"
-
 #include "CollisionConfig.h"
 #include "Lerp.h"
 #include "Matrix4x4.h"
 #include "ImGuiManager.h"
 #include "WorldTransform.h"
+#include "GameObjectManager.h"
 #include <cassert>
 
 EnemyBullet::~EnemyBullet() {
@@ -39,6 +39,9 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* e
 	object3d_->collider->SetOnCollision(std::bind(&EnemyBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 	object3d_->collider->SetDamage(kBulletDamage);
+
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
 	// 弾が最初にぶ方向
 	velocity_ = kFirstVelocity;
