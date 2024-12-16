@@ -136,10 +136,10 @@ void Framework::BeginFrame() {
 	pipelineManager_->PreDraw();
 	// ImGui
 	imGuiManager_->PreDraw();
+
+#ifdef _DEBUG
 	// グローバル変数の更新
 	GlobalVariables::GetInstance()->Update();
-#ifdef _DEBUG
-
 #endif // _DEBUG
 }
 

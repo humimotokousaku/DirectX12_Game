@@ -99,7 +99,7 @@ public:
 	// 今当たっているかを設定
 	void SetIsPreOnCollision(bool isPreOnCollision) { isPreOnCollision_ = isPreOnCollision; }
 	// 当たり判定を使用するかを設定
-	void SetIsActive(bool isActive) { isActive_ = isActive; }
+	void SetIsActive(const bool& isActive) { isActive_ = isActive; }
 
 	// 衝突応答を設定
 	void SetOnCollision(std::function<void(Collider*)> onCollision) { onCollision_ = onCollision; }

@@ -10,6 +10,7 @@ FixedTurret::FixedTurret() {
 }
 FixedTurret::~FixedTurret() {
 	models_.clear();
+	GameObjectManager::GetInstance()->ClearGameObjectList(object3d_.get());
 }
 
 void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {

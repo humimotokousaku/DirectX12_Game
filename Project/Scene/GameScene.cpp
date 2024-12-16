@@ -14,15 +14,15 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-	gameSystem_->Update(sceneNum);
-
 	// 自機との距離に応じてゲームオブジェクトを消す
 	gameObjectManager_->Update();
+
+	// ゲームシーンの処理
+	gameSystem_->Update(sceneNum);
 }
 
 void GameScene::Draw() {
 	gameSystem_->Draw();
-
 }
 
 void GameScene::Finalize() {

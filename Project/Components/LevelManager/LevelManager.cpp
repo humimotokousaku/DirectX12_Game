@@ -216,12 +216,13 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 		}
 
 		objects.push_back(newObject);
-
-		// ゲームオブジェクトマネージャーに追加
-		GameObjectManager::GetInstance()->AddGameObject(newObject);
 	}
-
 	levelObjects_ = objects;
+
+	for (auto& objectData : levelObjects_) {
+		// ゲームオブジェクトマネージャーに追加
+		GameObjectManager::GetInstance()->AddGameObject(objectData);
+	}
 }
 
 void LevelManager::Finalize() {

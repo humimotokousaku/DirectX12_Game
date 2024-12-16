@@ -8,7 +8,7 @@
 #include <cassert>
 
 EnemyBullet::~EnemyBullet() {
-
+	GameObjectManager::GetInstance()->ClearGameObjectList(object3d_.get());
 }
 
 void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData) {

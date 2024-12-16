@@ -638,7 +638,8 @@ void Player::LoadParticlesData() {
 }
 
 void Player::ImGuiParameter() {
-	//object3d_->ImGuiParameter("Player");
+#ifdef _DEBUG
+//object3d_->ImGuiParameter("Player");
 
 	ImGui::Begin("Player");
 	/*if (ImGui::TreeNode("EvasionData")) {
@@ -686,8 +687,6 @@ void Player::ImGuiParameter() {
 		globalVariables_->SaveFile(orbitPartileGroupName);
 		//globalVariables_->SaveFile(deadParticleGroupName);
 	}
-#ifdef _DEBUG
-
 #endif
 }
 

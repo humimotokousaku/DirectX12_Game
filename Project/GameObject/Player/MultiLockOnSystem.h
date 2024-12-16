@@ -106,6 +106,13 @@ private:
 	// 自機
 	Player* player_;
 
+	// ロックオン時に出るフレームのアニメーション
+	std::array<Animation, 2> lockOnFrameAnim_;
+	std::array<Animation, 2> lockOnFrameAlphaAnim_;
+
+	// ロックオン時に出るスプライト
+	std::array<std::unique_ptr<Sprite>, 2> lockOnFrame_;
+
 	// 弾の見た目
 	Model* model_;
 	// 射撃SE
