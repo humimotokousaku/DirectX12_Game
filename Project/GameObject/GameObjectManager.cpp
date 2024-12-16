@@ -25,9 +25,13 @@ void GameObjectManager::CheckIsDraw() {
 		// 範囲内なら描画する
 		if (p2o.x * p2o.x + p2o.y * p2o.y + p2o.z * p2o.z <= radius * radius) {
 			gameObject->SetIsActive(true);
+			//gameObject->SetIsCollision(true);
 		}
 		else {
+			// モデルの非表示
 			gameObject->SetIsActive(false);
+			// 当たり判定をとらない
+			//gameObject->SetIsCollision(false);
 		}
 	}
 }

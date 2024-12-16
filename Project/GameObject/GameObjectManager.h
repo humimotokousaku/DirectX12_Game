@@ -37,7 +37,7 @@ public:
 	/// ゲームオブジェクトを追加
 	/// </summary>
 	/// <param name="gameObject">ゲームオブジェクトのアドレス</param>
-	void AddGameObject(IObject3D* gameObject) { gameObjectList_.push_back(gameObject); }
+	void AddGameObject(Object3D* gameObject) { gameObjectList_.push_back(gameObject); }
 
 	/// <summary>
 	/// 自機のアドレスを設定
@@ -45,9 +45,13 @@ public:
 	/// <param name="player">自機のアドレス</param>
 	void SetPlayer(Player* player) { player_ = player; }
 
+	void ClearGameObjectList(Object3D* gameObject) {
+		gameObjectList_.remove(gameObject);
+	}
+
 private:
 	// ゲームオブジェクトリスト
-	std::vector<IObject3D*> gameObjectList_;
+	std::list<IObject3D*> gameObjectList_;
 
 	// 自機のアドレス
 	Player* player_;

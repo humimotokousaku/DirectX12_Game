@@ -9,7 +9,8 @@ BeamEnemy::BeamEnemy() {
 }
 
 BeamEnemy::~BeamEnemy() {
-
+	GameObjectManager::GetInstance()->ClearGameObjectList(object3d_.get());
+	GameObjectManager::GetInstance()->ClearGameObjectList(beamObject_.get());
 }
 
 void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {

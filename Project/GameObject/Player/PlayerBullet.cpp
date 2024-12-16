@@ -3,10 +3,11 @@
 #include "Matrix4x4.h"
 #include "BaseEnemy.h"
 #include "Player.h"
+#include "GameObjectManager.h"
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {
-
+	GameObjectManager::GetInstance()->ClearGameObjectList(object3d_.get());
 }
 
 void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* enemyData) {
@@ -35,6 +36,8 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* 
 	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale * 1.5f);
 	object3d_->collider->SetOnCollision(std::bind(&PlayerBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
+	// ゲームオブジェクトマネージャーに追加
+	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
 	// 緑にする
 	object3d_->SetColor(Vector4{ 0,1,0,1 });

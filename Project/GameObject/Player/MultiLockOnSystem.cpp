@@ -13,6 +13,26 @@ void MultiLockOnSystem::Initialize(Player* player, Camera* camera, std::list<Bas
 	gameSystem_ = gameSystem;
 	model_ = model;
 
+	lockOnFrame_[0] = std::make_unique<Sprite>();
+	lockOnFrame_[0]->Initialize("Textures/UI", "lockOnScreen.png");
+	lockOnFrame_[0]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, (float)WinApp::kClientHeight_ / 2.0f });
+	lockOnFrame_[0]->SetColor(Vector4{ 1,1,1,0.0f });
+	lockOnFrame_[0]->isActive_ = false;
+	PostEffectManager::GetInstance()->AddSpriteList(lockOnFrame_[0].get());
+	lockOnFrame_[1] = std::make_unique<Sprite>();
+	lockOnFrame_[1]->Initialize("Textures/UI", "lockOnScreen_LockedFrame.png");
+	lockOnFrame_[1]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2.0f, (float)WinApp::kClientHeight_ / 2.0f });
+	lockOnFrame_[1]->SetColor(Vector4{ 1,1,1,0.8f });
+	lockOnFrame_[1]->isActive_ = false;
+	PostEffectManager::GetInstance()->AddSpriteList(lockOnFrame_[1].get());
+
+	// ロックオン開始演出
+	lockOnFrameAnim_[0].SetAnimData(&lockOnFrame_[0]->worldTransform_.scale, Vector3{ 1.2f,1.2f,1.2f }, Vector3{ 1,1,1 }, 30.0f, Easings::EaseInExpo);
+	lockOnFrameAlphaAnim_[0].SetAnimData(lockOnFrame_[0]->GetColorP(), Vector4{ 1,1,1, 0 }, Vector4{ 1,1,1, 0.6f }, 10.0f, Easings::EaseInExpo);
+	// ロックオン終了演出
+	lockOnFrameAnim_[1].SetAnimData(&lockOnFrame_[0]->worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 1.2f,1.2f,1.2f }, 30.0f, Easings::EaseOutExpo);
+	lockOnFrameAlphaAnim_[1].SetAnimData(lockOnFrame_[0]->GetColorP(), Vector4{ 1,1,1, 0.6f }, Vector4{ 1,1,1, 0 }, 30.0f, Easings::EaseOutExpo);
+
 	// 射撃SE
 	shotSE_ = audio_->SoundLoadWave("Audio/shot.wav");
 }
@@ -24,6 +44,9 @@ void MultiLockOnSystem::Update() {
 		multiLockOnDatas_.clear();
 		// ロックオンされている敵のID
 		lockedEnemyIdList_.clear();
+
+		lockOnFrame_[0]->isActive_ = false;
+		lockOnFrame_[1]->isActive_ = false;
 		return;
 	}
 
@@ -46,6 +69,35 @@ void MultiLockOnSystem::Update() {
 
 	// 発射処理
 	Shot();
+
+	for (int i = 0; i < 2; i++) {
+		lockOnFrameAlphaAnim_[i].Update();
+		lockOnFrameAnim_[i].Update();
+	}
+
+	// ロックオン数が0ならロックオンフレームを消す
+	if (multiLockOnDatas_.size() != 0) {
+		if (lockOnFrameAnim_[0].GetIsEnd()) {
+			//lockOnFrame_[1]->isActive_ = true;
+		}
+	}
+	else {
+		lockOnFrame_[1]->isActive_ = false;
+	}
+
+	// ゲージが最大ならロックオンフレームを描画 + アニメーション開始
+	if (player_->GetBulletGauge().isMax) {
+		lockOnFrameAlphaAnim_[0].SetIsStart(true);
+		lockOnFrameAnim_[0].SetIsStart(true);
+		lockOnFrame_[0]->isActive_ = true;
+	}
+	else {
+		lockOnFrameAlphaAnim_[0].ResetData();
+		lockOnFrameAnim_[0].ResetData();
+
+		lockOnFrameAlphaAnim_[1].SetIsStart(true);
+		lockOnFrameAnim_[1].SetIsStart(true);
+	}
 }
 
 void MultiLockOnSystem::Draw() {

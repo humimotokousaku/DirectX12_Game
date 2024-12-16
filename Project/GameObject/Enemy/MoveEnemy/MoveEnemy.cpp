@@ -11,6 +11,7 @@ MoveEnemy::MoveEnemy() {
 }
 MoveEnemy::~MoveEnemy() {
 	models_.clear();
+	GameObjectManager::GetInstance()->ClearGameObjectList(object3d_.get());
 }
 
 void MoveEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {

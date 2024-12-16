@@ -41,6 +41,12 @@ public:
 	void SetModel(const std::string& directoryPath, const std::string& filePath);
 	void SetModel(Model* model);
 
+	/// <summary>
+	/// 当たり判定をとるかを設定
+	/// </summary>
+	/// <param name="isCollision">当たり判定</param>
+	void SetIsCollision(const bool& isCollision) { collider->SetIsActive(isCollision); }
+
 #pragma region アニメーション
 	// アニメーション追加
 	void AddAnimation(const std::string& directoryPath, const std::string& filePath, const char* animName = "\0") {
