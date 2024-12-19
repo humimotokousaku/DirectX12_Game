@@ -11,7 +11,7 @@ class MultiLockOnSystem {
 public:// 構造体
 	struct MultiLockOnData {
 		std::shared_ptr<Sprite> reticleSprite;  // 2Dレティクル
-		std::array<Animation, 2> reticleAnim;					// ロックオン時のアニメーション
+		std::array<Animation, 2> reticleAnim;	// ロックオン時のアニメーション
 		int enemyId;
 		bool isActive;
 	};
@@ -32,9 +32,6 @@ public:
 	/// </summary>
 	void Draw();
 
-	///
-	/// User Method
-	/// 
 private:// プライベートなメンバ関数
 	/// <summary>
 	/// 弾の発射処理
@@ -105,13 +102,6 @@ private:
 	GameSystem* gameSystem_;
 	// 自機
 	Player* player_;
-
-	// ロックオン時に出るフレームのアニメーション
-	std::array<Animation, 2> lockOnFrameAnim_;
-	std::array<Animation, 2> lockOnFrameAlphaAnim_;
-
-	// ロックオン時に出るスプライト
-	std::array<std::unique_ptr<Sprite>, 2> lockOnFrame_;
 
 	// 弾の見た目
 	Model* model_;
