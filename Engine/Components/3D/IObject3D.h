@@ -148,6 +148,11 @@ public:
 	// dissolve用のテクスチャを設定
 	void SetDissolveTexture(uint32_t dissolveTexture) { model_->SetDissolveTexture(dissolveTexture); }
 
+	// dissolveの閾値を設定
+	void SetDissolveMaskThreshold(const float& maskThreshold) { model_->SetDissolveMaskThreshold(maskThreshold); }
+	// dissolveを使用するかを設定
+	void SetIsDissolve(const bool& isActive) { model_->SetIsDissolve(isActive); }
+
 	// 描画をするかの設定
 	void SetIsActive(const bool& isActive) { isActive_ = isActive; }
 #pragma endregion
