@@ -305,7 +305,7 @@ void Model::CreateDissolveResource() {
 	dissolveResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(DissolveDataForGPU)).Get();
 	// 書き込むためのアドレスを取得
 	dissolveResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
-	dissolveData_->isActive = true;
+	dissolveData_->isActive = false;
 	dissolveData_->maskThreshold = 0.5f;
 }
 

@@ -236,7 +236,7 @@ void Sprite::AdjustTextureSize(const std::string& directoryPath, std::string tex
 	textureSize_.y = static_cast<float>(resDesc.Height);
 }
 
-void Sprite::AdjustTextureSize(uint32_t textureNum) {
+void Sprite::AdjustTextureSize(const uint32_t& textureNum) {
 	Microsoft::WRL::ComPtr<ID3D12Resource> textureBuffer = textureManager_->GetTextureResource(textureNum).Get();
 	assert(textureBuffer);
 

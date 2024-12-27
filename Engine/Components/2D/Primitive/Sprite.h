@@ -72,43 +72,44 @@ public:
 
 #pragma region Setter
 	// 縦幅、横幅
-	void SetSize(Vector2 size) { size_ = size; }
-	void SetSizeX(float sizeX) { size_.x = sizeX; }
-	void SetSizeY(float sizeY) { size_.y = sizeY; }
+	void SetSize(const Vector2& size) { size_ = size; }
+	void SetSizeX(const float& sizeX) { size_.x = sizeX; }
+	void SetSizeY(const float& sizeY) { size_.y = sizeY; }
 	// 座標
-	void SetPos(Vector2 pos) {
+	void SetPos(const Vector2& pos) {
 		worldTransform_.translate.x = pos.x;
 		worldTransform_.translate.y = pos.y;
 	}
-	void SetPosX(float x) {
-		worldTransform_.translate.x = x;
-	}
-	void SetPosY(float y) {
-		worldTransform_.translate.y = y;
-	}
+	void SetPosX(const float& x) { worldTransform_.translate.x = x; }
+	void SetPosY(const float& y) { worldTransform_.translate.y = y; }
 	// 回転角度を設定
-	void SetRotate(Vector3 rotate) { worldTransform_.rotate = rotate; }
+	void SetRotate(Vector3& rotate) { worldTransform_.rotate = rotate; }
 	// Spriteのアンカーポイント
-	void SetAnchorPoint(Vector2 anchorPoint) { anchorPoint_ = anchorPoint; }
+	void SetAnchorPoint(const Vector2& anchorPoint) { anchorPoint_ = anchorPoint; }
 	// 画像の切り出しサイズ
-	void SetTextureSize(Vector2 textureSize) { textureSize_ = textureSize; }
+	void SetTextureSize(const Vector2& textureSize) { textureSize_ = textureSize; }
 	// 使用するテクスチャの変更
-	void SetTextureIndex(uint32_t textureNum) { textureNum_ = textureNum; }
+	void SetTextureIndex(const uint32_t& textureNum) { textureNum_ = textureNum; }
 	// 使用するDissolveテクスチャの変更
-	void SetDissolveTextureIndex(uint32_t textureNum) { dissolveTextureNum_ = textureNum; }
+	void SetDissolveTextureIndex(const uint32_t& textureNum) { dissolveTextureNum_ = textureNum; }
+
+	// dissolveの閾値を設定
+	void SetDissolveMaskThreshold(const float& maskThreshold) { dissolveData_->maskThreshold = maskThreshold; }
+	// dissolveを使用するかを設定
+	void SetIsDissolve(const bool& isActive) { dissolveData_->isActive = isActive; }
 
 	// 画像の切りだしサイズのリセット
 	void ResetTextureSize() { textureSize_ = { 512.0f,512.0f }; }
 
 	// テクスチャのサイズをスプライトに合わせる
 	void AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath);
-	void AdjustTextureSize(uint32_t textureNum);
+	void AdjustTextureSize(const uint32_t& textureNum);
 
 	// このスプライトを背景として扱う
 	void SetIsBackGround() { worldTransform_.translate.z = 100000; }
 
 	// 色を設定
-	void SetColor(Vector4 color) { materialData_->color = color; }
+	void SetColor(const Vector4& color) { materialData_->color = color; }
 #pragma endregion
 
 protected:

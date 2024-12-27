@@ -85,6 +85,11 @@ public:
 	// dissolve用のテクスチャを設定
 	void SetDissolveTexture(uint32_t dissolveTexture) { dissolveTexHandle_ = dissolveTexture; }
 
+	// dissolveの閾値を設定
+	void SetDissolveMaskThreshold(const float& maskThreshold) { dissolveData_->maskThreshold = maskThreshold; }
+	// dissolveを使用するかを設定
+	void SetIsDissolve(const bool& isActive) { dissolveData_->isActive = isActive; }
+
 	// マテリアルのリソースを設定(ユーザーの使用禁止)
 	void SetMaterialResource(Microsoft::WRL::ComPtr<ID3D12Resource> materialResource) { materialResource_ = materialResource; }
 	// マテリアルの情報を設定(ユーザーの使用禁止)
