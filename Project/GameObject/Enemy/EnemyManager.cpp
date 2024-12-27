@@ -35,8 +35,10 @@ void EnemyManager::Initialize() {
 	// テクスチャの読み込み
 	textureManager_->LoadTexture("Textures/DefaultTexture", "white.png");
 	textureManager_->LoadTexture("Textures", "hitParticle.png");
-	spawnParticleTex_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
-	hitParticleTex_ = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
+	spawnParticleTextures_.particle = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
+	spawnParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
+	hitParticleTextures_.particle = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
+	hitParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 
@@ -114,11 +116,11 @@ void EnemyManager::Draw() {
 void EnemyManager::DrawParticle() {
 	// 出現時のパーティクル
 	for (Particles* particle : spawnParticles_) {
-		particle->Draw(spawnParticleTex_);
+		particle->Draw();
 	}
 	// 被弾時のパーティクル
 	for (Particles* hitParticle : hitParticles_) {
-		hitParticle->Draw(hitParticleTex_);
+		hitParticle->Draw();
 	}
 }
 
@@ -176,6 +178,8 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	Particles* particle = new Particles();
 	particle->Initialize(pos);
 	particle->SetCamera(camera_);
+	particle->SetTextures(spawnParticleTextures_);
+	particle->SetIsDissolve(false);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(20);
 	particle->SetEmitterSpawnCount(1);
@@ -214,6 +218,8 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	Particles* particle = new Particles();
 	particle->Initialize(pos);
 	particle->SetCamera(camera_);
+	particle->SetTextures(spawnParticleTextures_);
+	particle->SetIsDissolve(false);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(20);
 	particle->SetEmitterSpawnCount(1);
@@ -249,6 +255,8 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	Particles* particle = new Particles();
 	particle->Initialize(pos);
 	particle->SetCamera(camera_);
+	particle->SetTextures(spawnParticleTextures_);
+	particle->SetIsDissolve(false);
 	particle->SetEmitterFrequency(1);
 	particle->SetEmitterCount(20);
 	particle->SetEmitterSpawnCount(1);

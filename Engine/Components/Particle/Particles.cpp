@@ -17,7 +17,7 @@ Particles::~Particles() {
 
 }
 
-void Particles::Initialize(Vector3 emitterPos) {
+void Particles::Initialize(const Vector3& emitterPos) {
 	// 頂点の座標
 	modelData_.vertices.push_back({ .position = {-1.0f,1.0f,0.0f,1.0f}, .texcoord = {0.0f,0.0f},.normal = {0.0f,0.0f,1.0f} }); // 左上
 	modelData_.vertices.push_back({ .position = {1.0f,1.0f,0.0f,1.0f}, .texcoord = {1.0f,0.0f},.normal = {0.0f,0.0f,1.0f} }); // 右上
@@ -36,6 +36,15 @@ void Particles::Initialize(Vector3 emitterPos) {
 	instancingSrvHandleCPU_ = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex_);
 	instancingSrvHandleGPU_ = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex_);
 	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, instancingResource_.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
+
+
+	// Dissolveの情報を書き込む
+	dissolveResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
+	// 書き込むためのアドレスを取得
+	dissolveResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
+	dissolveData_->isActive = true;
+	dissolveData_->maskThreshold = 0.5f;
+
 
 	// 頂点データのメモリ確保
 	CreateVertexResource();
@@ -119,7 +128,7 @@ void Particles::Update() {
 	}
 }
 
-void Particles::Draw(uint32_t textureHandle) {
+void Particles::Draw() {
 	// カメラ
 	if (camera_) {
 		camera_->Update();
@@ -163,11 +172,11 @@ void Particles::Draw(uint32_t textureHandle) {
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	// DescriptorTableの設定
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(1, srvIndex_);
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureHandle);
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textures_.particle);
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, textures_.dissolve);
 	// マテリアルCBufferの場所を設定
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, dissolveResource_->GetGPUVirtualAddress());
 
 	DirectXCommon::GetInstance()->GetCommandList()->DrawInstanced(6, numInstance, 0, 0);
 }

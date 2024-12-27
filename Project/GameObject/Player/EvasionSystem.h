@@ -182,6 +182,7 @@ private:
 
 	// 残像モデルのテクスチャ
 	uint32_t afterImageTexture_;
+	ParticleTextures justParticleTextures_;
 
 	// 無敵時間
 	float invinsibleFrame_;

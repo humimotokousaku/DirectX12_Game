@@ -38,6 +38,8 @@ public:
 		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		// Dissolve用のテクスチャ
 		SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(4, dissolveTextureHandle_);
+		// DissolveData
+		dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, resource.Get()->GetGPUVirtualAddress());
 	}
 
 private:// プライベートな変数

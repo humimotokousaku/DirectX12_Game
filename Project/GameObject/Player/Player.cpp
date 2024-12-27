@@ -29,7 +29,8 @@ void Player::Initialize() {
 
 	// 自機のテクスチャ
 	playerTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Bob_Red.png");
-	deadParticleTexture = TextureManager::GetInstance()->GetSrvIndex("Level", "gray.png");
+	deadParticleTextures_.particle = TextureManager::GetInstance()->GetSrvIndex("Level", "gray.png");
+	deadParticleTextures_.dissolve = TextureManager::GetInstance()->GetSrvIndex("Textures", "noise.png");
 	defaultTexture = TextureManager::GetInstance()->GetSrvIndex("Textures/DefaultTexture", "white.png");
 #pragma endregion
 
@@ -38,6 +39,7 @@ void Player::Initialize() {
 	object3d_->Initialize();
 	object3d_->SetModel(models_["PlayerBody"]);
 	object3d_->SetCamera(camera_);
+	object3d_->SetDissolveTexture(deadParticleTextures_.dissolve);
 	object3d_->worldTransform.scale = { 0.5f,0.5f,0.5f };
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
@@ -94,6 +96,8 @@ void Player::Initialize() {
 		particles_[i]->Initialize(GetWorldPosition());
 		particles_[i]->SetCamera(camera_);
 		particles_[i]->SetEmitterParent(&object3d_->worldTransform);
+		particles_[i]->SetTexture(defaultTexture);
+		particles_[i]->SetDissolveTexture(TextureManager::GetInstance()->GetSrvIndex("Textures", "noise.png"));
 		// ランダムを切る
 		particles_[i]->OffRandom();
 	}
@@ -103,6 +107,8 @@ void Player::Initialize() {
 	deadParticle_->Initialize(GetWorldPosition());
 	deadParticle_->SetCamera(camera_);
 	deadParticle_->SetEmitterParent(&object3d_->worldTransform);
+	deadParticle_->SetTextures(deadParticleTextures_);
+	deadParticle_->SetIsDissolve(false);
 
 	// 全てのパーティクルの詳細な設定を読み込む
 	LoadParticlesData();
@@ -179,7 +185,7 @@ void Player::Draw() {
 		//particles_[i]->Draw(defaultTexture);
 	}
 	// 死亡パーティクル
-	deadParticle_->Draw(deadParticleTexture);
+	deadParticle_->Draw();
 
 	// DrawUI関数が呼ばれていないときはゲージ系を表示しないようにする
 	hp_.sprite->isActive_ = false;

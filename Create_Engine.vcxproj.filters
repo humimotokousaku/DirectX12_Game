@@ -482,6 +482,7 @@
     <ClCompile Include="Project\GameObject\GameObjectManager.cpp">
       <Filter>Project\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Pso\SpritePSO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -844,6 +845,8 @@
     <ClInclude Include="Project\GameObject\GameObjectManager.h">
       <Filter>Project\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Pso\SpritePSO.h" />
+    <ClInclude Include="Engine\PostProcess\PostEffectStructs.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -934,5 +937,7 @@
     <FxCompile Include="Engine\resources\sharder\VignetingPS.hlsl">
       <Filter>Resources\Sharder</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\Sprite.VS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\Sprite.PS.hlsl" />
   </ItemGroup>
 </Project>

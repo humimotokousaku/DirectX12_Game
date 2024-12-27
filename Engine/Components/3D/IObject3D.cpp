@@ -2,21 +2,35 @@
 
 void IObject3D::SetModel(const std::string& directoryPath, const std::string& filePath) {
 	*model_ = *ModelManager::GetInstance()->GetModel(directoryPath, filePath);
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+	
+	// material
 	Material* materialData;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
 	materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-	model_->SetMaterialResource(materialResource);
 	materialData->enableLighting = true;
 	materialData->color = { 1.0f,1.0f,1.0f,1.0f };
 	materialData->uvTransform = MakeIdentity4x4();
-	model_->materialData_ = materialData;
+	model_->SetMaterialResource(materialResource);
+	model_->SetMaterialData(materialData);
 
-	Motion animation = model_->animation_;
+	// Dissolve
+	DissolveDataForGPU* dissolveData;
+	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource;
+	// Dissolveの情報を書き込む
+	dissolveResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
+	// 書き込むためのアドレスを取得
+	dissolveResource.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData));
+	dissolveData->isActive = true;
+	dissolveData->maskThreshold = 0.5f;
+	model_->SetDissolveResource(dissolveResource);
+	model_->SetDissolveData(dissolveData);
+
+	Motion animation = model_->GetAnimation();
 	// アニメーション
 	animation_.push_back(animation);
 	// スケルトン
-	skeleton_ = model_->skeleton_;
+	skeleton_ = model_->GetSkeleton();
 	// スキンクラスタがあるなら作る
 	if (model_->GetModelData().isSkinClusterData) {
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());
@@ -26,21 +40,35 @@ void IObject3D::SetModel(const std::string& directoryPath, const std::string& fi
 
 void IObject3D::SetModel(Model* model) {
 	*model_ = *model;
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+
+	// material
 	Material* materialData;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
 	materialResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-	model_->SetMaterialResource(materialResource);
 	materialData->enableLighting = true;
 	materialData->color = { 1.0f,1.0f,1.0f,1.0f };
 	materialData->uvTransform = MakeIdentity4x4();
-	model_->materialData_ = materialData;
+	model_->SetMaterialResource(materialResource);
+	model_->SetMaterialData(materialData);
 
-	Motion animation = model_->animation_;
+	// Dissolve
+	DissolveDataForGPU* dissolveData;
+	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource;
+	// Dissolveの情報を書き込む
+	dissolveResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
+	// 書き込むためのアドレスを取得
+	dissolveResource.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData));
+	dissolveData->isActive = true;
+	dissolveData->maskThreshold = 0.5f;
+	model_->SetDissolveResource(dissolveResource);
+	model_->SetDissolveData(dissolveData);
+
+	Motion animation = model_->GetAnimation();
 	// アニメーション
 	animation_.push_back(animation);
 	// スケルトン
-	skeleton_ = model_->skeleton_;
+	skeleton_ = model_->GetSkeleton();
 	// スキンクラスタがあるなら作る
 	if (model_->GetModelData().isSkinClusterData) {
 		SkinCluster skinCluster = CreateSkinCluster(skeleton_, model_->GetModelData());

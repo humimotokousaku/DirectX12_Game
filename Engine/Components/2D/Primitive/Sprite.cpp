@@ -11,38 +11,16 @@ void Sprite::Initialize(const std::string& directoryPath, std::string textureFil
 	// テクスチャを読み込む
 	textureManager_->LoadTexture(directoryPath, textureFilePath);
 
-	/// メモリ確保
-	// 頂点データ
+	// 頂点データのリソース作成
 	CreateVertexResource();
-	CreateVertexBufferView();
-	// Index
+	// インデックスリソース作成
 	CreateIndexResource();
-	CreateIndexBufferView();
-	// material
+	// マテリアルデータのリソース作成
 	CreateMaterialResource();
-
-	// 1つ分のサイズを用意する
-	cameraPosResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Vector3)).Get();
-	// 書き込むためのアドレスを取得
-	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
-
-	// 書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-
-	/// uvの設定
-	// 色
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// Lightingするか
-	materialData_->enableLighting = false;
-	// uvTransform行列の初期化
-	materialData_->uvTransform = MakeIdentity4x4();
-	// uvを動かすための座標
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	// カメラ座標のリソース作成
+	CreateCameraPosResource();
+	// Dissolveリソース作成
+	CreateDissolveResource();
 
 	/// 頂点座標の設定
 	textureNum_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(directoryPath, textureFilePath);
@@ -110,38 +88,16 @@ void Sprite::Initialize(uint32_t textureNum) {
 	// 使用するテクスチャ番号
 	textureNum_ = textureNum;
 
-	/// メモリ確保
-	// 頂点データ
+	// 頂点データのリソース作成
 	CreateVertexResource();
-	CreateVertexBufferView();
-	// Index
+	// インデックスリソース作成
 	CreateIndexResource();
-	CreateIndexBufferView();
-	// material
+	// マテリアルデータのリソース作成
 	CreateMaterialResource();
-
-	// 1つ分のサイズを用意する
-	cameraPosResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Vector3)).Get();
-	// 書き込むためのアドレスを取得
-	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
-
-	// 書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-
-	/// uvの設定
-	// 色
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// Lightingするか
-	materialData_->enableLighting = false;
-	// uvTransform行列の初期化
-	materialData_->uvTransform = MakeIdentity4x4();
-	// uvを動かすための座標
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	// カメラ座標のリソース作成
+	CreateCameraPosResource();
+	// Dissolveリソース作成
+	CreateDissolveResource();
 
 	/// 頂点座標の設定
 	if (textureNum_ != UINT32_MAX) {
@@ -250,34 +206,25 @@ void Sprite::Draw() {
 	worldTransform_.UpdateMatrix();
 	/// コマンドを積む
 	// 使用するPSO
-	PipelineManager::GetInstance()->SetObject3dPSO(kFillModeSolid);
+	PipelineManager::GetInstance()->SetSpritePSO();
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	DirectXCommon::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
-	/// CBVの設定
-	// worldTransform
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_.constBuff_->GetGPUVirtualAddress());
-	// viewProjection
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera_->GetViewProjection().constBuff_->GetGPUVirtualAddress());
-	// カメラ位置
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
-
-	/// DescriptorTableの設定
-	// texture
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureNum_);
 	// material
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
-	// ライティング
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
-	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
+	// worldTransform
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_.constBuff_->GetGPUVirtualAddress());
+	// texture
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureNum_);
+	// dissolveの情報
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, dissolveResource_->GetGPUVirtualAddress());
+	// viewProjection
+	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera_->GetViewProjection().constBuff_->GetGPUVirtualAddress());
+	// dissolve用
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, dissolveTextureNum_);
 
 	// 描画(DrawCall/ドローコール)。6頂点で1つのインスタンス
 	DirectXCommon::GetInstance()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
-}
-
-void Sprite::Release() {
-
 }
 
 void Sprite::AdjustTextureSize(const std::string& directoryPath, std::string textureFilePath) {
@@ -343,9 +290,9 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Sprite::CreateBufferResource(const Micros
 
 void Sprite::CreateVertexResource() {
 	vertexResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(VertexData) * 4).Get();
-}
+	// 書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
-void Sprite::CreateVertexBufferView() {
 	// リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_.Get()->GetGPUVirtualAddress();
 	// 使用するリソースのサイズは頂点3つ分のサイズ
@@ -357,12 +304,17 @@ void Sprite::CreateVertexBufferView() {
 void Sprite::CreateIndexResource() {
 	indexResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(uint32_t) * 6).Get();
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
-}
 
-void Sprite::CreateIndexBufferView() {
 	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
 	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+}
+
+void Sprite::CreateCameraPosResource() {
+	// 1つ分のサイズを用意する
+	cameraPosResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Vector3)).Get();
+	// 書き込むためのアドレスを取得
+	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
 }
 
 void Sprite::CreateMaterialResource() {
@@ -371,4 +323,27 @@ void Sprite::CreateMaterialResource() {
 	materialData_ = nullptr;
 	// 書き込むためのアドレスを取得
 	materialResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+
+	/// uvの設定
+	// 色
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// Lightingするか
+	materialData_->enableLighting = false;
+	// uvTransform行列の初期化
+	materialData_->uvTransform = MakeIdentity4x4();
+	// uvを動かすための座標
+	uvTransform_ = {
+		{1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f},
+		{0.0f,0.0f,0.0f}
+	};
+}
+
+void Sprite::CreateDissolveResource() {
+	// Dissolveの情報を書き込む
+	dissolveResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
+	// 書き込むためのアドレスを取得
+	dissolveResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
+	dissolveData_->isActive = false;
+	dissolveData_->maskThreshold = 0.5f;
 }

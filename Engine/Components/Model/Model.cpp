@@ -6,6 +6,8 @@
 #include "TextureManager.h"
 #include "PipelineManager.h"
 #include "ModelManager.h"
+#include "SrvManager.h"
+#include "Utility.h"
 #include <cassert>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -37,34 +39,15 @@ void Model::Initialize(const std::string& directoryPath, const std::string& file
 
 	// 頂点データのリソース作成
 	CreateVertexResource();
-	CreateVertexBufferView();
-	// 書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-	// インデックスのリソース作成
-	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-	// 書き込むためのアドレスを取得
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
-	std::memcpy(mappedIndex_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-
+	// インデックスリソース作成
+	CreateIndexResource();
 	// マテリアルデータのリソース作成
 	CreateMaterialResource();
+	// カメラ座標のリソース作成
+	CreateCameraPosResource();
+	// Dissolveリソース作成
+	CreateDissolveResource();
 
-	// カメラ
-	// 1つ分のサイズを用意する
-	cameraPosResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector3)).Get();
-	// 書き込むためのアドレスを取得
-	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
-
-	// Lightingするか
-	materialData_->enableLighting = true;
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// uvTransform行列の初期化
-	materialData_->uvTransform = MakeIdentity4x4();
 	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
@@ -85,35 +68,15 @@ void Model::Initialize() {
 
 	// 頂点データのリソース作成
 	CreateVertexResource();
-	CreateVertexBufferView();
-	// 書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-	// インデックスのリソース作成
-	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-	// 書き込むためのアドレスを取得
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
-	std::memcpy(mappedIndex_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-
+	// インデックスリソース作成
+	CreateIndexResource();
 	// マテリアルデータのリソース作成
 	CreateMaterialResource();
+	// カメラ座標のリソース作成
+	CreateCameraPosResource();
+	// Dissolveリソース作成
+	CreateDissolveResource();
 
-	// カメラ
-	// 1つ分のサイズを用意する
-	cameraPosResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector3)).Get();
-	// 書き込むためのアドレスを取得
-	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
-
-	// Lightingするか
-	materialData_->shininess = 70.0f;
-	materialData_->enableLighting = true;
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// uvTransform行列の初期化
-	materialData_->uvTransform = MakeIdentity4x4();
 	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
@@ -143,34 +106,15 @@ void Model::Initialize(const std::string& filename) {
 
 	// 頂点データのリソース作成
 	CreateVertexResource();
-	CreateVertexBufferView();
-	// 書き込むためのアドレスを取得
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
-	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-
-	// インデックスのリソース作成
-	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
-	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
-	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
-	// 書き込むためのアドレスを取得
-	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
-	std::memcpy(mappedIndex_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
-
+	// インデックスリソース作成
+	CreateIndexResource();
 	// マテリアルデータのリソース作成
 	CreateMaterialResource();
+	// カメラ座標のリソース作成
+	CreateCameraPosResource();
+	// Dissolveリソース作成
+	CreateDissolveResource();
 
-	// カメラ
-	// 1つ分のサイズを用意する
-	cameraPosResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector3)).Get();
-	// 書き込むためのアドレスを取得
-	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
-
-	// Lightingするか
-	materialData_->enableLighting = true;
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// uvTransform行列の初期化
-	materialData_->uvTransform = MakeIdentity4x4();
 	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
@@ -200,22 +144,22 @@ void Model::Draw(const ViewProjection& viewProjection, uint32_t textureHandle) {
 	}
 	dxCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
-	/// CBVの設定
-
-	// viewProjection
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
-
-	// ライティング
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
-	/// DescriptorTableの設定
-	// texture
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureHandle);
-
 	// material
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
+	// texture
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureHandle);
+	// カメラの座標
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, cameraPosResource_.Get()->GetGPUVirtualAddress());
+	// viewProjection
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
+	// 点光源
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
+	// dissolveの情報
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, dissolveResource_->GetGPUVirtualAddress());
+	// dissolve用
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(7, textureHandle);
+	// 環境テクスチャ用
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(8, environmentTexHandle_);
 
 	dxCommon_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
@@ -242,22 +186,23 @@ void Model::Draw(const ViewProjection& viewProjection) {
 	}
 	dxCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
-	/// CBVの設定
-
-	// viewProjection
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, cameraPosResource_.Get()->GetGPUVirtualAddress());
-
-	/// DescriptorTableの設定
-	// texture
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, texHandle_);
-
 	// material
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_.Get()->GetGPUVirtualAddress());
-	// ライティング
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, DirectionalLight::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, SpotLight::GetInstance()->GetSpotLightResource()->GetGPUVirtualAddress());
+	// texture
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, texHandle_);
+	// カメラの座標
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, cameraPosResource_.Get()->GetGPUVirtualAddress());
+	// viewProjection
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
+	// 点光源
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, PointLight::GetInstance()->GetPointLightResource()->GetGPUVirtualAddress());
+	// dissolveの情報
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(6, dissolveResource_->GetGPUVirtualAddress());
+	// dissolve用
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(7, dissolveTexHandle_);
+	// 環境テクスチャ用
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(8, environmentTexHandle_);
+
 	dxCommon_->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
 
@@ -267,27 +212,101 @@ void Model::AdjustParameter() {
 	ImGui::End();
 }
 
-#pragma region プライベートな関数
+void Model::AnimationUpdate(float& animationTime) {
+	// アニメーションがないか、止めているなら早期リターン
+	if (animation_.nodeAnimations.size() == 0 || !animation_.isActive) {
+		animation_.isActive = false;
+		return;
+	}
 
-void Model::CreateVertexResource() {
-	vertexResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(VertexData) * modelData_.vertices.size()).Get();
+	// スケルトンに対してアニメーションを適用
+	ApplyAnimation(animationTime);
+	// 骨の更新処理
+	SkeletonUpdate(skeleton_);
+	// スキンクラスタの更新
+	SkinClusterUpdate(skinCluster_, skeleton_);
+
+	animationTime += 1.0f / 60.0f * animation_.playBackSpeed;
+	// ループ再生の場合
+	if (animation_.isLoop) {
+		// 通常
+		if (animation_.playBackSpeed > 0.0f) {
+			animationTime = Utility::Custom_fmod(animationTime, animation_.duration, 0);
+		}
+		// 逆再生
+		else {
+			animationTime = Utility::Custom_fmod(animationTime, animation_.duration, animation_.duration);
+		}
+
+	}
 }
 
-void Model::CreateVertexBufferView() {
+void Model::ApplyAnimation(float animationTime) {
+	for (Joint& joint : skeleton_.joints) {
+		if (auto it = animation_.nodeAnimations.find(joint.name); it != animation_.nodeAnimations.end()) {
+			const NodeAnimation& rootNodeAnimation = (*it).second;
+			joint.transform.scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime);
+			joint.transform.translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime);
+			joint.transform.rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime);
+		}
+	}
+}
+
+void Model::CreateVertexResource() {
+	vertexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(VertexData) * modelData_.vertices.size()).Get();
+
 	// リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	// 使用するリソースのサイズは頂点3つ分のサイズ
 	vertexBufferView_.SizeInBytes = sizeof(VertexData) * UINT(modelData_.vertices.size());
 	// 1頂点当たりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+	// 書き込むためのアドレスを取得
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
 void Model::CreateMaterialResource() {
-	materialResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(Material)).Get();
+	materialResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Material)).Get();
 	// マテリアルにデータを書き込む
 	materialData_ = nullptr;
 	// 書き込むためのアドレスを取得
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+
+	// Lightingするか
+	materialData_->enableLighting = true;
+	materialData_->shininess = 70.0f;
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// uvTransform行列の初期化
+	materialData_->uvTransform = MakeIdentity4x4();
+}
+
+void Model::CreateIndexResource() {
+	// インデックスのリソース作成
+	indexResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.BufferLocation = indexResource_.Get()->GetGPUVirtualAddress();
+	indexBufferView_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+	// 書き込むためのアドレスを取得
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex_));
+	std::memcpy(mappedIndex_, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+}
+
+void Model::CreateCameraPosResource() {
+	// 1つ分のサイズを用意する
+	cameraPosResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(Vector3)).Get();
+	// 書き込むためのアドレスを取得
+	cameraPosResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraPosData_));
+}
+
+void Model::CreateDissolveResource() {
+	// Dissolveの情報を書き込む
+	dissolveResource_ = CreateBufferResource(dxCommon_->GetDevice(), sizeof(DissolveDataForGPU)).Get();
+	// 書き込むためのアドレスを取得
+	dissolveResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
+	dissolveData_->isActive = true;
+	dissolveData_->maskThreshold = 0.5f;
 }
 
 ModelData Model::LoadModelFile(const std::string& directoryPath, const std::string& filename) {

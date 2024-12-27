@@ -10,8 +10,8 @@ DissolvePSO::DissolvePSO(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIn
 
 void DissolvePSO::Init(IDxcUtils* dxcUtils, IDxcCompiler3* dxcCompiler, IDxcIncludeHandler* includeHandler, const std::string& VS_fileName, const std::string& PS_fileName) {
 	// dissolveテクスチャを読み込む
-	TextureManager::GetInstance()->LoadTexture("noise.png");
-	dissolveTextureHandle_ = TextureManager::GetInstance()->GetSrvIndex("noise.png");	
+	TextureManager::GetInstance()->LoadTexture("Textures","noise.png");
+	dissolveTextureHandle_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "noise.png");
 	// 基底クラスの初期化
 	IPSO::Init(dxcUtils, dxcCompiler, includeHandler, VS_fileName, PS_fileName);
 	// PSO作成
@@ -23,21 +23,21 @@ void DissolvePSO::CreateRootSignature() {
 	psoData_.descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	psoData_.descriptorRange_.resize(1);
+	psoData_.descriptorRange_.resize(2);
 	// レンダリング画像
 	psoData_.descriptorRange_[0].BaseShaderRegister = 0;
 	psoData_.descriptorRange_[0].NumDescriptors = 1;
 	psoData_.descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	psoData_.descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
-	descriptorRange[0].BaseShaderRegister = 1;
-	descriptorRange[0].NumDescriptors = 1;
-	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	psoData_.descriptorRange_[1].BaseShaderRegister = 1;
+	psoData_.descriptorRange_[1].NumDescriptors = 1;
+	psoData_.descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	psoData_.descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
-	psoData_.rootParameters_.resize(5);
+	psoData_.rootParameters_.resize(6);
 	// material
 	psoData_.rootParameters_[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -46,7 +46,7 @@ void DissolvePSO::CreateRootSignature() {
 	psoData_.rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[1].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[0];
-	psoData_.rootParameters_[1].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size());
+	psoData_.rootParameters_[1].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
 	// worldTransform
 	psoData_.rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -58,8 +58,12 @@ void DissolvePSO::CreateRootSignature() {
 	// dissolve用のtexture
 	psoData_.rootParameters_[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[4].DescriptorTable.pDescriptorRanges = descriptorRange;
-	psoData_.rootParameters_[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+	psoData_.rootParameters_[4].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[1];
+	psoData_.rootParameters_[4].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
+	// DissolveData
+	psoData_.rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	psoData_.rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	psoData_.rootParameters_[5].Descriptor.ShaderRegister = 1;
 #pragma endregion
 
 	// rootParameterの設定を入れる

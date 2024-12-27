@@ -157,11 +157,6 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 Motion LoadAnimationFile(const std::string& directoryPath, const std::string& filename);
 Motion LoadAnimationFile(const std::string& filename);
 
-// 任意の時刻の値を取得
-Vector3 CalculateTranslateValue(const std::vector<KeyframeVector3>& keyframes, float time);
-Quaternion CalculateQuaternionValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
-Vector3 CalculateScaleValue(const std::vector<KeyframeVector3>& keyframes, float time);
-
 // ノードの読み込み
 Node ReadNode(aiNode* node);
 
@@ -173,15 +168,13 @@ Skeleton CreateSkeleton(const Node& rootNode);
 // スケルトンの更新処理
 void SkeletonUpdate(Skeleton& skeleton);
 
-// スケルトンに対してアニメーションを適用
-void ApplyAnimation(Skeleton& skeleton, Motion& animation, float animationTime);
-
 // skinClusterの作成
 SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
 // skinClusterの更新
 void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
 
-// アニメーションの更新処理
-void AnimationUpdate(SkinCluster& skinCluster, Skeleton& skeleton, Motion& animation, float& animationTime);
+Vector3 CalculateTranslateValue(const std::vector<KeyframeVector3>& keyframes, float time);
+Quaternion CalculateQuaternionValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+Vector3 CalculateScaleValue(const std::vector<KeyframeVector3>& keyframes, float time);
 
 Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);

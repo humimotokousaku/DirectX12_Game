@@ -11,6 +11,9 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 
 	// 残像オブジェクトに貼るテクスチャ
 	afterImageTexture_ = textureManager_->GetSrvIndex("Textures", "Bob_Red.png");
+	// ジャスト回避時のパーティクルのテクスチャ群
+	justParticleTextures_.particle = textureManager_->GetSrvIndex("Level", "gray.png");
+	justParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
 
 	// 自機の残像オブジェクトを作成
 	for (int i = 0; i < afterImageObject3d_.size(); i++) {
@@ -59,6 +62,8 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	justEvasionParticle_ = std::make_unique<Particles>();
 	justEvasionParticle_->Initialize(player_->GetWorldPosition());
 	justEvasionParticle_->SetCamera(camera);
+	justEvasionParticle_->SetTextures(justParticleTextures_);
+	justEvasionParticle_->SetIsDissolve(false);
 	justEvasionParticle_->SetEmitterParent(player_->GetWorldTransform());
 	justEvasionParticle_->SetParticleUpdate(std::bind(&EvasionSystem::JustParticleUpdate, this, std::placeholders::_1));
 	// ジャストパーティクルの詳細設定
@@ -158,7 +163,7 @@ void EvasionSystem::Draw() {
 	}
 
 	// ジャスト時のパーティクル
-	justEvasionParticle_->Draw(TextureManager::GetInstance()->GetSrvIndex("Level", "gray.png"));
+	justEvasionParticle_->Draw();
 
 	// ジャスト回避時の描画
 	justEvasionSystem_->Draw();

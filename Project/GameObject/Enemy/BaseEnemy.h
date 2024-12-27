@@ -100,17 +100,21 @@ public:
 	void SetCamera(Camera* camera) { camera_ = camera; }
 	// エネミーマネージャのアドレスを設定
 	void SetEnemyManager(EnemyManager* enemyManager) { enemyManager_ = enemyManager; }
+
 	// 移動速度を設定
-	void SetMoveSpeed(Vector3 speed) { moveSpeed_ = speed; }
+	void SetMoveSpeed(const Vector3& speed) { moveSpeed_ = speed; }
+
 	// 死亡フラグを設定
-	void SetIsDead(bool isDead) { isDead_ = isDead; }
+	void SetIsDead(const bool& isDead) { isDead_ = isDead; }
+
 	// 機能停止にするかを設定
 	// falseなら機能停止
-	void SetIsActive(bool isActive) {
+	void SetIsActive(const bool& isActive) {
 		isActive_ = isActive;
 		// 描画しない
 		object3d_->SetIsActive(isActive);
 	}
+
 	/// <summary>
 	/// 親子関係の設定
 	/// </summary>
@@ -119,13 +123,31 @@ public:
 		object3d_->worldTransform.parent_ = parent;
 		object3d_->worldTransform.UpdateMatrix();
 	}
+
 	// 移動ルートの制御点の座標の設定
-	void SetTravelRouteControlPoints(std::vector<Vector3> controlPoints) { controlPoints_ = controlPoints; }
+	void SetTravelRouteControlPoints(const std::vector<Vector3>& controlPoints) { controlPoints_ = controlPoints; }
+
 	/// <summary>
 	/// ローカル座標を設定
 	/// </summary>
 	/// <param name="pos">ローカル座標</param>
-	void SetLocalPosition(Vector3 pos) { object3d_->worldTransform.translate = pos; }
+	void SetLocalPosition(const Vector3& pos) { object3d_->worldTransform.translate = pos; }
+
+	/// <summary>
+	/// 被弾パーティクルに使用するテクスチャの設定
+	/// </summary>
+	/// <param name="textureNum">パーティクルに使用するTexture</param>
+	void SetHitParticleTexture(const uint32_t& textureNum) { hitParticleTextures_.particle = textureNum; }
+	/// <summary>
+	/// 被弾パーティクルのDissolve用のテクスチャの設定
+	/// </summary>
+	/// <param name="textureNum">Dissolveに使用するTexture</param>
+	void SetHitParticleDissolveTexture(const uint32_t& textureNum) { hitParticleTextures_.dissolve = textureNum; }
+	/// <summary>
+	/// 被弾パーティクルに使用するテクスチャ群の設定
+	/// </summary>
+	/// <param name="textureNum">パーティクルに使用するTexture</param>
+	void SetHitParticleTextures(const ParticleTextures& textureNums) { hitParticleTextures_ = textureNums; }
 #pragma endregion
 
 protected:
@@ -142,21 +164,15 @@ protected:
 	// エネミーマネージャ
 	EnemyManager* enemyManager_ = nullptr;
 
+	// 被弾パーティクルに使用するテクスチャ群
+	ParticleTextures hitParticleTextures_;
+
 	// 移動用スプライン曲線制御点（通過点）
 	std::vector<Vector3> controlPoints_;
 	// 線分で描画する用の頂点リスト
 	std::vector<Vector3> pointsDrawing_;
 	// 移動ルートの線(デバッグ用)
 	std::array<std::unique_ptr<Line>, 10> line_;
-
-	// 体力
-	float hp_ = 100;
-
-	// 管理番号
-	int id_;
-
-	// スコア
-	int score_;
 
 	// 敵のタイプ
 	std::string type_;
@@ -170,6 +186,15 @@ protected:
 	float targetT_;
 	// 移動ルートの進行度
 	float t_;
+
+	// 体力
+	float hp_ = 100;
+
+	// 管理番号
+	int id_;
+
+	// スコア
+	int score_;
 
 	// カメラの後ろ側にいるなら描画と機能を停止
 	// falseなら機能停止

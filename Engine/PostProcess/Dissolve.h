@@ -33,7 +33,16 @@ public:
 	/// </summary>
 	void PostDrawScene()override;
 
-private:
+#pragma region Setter
+	/// <summary>
+	/// パラメータを設定
+	/// </summary>
+	/// <param name="vignetingData">Dissolveの情報</param>
+	void SetDissolveData(DissolveData dissolveData) { *dissolveData_ = dissolveData; }
+#pragma endregion
 
+private:
+	DissolveData* dissolveData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource_;
 };
 

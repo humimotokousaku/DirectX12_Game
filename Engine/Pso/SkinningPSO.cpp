@@ -12,7 +12,7 @@ void SkinningPSO::CreateRootSignature() {
 	psoData_.descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	psoData_.descriptorRange_.resize(2);
+	psoData_.descriptorRange_.resize(3);
 	psoData_.descriptorRange_[0].BaseShaderRegister = 0;
 	psoData_.descriptorRange_[0].NumDescriptors = 1;
 	psoData_.descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -22,6 +22,11 @@ void SkinningPSO::CreateRootSignature() {
 	psoData_.descriptorRange_[1].NumDescriptors = 1;
 	psoData_.descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	psoData_.descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	psoData_.descriptorRange_[2].BaseShaderRegister = 2;
+	psoData_.descriptorRange_[2].NumDescriptors = 1;
+	psoData_.descriptorRange_[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	psoData_.descriptorRange_[2].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
@@ -39,8 +44,8 @@ void SkinningPSO::CreateRootSignature() {
 	psoData_.rootParameters_[9].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[9].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 	psoData_.rootParameters_[9].Descriptor.ShaderRegister = 0;
-	psoData_.rootParameters_[9].DescriptorTable.pDescriptorRanges = psoData_.descriptorRange_.data();
-	psoData_.rootParameters_[9].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size());
+	psoData_.rootParameters_[9].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[0];
+	psoData_.rootParameters_[9].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 3);
 #pragma endregion
 
 #pragma region PSShaderに送るデータ
@@ -52,28 +57,29 @@ void SkinningPSO::CreateRootSignature() {
 	psoData_.rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[2].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[0];
-	psoData_.rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
-	// 平行光源
+	psoData_.rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 3);
+	// カメラ位置
 	psoData_.rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[3].Descriptor.ShaderRegister = 1;
-	// カメラ位置
+	// 点光源
 	psoData_.rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[5].Descriptor.ShaderRegister = 2;
-	// 点光源
+	// DissolveData
 	psoData_.rootParameters_[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[6].Descriptor.ShaderRegister = 3;
-	// スポットライト
-	psoData_.rootParameters_[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	// dissolve用のtexture
+	psoData_.rootParameters_[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[7].Descriptor.ShaderRegister = 4;
+	psoData_.rootParameters_[7].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[2];
+	psoData_.rootParameters_[7].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 3);
 	// 環境マップ用のCubeTexture
 	psoData_.rootParameters_[8].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[8].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[8].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[1];
-	psoData_.rootParameters_[8].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
+	psoData_.rootParameters_[8].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 3);
 #pragma endregion
 
 #pragma endregion

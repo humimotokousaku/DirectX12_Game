@@ -1,7 +1,7 @@
 #pragma once
 #include "IPSO.h"
 
-class Object3dPSO : public IPSO {
+class SpritePSO : public IPSO {
 public:// メンバ関数
 	/// <summary>
 	/// 初期化
@@ -22,7 +22,7 @@ public:// メンバ関数
 	/// <summary>
 	/// 描画前に積むコマンド
 	/// </summary>
-	void SetCommand(Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr) override{
+	void SetCommand(Microsoft::WRL::ComPtr<ID3D12Resource> resource = nullptr) override {
 		// シグネチャの設定
 		dxCommon_->GetCommandList()->SetGraphicsRootSignature(psoData_.rootSignature_.Get());
 		// PSOを設定

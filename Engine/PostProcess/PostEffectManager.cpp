@@ -52,6 +52,15 @@ void PostEffectManager::Initialize() {
 	vignetingData_.scale = 100.0f;
 	vigneting_->SetVignetingData(vignetingData_);
 	postEffect_.push_back(vigneting_);
+	// Dissolve
+	dissolve_ = new Dissolve();
+	dissolve_->Initialize();
+	dissolveData_.isActive = false;
+	dissolveData_.maskThreshold = 0.5f;
+	dissolveData_.edgeRange = { 0.5f, 0.53f };
+	dissolveData_.color = { 1.0f, 0.4f, 0.3f };
+	renderTexture_.push_back(dissolve_->GetRenderTexture());
+	postEffect_.push_back(dissolve_);
 }
 
 void PostEffectManager::PreDraw() {
@@ -63,6 +72,7 @@ void PostEffectManager::PostDraw() {
 	gauss_->SetGaussData(gaussData_);
 	bloom_->SetBloomData(bloomData_);
 	vigneting_->SetVignetingData(vignetingData_);
+	dissolve_->SetDissolveData(dissolveData_);
 
 	postEffect_[NORMAL]->PostDrawScene();
 	for (int i = 0; i < COUNT - 1; i++) {

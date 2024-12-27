@@ -6,13 +6,6 @@
 #include "IPostEffect.h"
 
 class RadialBlur : public IPostEffect {
-public:// 構造体
-	// ブラー
-	struct RadialBlurData {
-		bool isActive;	 // 使用するか
-		float blurWidth; // ブラーの強さ
-		Vector2 center;
-	};
 public:
 	/// <summary>
 	/// コンストラクタ

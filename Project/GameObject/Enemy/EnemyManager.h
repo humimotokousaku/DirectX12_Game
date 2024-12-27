@@ -99,6 +99,9 @@ public:
 	/// <returns></returns>
 	std::vector<int> GetIdList() { return idList_; }
 	std::vector<int>* GetIdList_P() { return &idList_; }
+
+	const ParticleTextures& GetSpawnParticleTextures() { return spawnParticleTextures_; }
+	const ParticleTextures& GetHitParticleTextures() { return hitParticleTextures_; }
 #pragma endregion
 
 #pragma region Setter
@@ -186,9 +189,9 @@ private:// プライベートなメンバ変数
 	std::map<std::string,Model*> models_;
 
 	// 出現時のパーティクルのテクスチャ
-	uint32_t spawnParticleTex_;
+	ParticleTextures spawnParticleTextures_;
 	// 被弾時のパーティクルのテクスチャ
-	uint32_t hitParticleTex_;
+	ParticleTextures hitParticleTextures_;
 
 	// 死亡SE
 	uint32_t deadSE_;
