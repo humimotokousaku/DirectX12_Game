@@ -6,6 +6,8 @@ void BaseEnemy::CreateHitParticle() {
 	Particles* particles = new Particles();
 	particles->Initialize(GetWorldPosition());
 	particles->SetCamera(camera_);
+	particles->SetTextures(enemyManager_->GetHitParticleTextures());
+	particles->SetIsDissolve(false);
 	// 粒子の発生頻度
 	particles->SetEmitterFrequency(1);
 	// 一度に発生する粒子の数

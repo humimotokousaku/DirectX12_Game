@@ -7,6 +7,7 @@
 #include "Object3dPSO.h"
 #include "SkinningPSO.h"
 #include "SkyboxPSO.h"
+#include "SpritePSO.h"
 #include "LinePSO.h"
 #include "ParticlePSO.h"
 #include "OutlinePSO.h"
@@ -22,22 +23,16 @@
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "dxcompiler.lib")
 
-
-
 /// <summary>
 /// 使用できるポストエフェクトの種類
 /// </summary>
 enum PostEffectType {
 	NORMAL,
-	//OUTLINE,
 	RADIALBLUR,
-	//SMOOTHING,
 	GAUSSIAN,
-	/*HIGHINTENSITY,
-	BLUR,*/
-	//DISSOLVE,
 	BLOOM,
 	VIGNETTE,
+	DISSOLVE,
 	COUNT
 };
 
@@ -96,6 +91,7 @@ public:
 	void SetPostEffectPSO(int index, Microsoft::WRL::ComPtr<ID3D12Resource> resource) { postEffect_[index]->SetCommand(resource); }
 	void SetObject3dPSO(int fillMode) { object3dPSO_[fillMode]->SetCommand(); }
 	void SetSkinningPSO(int fillMode) { skinningPSO_[fillMode]->SetCommand(); }
+	void SetSpritePSO() { spritePSO_->SetCommand(); }
 	void SetSkyboxPSO() { skyboxPSO_->SetCommand(); }
 	void SetLinePSO() { linePSO_->SetCommand(); }
 	void SetParticlePSO() { particlePSO_->SetCommand(); }
@@ -119,6 +115,7 @@ private:
 	// PSO
 	std::array<std::unique_ptr<Object3dPSO>, 2> object3dPSO_;
 	std::array<std::unique_ptr<SkinningPSO>,2> skinningPSO_;
+	std::unique_ptr<SpritePSO> spritePSO_;
 	std::unique_ptr<SkyboxPSO> skyboxPSO_;
 	std::unique_ptr<LinePSO> linePSO_;
 	std::unique_ptr<ParticlePSO> particlePSO_;

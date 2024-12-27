@@ -7,12 +7,6 @@
 #include <Windows.h>
 
 class Bloom : public IPostEffect {
-public:// 構造体
-	struct BloomData {
-		bool isActive;	// 使用するか
-		float strength;	// ぼかしの強さ
-		float threshold; // ぼかすの閾値
-	};
 public:
 	/// <summary>
 	/// コンストラクタ

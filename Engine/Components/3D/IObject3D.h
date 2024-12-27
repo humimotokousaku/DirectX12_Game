@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "ModelManager.h"
 #include "PipelineManager.h"
+#include "Dissolve.h"
 #include "Collider.h"
 
 class IObject3D {
@@ -53,7 +54,7 @@ public:
 		// モデルをセット
 		model_ = ModelManager::GetInstance()->FindModel(directoryPath, filePath);
 		// アニメーションデータを代入
-		Motion animation = model_->animation_;
+		Motion animation = model_->GetAnimation();
 		// アニメーションの名前を代入
 		animation.name = animName;
 		animation_.push_back(animation);
@@ -64,7 +65,7 @@ public:
 	}
 	void AddAnimation(Model* model, const char* animName = "\0") {
 		// アニメーションデータを代入
-		Motion animation = model->animation_;
+		Motion animation = model->GetAnimation();
 		// アニメーションの名前を代入
 		animation.name = animName;
 		animation_.push_back(animation);
@@ -77,7 +78,7 @@ public:
 	// アニメーションの名前を設定
 	void SetAnimName(const char* animName) {
 		animation_[0].name = animName;
-		model_->animation_.name = animation_[0].name;
+		model_->SetAnimationName(animation_[0].name);
 	}
 
 	// 指定したアニメーションを再生(ただしその他のアニメーションを強制的に止めてしまうので毎フレーム呼び出すのは禁止)
@@ -86,9 +87,9 @@ public:
 			if (animation_[i].name == animName) {
 				animation_[i].time = 0.0f;
 				animation_[i].isActive = true;
-				model_->animation_ = animation_[i];
+				model_->SetAnimation(animation_[i]);
 				if (model_->GetModelData().isSkinClusterData) {
-					model_->skinCluster_ = skinCluster_[i];
+					model_->SetSkinCluster(skinCluster_[i]);
 				}
 			}
 			else {
@@ -101,9 +102,9 @@ public:
 			if (i == index) {
 				animation_[i].time = 0.0f;
 				animation_[i].isActive = true;
-				model_->animation_ = animation_[i];
+				model_->SetAnimation(animation_[i]);
 				if (model_->GetModelData().isSkinClusterData) {
-					model_->skinCluster_ = skinCluster_[i];
+					model_->SetSkinCluster(skinCluster_[i]);
 				}
 			}
 			else {
@@ -115,37 +116,40 @@ public:
 	void EndAnim() {
 		for (int i = 0; i < animation_.size(); i++) {
 			animation_[i].isActive = false;
-			model_->animation_.isActive = false;
+			model_->SetIsAnimation(false);
 		}
 	}
 	// アニメーションのループ設定
-	void SetIsAnimLoop(bool isActive) { model_->animation_.isLoop = isActive; }
+	void SetIsAnimationLoop(bool isActive) { model_->SetIsAnimationLoop(isActive); }
 	/// <summary>
 	/// アニメーションの再生速度
 	/// 2:二倍速
 	/// -:逆再生
 	/// </summary>
 	/// <param name="speed">再生倍率</param>
-	void SetAnimSpeed(float speed) { model_->animation_.playBackSpeed = speed; }
+	void SetAnimationSpeed(float speed) { model_->SetAnimationSpeed(speed); }
 #pragma endregion
 
 	// ライティングの設定
-	void SetIsLighting(bool isActive) { model_->SetIsLighting(isActive); }
+	void SetIsLighting(const bool& isActive) { model_->SetIsLighting(isActive); }
 	// 鏡面反射の輝度の設定
-	void SetShininess(float shininess) { model_->SetShininess(shininess); }
+	void SetShininess(const float& shininess) { model_->SetShininess(shininess); }
 	// 色の設定
-	void SetColor(Vector4 RGBA) { model_->materialData_->color = RGBA; }
+	void SetColor(const Vector4& RGBA) { model_->GetMaterialData()->color = RGBA; }
 	// α値の設定
-	void SetAlpha(float alpha) { model_->materialData_->color.w = alpha; }
+	void SetAlpha(const float& alpha) { model_->GetMaterialData()->color.w = alpha; }
 	// UV座標の設定
-	void SetUVTranslate(Vector3 translate) { model_->uvTransform.translate = translate; }
+	void SetUVTranslate(const Vector3& translate) { model_->uvTransform.translate = translate; }
 	// UVの角度の設定
-	void SetUVRotate(Vector3 rotate) { model_->uvTransform.rotate = rotate; }
+	void SetUVRotate(const Vector3& rotate) { model_->uvTransform.rotate = rotate; }
 	// UVのスケールの設定
-	void SetUVScale(Vector3 scale) { model_->uvTransform.scale = scale; }
+	void SetUVScale(const Vector3& scale) { model_->uvTransform.scale = scale; }
+
+	// dissolve用のテクスチャを設定
+	void SetDissolveTexture(uint32_t dissolveTexture) { model_->SetDissolveTexture(dissolveTexture); }
 
 	// 描画をするかの設定
-	void SetIsActive(bool isActive) { isActive_ = isActive; }
+	void SetIsActive(const bool& isActive) { isActive_ = isActive; }
 #pragma endregion
 
 public:// パブリックな変数
@@ -161,11 +165,14 @@ protected:
 
 	// モデル
 	Model* model_;
+
 	// アニメーション
 	std::vector<Motion> animation_;
 	float animationTime_ = 0.0f;
+
 	// スキンクラスタ
 	std::vector<SkinCluster> skinCluster_;
+
 	// スケルトン
 	Skeleton skeleton_;
 

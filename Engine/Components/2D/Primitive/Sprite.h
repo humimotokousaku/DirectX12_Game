@@ -8,6 +8,7 @@
 #include "WinApp.h"
 #include "WorldTransform.h"
 #include "Camera.h"
+#include "PostEffectStructs.h"
 #include <d3d12.h>
 #include <wrl.h>
 
@@ -36,16 +37,13 @@ public:
 	/// </summary>
 	void Draw();
 
-	// 解放処理
-	void Release();
-
 	/// 
 	/// User Method
 	/// 
 	// 調整項目
 	void ImGuiAdjustParameter();
 
-	/// Getter
+#pragma region Getter
 	// 縦幅、横幅
 	Vector2 GetSize() { return size_; }
 	// アドレス渡し
@@ -70,8 +68,9 @@ public:
 	Vector4 GetColor() { return materialData_->color; }
 	// アドレス渡し
 	Vector4* GetColorP() { return &materialData_->color; }
+#pragma endregion
 
-	/// Setter
+#pragma region Setter
 	// 縦幅、横幅
 	void SetSize(Vector2 size) { size_ = size; }
 	void SetSizeX(float sizeX) { size_.x = sizeX; }
@@ -95,6 +94,8 @@ public:
 	void SetTextureSize(Vector2 textureSize) { textureSize_ = textureSize; }
 	// 使用するテクスチャの変更
 	void SetTextureIndex(uint32_t textureNum) { textureNum_ = textureNum; }
+	// 使用するDissolveテクスチャの変更
+	void SetDissolveTextureIndex(uint32_t textureNum) { dissolveTextureNum_ = textureNum; }
 
 	// 画像の切りだしサイズのリセット
 	void ResetTextureSize() { textureSize_ = { 512.0f,512.0f }; }
@@ -108,19 +109,25 @@ public:
 
 	// 色を設定
 	void SetColor(Vector4 color) { materialData_->color = color; }
+#pragma endregion
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
 
+	// 頂点リソースの作成
 	void CreateVertexResource();
 
-	void CreateVertexBufferView();
+	// マテリアルリソースの作成
+	void CreateMaterialResource();
 
+	// インデックスリソースの作成
 	void CreateIndexResource();
 
-	void CreateIndexBufferView();
+	// カメラ座標リソースの作成
+	void CreateCameraPosResource();
 
-	void CreateMaterialResource();
+	// Dissolveリソースの作成
+	void CreateDissolveResource();
 
 public:
 	// ワールドトランスフォーム
@@ -151,6 +158,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_;
 	uint32_t* indexData_ = nullptr;
+	// Dissolve
+	DissolveDataForGPU* dissolveData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource_;
 
 	// 画像の中心点
 	Vector2 anchorPoint_ = { 0.5f,0.5f };
@@ -167,5 +177,6 @@ private:
 
 	// 使用するテクスチャ番号
 	uint32_t textureNum_;
+	uint32_t dissolveTextureNum_;
 };
 

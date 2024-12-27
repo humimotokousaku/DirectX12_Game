@@ -8,6 +8,7 @@
 #include "Outline.h"
 #include "Vigneting.h"
 #include "Sprite.h"
+#include "PostEffectStructs.h"
 #include <list>
 
 class PostEffectManager {
@@ -39,13 +40,15 @@ public:
 		gaussData_.isActive = false;
 		bloomData_.isActive = false;
 		vignetingData_.isActive = false;
+		dissolveData_.isActive = false;
 	}
 
 public:
-	RadialBlur::RadialBlurData radialBlurData_;
-	Gauss::GaussData gaussData_;
-	Bloom::BloomData bloomData_;
-	Vigneting::VignetingData vignetingData_;
+	RadialBlurData radialBlurData_;
+	GaussData gaussData_;
+	BloomData bloomData_;
+	VignetingData vignetingData_;
+	DissolveData dissolveData_;
 
 private:
 	std::vector<IPostEffect*> postEffect_;
@@ -61,4 +64,6 @@ private:
 	Bloom* bloom_;
 	// Vigneting
 	Vigneting* vigneting_;
+	// Dissolve
+	Dissolve* dissolve_;
 };

@@ -281,7 +281,7 @@ private:// プライベートなメンバ変数
 	// パーティクルテクスチャ
 	uint32_t defaultTexture = 0u;
 	// 死亡パーティクルのテクスチャ
-	uint32_t deadParticleTexture = 0u;
+	ParticleTextures deadParticleTextures_;
 #pragma endregion
 
 	// 自機の移動速度

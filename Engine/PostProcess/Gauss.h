@@ -1,13 +1,8 @@
 #pragma once
 #include "IPostEffect.h"
+#include "PostEffectStructs.h"
 
 class Gauss : public IPostEffect {
-public:// 構造体
-	struct GaussData {
-		bool isActive;
-		float strength;
-	};
-
 public:
 	/// <summary>
 	/// コンストラクタ

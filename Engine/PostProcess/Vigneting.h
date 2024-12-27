@@ -6,12 +6,6 @@
 #include "IPostEffect.h"
 
 class Vigneting : public IPostEffect {
-public:// 構造体
-	// ヴィネットの情報
-	struct VignetingData {
-		bool isActive;	 // 使用するか
-		float scale; // ヴィネットの強さ
-	};
 public:
 	/// <summary>
 	/// コンストラクタ

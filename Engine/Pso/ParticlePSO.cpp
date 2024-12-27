@@ -10,15 +10,20 @@ void ParticlePSO::CreateRootSignature() {
 	psoData_.descriptionRootSignature_.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 #pragma region descriptorRange
-	psoData_.descriptorRange_.resize(1);
+	psoData_.descriptorRange_.resize(2);
 	psoData_.descriptorRange_[0].BaseShaderRegister = 0;
 	psoData_.descriptorRange_[0].NumDescriptors = 1;
 	psoData_.descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	psoData_.descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	psoData_.descriptorRange_[1].BaseShaderRegister = 1;
+	psoData_.descriptorRange_[1].NumDescriptors = 1;
+	psoData_.descriptorRange_[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	psoData_.descriptorRange_[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 #pragma endregion
 
 #pragma region rootParameter
-	psoData_.rootParameters_.resize(8);
+	psoData_.rootParameters_.resize(6);
 #pragma region VSShaderに送るデータ
 	// worldTransform
 	psoData_.rootParameters_[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
@@ -40,24 +45,17 @@ void ParticlePSO::CreateRootSignature() {
 	// texture
 	psoData_.rootParameters_[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[2].DescriptorTable.pDescriptorRanges = psoData_.descriptorRange_.data();
-	psoData_.rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size());
-	// 平行光源
+	psoData_.rootParameters_[2].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[0];
+	psoData_.rootParameters_[2].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
+	// DissolveData
 	psoData_.rootParameters_[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	psoData_.rootParameters_[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	psoData_.rootParameters_[3].Descriptor.ShaderRegister = 1;
-	// カメラ位置
-	psoData_.rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	// dissolve用のtexture
+	psoData_.rootParameters_[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	psoData_.rootParameters_[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[5].Descriptor.ShaderRegister = 2;
-	// 点光源
-	psoData_.rootParameters_[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	psoData_.rootParameters_[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[6].Descriptor.ShaderRegister = 3;
-	// スポットライト
-	psoData_.rootParameters_[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	psoData_.rootParameters_[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	psoData_.rootParameters_[7].Descriptor.ShaderRegister = 4;
+	psoData_.rootParameters_[5].DescriptorTable.pDescriptorRanges = &psoData_.descriptorRange_[1];
+	psoData_.rootParameters_[5].DescriptorTable.NumDescriptorRanges = static_cast<UINT>(psoData_.descriptorRange_.size() / 2);
 #pragma endregion
 
 #pragma endregion

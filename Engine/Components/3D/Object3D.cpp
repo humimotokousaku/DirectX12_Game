@@ -35,30 +35,30 @@ void Object3D::Draw(uint32_t textureNum, int fillMode) {
 		// 使用するPSO
 		PipelineManager::GetInstance()->SetSkinningPSO(fillMode);
 		// アニメーション
-		if (model_->animation_.isActive) {
-			AnimationUpdate(model_->skinCluster_, model_->skeleton_, model_->animation_, animationTime_);
+		if (model_->GetAnimation().isActive) {
+			model_->AnimationUpdate(animationTime_);
 		}
 	}
 	else {
 		// 使用するPSO
 		PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
 		// スキンクラスターはないがアニメーションがある
-		if (model_->animation_.isActive) {
-			animationTime_ += 1.0f / 60.0f * model_->animation_.playBackSpeed;
+		if (model_->GetAnimation().isActive) {
+			animationTime_ += 1.0f / 60.0f * model_->GetAnimation().playBackSpeed;
 			// ループ再生の場合
-			if (model_->animation_.isLoop) {
+			if (model_->GetAnimation().isLoop) {
 				// 通常
-				if (model_->animation_.playBackSpeed >= 0.0f) {
-					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, 0);
+				if (model_->GetAnimation().playBackSpeed >= 0.0f) {
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->GetAnimation().duration, 0);
 				}
 				// 逆再生
-				else if (model_->animation_.playBackSpeed < 0.0f) {
-					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
+				else if (model_->GetAnimation().playBackSpeed < 0.0f) {
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->GetAnimation().duration, model_->GetAnimation().duration);
 				}
 			}
 
 			// アニメーション再生
-			NodeAnimation& rootNodeAnimation = model_->animation_.nodeAnimations[model_->GetModelData().rootNode.name];
+			NodeAnimation& rootNodeAnimation = model_->GetAnimation().nodeAnimations[model_->GetModelData().rootNode.name];
 			Vector3 translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime_);
 			Quaternion rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 			Vector3 scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime_);
@@ -88,30 +88,30 @@ void Object3D::Draw(int fillMode) {
 		// 使用するPSO
 		PipelineManager::GetInstance()->SetSkinningPSO(fillMode);
 		// アニメーション
-		if (model_->animation_.isActive) {
-			AnimationUpdate(model_->skinCluster_, skeleton_, model_->animation_, animationTime_);
+		if (model_->GetAnimation().isActive) {
+			model_->AnimationUpdate(animationTime_);
 		}
 	}
 	else {
 		// 使用するPSO
 		PipelineManager::GetInstance()->SetObject3dPSO(fillMode);
 		// スキンクラスターはないがアニメーションがある
-		if (model_->animation_.isActive) {
-			animationTime_ += 1.0f / 60.0f * model_->animation_.playBackSpeed;
+		if (model_->GetAnimation().isActive) {
+			animationTime_ += 1.0f / 60.0f * model_->GetAnimation().playBackSpeed;
 			// ループ再生の場合
-			if (model_->animation_.isLoop) {
+			if (model_->GetAnimation().isLoop) {
 				// 通常
-				if (model_->animation_.playBackSpeed >= 0.0f) {
-					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, 0);
+				if (model_->GetAnimation().playBackSpeed >= 0.0f) {
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->GetAnimation().duration, 0);
 				}
 				// 逆再生
-				else if (model_->animation_.playBackSpeed < 0.0f) {
-					animationTime_ = Utility::Custom_fmod(animationTime_, model_->animation_.duration, model_->animation_.duration);
+				else if (model_->GetAnimation().playBackSpeed < 0.0f) {
+					animationTime_ = Utility::Custom_fmod(animationTime_, model_->GetAnimation().duration, model_->GetAnimation().duration);
 				}
 			}
 
 			// アニメーション再生
-			NodeAnimation& rootNodeAnimation = model_->animation_.nodeAnimations[model_->GetModelData().rootNode.name];
+			NodeAnimation& rootNodeAnimation = model_->GetAnimation().nodeAnimations[model_->GetModelData().rootNode.name];
 			Vector3 translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime_);
 			Quaternion rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 			Vector3 scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime_);
@@ -165,8 +165,8 @@ void Object3D::CurrentAnimUpdate() {
 	for (int i = 0; i < animation_.size(); i++) {
 		// 使用しているアニメーションをモデルデータに代入
 		if (animation_[i].isActive) {
-			model_->animation_ = animation_[i];
-			model_->skinCluster_ = skinCluster_[i];
+			model_->SetAnimation(animation_[i]);
+			model_->SetSkinCluster(skinCluster_[i]);
 		}
 
 		int j = 0;
@@ -180,7 +180,7 @@ void Object3D::CurrentAnimUpdate() {
 				j++;
 				// 全てのアニメーションが停止しているなら止める
 				if (j > animation_.size() - 1) {
-					model_->animation_.isActive = false;
+					model_->SetIsAnimation(false);
 				}
 			}
 		}

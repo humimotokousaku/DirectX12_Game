@@ -42,6 +42,12 @@ void PipelineManager::Initialize() {
 	skinningPSO_[kFillModeWireFrame]->SetPSOData(skinningPSO_[kFillModeSolid]->GetPSOData());
 	skinningPSO_[kFillModeWireFrame]->CreateRasterizer(rasterizerDesc);
 	skinningPSO_[kFillModeWireFrame]->ApplyDetailedSettings();
+	
+	// スプライトに使用するPSO
+	spritePSO_ = std::make_unique<SpritePSO>();
+	spritePSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Sprite.VS.hlsl", "Sprite.PS.hlsl");
+	spritePSO_->CreatePSO();
+	
 	// skyboxを使用しているオブジェクトに使用する
 	skyboxPSO_ = std::make_unique<SkyboxPSO>();
 	skyboxPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Skybox.VS.hlsl", "Skybox.PS.hlsl");
@@ -59,25 +65,21 @@ void PipelineManager::Initialize() {
 	// 何もしない
 	PostEffectPSO* normal = new PostEffectPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "PostEffectTestPS.hlsl");
 	postEffect_.push_back(normal);
-	// outline
-	//OutlinePSO* outline = new OutlinePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "LuminanceBasedOutline.PS.hlsl");
-	/*OutlinePSO* outline = new OutlinePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "DepthBasedOutline.PS.hlsl");
-	postEffect_.push_back(outline);*/
 	// RadialBlur
 	RadialBlurPSO* radialBlur = new RadialBlurPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "RadialBlur.PS.hlsl");
 	postEffect_.push_back(radialBlur);
 	// Gauss
 	GaussPSO* gauss = new GaussPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "GaussianFilter.PS.hlsl");
 	postEffect_.push_back(gauss);
-	// Dissolve
-	//DissolvePSO* dissolve = new DissolvePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "Dissolve.PS.hlsl");
-	//postEffect_.push_back(dissolve);
 	// Bloom
 	BloomPSO* bloom = new BloomPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "BloomPS.hlsl");
 	postEffect_.push_back(bloom);
 	// Vigneting
 	VignetingPSO* vigneting = new VignetingPSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "VignetingPS.hlsl");
 	postEffect_.push_back(vigneting);
+	// Dissolve
+	DissolvePSO* dissolve = new DissolvePSO(dxcUtils_, dxcCompiler_, includeHandler_, "PostEffectTestVS.hlsl", "Dissolve.PS.hlsl");
+	postEffect_.push_back(dissolve);
 #pragma endregion
 
 	// ビューポートの生成

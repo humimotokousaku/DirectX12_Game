@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "DirectXCommon.h"
 #include "Camera.h"
+#include "PostEffectStructs.h"
 #include <Windows.h>
 
 class IPostEffect {

@@ -1,8 +1,8 @@
 #include "ModelStructs.h"
 #include "SrvManager.h"
 #include "Utility.h"
-#include <cassert>
 #include <assimp/Importer.hpp>
+#include <assert.h>
 
 MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
 	MaterialData materialData;
@@ -132,64 +132,6 @@ Motion LoadAnimationFile(const std::string& filename) {
 	return animation;
 }
 
-Vector3 CalculateTranslateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
-	assert(!keyframes.empty());
-	// キーが一つか、時刻がキーフレーム前なら最初の値にする
-	if (keyframes.size() == 1 || time <= keyframes[0].time) {
-		return keyframes[0].value;
-	}
-
-	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
-		size_t nextIndex = index + 1;
-		// indexとnextIndexを比較して範囲内に時刻があるかを判定
-		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-			// 範囲内を補間
-			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Lerps::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
-		}
-	}
-
-	return (*keyframes.rbegin()).value;
-}
-Quaternion CalculateQuaternionValue(const std::vector<KeyframeQuaternion>& keyframes, float time) {
-	assert(!keyframes.empty());
-	// キーが一つか、時刻がキーフレーム前なら最初の値にする
-	if (keyframes.size() == 1 || time <= keyframes[0].time) {
-		return keyframes[0].value;
-	}
-
-	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
-		size_t nextIndex = index + 1;
-		// indexとnextIndexを比較して範囲内に時刻があるかを判定
-		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-			// 範囲内を補間
-			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);
-		}
-	}
-
-	return keyframes.rbegin()->value;
-}
-Vector3 CalculateScaleValue(const std::vector<KeyframeVector3>& keyframes, float time) {
-	assert(!keyframes.empty());
-	// キーが一つか、時刻がキーフレーム前なら最初の値にする
-	if (keyframes.size() == 1 || time <= keyframes[0].time) {
-		return keyframes[0].value;
-	}
-
-	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
-		size_t nextIndex = index + 1;
-		// indexとnextIndexを比較して範囲内に時刻があるかを判定
-		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-			// 範囲内を補間
-			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-			return Lerps::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
-		}
-	}
-
-	return (*keyframes.rbegin()).value;
-}
-
 Node ReadNode(aiNode* node) {
 	Node result;
 	aiVector3D scale;
@@ -254,24 +196,13 @@ void SkeletonUpdate(Skeleton& skeleton) {
 	}
 }
 
-void ApplyAnimation(Skeleton& skeleton, Motion& animation, float animationTime) {
-	for (Joint& joint : skeleton.joints) {
-		if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
-			const NodeAnimation& rootNodeAnimation = (*it).second;
-			joint.transform.scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime);
-			joint.transform.translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime);
-			joint.transform.rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime);
-		}
-	}
-}
-
 SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData) {
 	SkinCluster skinCluster;
 	// クラスターデータがないなら早期リターン
 	if (!modelData.isSkinClusterData) {
 		return skinCluster;
 	}
-	
+
 #pragma region palette用のResourceを確保
 	skinCluster.paletteResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(WellForGPU) * skeleton.joints.size());
 	WellForGPU* mappedPalette = nullptr;
@@ -338,33 +269,62 @@ void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton) {
 	}
 }
 
-void AnimationUpdate(SkinCluster& skinCluster, Skeleton& skeleton, Motion& animation, float& animationTime) {
-	// アニメーションがないか、止めているなら早期リターン
-	if (animation.nodeAnimations.size() == 0 || !animation.isActive) {
-		animation.isActive = false;
-		return;
+Vector3 CalculateTranslateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
+	assert(!keyframes.empty());
+	// キーが一つか、時刻がキーフレーム前なら最初の値にする
+	if (keyframes.size() == 1 || time <= keyframes[0].time) {
+		return keyframes[0].value;
 	}
 
-	// スケルトンに対してアニメーションを適用
-	ApplyAnimation(skeleton, animation, animationTime);
-	// 骨の更新処理
-	SkeletonUpdate(skeleton);
-	// スキンクラスタの更新
-	SkinClusterUpdate(skinCluster, skeleton);
-
-	animationTime += 1.0f / 60.0f * animation.playBackSpeed;
-	// ループ再生の場合
-	if (animation.isLoop) {
-		// 通常
-		if (animation.playBackSpeed > 0.0f) {
-			animationTime = Utility::Custom_fmod(animationTime, animation.duration, 0);
+	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+		size_t nextIndex = index + 1;
+		// indexとnextIndexを比較して範囲内に時刻があるかを判定
+		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+			// 範囲内を補間
+			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+			return Lerps::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
 		}
-		// 逆再生
-		else {
-			animationTime = Utility::Custom_fmod(animationTime, animation.duration, animation.duration);
-		}
-
 	}
+
+	return (*keyframes.rbegin()).value;
+}
+Quaternion CalculateQuaternionValue(const std::vector<KeyframeQuaternion>& keyframes, float time) {
+	assert(!keyframes.empty());
+	// キーが一つか、時刻がキーフレーム前なら最初の値にする
+	if (keyframes.size() == 1 || time <= keyframes[0].time) {
+		return keyframes[0].value;
+	}
+
+	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+		size_t nextIndex = index + 1;
+		// indexとnextIndexを比較して範囲内に時刻があるかを判定
+		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+			// 範囲内を補間
+			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+			return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);
+		}
+	}
+
+	return keyframes.rbegin()->value;
+}
+Vector3 CalculateScaleValue(const std::vector<KeyframeVector3>& keyframes, float time) {
+	assert(!keyframes.empty());
+	// キーが一つか、時刻がキーフレーム前なら最初の値にする
+	if (keyframes.size() == 1 || time <= keyframes[0].time) {
+		return keyframes[0].value;
+	}
+
+	for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+		size_t nextIndex = index + 1;
+		// indexとnextIndexを比較して範囲内に時刻があるかを判定
+		if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+			// 範囲内を補間
+			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+			return Lerps::Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+		}
+	}
+
+	return (*keyframes.rbegin()).value;
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {

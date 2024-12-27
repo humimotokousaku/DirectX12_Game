@@ -8,6 +8,7 @@
 #include "WorldTransform.h"
 #include "PipelineManager.h"
 #include "SrvManager.h"
+#include "PostEffectManager.h"
 #include <list>
 #include <random>
 #include <functional>
@@ -46,6 +47,12 @@ struct AccField {
 	bool isActive;// Fieldの活性化
 };
 
+// パーティクルに使用するテクスチャ
+struct ParticleTextures {
+	uint32_t particle;			// パーティクル用のテクスチャ
+	uint32_t dissolve;			// dissolve用のテクスチャ
+};
+
 class Particles {
 public:
 	///
@@ -59,7 +66,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="emitterPos">生成場所</param>
-	void Initialize(Vector3 emitterPos);
+	void Initialize(const Vector3& emitterPos);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -67,8 +74,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	/// <param name="textureHandle">使用テクスチャ</param>
-	void Draw(uint32_t textureHandle);
+	void Draw();
 
 	///
 	/// User Method
@@ -95,6 +101,12 @@ public:
 	/// <param name="updateFunc">void (Particle＆);の関数</param>
 	void SetParticleUpdate(std::function<void(Particle&)> updateFunc) { updateFunc_ = updateFunc; }
 	/// <summary>
+	/// パーティクルの消え方をイージング関数で設定
+	/// </summary>
+	/// <param name="easeFunc"></param>
+	void SetParticleFade(std::function<float(float)> easeFunc) { easeFunc_ = easeFunc; }
+
+	/// <summary>
 	/// エミッターのワールドトランスフォームとペアレントする
 	/// </summary>
 	void SetEmitterParent(const WorldTransform* parent) { emitter_.transform.parent_ = parent; }
@@ -102,35 +114,57 @@ public:
 	/// パーティクルの発生源の座標
 	/// </summary>
 	/// <param name="translate">座標</param>
-	void SetEmitterPos(Vector3 translate) { emitter_.transform.translate = translate; }
+	void SetEmitterPos(const Vector3& translate) { emitter_.transform.translate = translate; }
 	/// <summary>
 	/// 一回で発生するパーティクルの数
 	/// </summary>
 	/// <param name="count">発生するパーティクルの数</param>
-	void SetEmitterCount(uint32_t count) { emitter_.count = count; }
+	void SetEmitterCount(const uint32_t& count) { emitter_.count = count; }
 	/// <summary>
 	/// パーティクルの発生の残り回数を設定
 	/// </summary>
 	/// <param name="spawnLeft"></param>
-	void SetEmitterSpawnLeft(uint32_t spawnLeft) { emitter_.spawnLeft = spawnLeft; }
+	void SetEmitterSpawnLeft(const uint32_t& spawnLeft) { emitter_.spawnLeft = spawnLeft; }
 	/// <summary>
 	/// パーティクルの発生回数(0なら無制限に出る)
 	/// </summary>
 	/// <param name="spawnCount">発生回数</param>
-	void SetEmitterSpawnCount(uint32_t spawnCount) { emitter_.spawnCount = spawnCount; }
+	void SetEmitterSpawnCount(const uint32_t& spawnCount) { emitter_.spawnCount = spawnCount; }
 	/// <summary>
 	/// パーティクルが発生する頻度
 	/// </summary>
 	/// <param name="frequency">秒</param>
-	void SetEmitterFrequency(float frequency) {
+	void SetEmitterFrequency(const float& frequency) {
 		emitter_.frequency = frequency;
 		emitter_.frequencyTime = frequency;
 	}
+
 	/// <summary>
-	/// パーティクルの消え方をイージング関数で設定
+	/// Dissolveの閾値を設定
 	/// </summary>
-	/// <param name="easeFunc"></param>
-	void SetParticleFade(std::function<float(float)> easeFunc) { easeFunc_ = easeFunc; }
+	/// <param name="maskThreshold">閾値</param>
+	void SetDissolveMaskThreshold(const float& maskThreshold) { dissolveData_->maskThreshold = maskThreshold; }
+	/// <summary>
+	/// Dissolveを使用するかを設定
+	/// </summary>
+	/// <param name="isActive">使用するか</param>
+	void SetIsDissolve(const bool& isActive) { dissolveData_->isActive = isActive; }
+
+	/// <summary>
+	/// パーティクルに使用するテクスチャの設定
+	/// </summary>
+	/// <param name="textureNum">パーティクルに使用するTexture</param>
+	void SetTexture(const uint32_t& textureNum) { textures_.particle = textureNum; }
+	/// <summary>
+	/// Dissolve用のテクスチャの設定
+	/// </summary>
+	/// <param name="textureNum">Dissolveに使用するTexture</param>
+	void SetDissolveTexture(const uint32_t& textureNum) { textures_.dissolve = textureNum; }
+	/// <summary>
+	/// パーティクルに使用するテクスチャ群の設定
+	/// </summary>
+	/// <param name="textureNum">パーティクルに使用するTexture</param>
+	void SetTextures(const ParticleTextures& textureNums) { textures_ = textureNums; }
 #pragma endregion
 
 	/// <summary>
@@ -179,7 +213,7 @@ public:
 	Limit randomVelLimit[3] = {
 		{-1.0f, 1.0f },	// x
 		{-1.0f, 1.0f },	// y
-		{-1.0f, 1.0f }		// z
+		{-1.0f, 1.0f }	// z
 	};
 	// ランダム生存時間の下限上限
 	Limit randomLifeTimeLimit = { 1.0f, 3.0f };
@@ -220,6 +254,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 	VertexData* vertexData_;
+	// Dissolve
+	DissolveDataForGPU* dissolveData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> dissolveResource_;
 
 	// 複数描画のための変数
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
@@ -230,5 +267,8 @@ private:
 
 	// カメラ
 	Camera* camera_;
+
+	// パーティクルで使用するテクスチャ群
+	ParticleTextures textures_;
 };
 
