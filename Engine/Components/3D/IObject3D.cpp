@@ -21,7 +21,7 @@ void IObject3D::SetModel(const std::string& directoryPath, const std::string& fi
 	dissolveResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
 	// 書き込むためのアドレスを取得
 	dissolveResource.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData));
-	dissolveData->isActive = true;
+	dissolveData->isActive = false;
 	dissolveData->maskThreshold = 0.5f;
 	model_->SetDissolveResource(dissolveResource);
 	model_->SetDissolveData(dissolveData);
@@ -59,7 +59,7 @@ void IObject3D::SetModel(Model* model) {
 	dissolveResource = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
 	// 書き込むためのアドレスを取得
 	dissolveResource.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData));
-	dissolveData->isActive = true;
+	dissolveData->isActive = false;
 	dissolveData->maskThreshold = 0.5f;
 	model_->SetDissolveResource(dissolveResource);
 	model_->SetDissolveData(dissolveData);

@@ -154,7 +154,7 @@ void Particles::Draw() {
 
 		if (numInstance < kNumMaxInstance) {
 			// WVPとworldMatrixの計算
-			Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate + emitter_.transform.worldPos);
+			Matrix4x4 worldMatrix = MakeAffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate + emitter_.transform.worldPos);
 			instancingData_[numInstance].World = Multiply(worldMatrix, Multiply(camera_->GetViewProjection().matView, camera_->GetViewProjection().matProjection));
 			instancingData_[numInstance].WVP = instancingData_[numInstance].World;
 			++numInstance;
@@ -277,34 +277,6 @@ Vector3 Particles::KelvinToRGB(int kelvin) {
 	color.z = blue / 255.0f;
 
 	return color;
-}
-
-Matrix4x4 Particles::AffineMatrix(const Vector3& scale, const Matrix4x4& rotateMatrix, const Vector3& translate) {
-	// 計算結果
-	Matrix4x4 result{};
-
-	// アフィン変換行列の計算
-	result.m[0][0] = scale.x * rotateMatrix.m[0][0];
-	result.m[0][1] = scale.x * rotateMatrix.m[0][1];
-	result.m[0][2] = scale.x * rotateMatrix.m[0][2];
-	result.m[0][3] = 0.0f;
-
-	result.m[1][0] = scale.y * rotateMatrix.m[1][0];
-	result.m[1][1] = scale.y * rotateMatrix.m[1][1];
-	result.m[1][2] = scale.y * rotateMatrix.m[1][2];
-	result.m[1][3] = 0.0f;
-
-	result.m[2][0] = scale.z * rotateMatrix.m[2][0];
-	result.m[2][1] = scale.z * rotateMatrix.m[2][1];
-	result.m[2][2] = scale.z * rotateMatrix.m[2][2];
-	result.m[2][3] = 0.0f;
-
-	result.m[3][0] = translate.x;
-	result.m[3][1] = translate.y;
-	result.m[3][2] = translate.z;
-	result.m[3][3] = 1.0f;
-
-	return result;
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> Particles::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {

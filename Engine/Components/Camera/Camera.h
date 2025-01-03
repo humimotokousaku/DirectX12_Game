@@ -24,12 +24,12 @@ public:
 	/// </summary>
 	void Update();
 
-	/// 
-	/// User Method
-	/// 
-	
-	/// Getter
+	/// <summary>
+	/// 行列を転送する
+	/// </summary>
+	void TransferMatrix();
 
+#pragma region Getter
 	// スケールの取得
 	Vector3 GetScale()const { return worldTransform_.scale; }
 	// ローカル座標の取得
@@ -47,8 +47,9 @@ public:
 	Vector3 GetRotate() const { return worldTransform_.rotate; }
 	// viewProjectionの取得
 	ViewProjection GetViewProjection() { return viewProjection_; }
+#pragma endregion
 
-	/// Setter
+#pragma region Setter
 	// スケールをセット
 	void SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 	// 座標をセット
@@ -65,6 +66,7 @@ public:
 	void SetFarClip(const float& farZ) { viewProjection_.farZ = farZ; }
 	// viewMatrixのセット
 	void SetViewMatrix(Matrix4x4 matrix) { viewProjection_.matView = matrix; }
+#pragma endregion
 
 private:
 	/// <summary>
@@ -83,10 +85,6 @@ private:
 	/// 行列を更新する
 	/// </summary>
 	void UpdateMatrix();
-	/// <summary>
-	/// 行列を転送する
-	/// </summary>
-	void TransferMatrix();
 	/// <summary>
 	/// ビュー行列を更新する
 	/// </summary>

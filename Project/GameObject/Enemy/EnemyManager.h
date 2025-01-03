@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "RailCamera.h"
 #include "Score.h"
+#include "DeadParicles.h"
 
 /// <summary>
 /// 敵の管理クラス
@@ -45,6 +46,12 @@ public:
 	void DrawParticle();
 
 private:
+	/// <summary>
+	/// 死亡パーティクルの生成
+	/// </summary>
+	/// <param name="enemyPos">敵の座標</param>
+	void CreateDeadParticle(const Vector3& enemyPos);
+
 	/// <summary>
 	/// 発生条件
 	/// </summary>
@@ -159,12 +166,21 @@ public:
 	}
 #pragma endregion
 
+private:
+	// 死亡パーティクルの一コマに使うフレーム数
+	const int kAnimationSpeed = 1;
+
+	// 死亡パーティクルのアニメーションのコマ数
+	const int kAnimationNum = 8 * kAnimationSpeed;
+
 private:// プライベートなメンバ変数
 	// 基本機能
 	TextureManager* textureManager_;
 	// 音
 	Audio* audio_;
 
+
+	std::unique_ptr<Camera> billboardCamera_;
 	// カメラのアドレス
 	Camera* camera_;
 	// 追従カメラのアドレス
@@ -184,14 +200,19 @@ private:// プライベートなメンバ変数
 	std::vector<Particles*> spawnParticles_;
 	// 被弾時時のパーティクル
 	std::vector<Particles*> hitParticles_;
+	// 死亡パーティクル
+	std::list<DeadParicles*> deadParicles_;
+	DeadParicles* deadPariclesIdol_;
 
 	// 使用するモデル
-	std::map<std::string,Model*> models_;
+	std::map<std::string, Model*> models_;
 
 	// 出現時のパーティクルのテクスチャ
 	ParticleTextures spawnParticleTextures_;
 	// 被弾時のパーティクルのテクスチャ
 	ParticleTextures hitParticleTextures_;
+	// 死亡時のパーティクル
+	std::vector<uint32_t> deadParticleTextures_;
 
 	// 死亡SE
 	uint32_t deadSE_;

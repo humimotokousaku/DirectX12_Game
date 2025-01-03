@@ -140,6 +140,9 @@
     <Filter Include="Project\Components\LevelManager">
       <UniqueIdentifier>{d4aeb386-b5ba-47c3-a022-d9689b288cd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameObject\DeadParticles">
+      <UniqueIdentifier>{2361ba14-de5a-4d6e-8705-5db8d0879250}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\ImGui\imgui.cpp">
@@ -485,7 +488,21 @@
     <ClCompile Include="Project\GameObject\GameObjectManager.cpp">
       <Filter>Project\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Pso\SpritePSO.cpp" />
+    <ClCompile Include="Project\GameObject\DeadParticles\DeadParicles.cpp">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\DeadParticles\DeadParticle.cpp">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\DeadParticles\DeadParticleLine.cpp">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Pso\SpritePSO.cpp">
+      <Filter>Engine\Pso</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\TrailObject.cpp">
+      <Filter>Project\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -848,8 +865,24 @@
     <ClInclude Include="Project\GameObject\GameObjectManager.h">
       <Filter>Project\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Pso\SpritePSO.h" />
-    <ClInclude Include="Engine\PostProcess\PostEffectStructs.h" />
+    <ClInclude Include="Project\GameObject\DeadParticles\DeadParticleLine.h">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\DeadParticles\DeadParicles.h">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\DeadParticles\DeadParticle.h">
+      <Filter>Project\GameObject\DeadParticles</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Pso\SpritePSO.h">
+      <Filter>Engine\Pso</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PostProcess\PostEffectStructs.h">
+      <Filter>Engine\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\TrailObject.h">
+      <Filter>Project\GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -940,7 +973,11 @@
     <FxCompile Include="Engine\resources\sharder\VignetingPS.hlsl">
       <Filter>Resources\Sharder</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resources\sharder\Sprite.VS.hlsl" />
-    <FxCompile Include="Engine\resources\sharder\Sprite.PS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\Sprite.VS.hlsl">
+      <Filter>Resources\Sharder</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\Sprite.PS.hlsl">
+      <Filter>Resources\Sharder</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

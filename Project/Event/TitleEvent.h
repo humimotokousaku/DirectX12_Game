@@ -4,6 +4,7 @@
 #include "FollowCamera.h"
 #include "Skydome/Skydome.h"
 #include "LevelManager.h"
+#include "DeadParicles.h"
 
 /// <summary>
 /// タイトル演出
