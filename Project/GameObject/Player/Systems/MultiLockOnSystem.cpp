@@ -62,28 +62,51 @@ void MultiLockOnSystem::Shot() {
 		// 自機の弾が一つもないときに弾を撃てる
 		if (gameSystem_->GetPlayerBulletList().size() != 0) { return; }
 
-		// ロックオンリストに登録されている敵に向けて撃つ
-		for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
-			for (BaseEnemy* obj : *enemys_) {
-				// ロックオン対象外の敵ならスキップ
-				if (obj->GetId() != multiLockOnData.enemyId) { continue; }
-
-				// 弾を生成し、初期化
-				PlayerBullet* newBullet = new PlayerBullet();
-				newBullet->SetCamera(camera_);
-				newBullet->SetPlayer(player_);
-				newBullet->Initialize(model_, player_->GetWorldPosition(), obj->GetWorldTransform());
-				// 弾を登録
-				gameSystem_->AddPlayerBullet(newBullet);
-
-				// 音の再生
-				audio_->SoundPlayWave(shotSE_, false, 0.25f);
-
-				multiLockOnData.isActive = true;
-			}
-		}
+		isShot_ = true;
 	}
 
+	// 発射した回数
+	int shotNum = 0;
+	if (isShot_) {
+		if ((int)currentFrame_ % kShotInterval == 0) {
+			// ロックオンリストに登録されている敵に向けて撃つ
+			for (MultiLockOnData& multiLockOnData : multiLockOnDatas_) {
+				// 同じ相手に弾が行かないようにする
+				if (multiLockOnData.isActive) { 
+					shotNum++;
+					continue; 
+				}
+
+				// 発射条件
+				for (BaseEnemy* obj : *enemys_) {
+					// ロックオン対象外の敵ならスキップ
+					if (obj->GetId() != multiLockOnData.enemyId) { continue; }
+
+					// 弾を生成し、初期化
+					PlayerBullet* newBullet = new PlayerBullet();
+					newBullet->SetCamera(camera_);
+					newBullet->SetPlayer(player_);
+					newBullet->Initialize(model_, player_->GetWorldPosition(), obj->GetWorldTransform());
+					// 弾を登録
+					gameSystem_->AddPlayerBullet(newBullet);
+
+					// 音の再生
+					audio_->SoundPlayWave(shotSE_, false, 0.25f);
+
+					multiLockOnData.isActive = true;
+					break;
+				}
+				// 敵一人に弾を発射するたびにfor文を抜ける
+				if (multiLockOnData.isActive) { break; }
+			}
+		}
+		currentFrame_+= GameTimer::GetInstance()->GetTimeScale();
+	}
+
+	if (shotNum >= (int)multiLockOnDatas_.size()) {
+		isShot_ = false;
+		currentFrame_ = 0;
+	}
 	// 音のこもり具合
 	//audio_->SetMuffle(shotSE_, 1.0f);
 }

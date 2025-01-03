@@ -4,6 +4,8 @@
 #include "BaseEnemy.h"
 #include "Player.h"
 #include "GameObjectManager.h"
+#include "PlayerBulletFollowState.h"
+#include "PlayerBulletNormalState.h"
 #include <cassert>
 
 PlayerBullet::~PlayerBullet() {
@@ -28,6 +30,10 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* 
 	object3d_->worldTransform.scale = kBulletSize;
 	// 行列を更新
 	object3d_->worldTransform.UpdateMatrix();
+
+	// 緑にする
+	object3d_->SetColor(Vector4{ 0,1,0,1 });
+
 	// colliderの設定
 	object3d_->collider->SetDamage(kBulletDamage);
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
@@ -39,17 +45,16 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* 
 	// ゲームオブジェクトマネージャーに追加
 	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
-	// 緑にする
-	object3d_->SetColor(Vector4{ 0,1,0,1 });
+	// 状態遷移
+	state_ = new PlayerBulletFollowState(this, player_);
+	state_->Initialize();
 
 	isDead_ = false;
 }
 
 void PlayerBullet::Update() {
-	Vector3 toPlayer = enemyData_->GetWorldPosition() - GetWorldPosition();
-	toPlayer = Normalize(toPlayer);
-	velocity_ = Normalize(velocity_);
-	velocity_ = Lerps::Slerp(velocity_, toPlayer, 1.0f) * kBulletSpeed * GameTimer::GetInstance()->GetTimeScale();
+	// 状態の更新
+	state_->Update();
 
 	// Y軸周り角度(θy)
 	object3d_->worldTransform.rotate.y = std::atan2(velocity_.x, velocity_.z);
@@ -84,6 +89,11 @@ void PlayerBullet::OnCollision(Collider* collider) {
 	if (kCollisionAttributeJustEvasion == collider->GetCollisionAttribute()) { return; }
 
 	isDead_ = true;
+}
+
+void PlayerBullet::ChangeState(BasePlayerBulletState* pState) {
+	delete state_;
+	state_ = pState;
 }
 
 Vector3 PlayerBullet::GetRotation() {

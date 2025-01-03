@@ -83,7 +83,10 @@ public:// GetterとSetter
 
 private:// 定数
 	// 同時ロックオン可能数
-	static const int kMaxLockOnNum = 20;
+	const int kMaxLockOnNum = 10;
+
+	// 弾の発射間隔
+	const int kShotInterval = 6;
 
 private:// エンジン機能
 	// ポストエフェクト
@@ -114,4 +117,9 @@ private:
 	std::vector<int> lockedEnemyIdList_;
 	// 全敵のIDリスト
 	std::vector<int>* enemyIdList_;
+
+	// 弾を発射しているか
+	bool isShot_;
+
+	float currentFrame_;
 };
