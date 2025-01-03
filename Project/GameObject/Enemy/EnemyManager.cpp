@@ -21,7 +21,13 @@ EnemyManager::~EnemyManager() {
 	for (Particles* particle : hitParticles_) {
 		delete particle;
 	}
+	// 死亡時のパーティクル
+	for (DeadParicles* deadParicles : deadParicles_) {
+		delete deadParicles;
+	}
+	spawnParticles_.clear();
 	hitParticles_.clear();
+	deadParicles_.clear();
 
 	models_.clear();
 }
@@ -35,12 +41,36 @@ void EnemyManager::Initialize() {
 	// テクスチャの読み込み
 	textureManager_->LoadTexture("Textures/DefaultTexture", "white.png");
 	textureManager_->LoadTexture("Textures", "hitParticle.png");
-	spawnParticleTextures_.particle = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
+	// 死亡パーティクル
+	for (int i = 1; i <= kAnimationNum; i++) {
+		std::string num = std::to_string(i).c_str();
+		textureManager_->LoadTexture("Textures", "deadParticle" + num + ".png");
+	}
+	spawnParticleTextures_.particle = textureManager_->GetSrvIndex("Textures", "deadParticle4.png");
 	spawnParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
-	hitParticleTextures_.particle = textureManager_->GetSrvIndex("Textures", "hitParticle.png");
+	hitParticleTextures_.particle = textureManager_->GetSrvIndex("Textures", "deadParticle4.png");
 	hitParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
+	// テクスチャ読み込み
+
+	for (int i = 1; i <= kAnimationNum / kAnimationSpeed; i++) {
+		std::string num = std::to_string(i).c_str();
+		for (int animSpeed = 0; animSpeed < kAnimationSpeed; animSpeed++) {
+			deadParticleTextures_.push_back(textureManager_->GetSrvIndex("Textures", "deadParticle" + num + ".png"));
+		}
+	}
+
+	billboardCamera_ = std::make_unique<Camera>();
+	billboardCamera_->Initialize();
+	billboardCamera_->viewProjection_.matProjection = MakeIdentity4x4();
+	billboardCamera_->viewProjection_.matView = MakeIdentity4x4();
+	billboardCamera_->TransferMatrix();
+
+	for (int i = 0; i < spawnPoints_.size(); i++) {
+		// 死亡パーティクルを生成
+		CreateDeadParticle(Vector3{ 0,0,0 });
+	}
 
 	cameraMoveVel_ = railCamera_->GetDirectionVelocity();
 	railCameraProgress_ = railCamera_->GetRailPercentage();
@@ -57,6 +87,15 @@ void EnemyManager::Update() {
 	enemys_.remove_if([&](BaseEnemy* enemy) {
 		// 倒したら点数を加算して解放
 		if (enemy->IsDead()) {
+			// 死亡時のパーティクルを発生
+			for (DeadParicles* deadParicles : deadParicles_) {
+				if (deadParicles->GetId() == -1) {
+					deadParicles->SetId(enemy->GetId());
+					deadParicles->CreateParticle(enemy->GetWorldPosition());
+					break;
+				}
+			}
+
 			// 管理番号リストから削除
 			idList_.erase(std::remove(idList_.begin(), idList_.end(), enemy->GetId()), idList_.end());
 			// 割り振られたスコアを加算
@@ -100,6 +139,10 @@ void EnemyManager::Update() {
 	for (Particles* hitParticle : hitParticles_) {
 		hitParticle->Update();
 	}
+	// 死亡時のパーティクル
+	for (DeadParicles* deadParicles : deadParicles_) {
+		deadParicles->Update();
+	}
 }
 
 void EnemyManager::Draw() {
@@ -114,14 +157,26 @@ void EnemyManager::Draw() {
 }
 
 void EnemyManager::DrawParticle() {
-	// 出現時のパーティクル
-	for (Particles* particle : spawnParticles_) {
-		particle->Draw();
+	//// 出現時のパーティクル
+	//for (Particles* particle : spawnParticles_) {
+	//	particle->Draw();
+	//}
+	//// 被弾時のパーティクル
+	//for (Particles* hitParticle : hitParticles_) {
+	//	hitParticle->Draw();
+	//}
+	// 死亡時のパーティクル
+	for (DeadParicles* deadParicles : deadParicles_) {
+		deadParicles->Draw(billboardCamera_->viewProjection_);
 	}
-	// 被弾時のパーティクル
-	for (Particles* hitParticle : hitParticles_) {
-		hitParticle->Draw();
-	}
+}
+
+void EnemyManager::CreateDeadParticle(const Vector3& enemyPos) {
+	DeadParicles* deadParicles = new DeadParicles();
+	deadParicles->SetDeadParticleTextures(deadParticleTextures_);
+	deadParicles->Initialize(camera_, enemyPos);
+
+	deadParicles_.push_back(deadParicles);
 }
 
 void EnemyManager::CheckSpawn() {
@@ -168,12 +223,6 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	// リストに登録
 	enemys_.push_back(enemy);
 
-	// 管理番号リストに登録
-	idList_.push_back(id_);
-
-	// 管理番号更新
-	id_++;
-
 	// 出現時のパーティクルを生成
 	Particles* particle = new Particles();
 	particle->Initialize(pos);
@@ -185,6 +234,12 @@ void EnemyManager::SpawnEnemy(Vector3 pos, Vector3 rotate, Vector3 moveSpeed, st
 	particle->SetEmitterSpawnCount(1);
 	particle->randomScaleLimit = { 0.3f, 0.4f };
 	spawnParticles_.push_back(particle);
+
+	// 管理番号リストに登録
+	idList_.push_back(id_);
+
+	// 管理番号更新
+	id_++;
 }
 
 void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints) {

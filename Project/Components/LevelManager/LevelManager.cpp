@@ -170,7 +170,6 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 	}
 
 	// オブジェクト生成
-	std::vector<Object3D*> objects;
 	for (auto& objectData : levelData->objects_) {
 		Model* model;
 		// モデルの読み込み
@@ -215,13 +214,12 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 			newObject->collider->SetOBBLength(objectData.colliderSize);
 		}
 
-		objects.push_back(newObject);
+		levelObjects_.push_back(newObject);
 	}
-	levelObjects_ = objects;
 
-	for (auto& objectData : levelObjects_) {
+	for (Object3D* object : levelObjects_) {
 		// ゲームオブジェクトマネージャーに追加
-		GameObjectManager::GetInstance()->AddGameObject(objectData);
+		GameObjectManager::GetInstance()->AddGameObject(object);
 	}
 }
 

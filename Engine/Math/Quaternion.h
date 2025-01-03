@@ -32,7 +32,7 @@ Vector3 RotateVector(const Vector3& vector, Quaternion quaternion);
 // Quaternionから回転行列を求める
 Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 // 回転角がクォータニオンでAffine行列を作成
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
+Matrix4x4 MakeAffineMatrix_Quaternion(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 // 球面線形補間
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);

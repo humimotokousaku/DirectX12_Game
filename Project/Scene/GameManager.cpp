@@ -98,12 +98,12 @@ void GameManager::Update() {
 
 	// 衝突マネージャー(当たり判定)
 	collisionManager_->CheckAllCollisions();
-
-#ifdef _DEBUG
 	// FPSカウンターの表示
 	ImGui::Begin("Control panel");
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
+#ifdef _DEBUG
+
 #endif
 }
 

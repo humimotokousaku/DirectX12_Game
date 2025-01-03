@@ -42,6 +42,7 @@ Matrix4x4 Transpose(const Matrix4x4& m);
 
 // 3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Matrix4x4& rotateMatrix, const Vector3& translate);
 
 // ベクトルに変換
 Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);

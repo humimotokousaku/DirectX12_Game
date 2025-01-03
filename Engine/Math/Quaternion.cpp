@@ -132,7 +132,7 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
 	return result;
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& q, const Vector3& translate) {
+Matrix4x4 MakeAffineMatrix_Quaternion(const Vector3& scale, const Quaternion& q, const Vector3& translate) {
 	// スケーリング行列
 	Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
 	// quaternionから回転行列を作成

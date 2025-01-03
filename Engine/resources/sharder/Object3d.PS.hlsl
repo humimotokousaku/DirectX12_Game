@@ -57,9 +57,9 @@ struct PixelShaderOutput {
 
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
-
+	
 	// Dissolve
-    if (gDissolveData.isActive != 0)
+    if (gDissolveData.isActive)
     {
         float32_t mask = gMaskTexture.Sample(gSampler, input.texcoord);
         if (mask <= gDissolveData.maskThreshold)
@@ -112,5 +112,6 @@ PixelShaderOutput main(VertexShaderOutput input) {
         output.color = gMaterial.color * textureColor;// + enviromentColor;
     }
 
+	
 	return output;
 }

@@ -361,7 +361,7 @@ ModelData Model::LoadModelFile(const std::string& directoryPath, const std::stri
 			aiVector3D translate;
 			aiQuaternion rotate;
 			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
-			Matrix4x4 bindPoseMatrix = MakeAffineMatrix({ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x,translate.y, translate.z });
+			Matrix4x4 bindPoseMatrix = MakeAffineMatrix_Quaternion({ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x,translate.y, translate.z });
 			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
 
 			// weight情報を取り出す
@@ -438,7 +438,7 @@ ModelData Model::LoadModelFile(const std::string& fullPath) {
 			aiVector3D translate;
 			aiQuaternion rotate;
 			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
-			Matrix4x4 bindPoseMatrix = MakeAffineMatrix({ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x,translate.y, translate.z });
+			Matrix4x4 bindPoseMatrix = MakeAffineMatrix_Quaternion({ scale.x, scale.y, scale.z }, { rotate.x, -rotate.y, -rotate.z, rotate.w }, { -translate.x,translate.y, translate.z });
 			jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrix);
 
 			// weight情報を取り出す

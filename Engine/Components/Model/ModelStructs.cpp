@@ -142,7 +142,7 @@ Node ReadNode(aiNode* node) {
 	result.transform.scale = { scale.x, scale.y, scale.z };
 	result.transform.rotate = { rotate.x, -rotate.y, -rotate.z,rotate.w };
 	result.transform.translate = { -translate.x, translate.y, translate.z };
-	result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
+	result.localMatrix = MakeAffineMatrix_Quaternion(result.transform.scale, result.transform.rotate, result.transform.translate);
 
 	result.name = node->mName.C_Str();
 	result.children.resize(node->mNumChildren);
@@ -186,7 +186,7 @@ Skeleton CreateSkeleton(const Node& rootNode) {
 }
 void SkeletonUpdate(Skeleton& skeleton) {
 	for (Joint& joint : skeleton.joints) {
-		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		joint.localMatrix = MakeAffineMatrix_Quaternion(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 		if (joint.parent) {
 			joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
 		}

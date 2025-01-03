@@ -62,7 +62,7 @@ void Object3D::Draw(uint32_t textureNum, int fillMode) {
 			Vector3 translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime_);
 			Quaternion rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 			Vector3 scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime_);
-			Matrix4x4 localMatrix = MakeAffineMatrix(scale, rotate, translate);
+			Matrix4x4 localMatrix = MakeAffineMatrix_Quaternion(scale, rotate, translate);
 			worldTransform.matWorld_ = Multiply(localMatrix, worldTransform.matWorld_);
 		}
 		worldTransform.TransferMatrix();
@@ -115,7 +115,7 @@ void Object3D::Draw(int fillMode) {
 			Vector3 translate = CalculateTranslateValue(rootNodeAnimation.translate.keyframes, animationTime_);
 			Quaternion rotate = CalculateQuaternionValue(rootNodeAnimation.rotate.keyframes, animationTime_);
 			Vector3 scale = CalculateScaleValue(rootNodeAnimation.scale.keyframes, animationTime_);
-			Matrix4x4 localMatrix = MakeAffineMatrix(scale, rotate, translate);
+			Matrix4x4 localMatrix = MakeAffineMatrix_Quaternion(scale, rotate, translate);
 			worldTransform.matWorld_ = Multiply(localMatrix, worldTransform.matWorld_);
 		}
 		worldTransform.TransferMatrix();
