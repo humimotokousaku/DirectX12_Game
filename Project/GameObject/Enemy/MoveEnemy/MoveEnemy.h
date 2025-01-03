@@ -34,10 +34,6 @@ public:
 	// 衝突判定
 	void OnCollision(Collider* collider) override;
 
-	///
-	/// User Method
-	/// 
-
 	/// <summary>
 	/// stateの変更
 	/// </summary>

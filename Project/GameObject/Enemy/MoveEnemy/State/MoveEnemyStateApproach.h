@@ -16,10 +16,10 @@ public:
 	void FireAndResetTimer();
 
 	// 初期化
-	void Initialize(MoveEnemy* enemy, Player* player);
+	void Initialize(MoveEnemy* enemy, Player* player) override;
 
 	// 更新処理
-	void Update(MoveEnemy* enemy);
+	void Update(MoveEnemy* enemy) override;
 
 public:
 	MoveEnemy* enemy_;

@@ -391,6 +391,9 @@
     <ClCompile Include="Project\GameObject\Player\Player.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Bullet\PlayerBullet.cpp">
+      <Filter>Project\GameObject\Player</Filter>
+    </ClCompile>
     <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp">
       <Filter>Project\GameObject\Camera\FollowCamera</Filter>
     </ClCompile>
@@ -452,19 +455,19 @@
     <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp">
       <Filter>Project\GameObject\Skydome</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp">
+    <ClCompile Include="Project\GameObject\Player\Systems\JustEvasionSystem.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameSystem.cpp">
       <Filter>Project</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\HitSystem.cpp">
+    <ClCompile Include="Project\GameObject\Player\Systems\HitSystem.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp">
+    <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp">
+    <ClCompile Include="Project\GameObject\Player\Systems\MultiLockOnSystem.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="Project\Event\TitleEvent.cpp">
@@ -500,6 +503,9 @@
     <ClCompile Include="Project\GameObject\TrailObject.cpp">
       <Filter>Project\GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -772,7 +778,7 @@
     <ClInclude Include="Project\GameObject\Score\Score.h">
       <Filter>Project\GameObject\Score</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\PlayerBullet.h">
+    <ClInclude Include="Project\GameObject\Player\Bullet\PlayerBullet.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameObject\Player\Player.h">
@@ -826,19 +832,19 @@
     <ClInclude Include="Project\GameObject\Skydome\Skydome.h">
       <Filter>Project\GameObject\Skydome</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h">
+    <ClInclude Include="Project\GameObject\Player\Systems\JustEvasionSystem.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="Project\GameSystem.h">
       <Filter>Project</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\HitSystem.h">
+    <ClInclude Include="Project\GameObject\Player\Systems\HitSystem.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h">
+    <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h">
+    <ClInclude Include="Project\GameObject\Player\Systems\MultiLockOnSystem.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="Project\Event\TitleEvent.h">
@@ -880,6 +886,9 @@
     <ClInclude Include="Project\GameObject\TrailObject.h">
       <Filter>Project\GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

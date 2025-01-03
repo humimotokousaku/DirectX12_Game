@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -82,7 +82,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;$(ProjectDir)Project\GameObject\Player\Systems;$(ProjectDir)Project\GameObject\Player\Bullet;$(ProjectDir)Project\GameObject\Player\Bullet\State;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -109,7 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;$(ProjectDir)Project\GameObject\Player\Systems;$(ProjectDir)Project\GameObject\Player\Bullet;$(ProjectDir)Project\GameObject\Player\Bullet\State;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -139,7 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Project\Scene;$(ProjectDir)Engine\Utility;$(ProjectDir)Engine\Math;$(ProjectDir)Engine\Manager;$(ProjectDir)Engine\Components;$(ProjectDir)Engine\Base;$(ProjectDir)Engine\Components\Model;$(ProjectDir)Engine\Components\Input;$(ProjectDir)Engine\Components\Audio;$(ProjectDir)Engine\Components\Camera;$(ProjectDir)Engine\Components\Light;$(ProjectDir)Engine\PostProcess;$(ProjectDir)Engine\Components\Particle;$(ProjectDir)Engine\Pso;$(ProjectDir)Project;$(ProjectDir)Engine\Components\3D;$(ProjectDir)Engine\Components\2D;$(ProjectDir)Engine\Components\3D\Primitive;$(ProjectDir)Engine\Components\2D\Primitive;$(ProjectDir)Engine\Components\Animation;$(ProjectDir)Project\Collision;$(ProjectDir)Project\GameObject;$(ProjectDir)externals\assimp\include;$(ProjectDir)Engine\Pso\PostEffect;$(ProjectDir)Project\GameObject\Player;$(ProjectDir)Project\GameObject\Enemy;$(ProjectDir)Project\Components;$(ProjectDir)Project\GameObject\Camera\RailCamera;$(ProjectDir)Project\GameObject\Camera;$(ProjectDir)Project\GameObject\Camera\FollowCamera;$(ProjectDir)Project\GameObject\Enemy\FixedTurret;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy;$(ProjectDir)Project\GameObject\Enemy\FixedTurret\State;$(ProjectDir)Project\GameObject\Enemy\MoveEnemy\State;$(ProjectDir)Project\GameObject\Score;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy;$(ProjectDir)Project\GameObject\Enemy\BeamEnemy\State;$(ProjectDir)Project\GameObject\Enemy\Bullet;$(ProjectDir)Project\Components\LevelManager;$(ProjectDir)Project\Event;$(ProjectDir)Project\GameObject\DeadParticles;$(ProjectDir)Project\GameObject\Player\Systems;$(ProjectDir)Project\GameObject\Player\Bullet;$(ProjectDir)Project\GameObject\Player\Bullet\State;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MinSpace</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -159,16 +159,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.cpp" />
     <ClCompile Include="Project\GameObject\DeadParticles\DeadParicles.cpp" />
     <ClCompile Include="Project\GameObject\DeadParticles\DeadParticleLine.cpp" />
     <ClCompile Include="Project\GameObject\DeadParticles\DeadParticle.cpp" />
     <ClCompile Include="Project\GameObject\GameObjectManager.cpp" />
     <ClCompile Include="Project\Event\DeadEvent.cpp" />
     <ClCompile Include="Project\Event\ClearEvent.cpp" />
-    <ClCompile Include="Project\GameObject\Player\EvasionSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\JustEvasionSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\HitSystem.cpp" />
-    <ClCompile Include="Project\GameObject\Player\MultiLockOnSystem.cpp">
+    <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Systems\JustEvasionSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Systems\HitSystem.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Systems\MultiLockOnSystem.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
@@ -230,6 +233,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Components\Model\Model.cpp" />
     <ClCompile Include="Engine\Components\Model\ModelStructs.cpp" />
     <ClCompile Include="engine\Components\WorldTransform.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\PlayerBullet.cpp" />
     <ClCompile Include="project\scene\GameManager.cpp" />
     <ClCompile Include="engine\Manager\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Pso\PipelineManager.cpp" />
@@ -283,6 +287,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\TrailObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.h" />
     <ClInclude Include="Project\GameObject\DeadParticles\DeadParicles.h" />
     <ClInclude Include="Project\GameObject\DeadParticles\DeadParticleLine.h" />
     <ClInclude Include="Project\GameObject\DeadParticles\DeadParticle.h" />
@@ -290,10 +297,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\GameObjectManager.h" />
     <ClInclude Include="Project\Event\DeadEvent.h" />
     <ClInclude Include="Project\Event\ClearEvent.h" />
-    <ClInclude Include="Project\GameObject\Player\EvasionSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\JustEvasionSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\HitSystem.h" />
-    <ClInclude Include="Project\GameObject\Player\MultiLockOnSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\Systems\JustEvasionSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\Systems\HitSystem.h" />
+    <ClInclude Include="Project\GameObject\Player\Systems\MultiLockOnSystem.h" />
     <ClInclude Include="Engine\Components\3D\IObject3D.h" />
     <ClInclude Include="Project\GameSystem.h" />
     <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.h" />
@@ -352,7 +359,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Components\Model\Model.h" />
     <ClInclude Include="Engine\Components\Model\ModelStructs.h" />
     <ClInclude Include="engine\Components\WorldTransform.h" />
-    <ClInclude Include="Project\GameObject\Player\PlayerBullet.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\PlayerBullet.h" />
     <ClInclude Include="Project\GameObject\Player\PlayerConfig.h" />
     <ClInclude Include="project\scene\GameManager.h" />
     <ClInclude Include="engine\Manager\ImGuiManager.h" />
