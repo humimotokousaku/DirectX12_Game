@@ -283,7 +283,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\Event\StartEvent.cpp" />
     <ClCompile Include="Project\Event\TitleEvent.cpp" />
     <ClCompile Include="Engine\Pso\SpritePSO.cpp" />
-    <ClCompile Include="Project\GameObject\TrailObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h" />
@@ -414,7 +413,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\Event\StartEvent.h" />
     <ClInclude Include="Project\Event\TitleEvent.h" />
     <ClInclude Include="Engine\Pso\SpritePSO.h" />
-    <ClInclude Include="Project\GameObject\TrailObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />

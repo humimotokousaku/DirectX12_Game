@@ -81,7 +81,7 @@ private:
 	Camera* camera_;
 
 	// 死亡時のパーティクルの列
-	std::list<DeadParticle*> deadparticleLine_;
+	std::list<DeadParticle*> deadParticle_;
 
 	// パーティクル生成情報
 	EmitterData emitterData_;

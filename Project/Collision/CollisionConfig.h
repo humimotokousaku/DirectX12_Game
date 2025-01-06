@@ -15,6 +15,7 @@ const uint32_t kCollisionAttributeJustEvasion = 0b01 << 3;
 /// 当たり判定の形状
 // OBB
 const uint32_t kCollisionOBB = 0b01 << 4;
+const uint32_t kCollisionNone = 0b01 << 5;
 
 // 立方体
 struct cAABB {

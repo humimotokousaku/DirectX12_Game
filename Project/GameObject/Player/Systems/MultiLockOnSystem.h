@@ -83,7 +83,7 @@ public:// GetterとSetter
 
 private:// 定数
 	// 同時ロックオン可能数
-	const int kMaxLockOnNum = 10;
+	const int kMaxLockOnNum = 20;
 
 	// 弾の発射間隔
 	const int kShotInterval = 6;
@@ -118,8 +118,14 @@ private:
 	// 全敵のIDリスト
 	std::vector<int>* enemyIdList_;
 
+	// 経過時間
+	float currentFrame_;
+
+	// 一度に発射した回数
+	int shotNum_;
+	// 一度に発射する予定の弾数
+	int shotGoal_;
+
 	// 弾を発射しているか
 	bool isShot_;
-
-	float currentFrame_;
 };

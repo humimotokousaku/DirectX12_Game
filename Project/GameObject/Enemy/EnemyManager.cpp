@@ -50,6 +50,7 @@ void EnemyManager::Initialize() {
 	spawnParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
 	hitParticleTextures_.particle = textureManager_->GetSrvIndex("Textures", "deadParticle4.png");
 	hitParticleTextures_.dissolve = textureManager_->GetSrvIndex("Textures", "noise.png");
+	bulletTexture_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
 	// テクスチャ読み込み
@@ -152,7 +153,7 @@ void EnemyManager::Draw() {
 	}
 	// 通常敵の弾
 	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Draw();
+		bullet->Draw(bulletTexture_);
 	}
 }
 
@@ -288,7 +289,7 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	// 敵モデルを追加
 	enemy->AddModel(models_["EnemyBody"]);
 	// ビームのモデルを追加
-	enemy->AddModel(models_["EnemyBullet"]);
+	enemy->AddModel(models_["EnemyBeam"]);
 	// 必要なアドレスを設定
 	enemy->SetPlayer(player_);
 	enemy->SetCamera(camera_);

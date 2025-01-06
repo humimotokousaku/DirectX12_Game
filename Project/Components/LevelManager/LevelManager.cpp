@@ -213,6 +213,13 @@ void LevelManager::LoadJSONFile(const std::string fileName, Camera* camera) {
 			// 当たり判定の大きさを代入
 			newObject->collider->SetOBBLength(objectData.colliderSize);
 		}
+		// 当たり判定が設定されていないオブジェクト
+		else {
+			newObject->collider->SetCollisionPrimitive(kCollisionNone);
+			newObject->collider->SetCollisionAttribute(kCollisionNone);
+			newObject->collider->SetCollisionMask(~kCollisionNone);
+			newObject->collider->SetIsActive(false);
+		}
 
 		levelObjects_.push_back(newObject);
 	}

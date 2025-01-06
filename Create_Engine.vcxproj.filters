@@ -143,6 +143,15 @@
     <Filter Include="Project\GameObject\DeadParticles">
       <UniqueIdentifier>{2361ba14-de5a-4d6e-8705-5db8d0879250}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Project\GameObject\Player\Bullet">
+      <UniqueIdentifier>{307cacdd-6a1b-4e3a-864a-1723ccccb0b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Player\Bullet\State">
+      <UniqueIdentifier>{e9f295f6-6324-4fad-a51a-d4f3662cef4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project\GameObject\Player\System">
+      <UniqueIdentifier>{4b8ec444-1e88-427b-ad02-923b1e109bbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\ImGui\imgui.cpp">
@@ -391,9 +400,6 @@
     <ClCompile Include="Project\GameObject\Player\Player.cpp">
       <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\PlayerBullet.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp">
       <Filter>Project\GameObject\Camera\FollowCamera</Filter>
     </ClCompile>
@@ -455,20 +461,8 @@
     <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp">
       <Filter>Project\GameObject\Skydome</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\JustEvasionSystem.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Project\GameSystem.cpp">
       <Filter>Project</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\HitSystem.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\MultiLockOnSystem.cpp">
-      <Filter>Project\GameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="Project\Event\TitleEvent.cpp">
       <Filter>Project\Event</Filter>
@@ -500,12 +494,30 @@
     <ClCompile Include="Engine\Pso\SpritePSO.cpp">
       <Filter>Engine\Pso</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\TrailObject.cpp">
-      <Filter>Project\GameObject</Filter>
+    <ClCompile Include="Project\GameObject\Player\Bullet\PlayerBullet.cpp">
+      <Filter>Project\GameObject\Player\Bullet</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.cpp" />
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.cpp" />
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.cpp">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.cpp">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.cpp">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Systems\MultiLockOnSystem.cpp">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Systems\JustEvasionSystem.cpp">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Systems\HitSystem.cpp">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -778,9 +790,6 @@
     <ClInclude Include="Project\GameObject\Score\Score.h">
       <Filter>Project\GameObject\Score</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\PlayerBullet.h">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Player\Player.h">
       <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
@@ -832,20 +841,8 @@
     <ClInclude Include="Project\GameObject\Skydome\Skydome.h">
       <Filter>Project\GameObject\Skydome</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\JustEvasionSystem.h">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameSystem.h">
       <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\HitSystem.h">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\MultiLockOnSystem.h">
-      <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="Project\Event\TitleEvent.h">
       <Filter>Project\Event</Filter>
@@ -883,12 +880,30 @@
     <ClInclude Include="Engine\PostProcess\PostEffectStructs.h">
       <Filter>Engine\PostProcess</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\TrailObject.h">
-      <Filter>Project\GameObject</Filter>
+    <ClInclude Include="Project\GameObject\Player\Bullet\PlayerBullet.h">
+      <Filter>Project\GameObject\Player\Bullet</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.h" />
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.h" />
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h" />
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.h">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.h">
+      <Filter>Project\GameObject\Player\Bullet\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Systems\MultiLockOnSystem.h">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Systems\JustEvasionSystem.h">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Systems\HitSystem.h">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
+      <Filter>Project\GameObject\Player\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
