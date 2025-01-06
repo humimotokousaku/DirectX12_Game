@@ -22,7 +22,6 @@ void TitleEvent::Initialize() {
 	modelManager_->LoadModel("Models", "block.obj");
 	modelManager_->LoadModel("Models", "Bob.obj");
 	modelManager_->LoadModel("Models", "Spitfire.obj");
-	modelManager_->LoadModel("Models", "boostFire.obj");
 	modelManager_->LoadModel("Level", "tail.obj");
 	modelManager_->LoadModel("Level", "skydome.obj");
 

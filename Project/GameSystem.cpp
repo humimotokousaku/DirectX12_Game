@@ -36,21 +36,23 @@ void GameSystem::Initialize() {
 	modelManager_->LoadModel("Models", "block.obj");
 	modelManager_->LoadModel("Models", "Bob.obj");
 	modelManager_->LoadModel("Models", "Spitfire.obj");
-	modelManager_->LoadModel("Models", "boostFire.obj");
+	modelManager_->LoadModel("Models", "bullet.obj");
 	modelManager_->LoadModel("Level", "tail.obj");
 	modelManager_->LoadModel("Level", "skydome.obj");
 
 	// 自機
 	AddModel("PlayerBody", modelManager_->GetModel("Models", "Bob.obj"));
 	// 自機の弾
-	AddModel("PlayerBullet", modelManager_->GetModel("Models", "block.obj"));
+	AddModel("PlayerBullet", modelManager_->GetModel("Models", "bullet.obj"));
 	// デバッグ用
 	// ロックオン時のマーカー用オブジェクト
 	AddModel("RockOnObject", modelManager_->GetModel("Models", "block.obj"));
 	// 通常敵のモデル
 	AddModel("EnemyBody", modelManager_->GetModel("Models", "Spitfire.obj"));
 	// 通常敵の弾
-	AddModel("EnemyBullet", modelManager_->GetModel("Models", "block.obj"));
+	AddModel("EnemyBullet", modelManager_->GetModel("Models", "bullet.obj"));
+	// 通常敵のビーム
+	AddModel("EnemyBeam", modelManager_->GetModel("Models", "block.obj"));
 	// 天球
 	AddModel("Skydome", modelManager_->GetModel("Level", "skydome.obj"));
 
@@ -93,6 +95,9 @@ void GameSystem::Initialize() {
 	enemyManager_.AddModel("EnemyBody",models_["EnemyBody"]);
 	// 通常敵の弾
 	enemyManager_.AddModel("EnemyBullet",models_["EnemyBullet"]);
+	// 通常敵のビーム
+	enemyManager_.AddModel("EnemyBeam",models_["EnemyBeam"]);
+
 	// アドレスを設定
 	enemyManager_.SetCamera(followCamera_.GetCamera());
 	enemyManager_.SetRailCamera(&railCamera_);

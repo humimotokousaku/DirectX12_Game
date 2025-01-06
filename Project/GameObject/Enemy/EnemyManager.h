@@ -179,7 +179,7 @@ private:// プライベートなメンバ変数
 	// 音
 	Audio* audio_;
 
-
+	// ビルボード用のカメラ
 	std::unique_ptr<Camera> billboardCamera_;
 	// カメラのアドレス
 	Camera* camera_;
@@ -202,7 +202,6 @@ private:// プライベートなメンバ変数
 	std::vector<Particles*> hitParticles_;
 	// 死亡パーティクル
 	std::list<DeadParicles*> deadParicles_;
-	DeadParicles* deadPariclesIdol_;
 
 	// 使用するモデル
 	std::map<std::string, Model*> models_;
@@ -213,6 +212,8 @@ private:// プライベートなメンバ変数
 	ParticleTextures hitParticleTextures_;
 	// 死亡時のパーティクル
 	std::vector<uint32_t> deadParticleTextures_;
+	// 弾のテクスチャ
+	uint32_t bulletTexture_;
 
 	// 死亡SE
 	uint32_t deadSE_;

@@ -39,15 +39,13 @@ public:
 	/// <param name="gameObject">ゲームオブジェクトのアドレス</param>
 	void AddGameObject(Object3D* gameObject) { gameObjectList_.push_back(gameObject); }
 
+	void ClearGameObjectList(Object3D* gameObject) { gameObjectList_.remove(gameObject); }
+
 	/// <summary>
 	/// 自機のアドレスを設定
 	/// </summary>
 	/// <param name="player">自機のアドレス</param>
 	void SetPlayer(Player* player) { player_ = player; }
-
-	void ClearGameObjectList(Object3D* gameObject) {
-		gameObjectList_.remove(gameObject);
-	}
 
 private:
 	// ゲームオブジェクトリスト
@@ -56,6 +54,7 @@ private:
 	// 自機のアドレス
 	Player* player_;
 
+	// 描画範囲
 	float radius_ = 1000.0f;
 };
 

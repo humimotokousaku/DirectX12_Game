@@ -11,10 +11,6 @@
 /// </summary>
 class EnemyBullet {
 public:// パブリックなメンバ関数
-	///
-	/// Default Method
-	/// 
-
 	EnemyBullet() = default;
 	~EnemyBullet();
 
@@ -33,11 +29,7 @@ public:// パブリックなメンバ関数
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw();
-
-	///
-	/// User Method
-	/// 
+	void Draw(uint32_t textureNum);
 
 	///
 	/// Getter

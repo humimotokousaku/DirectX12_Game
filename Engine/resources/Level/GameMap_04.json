@@ -226,29 +226,6 @@
         },
         {
             "type": "MESH",
-            "name": "6Story_Stack.018",
-            "transform": {
-                "translation": [
-                    -103.0,
-                    -388.6292724609375,
-                    40.0
-                ],
-                "rotation": [
-                    0.0,
-                    -0.0,
-                    0.0
-                ],
-                "scaling": [
-                    15.0,
-                    15.0,
-                    15.0
-                ]
-            },
-            "skydome": 0,
-            "file_name": "Stack.obj"
-        },
-        {
-            "type": "MESH",
             "name": "6Story_Stack.017",
             "transform": {
                 "translation": [

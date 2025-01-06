@@ -75,9 +75,9 @@ void EnemyBullet::Update() {
 	}
 }
 
-void EnemyBullet::Draw() {
+void EnemyBullet::Draw(uint32_t textureNum) {
 	// モデルの描画
-	object3d_->Draw();
+	object3d_->Draw(textureNum);
 }
 
 void EnemyBullet::OnCollision(Collider* collider) {

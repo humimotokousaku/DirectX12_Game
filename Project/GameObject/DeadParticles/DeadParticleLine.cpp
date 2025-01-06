@@ -2,10 +2,10 @@
 #include "GameTime.h"
 
 DeadParticleLine::~DeadParticleLine() {
-	for (DeadParticle* deadParticle : deadparticleLine_) {
+	for (DeadParticle* deadParticle : deadParticle_) {
 		delete deadParticle;
 	}
-	deadparticleLine_.clear();
+	deadParticle_.clear();
 }
 
 void DeadParticleLine::Initialize(Camera* camera, const Vector3& velocity, const Vector3& worldPos) {
@@ -24,7 +24,7 @@ void DeadParticleLine::Initialize(Camera* camera, const Vector3& velocity, const
 		deadparticle->SetCamera(camera_);
 		deadparticle->SetDeadParticleTextures(deadParticleTextures_);
 		deadparticle->Initialize(emitterData_.worldTransform.GetWorldPosition(), Vector3{ 0,0,0 });
-		deadparticleLine_.push_back(deadparticle);
+		deadParticle_.push_back(deadparticle);
 	}
 }
 
@@ -37,7 +37,7 @@ void DeadParticleLine::Update() {
 
 
 void DeadParticleLine::Draw(ViewProjection viewProjection) {
-	for (DeadParticle* deadParticle : deadparticleLine_) {
+	for (DeadParticle* deadParticle : deadParticle_) {
 		deadParticle->Draw(viewProjection);
 	}
 }
@@ -45,7 +45,7 @@ void DeadParticleLine::Draw(ViewProjection viewProjection) {
 void DeadParticleLine::CreateParticle() {
 	if (!emitterData_.isActive) { return; }
 
-	for (DeadParticle* deadParticle : deadparticleLine_) {
+	for (DeadParticle* deadParticle : deadParticle_) {
 		if (!deadParticle->GetIsActive()) {
 			deadParticle->SetIsActive(true);
 			deadParticle->SetWorldPosition(emitterData_.worldTransform.GetWorldPosition());
@@ -59,7 +59,7 @@ void DeadParticleLine::ParticleUpdate() {
 	CreateParticle();
 
 	// パーティクルの更新処理
-	for (DeadParticle* deadParticle : deadparticleLine_) {
+	for (DeadParticle* deadParticle : deadParticle_) {
 		deadParticle->Update();
 	}
 	// 全てのパーティクルアニメーションが終了しているか
@@ -80,7 +80,7 @@ void DeadParticleLine::ParticleUpdate() {
 }
 
 bool DeadParticleLine::ReleaseCheckParticle() {
-	for (DeadParticle* deadParticle : deadparticleLine_) {
+	for (DeadParticle* deadParticle : deadParticle_) {
 		if (!deadParticle->GetIsFinished()) { return false; }
 	}
 	return true;
