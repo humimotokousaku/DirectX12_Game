@@ -19,6 +19,7 @@ void FixedTurret::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	// 敵のテクスチャを割り振る
 	enemyTexture_ = TextureManager::GetInstance()->GetSrvIndex("Textures", "Spitfire_Purple.png");
 
+	// 機体オブジェクトを生成
 	object3d_->SetCamera(camera_);
 	object3d_->SetModel(models_[0]);
 	object3d_->worldTransform.translate = pos;

@@ -3,6 +3,7 @@
 #include "PostEffectManager.h"
 #include "BaseEnemy.h"
 #include "PlayerConfig.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// マルチロックオン機能
@@ -62,31 +63,30 @@ private:// プライベートなメンバ関数
 	/// <returns></returns>
 	bool IsObjectInScreen(Vector3 worldPos);
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="objectPosition"></param>
-	/// <returns></returns>
-	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
-
 public:// GetterとSetter
+#pragma region Setter
+	// レールカメラのアドレスを設定
+	void SetRailCamera(RailCamera* railCamera) { railCamera_ = railCamera; }
 	// 全敵のアドレスを設定
 	void SetEnemyList(std::list<BaseEnemy*>* enemys) { enemys_ = enemys; }
 	// 全敵のIDを設定
 	void SetEnemyIdList(std::vector<int>* enemyIdList) { enemyIdList_ = enemyIdList; }
+#pragma endregion
 
+#pragma region Getter
 	/// <summary>
 	/// ロックオン可能状態かを取得する
 	/// </summary>
 	/// <returns></returns>
 	const bool& GetIsActive() { return player_->GetBulletGauge().isMax; }
+#pragma endregion
 
 private:// 定数
 	// 同時ロックオン可能数
 	const int kMaxLockOnNum = 20;
 
 	// 弾の発射間隔
-	const int kShotInterval = 6;
+	const int kShotInterval = 3;
 
 private:// エンジン機能
 	// ポストエフェクト
@@ -99,6 +99,8 @@ private:// エンジン機能
 private:
 	// カメラのアドレス
 	Camera* camera_;
+	// 追従カメラのアドレス
+	RailCamera* railCamera_;
 	// 全ての敵
 	std::list<BaseEnemy*>* enemys_;
 	// ゲームシステム

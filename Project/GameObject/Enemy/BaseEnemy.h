@@ -58,10 +58,10 @@ public:
 	Vector3 GetMoveSpeed() { return moveSpeed_; }
 	// 完了ならtrueを返す
 	bool IsDead() const { return isDead_; }
-	// 活動可能状態かを取得
+	// 機能可能状態かを取得
 	bool GetIsActive() { return isActive_; }
-	// ロックオンできる状態か
-	bool GetIsLockOnAvailable() { return isLockOnAvailable_; }
+	// 機能停止可能かを取得
+	bool GetIsStopActive() { return isStopActive_; }
 	// 移動中かを取得
 	bool GetIsMove() {
 		// 終了している
@@ -114,6 +114,11 @@ public:
 		// 描画しない
 		object3d_->SetIsActive(isActive);
 	}
+
+	/// <summary>
+	/// 機能停止可能かを設定
+	/// </summary>
+	void SetIsStopActive(const bool& isActive) { isStopActive_ = isActive; }
 
 	/// <summary>
 	/// 親子関係の設定
@@ -199,8 +204,8 @@ protected:
 	// カメラの後ろ側にいるなら描画と機能を停止
 	// falseなら機能停止
 	bool isActive_ = true;
-	// ロックオンのできる敵か
-	bool isLockOnAvailable_ = true;
+	// 機能停止可能フラグ
+	bool isStopActive_ = true;
 	// 死亡フラグ
 	bool isDead_ = false;
 };

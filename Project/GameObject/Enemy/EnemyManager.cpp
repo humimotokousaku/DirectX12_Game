@@ -53,8 +53,8 @@ void EnemyManager::Initialize() {
 	bulletTexture_ = textureManager_->GetSrvIndex("Textures/DefaultTexture", "white.png");
 	// 死亡SEの読み込み
 	deadSE_ = audio_->SoundLoadWave("Audio/dead.wav");
-	// テクスチャ読み込み
 
+	// テクスチャ読み込み
 	for (int i = 1; i <= kAnimationNum / kAnimationSpeed; i++) {
 		std::string num = std::to_string(i).c_str();
 		for (int animSpeed = 0; animSpeed < kAnimationSpeed; animSpeed++) {
@@ -62,6 +62,7 @@ void EnemyManager::Initialize() {
 		}
 	}
 
+	// 爆発パーティクル用のビルボードカメラ
 	billboardCamera_ = std::make_unique<Camera>();
 	billboardCamera_->Initialize();
 	billboardCamera_->viewProjection_.matProjection = MakeIdentity4x4();
@@ -72,9 +73,6 @@ void EnemyManager::Initialize() {
 		// 死亡パーティクルを生成
 		CreateDeadParticle(Vector3{ 0,0,0 });
 	}
-
-	cameraMoveVel_ = railCamera_->GetDirectionVelocity();
-	railCameraProgress_ = railCamera_->GetRailPercentage();
 }
 
 void EnemyManager::Update() {
@@ -132,14 +130,6 @@ void EnemyManager::Update() {
 		return false;
 		});
 
-	// 出現時のパーティクル
-	for (Particles* particle : spawnParticles_) {
-		particle->Update();
-	}
-	// 被弾時のパーティクル
-	for (Particles* hitParticle : hitParticles_) {
-		hitParticle->Update();
-	}
 	// 死亡時のパーティクル
 	for (DeadParicles* deadParicles : deadParicles_) {
 		deadParicles->Update();
@@ -158,14 +148,6 @@ void EnemyManager::Draw() {
 }
 
 void EnemyManager::DrawParticle() {
-	//// 出現時のパーティクル
-	//for (Particles* particle : spawnParticles_) {
-	//	particle->Draw();
-	//}
-	//// 被弾時のパーティクル
-	//for (Particles* hitParticle : hitParticles_) {
-	//	hitParticle->Draw();
-	//}
 	// 死亡時のパーティクル
 	for (DeadParicles* deadParicles : deadParicles_) {
 		deadParicles->Draw(billboardCamera_->viewProjection_);
@@ -185,7 +167,7 @@ void EnemyManager::CheckSpawn() {
 		// すでに出現している
 		if (spawnPoint.isActive) { continue; }
 		// 指定のカメラ進行度まで達していない
-		if ((*railCameraProgress_) <= spawnPoint.percentage / 100.0f) { continue; }
+		if ((railCamera_->GetRailPercentage()) <= spawnPoint.percentage / 100.0f) { continue; }
 
 		// 通常の敵
 		if (spawnPoint.type == "NORMAL") {
@@ -257,7 +239,7 @@ void EnemyManager::SpawnFixedTurret(Vector3 pos, Vector3 rotate, std::vector<Vec
 	// 移動ルート
 	enemy->SetTravelRouteControlPoints(controlPoints);
 
-	enemy->SetParent(railCamera_->GetWorldTransform_P());
+	enemy->SetParent(&railCamera_->GetWorldTransform());
 	// 初期化
 	enemy->Initialize(pos, rotate, id_);
 
@@ -320,47 +302,19 @@ void EnemyManager::SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vecto
 	spawnParticles_.push_back(particle);
 }
 
-bool EnemyManager::IsObjectInOppositeDirection(const Vector3& objectPosition) {
-	// カメラの角度方向ベクトルに変換
-	Vector3 offset{ 0, 0, 1 };
-	// 回転行列を合成
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.parent_->rotate);
-	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, rotateMatrix);
-	offset = Normalize(offset);
-
-	// 自機と敵の方向ベクトルを算出
-	Vector3 p2eDirVel = Normalize(objectPosition - camera_->GetWorldPosition());
-
-	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
-	if (dotXZ < 0.0f) {
-		return false;
-	}
-	//float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
-	//float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
-	//float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
-	//angleXZ = Radian2Degree(angleXZ);
-
-	//if ((angleXZ) < (90.0f)) {
-	//	return false;
-	//}
-	// カメラの映らないところにいる
-	return true;
-}
-
 void EnemyManager::CheckActiveState() {
 	for (BaseEnemy* enemy : enemys_) {
-		// カメラの後ろなら敵の描画と機能停止
-		if (IsObjectInOppositeDirection(enemy->GetWorldPosition())) {
-			//enemy->SetIsActive(false);
-		}
+		// カメラの正面に敵がいるなら処理しない
+		if (!IsObjectInOppositeDirection(enemy->GetWorldPosition(), railCamera_->GetWorldTransform().worldPos, railCamera_->GetDirectionVelocity())) { continue; }
+		// 機能停止可能でないなら処理しない
+		if (!enemy->GetIsStopActive()) { continue; }
+		enemy->SetIsActive(false);
 	}
 
 	for (EnemyBullet* bullet : enemyBullets_) {
 		// カメラの後ろなら敵の描画と機能停止
-		if (IsObjectInOppositeDirection(bullet->GetWorldPosition())) {
-			//bullet->SetIsDead(true);
-		}
+		if (!IsObjectInOppositeDirection(bullet->GetWorldPosition(), railCamera_->GetWorldTransform().worldPos, railCamera_->GetDirectionVelocity())) { continue; }
+		bullet->SetIsDead(true);
 	}
 }
 

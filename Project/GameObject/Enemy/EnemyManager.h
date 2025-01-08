@@ -73,8 +73,6 @@ private:
 	/// <param name="rotate">回転角</param>
 	void SpawnBeamEnemy(Vector3 pos, Vector3 rotate, std::vector<Vector3> controlPoints);
 
-	// カメラの後ろに敵が行ってしまったら機能停止
-	bool IsObjectInOppositeDirection(const Vector3& objectPosition);
 	/// <summary>
 	/// 全ての敵弾がカメラの後ろにいるかを調べる
 	/// </summary>
@@ -138,16 +136,6 @@ public:
 	/// </summary>
 	/// <param name="player"></param>
 	void SetPlayer(Player* player) { player_ = player; }
-	/// <summary>
-	/// カメラの進行度を設定
-	/// </summary>
-	/// <param name="percentage">カメラの進行度[%]</param>
-	void SetRailCameraProgress(float* percentage) { railCameraProgress_ = percentage; }
-	/// <summary>
-	/// カメラの移動ベクトルを設定
-	/// </summary>
-	/// <param name="cameraMoveVel">カメラの移動ベクトル</param>
-	void SetCameraMoveVel(Vector3* cameraMoveVel) { cameraMoveVel_ = cameraMoveVel; }
 
 	/// <summary>
 	/// 出現する場所のリストを設定
@@ -230,11 +218,6 @@ private:// プライベートなメンバ変数
 
 	// 管理番号リスト
 	std::vector<int> idList_;
-
-	// レールカメラの進行度
-	float* railCameraProgress_;
-	// カメラの移動ベクトル
-	const Vector3* cameraMoveVel_;
 
 	// 敵の管理番号を与える
 	int id_;

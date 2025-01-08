@@ -78,12 +78,6 @@ void FollowCamera::HitUpdate() {
 	// 被弾演出中じゃないならreturn
 	if (!player_->GetIsHit()) { return; }
 
-	// 画面の揺れを行う
-	if (hitShake_->GetIsEnd()) {
-		hitShake_->Reset();
-		shakeRangeAnim_.ResetData();
-	}
-
 	shakeRangeAnim_.SetIsStart(true);
 	hitShake_->SetIsActive(true);
 

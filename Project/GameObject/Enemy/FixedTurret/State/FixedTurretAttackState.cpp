@@ -29,6 +29,8 @@ void FixedTurretAttackState::Initialize(FixedTurret* enemy, Player* player) {
 	shotCount_ = 0;
 	currentFrame_ = kMaxFollowTime;
 	FireAndResetTimer();
+	// 機能停止ができない状態にする
+	enemy->SetIsStopActive(false);
 }
 
 void FixedTurretAttackState::Update(FixedTurret* enemy) {

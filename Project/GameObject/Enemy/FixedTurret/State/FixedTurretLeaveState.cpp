@@ -12,6 +12,9 @@ void FixedTurretLeaveState::Initialize(FixedTurret* enemy, Player* player) {
 	leaveAnim_.SetAnimData(&leaveVel_, Vector3{ 0,0,0 }, kMaxLeaveVelocity, 40, Easings::EaseInExpo);
 	leaveAnim_.SetAnimData(&leaveVel_, Vector3{ 0,0,0 }, Vector3{0,0,0}, 180, Easings::EaseInExpo);
 	leaveAnim_.SetIsStart(true);
+	
+	// 機能停止することを可能にする
+	enemy->SetIsStopActive(true);
 }
 
 void FixedTurretLeaveState::Update(FixedTurret* enemy) {

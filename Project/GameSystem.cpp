@@ -57,8 +57,8 @@ void GameSystem::Initialize() {
 	AddModel("Skydome", modelManager_->GetModel("Level", "skydome.obj"));
 
 	// Blender
-	//levelManager_->LoadJSONFile("TestGoalMap.json", &camera_);
-	levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	//levelManager_->LoadJSONFile("GameMap_04.json", &camera_);
+	levelManager_->LoadJSONFile("GameMap_06.json", &camera_);
 #pragma endregion
 
 	// スコアの生成
@@ -110,11 +110,12 @@ void GameSystem::Initialize() {
 	// マルチロックオン機能
 	multiLockOnSystem_ = std::make_unique<MultiLockOnSystem>();
 	multiLockOnSystem_->Initialize(&player_, followCamera_.GetCamera(), enemyManager_.GetEnemyList_P(), this, models_["RockOnObject"]);
+	multiLockOnSystem_->SetRailCamera(&railCamera_);
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList_P());
 	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList_P());
 
 	// 天球の生成
-	skydome_.Initialize(models_["Skydome"], followCamera_.GetCamera(), railCamera_.GetWorldTransform_P());
+	skydome_.Initialize(models_["Skydome"], followCamera_.GetCamera(), &railCamera_.GetWorldTransform());
 
 	// スタート演出
 	startEvent_ = std::make_unique<StartEvent>();

@@ -98,3 +98,6 @@ float Degree2Radian(float degree);
 
 // 弧度から度数に変換
 float Radian2Degree(float radian);
+
+// カメラの正面方向にオブジェクトがいるかを検知
+bool IsObjectInOppositeDirection(const Vector3& objectPosition, const Vector3& cameraPosition, const Vector3& cameraDirection);

@@ -63,11 +63,10 @@ public:// GetterとSetter
 	Camera* GetCamera() { return camera_.get(); }
 	// カメラのワールド座標を取得
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
-	WorldTransform* GetWorldTransform_P() { return &camera_->worldTransform_; }
 	// 方向ベクトルを取得
-	Vector3* GetDirectionVelocity() { return &velocity_; }
+	Vector3 GetDirectionVelocity() { return velocity_; }
 	// レールの何パーセント進んだかを取得
-	float* GetRailPercentage() { return &t_; }
+	float GetRailPercentage() { return t_; }
 	// 視野角を取得
 	float* GetFov() { return &camera_->viewProjection_.fovAngleY; }
 	// レールカメラが終点についたかを取得
