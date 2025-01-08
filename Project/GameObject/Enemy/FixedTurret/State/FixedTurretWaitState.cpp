@@ -9,6 +9,8 @@ FixedTurretWaitState::FixedTurretWaitState(FixedTurret* enemy, Player* player) {
 void FixedTurretWaitState::Initialize(FixedTurret* enemy, Player* player) {
 	enemy_ = enemy;
 	player_ = player;
+	// 機能停止ができない状態にする
+	enemy->SetIsStopActive(false);
 }
 
 void FixedTurretWaitState::Update(FixedTurret* enemy) {

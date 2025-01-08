@@ -88,3 +88,16 @@ float Radian2Degree(float radian) {
 	float result = radian * 180 / (float)std::numbers::pi;
 	return result;
 }
+
+bool IsObjectInOppositeDirection(const Vector3& objectPosition, const Vector3& cameraPosition, const Vector3& cameraDirection) {
+	Vector3 cameraToEnemyDirection = Normalize(cameraPosition - objectPosition);
+	float dot = Dot(Normalize(cameraDirection), cameraToEnemyDirection);
+
+	// カメラの正面方向にいる
+	if (dot < 0.0f) {
+		return false;
+	}
+
+	// カメラの背後にいる
+	return true;
+}

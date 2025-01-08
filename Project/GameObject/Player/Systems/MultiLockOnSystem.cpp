@@ -104,8 +104,8 @@ void MultiLockOnSystem::Shot() {
 		currentFrame_ += GameTimer::GetInstance()->GetTimeScale();
 	}
 
-	// 全てのロックオン対象に向けて弾を撃ったらまた撃てるようにする
-	if (shotNum_ >= shotGoal_) {
+	// 全てのロックオン対象に向けて弾を撃つorまた撃てるようにする
+	if (shotNum_ >= shotGoal_ || multiLockOnDatas_.empty()) {
 		isShot_ = false;
 		currentFrame_ = 0;
 		shotNum_ = 0;
@@ -113,7 +113,7 @@ void MultiLockOnSystem::Shot() {
 	}
 
 	// 音のこもり具合
-	//audio_->SetMuffle(shotSE_, 1.0f);
+	audio_->SetMuffle(shotSE_, 1.0f);
 }
 
 void MultiLockOnSystem::LockOnUpdate() {
@@ -126,7 +126,7 @@ void MultiLockOnSystem::LockOnUpdate() {
 		// ロックオン数が最大数に達していない場合のみ追加
 		if (multiLockOnDatas_.size() >= kMaxLockOnNum) { continue; }
 		// 自機の正面方向に敵がいないなら終了
-		if (IsObjectInOppositeDirection(obj->GetWorldPosition())) { continue; }
+		if (IsObjectInOppositeDirection(obj->GetWorldPosition(), railCamera_->GetWorldTransform().worldPos, railCamera_->GetDirectionVelocity())) { continue; }
 		// 画面内にいないなら終了
 		if (!IsObjectInScreen(obj->GetWorldPosition())) { continue; }
 		// ロックオンリストに登録しているなら処理を行わない
@@ -174,7 +174,7 @@ void MultiLockOnSystem::EraseLockedList() {
 			if (enemyItr->GetId() != multiLockOnDatas_[i].enemyId) { continue; }
 
 			// 画面内に敵がいない
-			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition())) {
+			if (!IsObjectInScreen(enemyItr->GetWorldPosition()) || IsObjectInOppositeDirection(enemyItr->GetWorldPosition(), railCamera_->GetWorldTransform().worldPos, railCamera_->GetDirectionVelocity())) {
 				// ロックオン対象のIDを消す
 				lockedEnemyIdList_.erase(std::remove(lockedEnemyIdList_.begin(), lockedEnemyIdList_.end(), enemyItr->GetId()), lockedEnemyIdList_.end());
 				multiLockOnDatas_.erase(multiLockOnDatas_.begin() + i);
@@ -238,28 +238,4 @@ bool MultiLockOnSystem::IsObjectInScreen(Vector3 worldPos) {
 		return true;
 	}
 	return false;
-}
-
-bool MultiLockOnSystem::IsObjectInOppositeDirection(const Vector3& objectPosition) {
-	// カメラの角度方向ベクトルに変換
-	Vector3 offset{ 0, 0, 1 };
-	// 回転行列を合成
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(camera_->worldTransform_.parent_->rotate);
-	// 自機のワールド行列の回転を反映する
-	offset = TransformNormal(offset, rotateMatrix);
-
-	// 自機と敵の方向ベクトルを算出
-	Vector3 p2eDirVel = Normalize(objectPosition - camera_->worldTransform_.translate);
-
-	float dotXZ = Dot(Vector2{ offset.x,offset.z }, Vector2{ p2eDirVel.x,p2eDirVel.z });
-	float magnitude1XZ = Length(Vector2{ offset.x,offset.z });
-	float magnitude2XZ = Length(Vector2{ p2eDirVel.x,p2eDirVel.z });
-	float angleXZ = std::acos(dotXZ / (magnitude1XZ * magnitude2XZ));
-	angleXZ = Radian2Degree(angleXZ);
-
-	if ((angleXZ) < (90.0f)) {
-		return false;
-	}
-	// カメラの映らないところにいる
-	return true;
 }
