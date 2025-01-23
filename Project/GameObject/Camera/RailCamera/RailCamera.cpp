@@ -184,12 +184,6 @@ void RailCamera::ImGuiParameter() {
 	ImGui::DragFloat3("rotation", &camera_->worldTransform_.rotate.x, 0.1f);
 	// Fov
 	if (ImGui::TreeNode("FovData")) {
-		ImGui::DragFloat("Current", &camera_->viewProjection_.fovAngleY, 0.1f, -30, 30);
-		ImGui::DragFloat("Boost", &kMaxBoostFovIncrease, 0.1f, -60, 60);
-		ImGui::DragFloat("NormalEvasion", &kMaxEvasionFovIncrease, 0.1f, -30, 30);
-		ImGui::DragFloat("JustEvasion", &kMaxJustEvasionFovIncrease, 0.1f, -30, 30);
-		ImGui::TreePop();
-
 		// リセットボタンを作成
 		if (ImGui::Button("Regist")) {
 			// 加速中のfovアニメーション
@@ -199,6 +193,7 @@ void RailCamera::ImGuiParameter() {
 			// ジャスト回避時のFovアニメーション
 			justEvasionFovAnim_.SetFirstAnimData(&justEvasionFov_, 0.0f, kMaxJustEvasionFovIncrease, 2, Easings::EaseOutExpo);
 		}
+		ImGui::TreePop();
 	}
 	// 速度
 	if (ImGui::TreeNode("VelocityData")) {
@@ -206,8 +201,6 @@ void RailCamera::ImGuiParameter() {
 
 		if (ImGui::TreeNode("MoveSpeed")) {
 			ImGui::DragFloat("Current", &moveSpeed_, 0.0f, -100, 100);
-			ImGui::DragFloat("Normal", &kNormalMoveSpeed, 0.0f, -100, 100);
-			ImGui::DragFloat("Boost", &kBoostMoveSpeed, 0.0f, -100, 100);
 			ImGui::TreePop();
 		}
 		ImGui::TreePop();

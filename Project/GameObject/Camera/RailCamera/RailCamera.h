@@ -88,16 +88,16 @@ public:// パブリックなメンバ変数
 	static const size_t segmentCount = 500;
 
 	// 加速中のfov増加量の最大値
-	float kMaxBoostFovIncrease = 30.0f;
+	const float kMaxBoostFovIncrease = 30.0f;
 	// 回避中のfov増加量の最大値
-	float kMaxEvasionFovIncrease = -3.0f;
+	const float kMaxEvasionFovIncrease = -3.0f;
 	// ジャスト回避時のfov増加量の最大値
-	float kMaxJustEvasionFovIncrease = -20.0f;
+	const float kMaxJustEvasionFovIncrease = -20.0f;
 
 	// 通常の移動速度
-	float kNormalMoveSpeed = 0.0002f;
+	const float kNormalMoveSpeed = 0.0006f;
 	// 加速時の移動速度
-	float kBoostMoveSpeed = 0.00028f;
+	const float kBoostMoveSpeed = 0.0008f;
 
 private:
 	// カメラ
