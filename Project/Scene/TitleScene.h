@@ -31,4 +31,7 @@ private:
 
 	// UI
 	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+
+	// ボタンの拡縮アニメーション
+	Animation buttonScalingAnim_;
 };

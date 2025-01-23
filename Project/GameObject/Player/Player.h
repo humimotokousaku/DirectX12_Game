@@ -48,14 +48,15 @@ public:// パブリックなメンバ関数
 	/// </summary>
 	void DrawUI();
 
-	///
-	/// User Method
-	/// 
-	
 	/// <summary>
 	/// タイトル演出時の挙動
 	/// </summary>
 	void TitleEffect(bool& isEnd);
+	/// <summary>
+	/// ステージ開始演出時の挙動
+	/// </summary>
+	/// <param name="moveVel">自機の進む方向</param>
+	void StartStageEffect(const Vector3& moveVel);
 	/// <summary>
 	/// クリア演出時の挙動
 	/// </summary>

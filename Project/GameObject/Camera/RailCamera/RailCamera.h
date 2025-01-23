@@ -15,7 +15,7 @@ public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(std::vector<Vector3> controlPoints, Player* player);
+	void Initialize(const std::vector<Vector3>& controlPoints, Player* player);
 
 	/// <summary>
 	/// 更新処理
@@ -65,6 +65,8 @@ public:// GetterとSetter
 	const WorldTransform& GetWorldTransform() { return camera_->worldTransform_; }
 	// 方向ベクトルを取得
 	Vector3 GetDirectionVelocity() { return velocity_; }
+	// 任意の制御点の座標を取得
+	Vector3 GetControlPointPos(const int& index) { return controlPoints_[index]; }
 	// レールの何パーセント進んだかを取得
 	float GetRailPercentage() { return t_; }
 	// 視野角を取得
@@ -75,10 +77,10 @@ public:// GetterとSetter
 
 #pragma region Setter
 	///カメラの座標を設定
-	void SetTranslation(Vector3 pos) { camera_->worldTransform_.translate = pos; }
+	void SetTranslation(const Vector3& pos) { camera_->worldTransform_.translate = pos; }
 	
 	// 移動中かを設定
-	void SetIsMove(bool isMove) { isMove_ = isMove; }
+	void SetIsMove(const bool& isMove) { isMove_ = isMove; }
 #pragma endregion
 
 public:// パブリックなメンバ変数
@@ -93,9 +95,9 @@ public:// パブリックなメンバ変数
 	float kMaxJustEvasionFovIncrease = -20.0f;
 
 	// 通常の移動速度
-	float kNormalMoveSpeed = 0.6f;
+	float kNormalMoveSpeed = 0.0002f;
 	// 加速時の移動速度
-	float kBoostMoveSpeed = 0.8f;
+	float kBoostMoveSpeed = 0.00028f;
 
 private:
 	// カメラ

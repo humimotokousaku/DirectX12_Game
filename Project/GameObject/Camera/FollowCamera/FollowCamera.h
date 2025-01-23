@@ -60,6 +60,12 @@ public:
 	/// </summary>
 	/// <param name="fov">視野角</param>
 	void SetFov(float* fov) { fov_ = fov; }
+
+	/// <summary>
+	/// 追従カメラの座標を固定するかを設定
+	/// </summary>
+	/// <param name="isLock">座標を固定するか</param>
+	void SetIsLockPos(const bool& isLock) { isLockPos_ = isLock; }
 #pragma endregion
 
 #pragma region Getter

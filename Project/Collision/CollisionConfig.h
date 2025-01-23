@@ -7,6 +7,8 @@
 const uint32_t kCollisionAttributePlayer = 0b01;
 // 敵陣営
 const uint32_t kCollisionAttributeEnemy = 0b01 << 1;
+// 敵陣営の弾
+const uint32_t kCollisionAttributeEnemyBullet = 0b01 << 6;
 // 障害物
 const uint32_t kCollisionAttributeObstacles = 0b01 << 2;
 // ジャスト回避陣営

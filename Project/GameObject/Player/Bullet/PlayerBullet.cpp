@@ -87,6 +87,8 @@ void PlayerBullet::OnCollision(Collider* collider) {
 	if (kCollisionAttributeObstacles == collider->GetCollisionAttribute()) { return; }
 	// ジャスト回避の判定に当たっているなら処理しない
 	if (kCollisionAttributeJustEvasion == collider->GetCollisionAttribute()) { return; }
+	// 敵の弾判定に当たっているなら処理しない
+	if (kCollisionAttributeEnemyBullet == collider->GetCollisionAttribute()) { return; }
 
 	isDead_ = true;
 }

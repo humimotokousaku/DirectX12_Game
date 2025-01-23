@@ -91,8 +91,11 @@ private:// エンジン機能
 	PostEffectManager* postEffectManager_;
 
 private:
+	// 自機のアドレス
 	Player* player_;
+	// カメラのアドレス
 	Camera* camera_;
+	// スコアのアドレス
 	Score* score_;
 
 	// ジャスト時に出るパーティクル
@@ -101,6 +104,7 @@ private:
 	// 回避の情報
 	EvasionData evasion_;
 
+	// ジャスト回避時のパーティクルテクスチャ
 	uint32_t justParticleTexture_;
 
 	bool isActive_ = false;

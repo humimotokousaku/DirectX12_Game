@@ -24,6 +24,11 @@ void TitleScene::Initialize() {
 	for (int i = 0; i < guideUI_.size(); i++) {
 		PostEffectManager::GetInstance()->AddSpriteList(guideUI_[i].get());
 	}
+
+	// 常にボタンの拡大と縮小
+	buttonScalingAnim_.SetAnimData(&guideUI_[1]->worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 0.75f,0.75f,0.75f }, 5, Easings::EaseInOutSine);
+	buttonScalingAnim_.SetAnimData(&guideUI_[1]->worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 1,1,1 }, 20, Easings::EaseInOutSine);
+	buttonScalingAnim_.SetIsStart(true);
 }
 
 void TitleScene::Update() {
@@ -45,6 +50,14 @@ void TitleScene::Update() {
 		SceneTransition::GetInstance()->Start();
 	}
 #endif
+
+	// Aボタンの拡縮
+	buttonScalingAnim_.Update();
+	// アニメーションが終了してもループさせる
+	if (buttonScalingAnim_.GetIsEnd()) {
+		buttonScalingAnim_.ResetData();
+		buttonScalingAnim_.SetIsStart(true);
+	}
 
 	// タイトル演出
 	titleEvent_->Update();

@@ -79,9 +79,21 @@ void EvasionSystem::Initialize(Player* player, Camera* camera, Model* model) {
 	for (int i = 0; i < evasionAlphaAnims_.size(); i++) {
 		evasionAlphaAnims_[i].SetAnimData(&evasion_.alphas[i], 1.0f, 0.0f, 20, Easings::EaseOutExpo);
 	}
+
+	// 常にボタンの拡大と縮小
+	buttonScalingAnim_.SetAnimData(&firstJustSprite_->worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 0.75f,0.75f,0.75f }, 4, Easings::EaseInOutSine, false);
+	buttonScalingAnim_.SetAnimData(&firstJustSprite_->worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 1,1,1 }, 26, Easings::EaseInOutSine, false);
 }
 
 void EvasionSystem::Update(float rotateY, float rotateX, Vector3& moveVel) {
+	// ジャスト回避中のAボタンUIを拡縮する
+	buttonScalingAnim_.Update();
+	// アニメーションをループさせる
+	if (buttonScalingAnim_.GetIsEnd()) {
+		buttonScalingAnim_.ResetData();
+		buttonScalingAnim_.SetIsStart(true);
+	}
+
 	// ジャスト回避の更新処理
 	JustEvasion();
 
@@ -234,6 +246,7 @@ void EvasionSystem::JustOnCollision(Collider* collider) {
 	// 初めてジャスト回避を行う場合は説明を入れる
 	if (firstJustState_ == kNone) {
 		firstJustState_ = kFirstJust;
+		buttonScalingAnim_.SetIsStart(true);
 	}
 
 	// ジャスト回避を補助するために時間を遅くする

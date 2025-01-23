@@ -48,20 +48,36 @@ public:
 	/// </summary>
 	void Draw();
 
-	///
-	/// User Method
-	/// 
+	/// <summary>
+	/// 常に処理する
+	/// </summary>
+	void ConstantUpdate(int& sceneNum);
 
-	// 自機の弾を追加
-	void AddPlayerBullet(PlayerBullet* playerBullet) { playerBullets_.push_back(playerBullet); }
-	// 自機の弾リストを取得
-	std::list<PlayerBullet*> GetPlayerBulletList() { return playerBullets_; }
+	/// <summary>
+	/// 特定条件でのみ処理する
+	/// </summary>
+	void ConditionallyUpdate();
+
+	/// <summary>
+	/// ジャスト回避のチュートリアルUI描画
+	/// </summary>
+	void JustEvasionDrawUI();
+
+	/// <summary>
+	/// 攻撃のUI描画
+	/// </summary>
+	void AttackDrawUI();
 
 	/// <summary>
 	/// 演出の状態を設定
 	/// </summary>
 	/// <param name="effectState">演出の状態</param>
-	void SetEffectState(int effectState) { effectState_ = effectState; }
+	void SetEffectState(const int& effectState) { effectState_ = effectState; }
+
+	// 自機の弾を追加
+	void AddPlayerBullet(PlayerBullet* playerBullet) { playerBullets_.push_back(playerBullet); }
+	// 自機の弾リストを取得
+	std::list<PlayerBullet*> GetPlayerBulletList() { return playerBullets_; }
 
 private:
 	/// <summary>
@@ -78,14 +94,16 @@ private:
 
 public:// 定数
 	// 暗転時のポイントライトの減衰率
-	float kMaxPointLightDecay = 16.0f;
+	const float kMaxPointLightDecay = 16.0f;
 
 	// ラジアルブラーの強さ
-	float kBlurStrength = 0.01f;
+	const float kBlurStrength = 0.01f;
 	// ヴィネットの大きさ
-	float kMaxVignetteScale = 100.0f;
+	const float kMaxVignetteScale = 100.0f;
 	// ヴィネットの初期の大きさ
-	float kDefaultVignetteScale = 1000.0f;
+	const float kDefaultVignetteScale = 1000.0f;
+	// ジャスト回避時の振動の大きさ
+	const float kMaxVibrationStrength = 65535.0f;
 
 	// 操作UIの数
 	const static uint32_t kMaxGuideUINum = 6;
@@ -136,6 +154,9 @@ private:// プライベートなメンバ変数
 	// UI
 	std::array<Sprite, kMaxGuideUINum> guideUI_;
 
+	// ボタンの残像アニメーション
+	std::array<Animation, 3> buttonAfterImageAnim_;
+
 	// BGM
 	uint32_t BGM_;
 
@@ -147,6 +168,8 @@ private:// プライベートなメンバ変数
 	float vignetteScale_;
 	// 時間の速さ
 	float timeScale_;
+	// コントローラーの振動の強さ
+	float vibrationStrength_;
 
 	// 演出の状態
 	int effectState_ = Normal;

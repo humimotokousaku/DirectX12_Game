@@ -18,6 +18,7 @@ public: // 構造体
 		std::variant<Vector4, Vector3, Vector2, float, int> start;			// 始めの値
 		std::variant<Vector4, Vector3, Vector2, float, int> end;			// 終了時の値
 		bool isActive;  													// アニメーションをしているか
+		bool isTimeScale = true;											// 時間の流れの速さを適用するか
 		int id;																// アニメーションの番号
 		std::function<float(float)> easeFunc;								// 使用するイージング関数
 	};
@@ -90,10 +91,10 @@ public: // メンバ関数
 	/// <param name="end">終了時のパラメータ</param>
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
+	void SetAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc, bool isTimeScale = true);
 	// アニメーションに必要なパラメータを先頭のリスト情報を上書き
 	// 無い場合はリストに登録
-	void SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
+	void SetFirstAnimData(std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc, bool isTimeScale = true);
 	/// <summary>
 	/// 任意のアニメーション情報を上書き
 	/// </summary>
@@ -103,7 +104,7 @@ public: // メンバ関数
 	/// <param name="end">終了時のパラメータ</param>
 	/// <param name="endFrame">アニメーション終了時間</param>
 	/// <param name="easeFunc">使用するイージング関数</param>
-	void AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc);
+	void AnimDataOverride(int index, std::variant<Vector4*, Vector3*, Vector2*, float*, int*> target, std::variant<Vector4, Vector3, Vector2, float, int> start, std::variant<Vector4, Vector3, Vector2, float, int> end, float endFrame, std::function<float(float)> easeFunc, bool isTimeScale = true);
 #pragma endregion
 
 private:// エンジン機能

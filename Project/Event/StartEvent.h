@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "FollowCamera.h"
+#include "RailCamera.h"
 
 /// <summary>
 /// ステージ開始演出
@@ -15,7 +16,8 @@ public:
 	/// </summary>
 	/// <param name="player">自機のアドレス</param>
 	/// <param name="followCamera">追従カメラのアドレス</param>
-	void Initialize(Player* player, FollowCamera* followCamera);
+	/// <param name="railCamera">レールカメラのアドレス</param>
+	void Initialize(Player* player, FollowCamera* followCamera, RailCamera* railCamera);
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -41,11 +43,18 @@ public:
 private:
 	Player* player_;
 	FollowCamera* followCamera_;
+	RailCamera* railCamera_;
 
 	// ステージ開始時のアニメーション
 	std::array<Animation, 2> startAngleAnim_;
 
 	WorldTransform startWorldTransform_;
+
+
+	// 追従対象のオブジェクト
+	//WorldTransform followObject_;
+
+	Vector3 velocity_;
 
 	Vector3 cameraOffset_;
 

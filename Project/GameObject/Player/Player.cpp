@@ -230,6 +230,22 @@ void Player::TitleEffect(bool& isEnd) {
 	}
 }
 
+void Player::StartStageEffect(const Vector3& moveVel) {
+	// Y軸周り角度(θy)
+	object3d_->worldTransform.rotate.y = std::atan2(moveVel.x, moveVel.z);
+	// 横軸方向の長さを求める
+	float velocityXZ;
+	velocityXZ = sqrt(moveVel.x * moveVel.x + moveVel.z * moveVel.z);
+	// X軸周りの角度(θx)
+	object3d_->worldTransform.rotate.x = std::atan2(-moveVel.y, velocityXZ);
+	object3d_->worldTransform.UpdateMatrix();
+
+	// 速度を自機に加算
+	object3d_->worldTransform.translate += Normalize(moveVel) * 3.0f;
+	// ワールド行列を更新
+	object3d_->worldTransform.UpdateMatrix();
+}
+
 void Player::ClearEffect(bool& isEnd) {
 	clearAnim_.SetIsStart(true);
 	clearAnim_.Update();

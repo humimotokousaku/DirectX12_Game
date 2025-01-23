@@ -33,8 +33,8 @@ void EnemyBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* e
 
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
-	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
-	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
+	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemyBullet);
+	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemyBullet);
 	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale);
 	object3d_->collider->SetOnCollision(std::bind(&EnemyBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);

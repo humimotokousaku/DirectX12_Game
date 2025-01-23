@@ -5,7 +5,7 @@
 #include "PlayerConfig.h"
 #include "PostEffectManager.h"
 
-void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) {
+void RailCamera::Initialize(const std::vector<Vector3>& controlPoints, Player* player) {
 	player_ = player;
 	controlPoints_ = controlPoints;
 
@@ -26,6 +26,8 @@ void RailCamera::Initialize(std::vector<Vector3> controlPoints, Player* player) 
 	targetT_ = 1.0f / segmentCount;
 	isMove_ = false;
 	
+	Move();
+
 #pragma region デバッグ用
 	// 線分の数+1個分の頂点座標の計算
 	for (size_t i = 0; i < segmentCount + 1; i++) {
@@ -102,17 +104,16 @@ void RailCamera::Move() {
 	// 移動ベクトルからX軸周りの角度
 	camera_->worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ);
 
-
 	// 移動フラグがないならリターン
 	if (!isMove_) { return; }
 
 	// カメラの移動
 	if (t_ <= 1.0f) {
-		t_ += moveSpeed_ / 1000;
+		t_ += moveSpeed_;
 	}
 	// カメラの見ている座標(注視点)を移動
 	if (targetT_ <= 1.0f) {
-		targetT_ += moveSpeed_ / 1000;
+		targetT_ += moveSpeed_;
 	}
 	// 注視点がゴールまでいったら停止
 	if (targetT_ >= 1.0f) {

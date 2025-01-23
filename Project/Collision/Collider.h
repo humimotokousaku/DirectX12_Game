@@ -70,19 +70,19 @@ public:
 
 #pragma region Setter
 	// ダメージを設定
-	void SetDamage(float damage) { damage_ = damage; }
+	void SetDamage(const float& damage) { damage_ = damage; }
 
 	// 力を設定
-	void SetPower(Vector3 power) { power_ = power; }
+	void SetPower(const Vector3& power) { power_ = power; }
 
 	// 半径の設定
-	void SetRadius(float radius) { radius_ = radius; }
+	void SetRadius(const float& radius) { radius_ = radius; }
 
 	// OBBの設定
-	void SetOBB(OBB obb) { obb_ = obb; }
-	void SetOBBCenterPos(Vector3 centerPos) { obb_.m_Pos = centerPos; }
-	void SetOBBLength(Vector3 length) { obb_.m_fLength = length; }
-	void SetOBBDirect(int index) {
+	void SetOBB(const OBB& obb) { obb_ = obb; }
+	void SetOBBCenterPos(const Vector3& centerPos) { obb_.m_Pos = centerPos; }
+	void SetOBBLength(const Vector3& length) { obb_.m_fLength = length; }
+	void SetOBBDirect(const int& index) {
 		Matrix4x4 rotate = MakeRotateMatrix(GetRotation());
 		obb_.m_NormaDirect[index] = { rotate.m[index][0], rotate.m[index][1], rotate.m[index][2] };
 	}
@@ -95,9 +95,9 @@ public:
 	void SetCollisionPrimitive(const uint32_t& collisionPrimitive) { collisionPrimitive_ = collisionPrimitive; }
 
 	// 今当たっているかを設定
-	void SetIsOnCollision(bool isOnCollision) { isOnCollision_ = isOnCollision; }
+	void SetIsOnCollision(const bool& isOnCollision) { isOnCollision_ = isOnCollision; }
 	// 今当たっているかを設定
-	void SetIsPreOnCollision(bool isPreOnCollision) { isPreOnCollision_ = isPreOnCollision; }
+	void SetIsPreOnCollision(const bool& isPreOnCollision) { isPreOnCollision_ = isPreOnCollision; }
 	// 当たり判定を使用するかを設定
 	void SetIsActive(const bool& isActive) { isActive_ = isActive; }
 

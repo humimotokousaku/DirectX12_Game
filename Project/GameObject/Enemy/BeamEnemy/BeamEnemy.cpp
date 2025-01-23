@@ -22,8 +22,8 @@ void BeamEnemy::Initialize(Vector3 pos, Vector3 rotate, int id) {
 	object3d_->worldTransform.UpdateMatrix();
 	// colliderの設定
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
-	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemy);
-	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemy);
+	object3d_->collider->SetCollisionAttribute(kCollisionAttributeEnemyBullet);
+	object3d_->collider->SetCollisionMask(~kCollisionAttributeEnemyBullet);
 	object3d_->collider->SetOnCollision(std::bind(&BeamEnemy::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetDamage(kBodyDamage);
 	object3d_->collider->SetIsActive(true);

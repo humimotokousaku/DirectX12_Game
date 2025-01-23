@@ -119,7 +119,7 @@ void GameSystem::Initialize() {
 
 	// スタート演出
 	startEvent_ = std::make_unique<StartEvent>();
-	startEvent_->Initialize(&player_, &followCamera_);
+	startEvent_->Initialize(&player_, &followCamera_, &railCamera_);
 	// クリア演出
 	clearEvent_ = std::make_unique<ClearEvent>();
 	clearEvent_->Initialize(&player_, &followCamera_);
@@ -161,62 +161,20 @@ void GameSystem::Initialize() {
 	guideUI_[5].SetPos(Vector2{ 1132.0f, 192.0f });
 	PostEffectManager::GetInstance()->AddSpriteList(&guideUI_[5]);
 #pragma endregion
+
+	// Aボタンの残像を出す
+	buttonAfterImageAnim_[0].SetAnimData(&guideUI_[2].worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 2,2,2 }, 60, Easings::EaseOutExpo);
+	buttonAfterImageAnim_[1].SetAnimData(guideUI_[2].GetColorP(), Vector4{ 1,1,1,0.6f }, Vector4{ 1,1,1,0 }, 60, Easings::EaseOutExpo);
+	// ボタンの拡大と縮小
+	buttonAfterImageAnim_[2].SetAnimData(&guideUI_[1].worldTransform_.scale, Vector3{ 1,1,1 }, Vector3{ 0.75f,0.75f,0.75f }, 5, Easings::EaseInOutSine);
 }
 
 void GameSystem::Update(int& sceneNum) {
-	// スタート演出
-	startEvent_->Update();
-	// クリア演出
-	clearEvent_->Update();
-	// 死亡演出
-	deadEvent_->Update();
-
-	// シーン切り替えの条件
-	SceneChange(sceneNum);
-
-	// エネミーマネージャ
-	enemyManager_.Update();
-
-	// マルチロックオン
-	multiLockOnSystem_->Update();
+	// 常に処理する
+	ConstantUpdate(sceneNum);
 
 	// スタート演出中、クリア演出中, 死亡演出中は処理しない
-	if (startEvent_->GetIsActive() && !startEvent_->GetIsEnd() || clearEvent_->GetIsActive() || clearEvent_->GetIsEnd() || deadEvent_->GetIsActive() || deadEvent_->GetIsEnd()) { return; }
-
-	// スタート演出終了したら追従カメラの親子関係をもとに戻す
-	if (startEvent_->GetIsEnd() && !clearEvent_->GetIsEnd()) {
-		railCamera_.SetIsMove(true);
-		followCamera_.SetParent(&railCamera_.GetWorldTransform());
-	}
-
-	// 自キャラの更新
-	player_.Update();
-	// 終了した弾を削除
-	playerBullets_.remove_if([](PlayerBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-			return true;
-		}
-		return false;
-		});
-	// 弾の更新
-	for (PlayerBullet* bullet : playerBullets_) {
-		bullet->Update();
-	}
-
-	// レールカメラ
-	railCamera_.Update();
-	// 追従カメラ
-	followCamera_.Update();
-
-	// スコア
-	score_->Update();
-
-	// ステージBGM
-	//audio_->SetMuffle(BGM_, 1.0f);
-
-	// ポストエフェクトや暗転などの処理
-	EffectUpdate();
+	ConditionallyUpdate();
 }
 
 void GameSystem::Draw() {
@@ -257,16 +215,77 @@ void GameSystem::Draw() {
 	for (Sprite& UI : guideUI_) {
 		UI.isActive_ = true;
 	}
-
 	// ロックオン可能状態なら攻撃UIを明るく表示
-	if (multiLockOnSystem_->GetIsActive()) {
-		guideUI_[0].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
-		guideUI_[1].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+	AttackDrawUI();
+	// ジャスト回避のチュートリアルが終わるまで回避UIを出さない
+	JustEvasionDrawUI();
+
+	// スコアを表示する
+	score_->SetIsDraw(true);
+
+	// 自機のレティクルとHP
+	player_.DrawUI();
+}
+
+void GameSystem::ConstantUpdate(int& sceneNum) {
+	// スタート演出
+	startEvent_->Update();
+	// クリア演出
+	clearEvent_->Update();
+	// 死亡演出
+	deadEvent_->Update();
+
+	// シーン切り替えの条件
+	SceneChange(sceneNum);
+
+	// エネミーマネージャ
+	enemyManager_.Update();
+
+	// マルチロックオン
+	multiLockOnSystem_->Update();
+}
+
+void GameSystem::ConditionallyUpdate() {
+	// スタート演出中、クリア演出中, 死亡演出中は処理しない
+	if (startEvent_->GetIsActive() && !startEvent_->GetIsEnd() || clearEvent_->GetIsActive() || clearEvent_->GetIsEnd() || deadEvent_->GetIsActive() || deadEvent_->GetIsEnd()) { return; }
+
+	// スタート演出終了したら追従カメラの親子関係をもとに戻す
+	if (startEvent_->GetIsEnd() && !clearEvent_->GetIsEnd()) {
+		railCamera_.SetIsMove(true);
+		followCamera_.SetParent(&railCamera_.GetWorldTransform());
 	}
-	else {
-		guideUI_[0].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
-		guideUI_[1].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
+
+	// 自キャラの更新
+	player_.Update();
+	// 終了した弾を削除
+	playerBullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+		});
+	// 弾の更新
+	for (PlayerBullet* bullet : playerBullets_) {
+		bullet->Update();
 	}
+
+	// レールカメラ
+	railCamera_.Update();
+	// 追従カメラ
+	followCamera_.Update();
+
+	// スコア
+	score_->Update();
+
+	// ステージBGM
+	//audio_->SetMuffle(BGM_, 1.0f);
+
+	// ポストエフェクトや暗転などの処理
+	EffectUpdate();
+}
+
+void GameSystem::JustEvasionDrawUI() {
 	// ジャスト回避のチュートリアルが終わるまで回避UIを出さない
 	if (player_.GetFirstJustEvasionState() != 0) {
 		guideUI_[4].isActive_ = true;
@@ -276,12 +295,18 @@ void GameSystem::Draw() {
 		guideUI_[4].isActive_ = false;
 		guideUI_[5].isActive_ = false;
 	}
+}
 
-	// スコアを表示する
-	score_->SetIsDraw(true);
-
-	// 自機のレティクルとHP
-	player_.DrawUI();
+void GameSystem::AttackDrawUI() {
+	// ロックオン可能状態なら攻撃UIを明るく表示
+	if (multiLockOnSystem_->GetIsActive()) {
+		guideUI_[0].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+		guideUI_[1].SetColor(Vector4{ 1.0f,1.0f,1.0f,1.0f });
+	}
+	else {
+		guideUI_[0].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
+		guideUI_[1].SetColor(Vector4{ 0.2f,0.2f,0.2f,1.0f });
+	}
 }
 
 void GameSystem::SceneChange(int& sceneNum) {
@@ -328,6 +353,7 @@ void GameSystem::EffectUpdate() {
 	// ジャスト回避中
 	else if (player_.GetEvasionData().isJust) {
 		effectState_ = JustEvasion;
+		vibrationStrength_ = kMaxVibrationStrength;
 	}
 	// 加速中
 	else if (player_.GetIsBoost()) {
@@ -360,7 +386,8 @@ void GameSystem::EffectUpdate() {
 		}
 
 		// コントローラーの振動を消す
-		Input::GetInstance()->GamePadVibration(0, 0, 0);
+		vibrationStrength_ = 0.0f;
+		Input::GetInstance()->GamePadVibration(0, (WORD)vibrationStrength_, (WORD)vibrationStrength_);
 
 		// 時間の速さを戻す
 		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 0.5f);
@@ -386,7 +413,8 @@ void GameSystem::EffectUpdate() {
 		}
 
 		// コントローラーの振動を消す
-		Input::GetInstance()->GamePadVibration(0, 0, 0);
+		vibrationStrength_ = 0.0f;
+		Input::GetInstance()->GamePadVibration(0, (WORD)vibrationStrength_, (WORD)vibrationStrength_);
 
 		// 時間の速さを遅くする
 		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.0f, 0.8f);
@@ -407,8 +435,9 @@ void GameSystem::EffectUpdate() {
 		vignetteScale_ = Lerps::ExponentialInterpolate(vignetteScale_, kMaxVignetteScale + 200, 0.1f);
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 
-		// コントローラーの振動を消す
-		Input::GetInstance()->GamePadVibration(0, 0, 0);
+		// コントローラーを振動させる
+		vibrationStrength_ = Lerps::ExponentialInterpolate(vibrationStrength_, 0.0f, 0.3f);
+		Input::GetInstance()->GamePadVibration(0, (WORD)vibrationStrength_, (WORD)vibrationStrength_);
 
 		// 時間の速さを遅くする
 		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 0.1f, 0.1f);
@@ -430,7 +459,9 @@ void GameSystem::EffectUpdate() {
 		PostEffectManager::GetInstance()->vignetingData_.scale = vignetteScale_;
 
 		// コントローラーを振動させる
-		Input::GetInstance()->GamePadVibration(0, 65535, 65535);
+		vibrationStrength_ = Lerps::ExponentialInterpolate(vibrationStrength_, kMaxVibrationStrength, 0.01f);
+		Input::GetInstance()->GamePadVibration(0, (WORD)vibrationStrength_, (WORD)vibrationStrength_);
+		if(vibrationStrength_ >= kMaxVibrationStrength / 1.5f){ Input::GetInstance()->GamePadVibration(0, 0, 0); }
 
 		// 時間の速さを戻す
 		timeScale_ = Lerps::ExponentialInterpolate(timeScale_, 1.0f, 0.5f);

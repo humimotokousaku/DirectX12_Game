@@ -179,6 +179,8 @@ private:
 	Animation evasionRotSpeedAnim_;
 	// 残像のα値のアニメーション
 	std::vector<Animation> evasionAlphaAnims_;
+	// ジャスト回避のチュートリアル時のAボタン拡縮アニメーション
+	Animation buttonScalingAnim_;
 
 	// 残像モデルのテクスチャ
 	uint32_t afterImageTexture_;
