@@ -79,8 +79,8 @@ public:
 	/// 揺れる範囲を取得
 	/// </summary>
 	/// <returns></returns>
-	Vector3 GetRange() { return range_; }
-	Vector3* GetRange_P() { return &range_; }
+	//Vector3 GetRange() { return range_; }
+	Vector3* GetRange() { return &range_; }
 	/// <summary>
 	/// 経過時間を取得
 	/// </summary>

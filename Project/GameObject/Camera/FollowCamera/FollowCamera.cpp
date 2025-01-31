@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "ImGuiManager.h"
 #include "Utility.h"
+#include <assert.h>
 
 FollowCamera::FollowCamera() {
 	// カメラの生成
@@ -18,18 +19,28 @@ void FollowCamera::Initialize(Player* player) {
 	hitShake_->SetTarget(&shakeOffset_);
 	hitShake_->SetEndFrame(30.0f);
 
+	// 射撃時の揺れ
+	shotShake_ = new Shake();
+	shotShake_->SetRange(Vector3{ 0.8f,0.8f,0.8f });
+	shotShake_->SetTarget(&shotShakeOffset_);
+	shotShake_->SetEndFrame(20.0f);
+
 	// 被弾時のカメラの揺れる範囲
 	const float endFrame = 5;
 	const Vector3 end = { 0.3f, 0.3f,0.0f };
-	shakeRangeAnim_.SetAnimData(hitShake_->GetRange_P(), hitShake_->GetRange(), end, endFrame, Easings::EaseInExpo);
-	shakeRangeAnim_.SetAnimData(hitShake_->GetRange_P(), end, Vector3{ 0,0,0 }, hitShake_->GetEndFrame() - endFrame, Easings::EaseInCubic);
+	shakeRangeAnim_.SetAnimData(hitShake_->GetRange(), *hitShake_->GetRange(), end, endFrame, Easings::EaseInExpo);
+	shakeRangeAnim_.SetAnimData(hitShake_->GetRange(), end, Vector3{ 0,0,0 }, hitShake_->GetEndFrame() - endFrame, Easings::EaseInCubic);
 
 	targetOffset_ = { 0, 5, -20 };
 }
 
 void FollowCamera::Update() {
+	assert(player_);
+
 	// 被弾演出
 	HitUpdate();
+	// 射撃演出
+	ShotUpdate();
 
 	// 親のオイラー角を取得
 	camera_->worldTransform_.rotate = camera_->worldTransform_.parent_->rotate;
@@ -39,7 +50,7 @@ void FollowCamera::Update() {
 
 	// 座標をコピーしてオフセット分ずらす
 	if (!isLockPos_) {
-		camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset + shakeOffset_;
+		camera_->worldTransform_.translate = camera_->worldTransform_.parent_->translate + offset + shakeOffset_ + shotShakeOffset_;
 	}
 	// 演出用のoffsetを加算
 	camera_->worldTransform_.rotate += player_->GetCameraRotateOffset();
@@ -85,6 +96,23 @@ void FollowCamera::HitUpdate() {
 	if (hitShake_->GetIsEnd()) {
 		hitShake_->Reset();
 		shakeRangeAnim_.ResetData();
+	}
+}
+
+void FollowCamera::ShotUpdate() {
+	if (multiLockOnSystem_ == nullptr) { return; }
+
+	// カメラの揺れ
+	shotShake_->Update();
+
+	// 撃っている最中でないならreturn
+	if (!multiLockOnSystem_->GetIsShot()) { return; }
+
+	shotShake_->SetIsActive(true);
+
+	// 画面の揺れを行う
+	if (shotShake_->GetIsEnd()) {
+		shotShake_->Reset();
 	}
 }
 

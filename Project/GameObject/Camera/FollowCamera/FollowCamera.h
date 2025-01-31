@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Player.h"
 #include "Shake.h"
+#include "MultiLockOnSystem.h"
 
 /// <summary>
 /// 追従カメラ
@@ -27,6 +28,11 @@ public:
 	void HitUpdate();
 
 	/// <summary>
+	/// 弾発射時の処理
+	/// </summary>
+	void ShotUpdate();
+
+	/// <summary>
 	/// 追従対象からのオフセットを計算する
 	/// </summary>
 	/// <returns></returns>
@@ -38,10 +44,16 @@ public:
 	void PositionLock(const Vector3& lockTarget);
 
 #pragma region Setter
-	// 親子関係を設定
-	void SetParent(const WorldTransform* target) {
-		camera_->worldTransform_.parent_ = target;
-	}
+	/// <summary>
+	/// マルチロックオンクラスのアドレスを設定
+	/// </summary>
+	/// <param name="multiLockOnSystem">マルチロックオンクラスのアドレス</param>
+	void SetMultiLockOnSystem(MultiLockOnSystem* multiLockOnSystem) { multiLockOnSystem_ = multiLockOnSystem; }
+	/// <summary>
+	/// 親子関係を設定
+	/// </summary>
+	/// <param name="target">親</param>
+	void SetParent(const WorldTransform* target) {	camera_->worldTransform_.parent_ = target; }
 
 	/// <summary>
 	/// 自機の座標を設定
@@ -108,15 +120,23 @@ private:
 	std::unique_ptr<Camera> camera_;
 	// 自機のアドレス
 	Player* player_;
+	// マルチロックオンクラスのアドレス
+	MultiLockOnSystem* multiLockOnSystem_;
 
 	// ダメージ時に揺らす
 	Shake* hitShake_;
+	// 射撃時に揺らす
+	Shake* shotShake_;
 
 	// 被弾時のカメラの揺れる範囲
 	Animation shakeRangeAnim_;
+	// 射撃時のカメラの揺れる範囲
+	//Animation shakeRangeAnim_;
 
 	// 揺れの補正値
 	Vector3 shakeOffset_;
+	// 射撃時の揺れ補正値
+	Vector3 shotShakeOffset_;
 
 	Vector3 playerPos_;
 	Vector3 interTarget_;

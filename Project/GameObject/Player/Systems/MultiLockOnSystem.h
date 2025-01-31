@@ -79,6 +79,12 @@ public:// GetterとSetter
 	/// </summary>
 	/// <returns></returns>
 	const bool& GetIsActive() { return player_->GetBulletGauge().isMax; }
+
+	/// <summary>
+	/// 弾を発射している状態かを取得する
+	/// </summary>
+	/// <returns></returns>
+	const bool& GetIsShot() { return isShot_; }
 #pragma endregion
 
 private:// 定数

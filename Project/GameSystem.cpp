@@ -113,6 +113,8 @@ void GameSystem::Initialize() {
 	multiLockOnSystem_->SetRailCamera(&railCamera_);
 	multiLockOnSystem_->SetEnemyList(enemyManager_.GetEnemyList_P());
 	multiLockOnSystem_->SetEnemyIdList(enemyManager_.GetIdList_P());
+	// 追従カメラにマルチロックオンクラスを設定
+	followCamera_.SetMultiLockOnSystem(multiLockOnSystem_.get());
 
 	// 天球の生成
 	skydome_.Initialize(models_["Skydome"], followCamera_.GetCamera(), &railCamera_.GetWorldTransform());
