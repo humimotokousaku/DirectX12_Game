@@ -46,6 +46,12 @@ public: // メンバ関数
 
 #pragma region Getter
 	/// <summary>
+	/// 使用しているカメラのアドレスを取得
+	/// </summary>
+	/// <returns></returns>
+	Camera* GetCamera() { return camera_; }
+
+	/// <summary>
 	/// 追尾対象のワールドトランスフォームの情報
 	/// </summary>
 	/// <returns></returns>
@@ -97,10 +103,40 @@ public: // メンバ関数
 	void SetPlayer(Player* player) { player_ = player; }
 
 	/// <summary>
+	/// 親子関係の設定
+	/// </summary>
+	/// <param name="parent">親</param>
+	void SetParent(const WorldTransform* parent) { object3d_->worldTransform.parent_ = parent; }
+
+	/// <summary>
 	/// 移動速度を設定
 	/// </summary>
 	/// <param name="velocity">移動速度</param>
 	void SetVelocity(const Vector3& velocity) { velocity_ = velocity; }
+
+	/// <summary>
+	/// 発射角度を設定
+	/// </summary>
+	/// <param name="shotAngle">発射角度</param>
+	void SetShotAngle(const Vector3& shotAngle) { shotAngle_ = shotAngle; }
+
+	/// <summary>
+	/// 座標を設定
+	/// </summary>
+	/// <param name="velocity"></param>
+	void SetPos(const Vector3& pos) {
+		object3d_->worldTransform.translate = pos;
+		object3d_->worldTransform.UpdateMatrix();
+	}
+
+	/// <summary>
+	/// 角度を設定
+	/// </summary>
+	/// <param name="rotate">角度</param>
+	void SetRotate(const Vector3& rotate) {
+		object3d_->worldTransform.rotate = rotate;
+		object3d_->worldTransform.UpdateMatrix();
+	}
 
 	/// <summary>
 	/// 死亡フラグの設定
@@ -116,7 +152,7 @@ private:// 定数
 	const float kBulletSpeed = 15.0f;
 
 	// 弾の大きさ
-	const Vector3 kBulletSize = { 3.0f,3.0f,3.0f };
+	const Vector3 kBulletSize = { 1.0f,1.0f,1.0f };
 	// 弾のダメージ
 	const float kBulletDamage = 1000.0f;
 
@@ -138,6 +174,9 @@ private: // メンバ変数
 
 	// 速度
 	Vector3 velocity_;
+
+	// 発射角度
+	Vector3 shotAngle_;
 
 	// 寿命<frm>
 	static const int32_t kLifeTime = 60 * 1;

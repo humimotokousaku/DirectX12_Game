@@ -21,9 +21,9 @@ void FollowCamera::Initialize(Player* player) {
 
 	// 射撃時の揺れ
 	shotShake_ = new Shake();
-	shotShake_->SetRange(Vector3{ 0.8f,0.8f,0.8f });
+	shotShake_->SetRange(Vector3{ 0.3f,0.3f,0.3f });
 	shotShake_->SetTarget(&shotShakeOffset_);
-	shotShake_->SetEndFrame(20.0f);
+	shotShake_->SetEndFrame(10.0f);
 
 	// 被弾時のカメラの揺れる範囲
 	const float endFrame = 5;
@@ -108,7 +108,7 @@ void FollowCamera::ShotUpdate() {
 	// 撃っている最中でないならreturn
 	if (!multiLockOnSystem_->GetIsShot()) { return; }
 
-	shotShake_->SetIsActive(true);
+	//shotShake_->SetIsActive(true);
 
 	// 画面の揺れを行う
 	if (shotShake_->GetIsEnd()) {

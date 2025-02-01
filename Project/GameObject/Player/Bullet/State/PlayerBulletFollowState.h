@@ -11,5 +11,4 @@ public:
 private:
 	// 追尾精度(0~1)
 	float followRate_;
-
 };

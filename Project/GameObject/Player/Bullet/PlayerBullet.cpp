@@ -39,14 +39,14 @@ void PlayerBullet::Initialize(Model* model, const Vector3& pos, WorldTransform* 
 	object3d_->collider->SetCollisionPrimitive(kCollisionOBB);
 	object3d_->collider->SetCollisionAttribute(kCollisionAttributePlayer);
 	object3d_->collider->SetCollisionMask(~kCollisionAttributePlayer);
-	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale * 1.5f);
+	object3d_->collider->SetOBBLength(object3d_->worldTransform.scale * 7.5f);
 	object3d_->collider->SetOnCollision(std::bind(&PlayerBullet::OnCollision, this, std::placeholders::_1));
 	object3d_->collider->SetIsActive(true);
 	// ゲームオブジェクトマネージャーに追加
 	GameObjectManager::GetInstance()->AddGameObject(object3d_.get());
 
 	// 状態遷移
-	state_ = new PlayerBulletFollowState(this, player_);
+	state_ = new PlayerBulletNormalState(this, player_, shotAngle_);
 	state_->Initialize();
 
 	isDead_ = false;

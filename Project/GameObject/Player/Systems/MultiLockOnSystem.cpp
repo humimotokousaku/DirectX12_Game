@@ -83,6 +83,9 @@ void MultiLockOnSystem::Shot() {
 					PlayerBullet* newBullet = new PlayerBullet();
 					newBullet->SetCamera(camera_);
 					newBullet->SetPlayer(player_);
+					// 発射角度を決める
+					shotAngle_ = ShotAngle(shotAngle_);
+					newBullet->SetShotAngle(shotAngle_);
 					newBullet->Initialize(model_, player_->GetWorldPosition(), obj->GetWorldTransform());
 					// 弾を登録
 					gameSystem_->AddPlayerBullet(newBullet);
@@ -110,6 +113,7 @@ void MultiLockOnSystem::Shot() {
 		currentFrame_ = 0;
 		shotNum_ = 0;
 		shotGoal_ = 0;
+		shotAngle_ = { 0,0,0 };
 	}
 
 	// 音のこもり具合
@@ -211,6 +215,17 @@ void MultiLockOnSystem::EraseLockedList() {
 		}
 	}
 #pragma endregion
+}
+
+Vector3 MultiLockOnSystem::ShotAngle(Vector3 shotAngle) {
+	shotAngle;
+	Vector3 result = {
+		-(float)std::numbers::pi / 2.0f,
+		0.0f,
+		shotAngle.z + 2.0f * (float)std::numbers::pi / (float)shotGoal_,
+	};
+
+	return result;
 }
 
 Vector2 MultiLockOnSystem::ConvertWorld2Screen(Vector3 worldPos) {

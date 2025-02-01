@@ -49,6 +49,12 @@ private:// プライベートなメンバ関数
 	/// </summary>
 	void EraseLockedList();
 
+	/// <summary>
+	/// 射撃するときの弾の角度
+	/// </summary>
+	/// <returns></returns>
+	Vector3 ShotAngle(Vector3 shotAngle);
+
 	/// </summary>
 	/// ワールド座標からスクリーン座標に変換
 	/// </summary>
@@ -125,6 +131,9 @@ private:
 	std::vector<int> lockedEnemyIdList_;
 	// 全敵のIDリスト
 	std::vector<int>* enemyIdList_;
+
+	// 発射角度
+	Vector3 shotAngle_;
 
 	// 経過時間
 	float currentFrame_;

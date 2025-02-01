@@ -17,5 +17,5 @@ void PlayerBulletFollowState::Update() {
 	playerBullet_->SetVelocity(Normalize(playerBullet_->GetVelocity()));
 	playerBullet_->SetVelocity(Lerps::Slerp(playerBullet_->GetVelocity(), toPlayer, followRate_) * playerBullet_->GetBulletSpeed() * GameTimer::GetInstance()->GetTimeScale());
 
-	followRate_ = Lerps::ExponentialInterpolate(followRate_, 1.0f, 1.0f);
+	followRate_ = Lerps::ExponentialInterpolate(followRate_, 1.0f, 0.05f);
 }

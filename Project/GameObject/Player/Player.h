@@ -132,6 +132,8 @@ public:// GetterとSetter
 	const bool& GetIsDead() { return isDead_; }
 	// ワールド座標
 	Vector3 GetWorldPosition();
+	// ローカル座標を取得
+	Vector3 GetLocalPosition() { return object3d_->worldTransform.translate; }
 	// 角度
 	const Vector3& GetRotation();
 
