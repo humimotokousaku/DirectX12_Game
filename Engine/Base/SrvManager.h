@@ -25,6 +25,8 @@ public:
 
 	// テクスチャ用
 	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels, DirectX::TexMetadata metdata);
+	// Texture2DArray用
+	void CreateSRVforTexture2DArray(uint32_t srvIndex, ID3D12Resource* pResource, uint32_t textureSize);
 	// Structured Buffer用
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
 	// ポストエフェクト用

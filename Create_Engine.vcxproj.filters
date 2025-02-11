@@ -518,6 +518,8 @@
     <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
       <Filter>Project\GameObject\Player\System</Filter>
     </ClCompile>
+    <ClCompile Include="TrailObject.cpp" />
+    <ClCompile Include="Engine\Pso\TrailPSO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -904,6 +906,8 @@
     <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
       <Filter>Project\GameObject\Player\System</Filter>
     </ClInclude>
+    <ClInclude Include="TrailObject.h" />
+    <ClInclude Include="Engine\Pso\TrailPSO.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">
@@ -1000,5 +1004,7 @@
     <FxCompile Include="Engine\resources\sharder\Sprite.PS.hlsl">
       <Filter>Resources\Sharder</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\Trail.VS.hlsl" />
+    <FxCompile Include="Engine\resources\sharder\Trail.PS.hlsl" />
   </ItemGroup>
 </Project>

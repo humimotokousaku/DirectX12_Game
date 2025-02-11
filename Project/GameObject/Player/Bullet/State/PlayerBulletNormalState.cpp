@@ -18,7 +18,6 @@ PlayerBulletNormalState::PlayerBulletNormalState(PlayerBullet* playerBullet, Pla
 	playerBullet_->SetRotate(shotAngle);
 
 	// 弾の速度
-	velocityAnim_.SetAnimData(&velocity_, Vector3{ 0,0,0 }, velocity_, 6, Easings::EaseOutExpo);
 	velocityAnim_.SetAnimData(&velocity_, velocity_, Vector3{ 0,0,0 },10, Easings::EaseOutExpo);
 	velocityAnim_.SetIsStart(true);
 }

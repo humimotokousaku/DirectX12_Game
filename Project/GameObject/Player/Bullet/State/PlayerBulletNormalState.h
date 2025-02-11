@@ -20,7 +20,7 @@ public:// 定数
 	const float kChangeStateInterval = 20;
 
 	// 弾の速さ
-	const float kBulletSpeed = 1.0f;
+	const float kBulletSpeed = 2.0f;
 
 private:
 	// 速度変化

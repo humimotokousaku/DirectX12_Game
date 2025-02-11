@@ -283,6 +283,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\Event\StartEvent.cpp" />
     <ClCompile Include="Project\Event\TitleEvent.cpp" />
     <ClCompile Include="Engine\Pso\SpritePSO.cpp" />
+    <ClCompile Include="TrailObject.cpp" />
+    <ClCompile Include="Engine\Pso\TrailPSO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h" />
@@ -413,6 +415,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\Event\StartEvent.h" />
     <ClInclude Include="Project\Event\TitleEvent.h" />
     <ClInclude Include="Engine\Pso\SpritePSO.h" />
+    <ClInclude Include="TrailObject.h" />
+    <ClInclude Include="Engine\Pso\TrailPSO.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt" />
@@ -617,6 +621,22 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <FxCompile Include="Engine\resources\sharder\Sprite.VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\Trail.PS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Engine\resources\sharder\Trail.VS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Demo|x64'">true</ExcludedFromBuild>

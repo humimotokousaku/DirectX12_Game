@@ -30,12 +30,19 @@ void Particles::Initialize(const Vector3& emitterPos) {
 	instancingResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(ParticleForGPU) * kNumMaxInstance);
 	instancingData_ = nullptr;
 	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
-
 	// SRVの作成
 	srvIndex_ = SrvManager::GetInstance()->Allocate();
 	instancingSrvHandleCPU_ = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex_);
 	instancingSrvHandleGPU_ = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex_);
 	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, instancingResource_.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
+
+	// Resource作成
+	instancingTextureResource_ = CreateTexture2DArrayBufferResource(DirectXCommon::GetInstance()->GetDevice(), kNumMaxInstance);
+	instancingTextureData_ = nullptr;
+	instancingTextureResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingTextureData_));
+	// SRVの作成
+	textureArraySrvIndex_ = SrvManager::GetInstance()->Allocate();
+	SrvManager::GetInstance()->CreateSRVforTexture2DArray(textureArraySrvIndex_, instancingTextureResource_.Get(), kNumMaxInstance);
 
 
 	// Dissolveの情報を書き込む
@@ -44,7 +51,6 @@ void Particles::Initialize(const Vector3& emitterPos) {
 	dissolveResource_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&dissolveData_));
 	dissolveData_->isActive = true;
 	dissolveData_->maskThreshold = 0.5f;
-
 
 	// 頂点データのメモリ確保
 	CreateVertexResource();
@@ -153,6 +159,8 @@ void Particles::Draw() {
 		}
 
 		if (numInstance < kNumMaxInstance) {
+			instancingTextureData_[numInstance] = 2;
+
 			// WVPとworldMatrixの計算
 			Matrix4x4 worldMatrix = MakeAffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate + emitter_.transform.worldPos);
 			instancingData_[numInstance].World = Multiply(worldMatrix, Multiply(camera_->GetViewProjection().matView, camera_->GetViewProjection().matProjection));
@@ -172,7 +180,8 @@ void Particles::Draw() {
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	// DescriptorTableの設定
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(1, srvIndex_);
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textures_.particle);
+	//SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textures_.particle);
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureArraySrvIndex_);
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, textures_.dissolve);
 	// マテリアルCBufferの場所を設定
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -304,6 +313,35 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Particles::CreateBufferResource(const Mic
 	assert(SUCCEEDED(hr));
 
 	return vertexResource;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> Particles::CreateTexture2DArrayBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, int size) {
+	// 頂点リソース用のヒープの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD; // UploadHeapを使う
+	D3D12_RESOURCE_DESC textureDesc = {};
+	textureDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	textureDesc.Width = 512; // テクスチャの幅
+	textureDesc.Height = 512; // テクスチャの高さ
+	textureDesc.DepthOrArraySize = (UINT16)size; // 配列のサイズ (4レイヤー)
+	textureDesc.MipLevels = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 8bit RGBA
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+	textureDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> textureArray;
+	HRESULT hr;
+	hr = device->CreateCommittedResource(
+		&uploadHeapProperties,
+		D3D12_HEAP_FLAG_NONE,
+		&textureDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST, // 初期状態
+		nullptr,
+		IID_PPV_ARGS(&textureArray)
+	);
+
+	return textureArray;
 }
 
 void Particles::CreateVertexResource() {

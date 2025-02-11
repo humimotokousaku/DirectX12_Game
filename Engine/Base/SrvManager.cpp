@@ -50,6 +50,22 @@ void SrvManager::CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 	directXCommon_->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
 }
 
+void SrvManager::CreateSRVforTexture2DArray(uint32_t srvIndex, ID3D12Resource* pResource, uint32_t textureSize) {
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+	srvDesc.Texture2DArray.MostDetailedMip = 0;
+	srvDesc.Texture2DArray.MipLevels = 1;
+	srvDesc.Texture2DArray.FirstArraySlice = 0;
+	srvDesc.Texture2DArray.ArraySize = textureSize;
+	srvDesc.Texture2DArray.PlaneSlice = 0;
+	srvDesc.Texture2DArray.ResourceMinLODClamp = 0.0f;
+
+	// SRVの生成
+	DirectXCommon::GetInstance()->GetDevice()->CreateShaderResourceView(pResource, &srvDesc, GetCPUDescriptorHandle(srvIndex));
+}
+
 void SrvManager::CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride) {
 	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
 	instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;

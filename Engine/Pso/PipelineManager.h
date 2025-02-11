@@ -10,6 +10,7 @@
 #include "SpritePSO.h"
 #include "LinePSO.h"
 #include "ParticlePSO.h"
+#include "TrailPSO.h"
 #include "OutlinePSO.h"
 #include "DissolvePSO.h"
 #include "GaussPSO.h"
@@ -119,6 +120,7 @@ private:
 	std::unique_ptr<SkyboxPSO> skyboxPSO_;
 	std::unique_ptr<LinePSO> linePSO_;
 	std::unique_ptr<ParticlePSO> particlePSO_;
+	std::unique_ptr<TrailPSO> trailPSO_;
 	// ポストエフェクトで使用するPSO
 	std::vector<IPSO*> postEffect_;
 

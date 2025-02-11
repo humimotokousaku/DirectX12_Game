@@ -26,6 +26,7 @@ struct Particle {
 	Vector4 color;			// 色
 	float lifeTime;			// 生存時間
 	float currentTime = 0;	// 経過フレーム
+	uint32_t textureNum;
 };
 // Particleを発生させる
 struct Emitter {
@@ -193,6 +194,8 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
 
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTexture2DArrayBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, int size);
+
 	void CreateVertexResource();
 
 	void CreateVertexBufferView();
@@ -262,6 +265,10 @@ private:
 	ParticleForGPU* instancingData_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 	uint32_t srvIndex_;
+
+	int* instancingTextureData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> instancingTextureResource_;
+	uint32_t textureArraySrvIndex_;
 
 	// カメラ
 	Camera* camera_;

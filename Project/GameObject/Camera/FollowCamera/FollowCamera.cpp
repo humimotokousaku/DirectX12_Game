@@ -108,7 +108,7 @@ void FollowCamera::ShotUpdate() {
 	// 撃っている最中でないならreturn
 	if (!multiLockOnSystem_->GetIsShot()) { return; }
 
-	//shotShake_->SetIsActive(true);
+	shotShake_->SetIsActive(true);
 
 	// 画面の揺れを行う
 	if (shotShake_->GetIsEnd()) {
