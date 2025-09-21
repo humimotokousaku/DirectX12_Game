@@ -139,6 +139,9 @@ void Player::Initialize() {
 	hitSystem_->Initialize();
 	hitSystem_->SetEndFrame(30.0f);
 
+	// トレイルオブジェクト
+	//trailObject_ = std::make_unique<TrailObject>(16,camera_);
+
 	// 死亡フラグ
 	isDead_ = false;
 
@@ -167,6 +170,9 @@ void Player::Update() {
 	// 弾ゲージの更新処理
 	BulletGaugeUpdate();
 
+	// トレイルオブジェクトの更新処理
+	//trailObject_->Update();
+
 	// 自機の軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {
 		//particles_[i]->Update();
@@ -179,6 +185,9 @@ void Player::Update() {
 void Player::Draw() {
 	// 自機
 	object3d_->Draw(playerTexture_);
+
+	// トレイル
+	//trailObject_->Draw();
 
 	// 軌道パーティクル
 	for (int i = 0; i < particles_.size(); i++) {

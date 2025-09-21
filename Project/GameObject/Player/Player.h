@@ -15,6 +15,7 @@
 #include "HitSystem.h"
 #include "EvasionSystem.h"
 #include "GlobalVariables.h"
+#include "TrailObject.h"
 #include <map>
 #include <tuple>
 
@@ -24,10 +25,6 @@ class GameSystem;
 /// </summary>
 class Player {
 public:// パブリックなメンバ関数
-	/// 
-	/// Default Method
-	/// 
-
 	Player();
 	~Player();
 
@@ -257,6 +254,9 @@ private:// プライベートなメンバ変数
 	std::unique_ptr<HitSystem> hitSystem_;
 	// 回避システム
 	std::unique_ptr<EvasionSystem> evasionSystem_;
+
+	// トレイルオブジェクト
+	std::unique_ptr<TrailObject> trailObject_;
 
 	// 加速時の情報
 	BoostData boost_{};

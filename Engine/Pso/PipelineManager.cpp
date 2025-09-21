@@ -60,10 +60,10 @@ void PipelineManager::Initialize() {
 	particlePSO_ = std::make_unique<ParticlePSO>();
 	particlePSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_,"Particle.VS.hlsl","Particle.PS.hlsl");
 	particlePSO_->CreatePSO();
-	//// トレイルに使用するPSO
-	//trailPSO_ = std::make_unique<TrailPSO>();
-	//trailPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Particle.VS.hlsl", "Particle.PS.hlsl");
-	//trailPSO_->CreatePSO();
+	// トレイルに使用するPSO
+	trailPSO_ = std::make_unique<TrailPSO>();
+	trailPSO_->Init(dxcUtils_, dxcCompiler_, includeHandler_, "Trail.VS.hlsl", "Trail.PS.hlsl");
+	trailPSO_->CreatePSO();
 
 #pragma region postEffectに使用するPSO
 	// 何もしない

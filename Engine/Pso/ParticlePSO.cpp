@@ -98,7 +98,7 @@ void ParticlePSO::CreatePSO() {
 	CreateRootSignature();
 
 #pragma region inputElement
-	psoData_.inputElementDescs_.resize(3);
+	psoData_.inputElementDescs_.resize(4);
 	psoData_.inputElementDescs_[0].SemanticName = "POSITION";
 	psoData_.inputElementDescs_[0].SemanticIndex = 0;
 	psoData_.inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -111,6 +111,10 @@ void ParticlePSO::CreatePSO() {
 	psoData_.inputElementDescs_[2].SemanticIndex = 0;
 	psoData_.inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	psoData_.inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	psoData_.inputElementDescs_[3].SemanticName = "TEXCOORD";
+	psoData_.inputElementDescs_[3].SemanticIndex = 1;
+	psoData_.inputElementDescs_[3].Format = DXGI_FORMAT_R32G32_FLOAT;
+	psoData_.inputElementDescs_[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 	psoData_.inputLayoutDesc_.pInputElementDescs = psoData_.inputElementDescs_.data();
 	psoData_.inputLayoutDesc_.NumElements = static_cast<UINT>(psoData_.inputElementDescs_.size());
 #pragma endregion

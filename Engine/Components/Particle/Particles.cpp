@@ -36,15 +36,6 @@ void Particles::Initialize(const Vector3& emitterPos) {
 	instancingSrvHandleGPU_ = SrvManager::GetInstance()->GetGPUDescriptorHandle(srvIndex_);
 	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, instancingResource_.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
 
-	// Resource作成
-	instancingTextureResource_ = CreateTexture2DArrayBufferResource(DirectXCommon::GetInstance()->GetDevice(), kNumMaxInstance);
-	instancingTextureData_ = nullptr;
-	instancingTextureResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingTextureData_));
-	// SRVの作成
-	textureArraySrvIndex_ = SrvManager::GetInstance()->Allocate();
-	SrvManager::GetInstance()->CreateSRVforTexture2DArray(textureArraySrvIndex_, instancingTextureResource_.Get(), kNumMaxInstance);
-
-
 	// Dissolveの情報を書き込む
 	dissolveResource_ = CreateBufferResource(DirectXCommon::GetInstance()->GetDevice(), sizeof(DissolveDataForGPU)).Get();
 	// 書き込むためのアドレスを取得
@@ -159,7 +150,7 @@ void Particles::Draw() {
 		}
 
 		if (numInstance < kNumMaxInstance) {
-			instancingTextureData_[numInstance] = 2;
+			//instancingTextureData_[numInstance] = 2;
 
 			// WVPとworldMatrixの計算
 			Matrix4x4 worldMatrix = MakeAffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate + emitter_.transform.worldPos);
@@ -180,8 +171,7 @@ void Particles::Draw() {
 	DirectXCommon::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	// DescriptorTableの設定
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(1, srvIndex_);
-	//SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textures_.particle);
-	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textureArraySrvIndex_);
+	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(2, textures_.particle);
 	SrvManager::GetInstance()->SetGraphicsRootDesctiptorTable(5, textures_.dissolve);
 	// マテリアルCBufferの場所を設定
 	DirectXCommon::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());

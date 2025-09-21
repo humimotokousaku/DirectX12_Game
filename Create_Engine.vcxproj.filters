@@ -518,7 +518,7 @@
     <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
       <Filter>Project\GameObject\Player\System</Filter>
     </ClCompile>
-    <ClCompile Include="TrailObject.cpp" />
+    <ClCompile Include="Project\GameObject\TrailObject\TrailObject.cpp" />
     <ClCompile Include="Engine\Pso\TrailPSO.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -906,7 +906,7 @@
     <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
       <Filter>Project\GameObject\Player\System</Filter>
     </ClInclude>
-    <ClInclude Include="TrailObject.h" />
+    <ClInclude Include="Project\GameObject\TrailObject\TrailObject.h" />
     <ClInclude Include="Engine\Pso\TrailPSO.h" />
   </ItemGroup>
   <ItemGroup>

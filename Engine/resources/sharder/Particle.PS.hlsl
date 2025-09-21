@@ -23,12 +23,14 @@ Texture2D<float32_t> gMaskTexture : register(t1);
 SamplerState gSampler : register(s0);
 struct PixelShaderOutput {
 	float32_t4 color : SV_TARGET0;
-
 };
 
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
-	float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
+    float32_t4x4 uvMatrix = gMaterial.uvTransform;
+    uvMatrix[0][3] = input.clippingArea.x;
+    uvMatrix[1][3] = input.clippingArea.y;
+    float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), uvMatrix);
 	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 	
     if (gDissolveData.isActive != 0)

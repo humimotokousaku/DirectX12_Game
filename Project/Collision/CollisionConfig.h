@@ -4,20 +4,20 @@
 
 /// 衝突属性
 // プレイヤー陣営
-const uint32_t kCollisionAttributePlayer = 0b01;
+inline const uint32_t kCollisionAttributePlayer = 0b01;
 // 敵陣営
-const uint32_t kCollisionAttributeEnemy = 0b01 << 1;
+inline const uint32_t kCollisionAttributeEnemy = 0b01 << 1;
 // 敵陣営の弾
-const uint32_t kCollisionAttributeEnemyBullet = 0b01 << 6;
+inline const uint32_t kCollisionAttributeEnemyBullet = 0b01 << 6;
 // 障害物
-const uint32_t kCollisionAttributeObstacles = 0b01 << 2;
+inline const uint32_t kCollisionAttributeObstacles = 0b01 << 2;
 // ジャスト回避陣営
-const uint32_t kCollisionAttributeJustEvasion = 0b01 << 3;
+inline const uint32_t kCollisionAttributeJustEvasion = 0b01 << 3;
 
 /// 当たり判定の形状
 // OBB
-const uint32_t kCollisionOBB = 0b01 << 4;
-const uint32_t kCollisionNone = 0b01 << 5;
+inline const uint32_t kCollisionOBB = 0b01 << 4;
+inline const uint32_t kCollisionNone = 0b01 << 5;
 
 // 立方体
 struct cAABB {

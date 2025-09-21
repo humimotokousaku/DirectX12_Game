@@ -18,12 +18,14 @@ struct ParticleForGPU {
 	Matrix4x4 WVP;
 	Matrix4x4 World;
 	Vector4 color;
+	Vector2 clippingArea;
 };
 
 struct Particle {
 	Transform transform;	// 座標
 	Vector3 vel;			// 速度
 	Vector4 color;			// 色
+	Vector2 clippingArea;	// 
 	float lifeTime;			// 生存時間
 	float currentTime = 0;	// 経過フレーム
 	uint32_t textureNum;
