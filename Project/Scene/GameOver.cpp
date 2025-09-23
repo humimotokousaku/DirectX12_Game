@@ -1,5 +1,4 @@
 #include "GameOver.h"
-#include "GameManager.h"
 #include "SceneTransition/SceneTransition.h"
 
 void GameOver::Initialize() {

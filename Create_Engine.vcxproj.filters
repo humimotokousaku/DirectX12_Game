@@ -247,9 +247,6 @@
     <ClCompile Include="engine\pso\LinePSO.cpp">
       <Filter>Engine\Pso</Filter>
     </ClCompile>
-    <ClCompile Include="project\scene\GameManager.cpp">
-      <Filter>Project\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="engine\math\Lerp.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
@@ -301,15 +298,6 @@
     <ClCompile Include="Engine\math\Quaternion.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.cpp">
-      <Filter>Project\GameObject\Enemy\BeamEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateVertical.cpp">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateWait.cpp">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Collision\Collider.cpp">
       <Filter>Project\Collision</Filter>
     </ClCompile>
@@ -325,33 +313,6 @@
     <ClCompile Include="engine\Pso\PostEffect\BloomPSO.cpp">
       <Filter>Engine\Pso\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\Bullet\EnemyBullet.cpp">
-      <Filter>Project\GameObject\Enemy\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\EnemyManager.cpp">
-      <Filter>Project\GameObject\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateApproach.cpp">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateWait.cpp">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateLeave.cpp">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\MoveEnemy.cpp">
-      <Filter>Project\GameObject\Enemy\MoveEnemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.cpp">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.cpp">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.cpp">
-      <Filter>Project\GameObject\Enemy\FixedTurret</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\PostProcess\Gauss.cpp">
       <Filter>Engine\PostProcess</Filter>
     </ClCompile>
@@ -363,18 +324,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Pso\IPSO.cpp">
       <Filter>Engine\Pso</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Score\Score.cpp">
-      <Filter>Project\GameObject\Score</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BeamEnemy\State\BaseBeamEnemyState.cpp">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\MoveEnemy\State\BaseMoveEnemyState.cpp">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\BaseFixedTurretState.cpp">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
     </ClCompile>
     <ClCompile Include="engine\Utility\LevelData.cpp">
       <Filter>Engine\Utility</Filter>
@@ -396,15 +345,6 @@
     </ClCompile>
     <ClCompile Include="engine\Pso\PostEffect\PostEffectPSO.cpp">
       <Filter>Engine\Pso\PostEffect</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Player.cpp">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Camera\FollowCamera\FollowCamera.cpp">
-      <Filter>Project\GameObject\Camera\FollowCamera</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Camera\RailCamera\RailCamera.cpp">
-      <Filter>Project\GameObject\Camera\RailCamera</Filter>
     </ClCompile>
     <ClCompile Include="engine\PostProcess\RadialBlur.cpp">
       <Filter>Engine\PostProcess</Filter>
@@ -433,16 +373,7 @@
     <ClCompile Include="Engine\Math\Vector2.cpp">
       <Filter>Engine\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\BaseEnemy.cpp">
-      <Filter>Project\GameObject\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Project\Event\ClearEvent.cpp">
-      <Filter>Project\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Event\DeadEvent.cpp">
-      <Filter>Project\Event</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Pso\PostEffect\VignetingPSO.cpp">
       <Filter>Engine\Pso\PostEffect</Filter>
     </ClCompile>
@@ -452,72 +383,37 @@
     <ClCompile Include="Engine\Utility\Utility.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Event\StartEvent.cpp">
-      <Filter>Project\Event</Filter>
-    </ClCompile>
     <ClCompile Include="Project\Scene\IScene.cpp">
       <Filter>Project\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Project\GameObject\Skydome\Skydome.cpp">
       <Filter>Project\GameObject\Skydome</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameSystem.cpp">
-      <Filter>Project</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\Event\TitleEvent.cpp">
-      <Filter>Project\Event</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp">
       <Filter>Engine\Components\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.cpp">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Utility\Shake.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Project\Components\LevelManager\LevelManager.cpp">
-      <Filter>Project\Components\LevelManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\GameObjectManager.cpp">
-      <Filter>Project\GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\DeadParticles\DeadParicles.cpp">
-      <Filter>Project\GameObject\DeadParticles</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\DeadParticles\DeadParticle.cpp">
-      <Filter>Project\GameObject\DeadParticles</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\DeadParticles\DeadParticleLine.cpp">
-      <Filter>Project\GameObject\DeadParticles</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Pso\SpritePSO.cpp">
       <Filter>Engine\Pso</Filter>
     </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\PlayerBullet.cpp">
-      <Filter>Project\GameObject\Player\Bullet</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.cpp">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.cpp">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.cpp">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\MultiLockOnSystem.cpp">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\JustEvasionSystem.cpp">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\HitSystem.cpp">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClCompile>
-    <ClCompile Include="Project\GameObject\Player\Systems\EvasionSystem.cpp">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClCompile>
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\DebugDrawLeaf.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\DecoratorNode\DecoratorNodeBase.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\DecoratorNode\Inverter.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\CompositeNodeBase.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\Selector.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\Sequence.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Actor\Actor.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Actor\ActorHealth.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Actor\ActorManager.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Actor\BlackBoard.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Math\MyRectangle.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\Math\MyTimer.cpp" />
+    <ClCompile Include="Project\GameObject\World\World.cpp" />
+    <ClCompile Include="Project\GameObject\Player\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -739,67 +635,10 @@
     <ClInclude Include="Project\Collision\CollisionConfig.h">
       <Filter>Project\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BaseBeamEnemyState.h">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateVertical.h">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\State\BeamEnemyStateWait.h">
-      <Filter>Project\GameObject\Enemy\BeamEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BeamEnemy\BeamEnemy.h">
-      <Filter>Project\GameObject\Enemy\BeamEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\Bullet\EnemyBullet.h">
-      <Filter>Project\GameObject\Enemy\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\BaseFixedTurretState.h">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretAttackState.h">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretWaitState.h">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\FixedTurret.h">
-      <Filter>Project\GameObject\Enemy\FixedTurret</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\BaseMoveEnemyState.h">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateApproach.h">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateLeave.h">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\State\MoveEnemyStateWait.h">
-      <Filter>Project\GameObject\Enemy\MoveEnemy\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\MoveEnemy\MoveEnemy.h">
-      <Filter>Project\GameObject\Enemy\MoveEnemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\BaseEnemy.h">
-      <Filter>Project\GameObject\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\EnemyManager.h">
-      <Filter>Project\GameObject\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Score\Score.h">
-      <Filter>Project\GameObject\Score</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Player.h">
-      <Filter>Project\GameObject\Player</Filter>
-    </ClInclude>
     <ClInclude Include="project\scene\TitleScene.h">
       <Filter>Project\Scene</Filter>
     </ClInclude>
     <ClInclude Include="project\scene\GameClear.h">
-      <Filter>Project\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="project\scene\GameManager.h">
       <Filter>Project\Scene</Filter>
     </ClInclude>
     <ClInclude Include="project\scene\GameOver.h">
@@ -811,20 +650,8 @@
     <ClInclude Include="project\scene\IScene.h">
       <Filter>Project\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Camera\FollowCamera\FollowCamera.h">
-      <Filter>Project\GameObject\Camera\FollowCamera</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Camera\RailCamera\RailCamera.h">
-      <Filter>Project\GameObject\Camera\RailCamera</Filter>
-    </ClInclude>
     <ClInclude Include="Project\Components\SceneTransition\SceneTransition.h">
       <Filter>Project\Components\SceneTransition</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Event\ClearEvent.h">
-      <Filter>Project\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Event\DeadEvent.h">
-      <Filter>Project\Event</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Pso\PostEffect\VignetingPSO.h">
       <Filter>Engine\Pso\PostEffect</Filter>
@@ -835,44 +662,14 @@
     <ClInclude Include="Engine\Utility\Utility.h">
       <Filter>Engine\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Project\Event\StartEvent.h">
-      <Filter>Project\Event</Filter>
-    </ClInclude>
     <ClInclude Include="Project\GameObject\Skydome\Skydome.h">
       <Filter>Project\GameObject\Skydome</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameSystem.h">
-      <Filter>Project</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Event\TitleEvent.h">
-      <Filter>Project\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\PlayerConfig.h">
-      <Filter>Project\GameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\3D\IObject3D.h">
       <Filter>Engine\Components\3D</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Enemy\FixedTurret\State\FixedTurretLeaveState.h">
-      <Filter>Project\GameObject\Enemy\FixedTurret\State</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Utility\Shake.h">
       <Filter>Engine\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\Components\LevelManager\LevelManager.h">
-      <Filter>Project\Components\LevelManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\GameObjectManager.h">
-      <Filter>Project\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\DeadParticles\DeadParticleLine.h">
-      <Filter>Project\GameObject\DeadParticles</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\DeadParticles\DeadParicles.h">
-      <Filter>Project\GameObject\DeadParticles</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\DeadParticles\DeadParticle.h">
-      <Filter>Project\GameObject\DeadParticles</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Pso\SpritePSO.h">
       <Filter>Engine\Pso</Filter>
@@ -880,30 +677,34 @@
     <ClInclude Include="Engine\PostProcess\PostEffectStructs.h">
       <Filter>Engine\PostProcess</Filter>
     </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\PlayerBullet.h">
-      <Filter>Project\GameObject\Player\Bullet</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletNormalState.h">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\PlayerBulletFollowState.h">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Bullet\State\BasePlayerBulletState.h">
-      <Filter>Project\GameObject\Player\Bullet\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\MultiLockOnSystem.h">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\JustEvasionSystem.h">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\HitSystem.h">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Project\GameObject\Player\Systems\EvasionSystem.h">
-      <Filter>Project\GameObject\Player\System</Filter>
-    </ClInclude>
+    <ClInclude Include="Project\GameObject\BehaviourTree\NodeResult.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\INode.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\NodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\AlwaysFailLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\AlwaysSuccessLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\DebugDrawLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\LeafNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\DecoratorNode\Inverter.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\DecoratorNode\DecoratorNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\Sequence.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\CompositeNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\Selector.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\Actor.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\ActorHealth.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\ActorManager.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\BlackBoard.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\IAgent.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\Mathf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\MyRectangle.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\MySystemTimer.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\MyTimer.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\Screen.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\Math\Singleton.h" />
+    <ClInclude Include="Project\GameObject\World\World.h" />
+    <ClInclude Include="Project\GameObject\World\IWorld.h" />
+    <ClInclude Include="Project\GameObject\Player\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

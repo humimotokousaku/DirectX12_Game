@@ -2,7 +2,8 @@
 #include "IScene.h"
 #include "Input.h"
 #include "Sprite.h"
-#include "TitleEvent.h"
+#include "Camera.h"
+#include "World/World.h"
 
 class GameManager;
 /// <summary>
@@ -24,11 +25,11 @@ public:
 
 private:// エンジン機能
 	Input* input_;
-
+	std::unique_ptr<Camera> camera_;
 private:
-	// タイトル演出
-	std::unique_ptr<TitleEvent> titleEvent_;
+	World mWorld;
 
-	// UI
-	std::array<std::unique_ptr<Sprite>, 2> guideUI_;
+	bool mIsEnd = false;
+
+	int mRunnningNodeId = 0;
 };

@@ -1,5 +1,4 @@
 #include "GameClear.h"
-#include "GameManager.h"
 #include "SceneTransition/SceneTransition.h"
 
 void GameClear::Initialize() {

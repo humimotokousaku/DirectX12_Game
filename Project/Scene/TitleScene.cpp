@@ -6,54 +6,29 @@
 #include "ModelManager.h"
 #include "SceneTransition/SceneTransition.h"
 
+#include "BehaviourTree/Actor/Enemy/Attacker.h"
+#include "Player/Player.h"
+
 void TitleScene::Initialize() {
 	sceneNum = TITLE_SCENE;
 	input_ = Input::GetInstance();
 
-	titleEvent_ = std::make_unique<TitleEvent>();
-	titleEvent_->Initialize();
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
 
-	// UIのスプライトを作成
-	guideUI_[0] = std::make_unique<Sprite>();
-	guideUI_[0]->Initialize("Textures/UI", "titleName.png");
-	guideUI_[0]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 });
-	guideUI_[1] = std::make_unique<Sprite>();
-	guideUI_[1]->Initialize("Textures/UI", "guide_pad_A.png");
-	guideUI_[1]->SetSize(Vector2{ 64,64 });
-	guideUI_[1]->SetPos(Vector2{ (float)WinApp::kClientWidth_ / 2,(float)WinApp::kClientHeight_ / 4 * 3 });
-	for (int i = 0; i < guideUI_.size(); i++) {
-		PostEffectManager::GetInstance()->AddSpriteList(guideUI_[i].get());
-	}
+	mWorld.add_actor(new Player());
+	mWorld.add_actor(new Attacker(&mWorld, camera_.get(),"Engine/resources/behavior_tree.json"));
 }
 
 void TitleScene::Update() {
-	// シーン遷移演出開始
-	if (input_->TriggerKey(DIK_SPACE) || input_->GamePadTrigger(XINPUT_GAMEPAD_A)) {
-		titleEvent_->SetIsActive(true);
-		// UIを非表示にする
-		for (int i = 0; i < guideUI_.size(); i++) {
-			guideUI_[i]->isActive_ = false;
-		}
-	}
-
-	// タイトル演出
-	titleEvent_->Update();
-
-	// タイトル演出が終わっているならシーン遷移演出開始
-	if(titleEvent_->GetIsEnd()){
-		SceneTransition::GetInstance()->Start(); 
-	}
-	// シーン遷移演出が終わったら遷移する
-	if (SceneTransition::GetInstance()->GetSceneTransitionSignal()) {
-		sceneNum = GAME_SCENE;
-	}
+	float delta_time = 1.f;
+	mWorld.update(delta_time);
 }
 
 void TitleScene::Draw() {
-	// タイトル演出
-	titleEvent_->Draw();
+	mWorld.draw();
 }
 
 void TitleScene::Finalize() {
-
+	mWorld.clear();
 }
