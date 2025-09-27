@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Math/BehaviourTree/LeafNode/LeafNodeBase.h"
+#include "LeafNodeBase.h"
 
 /// <summary>
-/// ƒvƒŒƒCƒ„[‚©‚ç“¦‚°‚é—tƒm[ƒh
+/// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰é€ƒã’ã‚‹è‘‰ãƒãƒ¼ãƒ‰
 /// </summary>
 class EscapeFromPlayerLeaf : public LeafNodeBase {
 public:
@@ -11,7 +11,7 @@ public:
 
 	~EscapeFromPlayerLeaf();
 
-	void tick() override;
+	void Tick() override;
 
-	NodeResult get_node_result() const override;
+	NodeResult GetNodeResult() const override;
 };

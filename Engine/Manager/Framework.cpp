@@ -1,6 +1,7 @@
 #include "Framework.h"
 #include "ConvertString.h"
 #include "GlobalVariables.h"
+#include "../../externals/imnodes/imnodes.h"
 
 Framework::Framework() {
 
@@ -26,6 +27,7 @@ void Framework::Initialize() {
 	// ImGuiの初期化
 	imGuiManager_ = new ImGuiManager();
 	imGuiManager_->Initialize(winApp_->GetHwnd());
+	ImNodes::CreateContext();
 	// Textureの初期化
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->Initialize(srvManager_);
@@ -119,6 +121,7 @@ void Framework::Run() {
 
 void Framework::Finalize() {
 	// ImGui
+	ImNodes::DestroyContext();
 	imGuiManager_->Finalize();
 	textureManager_->Finalize();
 	directXCommon_->Finalize();

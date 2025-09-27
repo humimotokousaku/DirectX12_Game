@@ -13,12 +13,12 @@ DebugDrawLeaf::~DebugDrawLeaf()
 {
 }
 
-void DebugDrawLeaf::tick()
+void DebugDrawLeaf::Tick()
 {
 	//printfDx("%i\n", mText);
 }
 
-NodeResult DebugDrawLeaf::get_node_result() const
+NodeResult DebugDrawLeaf::GetNodeResult() const
 {
 	// 必ず成功を返す
 	return NodeResult::Success;

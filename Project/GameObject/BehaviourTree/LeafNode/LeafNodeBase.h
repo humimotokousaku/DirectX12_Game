@@ -3,7 +3,7 @@
 #include "../NodeBase.h"
 
 /// <summary>
-/// 葉ノードの基底クラス
+/// 葉ノードの基底クラス(Actorの具体的な行動処理)
 /// </summary>
 class LeafNodeBase : public NodeBase {
 protected:

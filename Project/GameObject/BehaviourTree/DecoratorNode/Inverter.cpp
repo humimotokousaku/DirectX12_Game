@@ -5,20 +5,20 @@
 Inverter::Inverter(BlackBoard* black_board, INode* child_node)
 	: DecoratorNodeBase(black_board)
 {
-	set_node(child_node);
+	SetNode(child_node);
 }
 
 Inverter::~Inverter()
 {
 }
 
-void Inverter::tick()
+void Inverter::Tick()
 {
-	// qƒm[ƒh‚ğÀs
-	mChildNode->tick();
-	// qƒm[ƒh‚ÌŒ‹‰Ê‚ğæ“¾
-	NodeResult result = mChildNode->get_node_result();
-	// Œ‹‰Ê‚ğ”½“]‚³‚¹‚é
+	// å­ãƒãƒ¼ãƒ‰ã‚’å®Ÿè¡Œ
+	mChildNode->Tick();
+	// å­ãƒãƒ¼ãƒ‰ã®çµæœã‚’å–å¾—
+	NodeResult result = mChildNode->GetNodeResult();
+	// çµæœã‚’åè»¢ã•ã›ã‚‹
 	if (result == NodeResult::Success) {
 		mNodeResult = NodeResult::Fail;
 		return;
@@ -28,6 +28,6 @@ void Inverter::tick()
 		return;
 	}
 
-	// qƒm[ƒh‚ªÀs’†‚Ìê‡‚ÍAInverter‚àÀs’†‚É‚·‚é
+	// å­ãƒãƒ¼ãƒ‰ãŒå®Ÿè¡Œä¸­ã®å ´åˆã¯ã€Inverterã‚‚å®Ÿè¡Œä¸­ã«ã™ã‚‹
 	mNodeResult = NodeResult::Running;
 }

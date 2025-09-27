@@ -159,19 +159,27 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="externals\imnodes\imnodes.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\Actor.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\ActorHealth.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\ActorManager.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\BlackBoard.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\CompositeNodeBase.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\Selector.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\CompositeNode\Sequence.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\DecoratorNode\DecoratorNodeBase.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\DecoratorNode\Inverter.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\ChasePlayerLeaf.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\CircleAttackLeaf.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\DebugDrawLeaf.cpp" />
     <ClCompile Include="Engine\Components\3D\IObject3D.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\EscapeFromPlayerLeaf.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\WaitLeaf.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Math\MyRectangle.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Math\MyTimer.cpp" />
     <ClCompile Include="Project\GameObject\Player\Player.cpp" />
@@ -234,6 +242,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="engine\Manager\Framework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="project\scene\GameClear.cpp" />
+    <ClCompile Include="Project\Scene\GameManager.cpp" />
     <ClCompile Include="project\scene\GameOver.cpp" />
     <ClCompile Include="project\scene\GameScene.cpp" />
     <ClCompile Include="Project\Scene\IScene.cpp" />
@@ -259,13 +268,18 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Engine\Pso\SpritePSO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="externals\imnodes\imnodes.h" />
+    <ClInclude Include="externals\imnodes\imnodes_internal.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\Actor.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\ActorHealth.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\ActorManager.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\BlackBoard.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\IAgent.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\CompositeNodeBase.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\Selector.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\CompositeNode\Sequence.h" />
@@ -274,8 +288,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\BehaviourTree\INode.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\AlwaysFailLeaf.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\AlwaysSuccessLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\ChasePlayerLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\CircleAttackLeaf.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\DebugDrawLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\EscapeFromPlayerLeaf.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\LeafNodeBase.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\WaitLeaf.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Math\Mathf.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Math\MyRectangle.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Math\MySystemTimer.h" />
@@ -347,6 +365,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Engine\Components\2D\Primitive\Sprite.h" />
     <ClInclude Include="Engine\Components\3D\Primitive\Triangle.h" />
     <ClInclude Include="project\scene\GameClear.h" />
+    <ClInclude Include="Project\Scene\GameManager.h" />
     <ClInclude Include="project\scene\GameOver.h" />
     <ClInclude Include="project\scene\GameScene.h" />
     <ClInclude Include="project\scene\IScene.h" />

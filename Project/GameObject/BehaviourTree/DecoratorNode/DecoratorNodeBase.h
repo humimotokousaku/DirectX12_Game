@@ -7,12 +7,12 @@ public:
 	explicit DecoratorNodeBase(BlackBoard* black_board) : NodeBase(black_board) {}
 	virtual ~DecoratorNodeBase();
 
-	virtual void init() override;
-	virtual void finalize() override;
+	virtual void Init() override;
+	virtual void Finalize() override;
 
-	void set_node(INode* node);
+	void SetNode(INode* node);
 
-	int get_running_node_id() const override;
+	int GetRunningNodeID() const override;
 
 protected:
 	INode* mChildNode = nullptr;

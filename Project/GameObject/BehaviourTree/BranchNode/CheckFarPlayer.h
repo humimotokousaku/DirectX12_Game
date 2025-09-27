@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math/BehaviourTree/BranchNode/BranchNodeBase.h"
+#include "BranchNodeBase.h"
 
 class CheckFarPlayer : public BranchNodeBase {
 public:
@@ -9,7 +9,7 @@ public:
 	~CheckFarPlayer();
 
 private:
-	const bool is_condition() override;
+	const bool IsCondition() override;
 
 private:
 	const float mMaxDistance = 5;

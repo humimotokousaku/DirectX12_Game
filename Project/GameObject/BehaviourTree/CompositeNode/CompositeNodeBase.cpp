@@ -8,36 +8,36 @@ CompositeNodeBase::~CompositeNodeBase()
 	mChildNodes.clear();
 }
 
-void CompositeNodeBase::init()
+void CompositeNodeBase::Init()
 {
-	NodeBase::init();
+	NodeBase::Init();
 	mRunningNodeIndex = 0;
 
-	// Å‰‚Ìƒm[ƒh‚ð‰Šú‰»
+	// æœ€åˆã®ãƒŽãƒ¼ãƒ‰ã‚’åˆæœŸåŒ–
 	if (mChildNodes.size() > 0) {
-		mChildNodes[mRunningNodeIndex]->init();
+		mChildNodes[mRunningNodeIndex]->Init();
 	}
 	else {
 		mNodeResult = NodeResult::Fail;
 	}
 }
 
-void CompositeNodeBase::finalize()
+void CompositeNodeBase::Finalize()
 {
-	NodeBase::finalize();
+	NodeBase::Finalize();
 
-	// Å‰‚Ìƒm[ƒh‚ð‰Šú‰»
+	// æœ€åˆã®ãƒŽãƒ¼ãƒ‰ã‚’åˆæœŸåŒ–
 	mRunningNodeIndex = 0;
-	mChildNodes[mRunningNodeIndex]->init();
+	mChildNodes[mRunningNodeIndex]->Init();
 }
 
-void CompositeNodeBase::add_node(INode* node)
+void CompositeNodeBase::AddNode(INode* node)
 {
 	mChildNodes.push_back(node);
 }
 
-int CompositeNodeBase::get_running_node_id() const
+int CompositeNodeBase::GetRunningNodeID() const
 {
-	// Œ»Ý“®‚©‚µ‚Ä‚¢‚éƒm[ƒh‚ÌID‚ð•Ô‚·
-	return mChildNodes[mRunningNodeIndex]->get_running_node_id();
+	// ç¾åœ¨å‹•ã‹ã—ã¦ã„ã‚‹ãƒŽãƒ¼ãƒ‰ã®IDã‚’è¿”ã™
+	return mChildNodes[mRunningNodeIndex]->GetRunningNodeID();
 }

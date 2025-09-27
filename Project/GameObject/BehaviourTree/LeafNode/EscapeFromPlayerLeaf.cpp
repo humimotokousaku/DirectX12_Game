@@ -1,8 +1,8 @@
 #include "EscapeFromPlayerLeaf.h"
 
-#include "Math/Vector2.h"
-#include "Actor/BlackBoard.h"
-#include "Actor/IAgent.h"
+#include "../Math/Vector2.h"
+#include "../Actor/BlackBoard.h"
+#include "../Actor/IAgent.h"
 
 EscapeFromPlayerLeaf::EscapeFromPlayerLeaf(BlackBoard* black_board)
 	: LeafNodeBase(black_board)
@@ -13,19 +13,19 @@ EscapeFromPlayerLeaf::~EscapeFromPlayerLeaf()
 {
 }
 
-void EscapeFromPlayerLeaf::tick()
+void EscapeFromPlayerLeaf::Tick()
 {
-	// ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ğæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã‚’å–å¾—
 	auto player_pos = mpBlackBoard->get_value<Vector2>("PlayerPos");
 	auto* agent = mpBlackBoard->get_value<IAgent*>("Agent");
 
 	auto vector = agent->get_position() - player_pos;
 
-	agent->move_towards(vector.normalized(), 3.f);
+	agent->move_towards(Normalize(vector), 3.f);
 }
 
-NodeResult EscapeFromPlayerLeaf::get_node_result() const
+NodeResult EscapeFromPlayerLeaf::GetNodeResult() const
 {
-	// •K‚¸¬Œ÷‚ğ•Ô‚·
+	// å¿…ãšæˆåŠŸã‚’è¿”ã™
 	return NodeResult::Success;
 }

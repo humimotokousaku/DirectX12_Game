@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Math/BehaviourTree/LeafNode/LeafNodeBase.h"
+#include "LeafNodeBase.h"
 
 /// <summary>
-/// w’è‚µ‚½ŠÔ‘Ò‹@‚·‚é—tƒm[ƒh
+/// æŒ‡å®šã—ãŸæ™‚é–“å¾…æ©Ÿã™ã‚‹è‘‰ãƒãƒ¼ãƒ‰
 /// </summary>
 class WaitLeaf : public LeafNodeBase {
 public:
 	explicit WaitLeaf(BlackBoard* black_board, const float wait_time);
 	~WaitLeaf();
 
-	void tick() override;
-	void finalize() override;
+	void Tick() override;
+	void Finalize() override;
 
 private:
 	float mWaitTime = 0.f;

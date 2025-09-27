@@ -1,8 +1,8 @@
 #include "ChasePlayerLeaf.h"
 
 #include "Vector2.h"
-#include "Actor/BlackBoard.h"
-#include "Actor/IAgent.h"
+#include "../Actor/BlackBoard.h"
+#include "../Actor/IAgent.h"
 
 
 ChasePlayerLeaf::ChasePlayerLeaf(BlackBoard* black_board)
@@ -14,7 +14,7 @@ ChasePlayerLeaf::~ChasePlayerLeaf()
 {
 }
 
-void ChasePlayerLeaf::tick()
+void ChasePlayerLeaf::Tick()
 {
 	// プレイヤーの位置を取得
 	auto player_pos = mpBlackBoard->get_value<Vector2>("PlayerPos");
@@ -22,10 +22,10 @@ void ChasePlayerLeaf::tick()
 
 	auto vector = player_pos - agent->get_position();
 
-	agent->move_towards(vector.normalized(), 3.25f);
+	agent->move_towards(Normalize(vector), 3.25f);
 }
 
-NodeResult ChasePlayerLeaf::get_node_result() const
+NodeResult ChasePlayerLeaf::GetNodeResult() const
 {
 	// 必ず成功を返す
 	return NodeResult::Success;

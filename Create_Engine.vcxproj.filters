@@ -414,6 +414,15 @@
     <ClCompile Include="Project\GameObject\BehaviourTree\Math\MyTimer.cpp" />
     <ClCompile Include="Project\GameObject\World\World.cpp" />
     <ClCompile Include="Project\GameObject\Player\Player.cpp" />
+    <ClCompile Include="Project\Scene\GameManager.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\WaitLeaf.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\ChasePlayerLeaf.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\CircleAttackLeaf.cpp" />
+    <ClCompile Include="externals\imnodes\imnodes.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\LeafNode\EscapeFromPlayerLeaf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\ImGui\imconfig.h">
@@ -705,6 +714,16 @@
     <ClInclude Include="Project\GameObject\World\World.h" />
     <ClInclude Include="Project\GameObject\World\IWorld.h" />
     <ClInclude Include="Project\GameObject\Player\Player.h" />
+    <ClInclude Include="Project\Scene\GameManager.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\WaitLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\CircleAttackLeaf.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\ChasePlayerLeaf.h" />
+    <ClInclude Include="externals\imnodes\imnodes.h" />
+    <ClInclude Include="externals\imnodes\imnodes_internal.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\LeafNode\EscapeFromPlayerLeaf.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\ImGui\LICENSE.txt">

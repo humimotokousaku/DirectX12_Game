@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Math/BehaviourTree/LeafNode/LeafNodeBase.h"
+#include "LeafNodeBase.h"
 
 /// <summary>
-/// ‰~Œ`UŒ‚‚ğs‚¤—tƒm[ƒh
+/// å††å½¢æ”»æ’ƒã‚’è¡Œã†è‘‰ãƒãƒ¼ãƒ‰
 /// </summary>
 class CircleAttackLeaf : public LeafNodeBase {
 public:
 	explicit CircleAttackLeaf(BlackBoard* black_board);
 	~CircleAttackLeaf();
 
-	void tick() override;
+	void Tick() override;
 
-	NodeResult get_node_result() const override;
+	NodeResult GetNodeResult() const override;
 };

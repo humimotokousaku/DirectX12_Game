@@ -3,6 +3,8 @@
 BranchNodeBase::BranchNodeBase(BlackBoard* black_board, INode* true_node, INode* false_node)
 	: NodeBase(black_board)
 {
+	// [0]->trueノード
+	// [1]->falseノード
 	mpBranchNodes[0] = true_node;
 	mpBranchNodes[1] = false_node;
 }
@@ -18,36 +20,39 @@ BranchNodeBase::~BranchNodeBase()
 	}
 }
 
-void BranchNodeBase::init()
+void BranchNodeBase::Init()
 {
-	NodeBase::init();
+	NodeBase::Init();
 
-	if (is_condition())
-	{
+	// 条件を満たしたか
+	if (IsCondition()) {
+		// trueノード
 		mSatisfyIndex = 0;
 	}
-	else
-	{
+	else {
+		// falseノード
 		mSatisfyIndex = 1;
 	}
 
-	mpBranchNodes[mSatisfyIndex]->init();
+	// 該当のノードの初期化
+	mpBranchNodes[mSatisfyIndex]->Init();
 }
 
-void BranchNodeBase::tick()
+void BranchNodeBase::Tick()
 {
-	mpBranchNodes[mSatisfyIndex]->tick();
-	mNodeResult = mpBranchNodes[mSatisfyIndex]->get_node_result();
+	mpBranchNodes[mSatisfyIndex]->Tick();
+	// 現在のノード状態を更新
+	mNodeResult = mpBranchNodes[mSatisfyIndex]->GetNodeResult();
 }
 
-void BranchNodeBase::finalize()
+void BranchNodeBase::Finalize()
 {
-	NodeBase::finalize();
-	mpBranchNodes[mSatisfyIndex]->finalize();
+	NodeBase::Finalize();
+	mpBranchNodes[mSatisfyIndex]->Finalize();
 	mSatisfyIndex = -1;
 }
 
-int BranchNodeBase::get_running_node_id() const
+int BranchNodeBase::GetRunningNodeID() const
 {
-	return mpBranchNodes[mSatisfyIndex]->get_running_node_id();
+	return mpBranchNodes[mSatisfyIndex]->GetRunningNodeID();
 }

@@ -1,10 +1,13 @@
 #include "BehaviorTreeUtility.h"
 
-#include "imgui.h"
-#include "imnodes.h"
-#include "DxLib.h"
+#include "../externals/ImGui/imgui.h"
+#include "../externals/imnodes/imnodes.h"
+
+#include "Input.h"
 
 #include <set>
+#include <commdlg.h>
+#include <minwindef.h>
 
 BehaviorTreeGraph::BehaviorTreeGraph(bool is_edit_mode)
 	: mIsEditMode{ is_edit_mode }
@@ -21,20 +24,19 @@ void BehaviorTreeGraph::initialize()
 	mNodeNames = get_all_node_names();
 }
 
-void BehaviorTreeGraph::update()
-{
+void BehaviorTreeGraph::update() {
 	if (!mIsEditMode) return;
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚é—v‘f‚ÌXV
+	// é¸æŠã—ã¦ã„ã‚‹è¦ç´ ã®æ›´æ–°
 	update_selected();
 
-	// ƒŠƒ“ƒNì¬
+	// ãƒªãƒ³ã‚¯ä½œæˆ
 	update_links();
 
-	// ƒm[ƒh‚ÌˆÊ’u‚ğXV
+	// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã®ä½ç½®ã‚’æ›´æ–°
 	update_node_pos();
 
-	// ƒL[“ü—Í‚ğXV
+	// ã‚­ãƒ¼å…¥åŠ›ã‚’æ›´æ–°
 	update_input_key();
 }
 
@@ -42,10 +44,10 @@ void BehaviorTreeGraph::draw()
 {
 	ImGui::Begin("Behavior Tree Editor");
 	{
-		// ƒc[ƒ‹ƒo[‚Ì•`‰æ
+		// ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®æç”»
 		draw_toolbar();
 
-		// ƒcƒŠ[•`‰æ
+		// ãƒ„ãƒªãƒ¼æç”»
 		draw_editor();
 	}
 	ImGui::End();
@@ -60,7 +62,7 @@ void BehaviorTreeGraph::select_load_file()
 {
 #if defined(_WIN32)
 	OPENFILENAMEA ofn = { 0 };
-	char szFile[MAX_PATH] = { 0 };	// ƒtƒ@ƒCƒ‹ƒpƒX‚ÌƒTƒCƒY‚ÍWindowsŠù’è‚Ì‚à‚Ì‚É
+	char szFile[MAX_PATH] = { 0 };	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®ã‚µã‚¤ã‚ºã¯Windowsæ—¢å®šã®ã‚‚ã®ã«
 	ofn.lStructSize = sizeof(ofn);
 	ofn.lpstrFile = szFile;
 	ofn.nMaxFile = sizeof(szFile);
@@ -80,18 +82,18 @@ void BehaviorTreeGraph::draw_toolbar()
 {
 	if (!mIsEditMode) return;
 
-	// ƒm[ƒh’Ç‰Áƒ{ƒ^ƒ“
+	// ãƒãƒ¼ãƒ‰è¿½åŠ ãƒœã‚¿ãƒ³
 	draw_add_button();
 
-	// íœƒ{ƒ^ƒ“
+	// å‰Šé™¤ãƒœã‚¿ãƒ³
 	draw_delete_button();
 
 	ImGui::NewLine();
-	// ƒtƒ@ƒCƒ‹‘‚«o‚µ
+	// ãƒ•ã‚¡ã‚¤ãƒ«æ›¸ãå‡ºã—
 	draw_export_button();
 	ImGui::SameLine();
 
-	// ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	draw_import_button();
 }
 
@@ -99,19 +101,18 @@ void BehaviorTreeGraph::draw_editor()
 {
 	ImNodes::BeginNodeEditor();
 	{
-		// ƒ~ƒjƒ}ƒbƒv‚ğ•`‰æ
+		// ãƒŸãƒ‹ãƒãƒƒãƒ—ã‚’æç”»
 		ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_TopRight);
-		// ƒm[ƒh•`‰æ
+		// ãƒãƒ¼ãƒ‰æç”»
 		draw_nodes();
-		// ƒŠƒ“ƒN‚Ì•`‰æ
+		// ãƒªãƒ³ã‚¯ã®æç”»
 		draw_links();
 	}
 	ImNodes::EndNodeEditor();
 }
 
-void BehaviorTreeGraph::set_runnning_node_id(const int running_node_id)
-{
-	// Às’†‚Ìƒm[ƒh/ƒŠƒ“ƒN‚ÌƒŠƒXƒg‚ğXV
+void BehaviorTreeGraph::set_runnning_node_id(const int running_node_id) {
+	// å®Ÿè¡Œä¸­ã®ãƒãƒ¼ãƒ‰/ãƒªãƒ³ã‚¯ã®ãƒªã‚¹ãƒˆã‚’æ›´æ–°
 	mRunningLinks.clear();
 	mRunningNodes.clear();
 
@@ -119,94 +120,84 @@ void BehaviorTreeGraph::set_runnning_node_id(const int running_node_id)
 	get_nodes_related_all_nodes(running_node_id, &mRunningNodes);
 }
 
-int BehaviorTreeGraph::add_node(NodeName name)
-{
-	// ID‚Ìd•¡‚ğ”ğ‚¯‚é
-	while (mNodes.find(mNextId) != mNodes.end())
-	{
-		mNextId++;
-	}
-
+int BehaviorTreeGraph::add_node(NodeName name) {
+	// IDã®é‡è¤‡ã‚’é¿ã‘ã‚‹
+	while (mNodes.find(mNextId) != mNodes.end()) { mNextId++; }
 	int id = mNextId;
 
-	// NodeName‚©‚çƒm[ƒhƒ^ƒCƒv‚ğæ“¾
+	// NodeNameã‹ã‚‰ãƒãƒ¼ãƒ‰ã‚¿ã‚¤ãƒ—ã‚’å–å¾—
 	NodeType type = NODE_MAP[name];
 
 	mNodes[id] = BTNode{ id, type, name, {} };
 	return id;
 }
 
-void BehaviorTreeGraph::remove_node(int id)
-{
+void BehaviorTreeGraph::remove_node(int id) {
 	auto it = mNodes.find(id);
-	if (it != mNodes.end())
-	{
-		// qƒm[ƒh‚Ìe‚ğ‰ğœ
-		for (int child_id : it->second.children)
-		{
+	if (it != mNodes.end()) {
+		// å­ãƒãƒ¼ãƒ‰ã®è¦ªã‚’è§£é™¤
+		for (int child_id : it->second.children) {
 			mNodes[child_id].parent = -1;
 		}
-
-		// eƒm[ƒh‚Ìqƒm[ƒh‚ğíœ
-		if (it->second.parent != -1)
-		{
+		// è¦ªãƒãƒ¼ãƒ‰ã«æ¥ç¶šã•ã‚Œã¦ã‚‹å­ãƒãƒ¼ãƒ‰ã‚’å‰Šé™¤
+		if (it->second.parent != -1) {
 			auto& parent_node = mNodes[it->second.parent];
 			auto it_child = std::find(parent_node.children.begin(), parent_node.children.end(), id);
-			if (it_child != parent_node.children.end())
-			{
+			if (it_child != parent_node.children.end()) {
 				parent_node.children.erase(it_child);
 			}
 		}
+		// é¸æŠã•ã‚Œã¦ã‚‹ãƒãƒ¼ãƒ‰ã®å‰Šé™¤
 		mNodes.erase(it);
 	}
 }
 
-void BehaviorTreeGraph::remove_node(const std::vector<int>& delete_list)
-{
-	for (int node_id : delete_list)
-	{
+void BehaviorTreeGraph::remove_node(const std::vector<int>& delete_list) {
+	for (int node_id : delete_list) {
 		auto it = mNodes.find(node_id);
-		if (it != mNodes.end())
-		{
+		if (it != mNodes.end()) {
 			remove_node(node_id);
 		}
 	}
 }
 
-void BehaviorTreeGraph::add_link(int start_attr, int end_attr)
-{
+void BehaviorTreeGraph::add_link(int start_attr, int end_attr) {
 	int parent_id = start_attr >> cInputBit;
 	int child_id = end_attr >> cInputBit;
-	int pin_type = start_attr & 0xFFFF; // ‰ºˆÊ16ƒrƒbƒg
+	int pin_type = start_attr & 0xFFFF; // ä¸‹ä½16ãƒ“ãƒƒãƒˆ
 
-	// ‰ºˆÊ16ƒrƒbƒg‚ª1‚È‚çTrueƒsƒ“A2‚È‚çFalseƒsƒ“
+	// ä¸‹ä½16ãƒ“ãƒƒãƒˆãŒ1ãªã‚‰Trueãƒ”ãƒ³ã€2ãªã‚‰Falseãƒ”ãƒ³
 	bool is_true_branch = (pin_type == cTruePinBit);
 
-	if (is_link_addable(mNodes[parent_id], mNodes[child_id], is_true_branch))
-	{
-		if (mNodes[parent_id].type == NodeType::Branch)
-		{
-			if (is_true_branch)
-			{
+	// ãƒªãƒ³ã‚¯ã§ãã‚‹çŠ¶æ…‹ã‹ã‚’ç¢ºèª
+	if (is_link_addable(mNodes[parent_id], mNodes[child_id], is_true_branch)) {
+		// branchãƒãƒ¼ãƒ‰ã®å ´åˆ
+		if (mNodes[parent_id].type == NodeType::Branch) {
+			// trueãƒ”ãƒ³ã«å­ãƒãƒ¼ãƒ‰ã‚’è¨­å®š
+			if (is_true_branch) {
 				mNodes[parent_id].true_child = child_id;
 			}
-			else
-			{
+			// falseãƒ”ãƒ³ã«å­ãƒãƒ¼ãƒ‰ã‚’è¨­å®š
+			else {
 				mNodes[parent_id].false_child = child_id;
 			}
 		}
-		else
-		{
+		// ãã®ã»ã‹ã®ãƒãƒ¼ãƒ‰ã®å ´åˆ
+		else {
+			// è¦ªãƒãƒ¼ãƒ‰ã®å­ã‚’è¨­å®š
 			mNodes[parent_id].children.push_back(child_id);
 		}
+		// å­ãƒãƒ¼ãƒ‰ã®è¦ªã‚’è¨­å®š
 		mNodes[child_id].parent = parent_id;
 
+		// ãƒªãƒ³ã‚¯è¿½åŠ 
 		add_link_tuple(parent_id, child_id, is_true_branch);
 	}
 }
 
-void BehaviorTreeGraph::add_link_tuple(int parent_id, int child_id, bool is_true_branch)
-{
+void BehaviorTreeGraph::add_link_tuple(int parent_id, int child_id, bool is_true_branch) {
+	// branchãƒãƒ¼ãƒ‰ã®trueãƒ”ãƒ³ã‹falseãƒ”ãƒ³ã«ãƒªãƒ³ã‚¯ãŒã‚ã‚‹ã‹ã‚’åˆ¤åˆ¥
+	// ã¡ãªã¿ã«branchãƒãƒ¼ãƒ‰ã§ãªã„ã‚‚ã®ã¯å…¨ã¦falseã¨ã—ã¦åˆ¤å®šã•ã‚Œãã†
 	int pin_type = is_true_branch ? cTruePinBit : cFalsePinBit;
 	mNodeLinks[mCreatedLinkId] = std::make_tuple(parent_id, child_id, pin_type);
 	mCreatedLinkId++;
@@ -215,7 +206,7 @@ void BehaviorTreeGraph::add_link_tuple(int parent_id, int child_id, bool is_true
 std::vector<std::string> BehaviorTreeGraph::get_all_node_names() const
 {
 	std::vector<std::string> node_names;
-	// Enum‚ğ‰ñ‚·
+	// Enumã‚’å›ã™
 	for (int i = 0; i < static_cast<int>(NodeName::NameEnd); ++i)
 	{
 		NodeName node_name = static_cast<NodeName>(i);
@@ -226,8 +217,7 @@ std::vector<std::string> BehaviorTreeGraph::get_all_node_names() const
 	return node_names;
 }
 
-void BehaviorTreeGraph::reset_selected()
-{
+void BehaviorTreeGraph::reset_selected() {
 	mSelectedNodes.clear();
 	mSelectedLinks.clear();
 
@@ -235,22 +225,20 @@ void BehaviorTreeGraph::reset_selected()
 	ImNodes::ClearLinkSelection();
 }
 
-bool BehaviorTreeGraph::get_selected_nodes_related_links(std::vector<int>* links)
-{
-	for (int node_id : mSelectedNodes)
-	{
+bool BehaviorTreeGraph::get_selected_nodes_related_links(std::vector<int>* links) {
+	for (int node_id : mSelectedNodes) {
+		// é¸æŠä¸­ã®ãƒãƒ¼ãƒ‰ã«æ¥ç¶šã•ã‚Œã¦ã„ã‚‹ãƒªãƒ³ã‚¯ã‚’æ´—ã„å‡ºã™
 		get_nodes_related_links(node_id, links);
 	}
 
 	return links->size() > 0;
 }
 
-bool BehaviorTreeGraph::get_nodes_related_links(const int node_id, std::vector<int>* links, bool contain_child)
-{
-	for (const auto& link_pair : mNodeLinks)
-	{
-		if (is_related_links(node_id, link_pair, contain_child))
-		{
+bool BehaviorTreeGraph::get_nodes_related_links(const int node_id, std::vector<int>* links, bool contain_child) {
+	for (const auto& link_pair : mNodeLinks) {
+		// ãƒªãƒ³ã‚¯ã®å‰Šé™¤æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ã‚‹ã‹ã‚’åˆ¤åˆ¥
+		if (is_related_links(node_id, link_pair, contain_child)) {
+			// æ¶ˆã—ãŸã„ãƒªãƒ³ã‚¯ã®è¦ç´ ç•ªå·ã‚’æŒ‡å®š
 			links->push_back(link_pair.first);
 		}
 	}
@@ -258,39 +246,33 @@ bool BehaviorTreeGraph::get_nodes_related_links(const int node_id, std::vector<i
 	return links->size() > 0;
 }
 
-bool BehaviorTreeGraph::get_nodes_related_all_links(const int node_id, std::vector<int>* links)
-{
+bool BehaviorTreeGraph::get_nodes_related_all_links(const int node_id, std::vector<int>* links) {
 	int current_id = node_id;
 
-	// ƒ‹[ƒgƒm[ƒh‚É“’B‚·‚é‚Ü‚Å‘±‚¯‚é
-	while (current_id != -1)
-	{
+	// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã«åˆ°é”ã™ã‚‹ã¾ã§ç¶šã‘ã‚‹
+	while (current_id != -1) {
 		get_nodes_related_links(current_id, links, false);
 
-		// eƒm[ƒh‚Ö‚³‚©‚Ì‚Ú‚Á‚ÄÄ“x’Tõ
+		// è¦ªãƒãƒ¼ãƒ‰ã¸ã•ã‹ã®ã¼ã£ã¦å†åº¦æ¢ç´¢
 		auto it = get_node(current_id);
 		current_id = it.parent;
 	}
 	return !links->empty();
 }
 
-bool BehaviorTreeGraph::get_nodes_related_all_nodes(const int node_id, std::vector<int>* nodes)
-{
+bool BehaviorTreeGraph::get_nodes_related_all_nodes(const int node_id, std::vector<int>* nodes) {
 	int current_id = node_id;
 	nodes->push_back(current_id);
 
-	// ƒ‹[ƒgƒm[ƒh‚É“’B‚·‚é‚Ü‚Å‘±‚¯‚é
-	while (current_id != -1)
-	{
-		for (const auto& node : mNodes)
-		{
-			if (is_related_nodes(current_id, node))
-			{
+	// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã«åˆ°é”ã™ã‚‹ã¾ã§ç¶šã‘ã‚‹
+	while (current_id != -1) {
+		for (const auto& node : mNodes) {
+			if (is_related_nodes(current_id, node)) {
 				nodes->push_back(node.first);
 			}
 		}
 
-		// eƒm[ƒh‚Ö‚³‚©‚Ì‚Ú‚Á‚Ä’Tõ
+		// è¦ªãƒãƒ¼ãƒ‰ã¸ã•ã‹ã®ã¼ã£ã¦æ¢ç´¢
 		auto it = get_node(current_id);
 		current_id = it.parent;
 	}
@@ -298,59 +280,47 @@ bool BehaviorTreeGraph::get_nodes_related_all_nodes(const int node_id, std::vect
 	return !nodes->empty();
 }
 
-bool BehaviorTreeGraph::is_related_links(const int node_id, const std::pair<int, std::tuple<int, int, int>>& node_link, bool contain_child)
-{
+bool BehaviorTreeGraph::is_related_links(const int node_id, const std::pair<int, std::tuple<int, int, int>>& node_link, bool contain_child) {
+	// ãƒªãƒ³ã‚¯ã®è¦ç´ ç•ªå·
 	int link_id = node_link.first;
+	// ãƒªãƒ³ã‚¯ã®æ¥ç¶šå…ƒãƒãƒ¼ãƒ‰ID
 	int parent_id = std::get<0>(node_link.second);
+	// ãƒªãƒ³ã‚¯ã®æ¥ç¶šå…ˆå­ãƒãƒ¼ãƒ‰ID
 	int child_id = std::get<1>(node_link.second);
 
-	if (child_id == node_id) 
-	{
-		return true;
-	}
+	// ãƒªãƒ³ã‚¯æç”»ã™ã‚‹ãŸã‚ã®ãƒãƒ¼ãƒ‰IDãƒªã‚¹ãƒˆå†…ã®å­ãƒãƒ¼ãƒ‰IDã¨ã€é¸æŠä¸­ã®ãƒãƒ¼ãƒ‰IDãŒä¸€è‡´ã—ãŸã‚‰å‰Šé™¤
+	if (child_id == node_id) { return true; }
 
-	if (contain_child)
-	{
-		if (parent_id == node_id)
-		{
-			return true;
-		}
+	if (contain_child) {
+		// ãƒªãƒ³ã‚¯æç”»ã™ã‚‹ãŸã‚ã®ãƒãƒ¼ãƒ‰IDãƒªã‚¹ãƒˆå†…ã®æ¥ç¶šå…ƒãƒãƒ¼ãƒ‰IDã¨ã€é¸æŠä¸­ã®ãƒãƒ¼ãƒ‰IDãŒä¸€è‡´ã—ãŸã‚‰å‰Šé™¤
+		if (parent_id == node_id) { return true; }
 	}
 
 	return false;
 }
 
-bool BehaviorTreeGraph::is_related_nodes(const int node_id, const std::pair<const int, const BTNode>& node)
-{
-
+bool BehaviorTreeGraph::is_related_nodes(const int node_id, const std::pair<const int, const BTNode>& node) {
 	int id = node.first;
 	const auto node_type = node.second.type;
 
-	// —tƒm[ƒh‚Ìê‡‚Íqƒm[ƒh‚ğ‚½‚È‚¢‚½‚ßfalse
+	// è‘‰ãƒãƒ¼ãƒ‰ã®å ´åˆã¯å­ãƒãƒ¼ãƒ‰ã‚’æŒãŸãªã„ãŸã‚false
 	if (node_type == NodeType::Leaf) return false;
 
-	// ƒuƒ‰ƒ“ƒ`ƒm[ƒh‚Ìê‡
-	if (node_type == NodeType::Branch)
-	{
-		// true, false‚Ç‚¿‚ç‚ànode_id‚Æˆê’v‚µ‚È‚¯‚ê‚Îfalse
-		if (!(node.second.true_child == node_id || node.second.false_child == node_id))
-		{
+	// ãƒ–ãƒ©ãƒ³ãƒãƒãƒ¼ãƒ‰ã®å ´åˆ
+	if (node_type == NodeType::Branch) {
+		// true, falseã©ã¡ã‚‰ã‚‚node_idã¨ä¸€è‡´ã—ãªã‘ã‚Œã°false
+		if (!(node.second.true_child == node_id || node.second.false_child == node_id)) {
 			return false;
 		}
 	}
 
-	// ‚»‚êˆÈŠO‚Ìqƒm[ƒh‚ğ‚Âƒm[ƒh‚Ìê‡(Composite, Decorator)
-	if (node_type == NodeType::Composite || node_type == NodeType::Decorator)
-	{
+	// ãã‚Œä»¥å¤–ã®å­ãƒãƒ¼ãƒ‰ã‚’æŒã¤ãƒãƒ¼ãƒ‰ã®å ´åˆ(Composite, Decorator)
+	if (node_type == NodeType::Composite || node_type == NodeType::Decorator) {
 		const auto& children = node.second.children;
 		bool found = false;
 
-		for (const auto& child : children)
-		{
-			if (child == node_id)
-			{
-				found = true;
-			}
+		for (const auto& child : children) {
+			if (child == node_id) { found = true; }
 		}
 
 		if (!found) return false;
@@ -359,84 +329,72 @@ bool BehaviorTreeGraph::is_related_nodes(const int node_id, const std::pair<cons
 	return true;
 }
 
-bool BehaviorTreeGraph::is_link_addable(BTNode& parent_node, BTNode& child_node, bool is_true_branch)
-{
-	// ‚·‚Å‚Éeƒm[ƒh‚ğ‚Á‚Ä‚¢‚½‚çfalse‚ğ•Ô‚·
+bool BehaviorTreeGraph::is_link_addable(BTNode& parent_node, BTNode& child_node, bool is_true_branch) {
+	// ã™ã§ã«è¦ªãƒãƒ¼ãƒ‰ã‚’æŒã£ã¦ã„ãŸã‚‰falseã‚’è¿”ã™
 	if (child_node.parent != -1) return false;
 
-	if (parent_node.type == NodeType::Decorator)
-	{
-		// Decorator‚Í‚Ä‚éqƒm[ƒh‚Íˆê‚Â‚¾‚¯
-		// ‚à‚µ‚·‚Å‚Éqƒm[ƒh‚ğ‚Á‚Ä‚¢‚½‚ç’Ç‰Á‚Å‚«‚È‚¢
-		if (parent_node.children.size() > 0)
-		{
-			return false;
-		}
+	if (parent_node.type == NodeType::Decorator) {
+		// Decoratorã¯æŒã¦ã‚‹å­ãƒãƒ¼ãƒ‰ã¯ä¸€ã¤ã ã‘
+		// ã‚‚ã—ã™ã§ã«å­ãƒãƒ¼ãƒ‰ã‚’æŒã£ã¦ã„ãŸã‚‰è¿½åŠ ã§ããªã„
+		if (parent_node.children.size() > 0) { return false; }
 	}
-	else if (parent_node.type == NodeType::Branch)
-	{
-		// Branch‚Í‚Ä‚éqƒm[ƒh‚ÍTrue,False‚Å‚»‚ê‚¼‚êˆê‚Â‚¾‚¯
-		// ‚à‚µŠù‚Éqƒm[ƒh‚ğ‚Á‚Ä‚¢‚½‚ç’Ç‰Á‚Å‚«‚È‚¢
-		if (is_true_branch)
-		{
-			if (parent_node.true_child != -1)
-			{
-				return false;
-			}
+	else if (parent_node.type == NodeType::Branch) {
+		// Branchã¯æŒã¦ã‚‹å­ãƒãƒ¼ãƒ‰ã¯True,Falseã§ãã‚Œãã‚Œä¸€ã¤ã ã‘
+		// ã‚‚ã—æ—¢ã«å­ãƒãƒ¼ãƒ‰ã‚’æŒã£ã¦ã„ãŸã‚‰è¿½åŠ ã§ããªã„
+		if (is_true_branch) {
+			if (parent_node.true_child != -1) { return false; }
 		}
-		else
-		{
-			if (parent_node.false_child != -1)
-			{
-				return false;
-			}
+		else {
+			if (parent_node.false_child != -1) { return false; }
 		}
 	}
 
 	return true;
 }
 
-void BehaviorTreeGraph::remove_nodes_link(int parent_id, int child_id)
-{
+void BehaviorTreeGraph::remove_nodes_link(int parent_id, int child_id) {
+	// æ¥ç¶šå…ƒã®ãƒãƒ¼ãƒ‰
 	auto& parent_node = mNodes[parent_id];
+	// æ¥ç¶šå…ˆã®ãƒãƒ¼ãƒ‰
 	auto& child_node = mNodes[child_id];
-	if (parent_node.type == NodeType::Branch)
-	{
-		if (parent_node.true_child == child_id)
-		{
+
+	// branchãƒãƒ¼ãƒ‰ã®å ´åˆ
+	if (parent_node.type == NodeType::Branch) {
+		// trueãƒ”ãƒ³ã‹ã‚‰ãƒªãƒ³ã‚¯ã‚’å¤–ã™
+		if (parent_node.true_child == child_id) {
 			parent_node.true_child = -1;
 		}
-		else if (parent_node.false_child == child_id)
-		{
+		// falseãƒ”ãƒ³ã‹ã‚‰ãƒªãƒ³ã‚¯ã‚’å¤–ã™
+		else if (parent_node.false_child == child_id) {
 			parent_node.false_child = -1;
 		}
 	}
-	else
-	{
+	// ãã®ä»–ã®å ´åˆ
+	else {
 		auto it = std::find(parent_node.children.begin(), parent_node.children.end(), child_id);
-		if (it != parent_node.children.end())
-		{
+		if (it != parent_node.children.end()) {
+			// è¦ªãƒãƒ¼ãƒ‰ã«æ¥ç¶šã•ã‚Œã¦ã„ã‚‹å­ãƒãƒ¼ãƒ‰IDãƒªã‚¹ãƒˆå‰Šé™¤
 			parent_node.children.erase(it);
 		}
 	}
+	// å­ãƒãƒ¼ãƒ‰ã¯ãƒªãƒ³ã‚¯ã—ã¦ã„ã‚‹IDã‚’åˆæœŸåŒ–
 	child_node.parent = -1;
 }
 
-void BehaviorTreeGraph::delete_link(int id)
-{
+void BehaviorTreeGraph::delete_link(int id) {
 	mNodeLinks.erase(id);
 }
 
-void BehaviorTreeGraph::delete_link(const std::vector<int>& delete_list)
-{
-	for (int link_id : delete_list)
-	{
+void BehaviorTreeGraph::delete_link(const std::vector<int>& delete_list) {
+	// æç”»ç”¨ãƒªãƒ³ã‚¯ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
+	for (int link_id : delete_list) {	
 		auto it = mNodeLinks.find(link_id);
-		if (it != mNodeLinks.end())
-		{
+		if (it != mNodeLinks.end()) {
 			int parent_id = std::get<0>(it->second);
 			int child_id = std::get<1>(it->second);
+			// ãƒãƒ¼ãƒ‰åŒå£«ã®ãƒªãƒ³ã‚¯è§£é™¤
 			remove_nodes_link(parent_id, child_id);
+			// ãƒªãƒ³ã‚¯ã®è§£æ”¾
 			delete_link(it->first);
 		}
 	}
@@ -465,7 +423,7 @@ void BehaviorTreeGraph::export_json(const std::string& file_name) {
 		}
 		else
 		{
-			// ‘‚«o‚µ‚·‚é‘O‚ÉAyÀ•W‚ª¬‚³‚¢‡‚É•À‚Ñ•Ï‚¦‚é
+			// æ›¸ãå‡ºã—ã™ã‚‹å‰ã«ã€yåº§æ¨™ãŒå°ã•ã„é †ã«ä¸¦ã³å¤‰ãˆã‚‹
 			auto children = node.children;
 
 			std::sort(children.begin(), children.end(),
@@ -477,7 +435,7 @@ void BehaviorTreeGraph::export_json(const std::string& file_name) {
 			node_json["children"] = children;
 		}
 
-		// ƒm[ƒhŒÅ—L‚Ì’l
+		// ãƒãƒ¼ãƒ‰å›ºæœ‰ã®å€¤
 		if (node.wait_time != -1.f)
 		{
 			node_json["wait_time"] = node.wait_time;
@@ -542,8 +500,8 @@ void BehaviorTreeGraph::import_json(const std::string& file_name)
 
 		mNodes[id] = node;
 
-		// ƒŠƒ“ƒNì¬
-		// children‚ª‹ó‚Å‚È‚¢ê‡‚ÍƒŠƒ“ƒN
+		// ãƒªãƒ³ã‚¯ä½œæˆ
+		// childrenãŒç©ºã§ãªã„å ´åˆã¯ãƒªãƒ³ã‚¯
 		if (node.children.size() != 0)
 		{
 			for (int i = 0; i < node.children.size(); ++i)
@@ -552,7 +510,7 @@ void BehaviorTreeGraph::import_json(const std::string& file_name)
 			}
 		}
 
-		// true_child, false_child‚ª‹ó‚Å‚È‚¢ê‡‚ÍƒŠƒ“ƒN
+		// true_child, false_childãŒç©ºã§ãªã„å ´åˆã¯ãƒªãƒ³ã‚¯
 		if (node.true_child != -1)
 		{
 			add_link_tuple(id, node.true_child, true);
@@ -567,36 +525,26 @@ void BehaviorTreeGraph::import_json(const std::string& file_name)
 	file.close();
 }
 
-void BehaviorTreeGraph::set_node_pos(int id, float x, float y)
-{
+void BehaviorTreeGraph::set_node_pos(int id, float x, float y) {
 	auto it = mNodes.find(id);
-	if (it != mNodes.end())
-	{
+	if (it != mNodes.end())	{
 		it->second.pos_x = x;
 		it->second.pos_y = y;
 	}
 }
 
-BTNode& BehaviorTreeGraph::get_node(int id)
-{
+BTNode& BehaviorTreeGraph::get_node(int id) {
 	auto it = mNodes.find(id);
-	if (it != mNodes.end()) {
-		return it->second;
-	}
+	if (it != mNodes.end()) { return it->second; }
 
 	throw std::runtime_error("Node not found");
 }
 
-NodeName BehaviorTreeGraph::get_matching_node_name(std::string name)
-{
-	for (int i = 0; i < static_cast<int>(NodeName::NameEnd); ++i)
-	{
+NodeName BehaviorTreeGraph::get_matching_node_name(std::string name) {
+	for (int i = 0; i < static_cast<int>(NodeName::NameEnd); ++i) {
 		NodeName node_name = static_cast<NodeName>(i);
 		std::string node_name_string = std::string(NAMEOF_ENUM(node_name));
-		if (name == node_name_string)
-		{
-			return node_name;
-		}
+		if (name == node_name_string) { return node_name; }
 	}
 	return NodeName::WaitLeaf;
 }
@@ -606,99 +554,86 @@ const int BehaviorTreeGraph::get_selected_node(int index)
 	return mSelectedNodes[index];
 }
 
-void BehaviorTreeGraph::update_selected()
-{
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒm[ƒh‚ğ•Û
+void BehaviorTreeGraph::update_selected() {
+	// é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’ä¿æŒ
 	int selected_node_num = ImNodes::NumSelectedNodes();
 	mSelectedNodes.resize(selected_node_num);
-	if (selected_node_num > 0)
-	{
+	if (selected_node_num > 0) {
 		ImNodes::GetSelectedNodes(mSelectedNodes.data());
 	}
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒŠƒ“ƒN‚ğ•Û‚µ‚Ä‚¨‚­
+	// é¸æŠã—ã¦ã„ã‚‹ãƒªãƒ³ã‚¯ã‚’ä¿æŒã—ã¦ãŠã
 	int selected_link_num = ImNodes::NumSelectedLinks();
 	mSelectedLinks.resize(selected_link_num);
-	if (selected_link_num > 0)
-	{
+	if (selected_link_num > 0) {
 		ImNodes::GetSelectedLinks(mSelectedLinks.data());
 	}
 }
 
-void BehaviorTreeGraph::update_links()
-{
+void BehaviorTreeGraph::update_links() {
 	int start_attr, end_attr;
-	if (ImNodes::IsLinkCreated(&start_attr, &end_attr))
-	{
+	// ãƒªãƒ³ã‚¯ã‚’ãƒ”ãƒ³ã‹ã‚‰ãƒ”ãƒ³ã«ã¤ãªã’ãŸã‹
+	// ä»•æ§˜ã§è¦ªãƒ”ãƒ³ã‹ã‚‰è¦ªãƒ”ãƒ³ã«ã¤ãªãã“ã¨ã¯ã§ããªã„ã‚ˆã†ã«ãªã£ã¦ã‚‹ã‚‰ã—ã„
+	if (ImNodes::IsLinkCreated(&start_attr, &end_attr)) {
+		// ãƒªãƒ³ã‚¯ã®è¿½åŠ ã‚’è©¦ã¿ã‚‹
 		add_link(start_attr, end_attr);
 	}
 }
 
-void BehaviorTreeGraph::update_node_pos()
-{
-	for (int i = 0; i < mSelectedNodes.size(); ++i)
-	{
+void BehaviorTreeGraph::update_node_pos() {
+	// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã™ã¹ã¦ã®åº§æ¨™æ›´æ–°
+	for (int i = 0; i < mSelectedNodes.size(); ++i) {
 		int node_id = mSelectedNodes[i];
 		ImVec2 pos = ImNodes::GetNodeGridSpacePos(node_id);
 		set_node_pos(node_id, pos.x, pos.y);
 	}
 }
 
-void BehaviorTreeGraph::update_input_key()
-{
-	// ‚à‚µdeleteƒL[‚ª‰Ÿ‚³‚ê‚½‚ç‘I‘ğ‚µ‚Ä‚¢‚é—v‘f‚ğíœ
-	if (CheckHitKey(KEY_INPUT_DELETE))
-	{
+void BehaviorTreeGraph::update_input_key() {
+	// ã‚‚ã—deleteã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸã‚‰é¸æŠã—ã¦ã„ã‚‹è¦ç´ ã‚’å‰Šé™¤
+	if (Input::GetInstance()->TriggerKey(DIK_DELETE)) {
 		delete_selected_items();
 	}
 }
 
-void BehaviorTreeGraph::draw_add_button()
-{
-	if (!mNodeNames.empty())
-	{
+void BehaviorTreeGraph::draw_add_button() {
+	// è¿½åŠ ã™ã‚‹ãƒãƒ¼ãƒ‰ã®ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ä½œæˆ
+	if (!mNodeNames.empty()) {
 		const char* combo_preview_value = mNodeNames[mSelectedAddNode].c_str();
-		if (ImGui::BeginCombo(u8" ", combo_preview_value))
-		{
-			for (int n = 0; n < mNodeNames.size(); n++)
-			{
+		if (ImGui::BeginCombo((" "), combo_preview_value)) {
+			for (int n = 0; n < mNodeNames.size(); n++) {
 				const bool is_selected = (mSelectedAddNode == n);
-				if (ImGui::Selectable(mNodeNames[n].c_str(), is_selected))
-				{
+				if (ImGui::Selectable(mNodeNames[n].c_str(), is_selected)) {
 					mSelectedAddNode = n;
 				}
 
-				if (is_selected)
-				{
+				if (is_selected) {
 					ImGui::SetItemDefaultFocus();
 				}
 			}
 			ImGui::EndCombo();
 		}
 	}
-	else
-	{
-		ImGui::TextDisabled(u8"’Ç‰Á‚Å‚«‚éƒm[ƒh‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½");
+	else {
+		ImGui::TextDisabled(("Not found add node"));
 	}
 
 	ImGui::SameLine();
 
-	// ƒm[ƒh‚Ì’Ç‰Áƒ{ƒ^ƒ“
-	if (ImGui::Button(u8"’Ç‰Á"))
-	{
+	// ãƒãƒ¼ãƒ‰ã®è¿½åŠ ãƒœã‚¿ãƒ³
+	if (ImGui::Button(("Add"))) {
+		// ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ã§é¸æŠã—ãŸãƒãƒ¼ãƒ‰ã®åå‰ã‚’ä»£å…¥
 		NodeName node_name = get_matching_node_name(mNodeNames[mSelectedAddNode]);
 		add_node(node_name);
 	}
 }
 
-void BehaviorTreeGraph::draw_export_button()
-{
-	// ƒtƒ@ƒCƒ‹•Û‘¶ƒ_ƒCƒAƒƒO‚ğg‚Á‚Ä•Û‘¶æ‚Æƒtƒ@ƒCƒ‹–¼‚ğw’è
-	if (ImGui::Button(u8"Jsono—Í"))
-	{
+void BehaviorTreeGraph::draw_export_button() {
+	// ãƒ•ã‚¡ã‚¤ãƒ«ä¿å­˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’ä½¿ã£ã¦ä¿å­˜å…ˆã¨ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŒ‡å®š
+	if (ImGui::Button(("Json Export"))) {
 #if defined(_WIN32)
 		OPENFILENAMEA ofn = { 0 };
-		char szFile[MAX_PATH] = { 0 };	// ƒtƒ@ƒCƒ‹ƒpƒX‚ÌƒTƒCƒY‚ÍWindowsŠù’è‚Ì‚à‚Ì‚É
+		char szFile[MAX_PATH] = { 0 };	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã®ã‚µã‚¤ã‚ºã¯Windowsæ—¢å®šã®ã‚‚ã®ã«
 		ofn.lStructSize = sizeof(ofn);
 		ofn.lpstrFile = szFile;
 		ofn.nMaxFile = sizeof(szFile);
@@ -707,8 +642,7 @@ void BehaviorTreeGraph::draw_export_button()
 		ofn.lpstrDefExt = "json";
 		ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
 
-		if (GetSaveFileNameA(&ofn))
-		{
+		if (GetSaveFileNameA(&ofn)) {
 			export_json(szFile);
 		}
 #endif
@@ -717,86 +651,83 @@ void BehaviorTreeGraph::draw_export_button()
 
 void BehaviorTreeGraph::draw_import_button()
 {
-	if (ImGui::Button(u8"Json“Ç"))
+	if (ImGui::Button(("Json Load")))
 	{
 		select_load_file();
 	}
 }
 
-void BehaviorTreeGraph::draw_delete_button()
-{
-	// ‰½‚à‘I‘ğ‚µ‚Ä‚¢‚È‚¯‚ê‚Îíœƒ{ƒ^ƒ“‚ğ–³Œø‰»
+void BehaviorTreeGraph::draw_delete_button() {
+	// ä½•ã‚‚é¸æŠã—ã¦ã„ãªã‘ã‚Œã°å‰Šé™¤ãƒœã‚¿ãƒ³ã‚’ç„¡åŠ¹åŒ–
 	const bool can_delete = (mSelectedLinks.size() > 0) || (mSelectedNodes.size() > 0);
 
 	ImGui::BeginDisabled(!can_delete);
-	if (ImGui::Button(u8"‘I‘ğ’†‚Ì—v‘f‚ğíœ"))
-	{
+	// å‰Šé™¤ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰é¸æŠã•ã‚Œã¦ã‚‹ã‚‚ã®è§£æ”¾
+	if (ImGui::Button(("Select node Delete"))) {
 		delete_selected_items();
 	}
 	ImGui::EndDisabled();
 }
 
-void BehaviorTreeGraph::delete_selected_items()
-{
-	// íœ‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚éƒm[ƒh‚ÉŠÖ˜A‚·‚éƒŠƒ“ƒN‚ğô‚¢o‚·
+void BehaviorTreeGraph::delete_selected_items() {
+	// å‰Šé™¤ã—ã‚ˆã†ã¨ã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã«é–¢ã‚ã‚‹ãƒªãƒ³ã‚¯ã‚’æ´—ã„å‡ºã™
 	std::vector<int> links_to_remove;
 	bool is_get_related_links = get_selected_nodes_related_links(&links_to_remove);
-	if (is_get_related_links)
-	{
-		// ã‚Åô‚¢o‚µ‚½ƒŠƒ“ƒN‚ğíœ
+	if (is_get_related_links) {
+		// ä¸Šã§æ´—ã„å‡ºã—ãŸãƒªãƒ³ã‚¯ã‚’å‰Šé™¤
 		delete_link(links_to_remove);
 	}
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒm[ƒh‚ğíœ
+	// é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’å‰Šé™¤
 	remove_node(mSelectedNodes);
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒŠƒ“ƒN‚ğíœ(‚Ü‚¾c‚Á‚Ä‚¢‚éê‡)
+	// é¸æŠã—ã¦ã„ã‚‹ãƒªãƒ³ã‚¯ã‚’å‰Šé™¤(ã¾ã æ®‹ã£ã¦ã„ã‚‹å ´åˆ)
 	delete_link(mSelectedLinks);
 
-	// ‘I‘ğ‰ğœ
+	// é¸æŠè§£é™¤
 	reset_selected();
 }
 
-void BehaviorTreeGraph::draw_nodes()
-{
-	// ƒm[ƒh‚ÌˆÊ’u‚ğXV
+void BehaviorTreeGraph::draw_nodes() {
+	// ãƒãƒ¼ãƒ‰ã®ä½ç½®ã‚’æ›´æ–°
 	for (auto& [id, node] : mNodes) {
 		ImNodes::SetNodeGridSpacePos(id, ImVec2(node.pos_x, node.pos_y));
 	}
 
+	// é‡è¤‡å›é¿
 	std::set<int> selected_node_set(mSelectedNodes.begin(), mSelectedNodes.end());
-	for (auto& pair : mNodes)
-	{
-		// Šeƒm[ƒh‚ğ•`‰æ
+	for (auto& pair : mNodes) {
+		// ãƒãƒ¼ãƒ‰ã®æƒ…å ±ã‚’ä»£å…¥
 		auto& node = pair.second;
+		// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‹ã‚’åˆ¤åˆ¥
 		bool is_selected = selected_node_set.count(node.id) > 0;
+
+		// ãƒãƒ¼ãƒ‰æç”»
 		draw_node(node, pair.first, is_selected);
 	}
 }
 
-void BehaviorTreeGraph::draw_node(const BTNode& node, int node_id, bool is_selected)
-{
-	if (std::find(mRunningNodes.begin(), mRunningNodes.end(), node_id) != mRunningNodes.end())
-	{
+void BehaviorTreeGraph::draw_node(const BTNode& node, int node_id, bool is_selected) {
+	// 
+	if (std::find(mRunningNodes.begin(), mRunningNodes.end(), node_id) != mRunningNodes.end()) {
 		ImNodes::PushColorStyle(ImNodesCol_TitleBar, cRunningColor);
 	}
-	else
-	{
+	else {
 		ImNodes::PushColorStyle(ImNodesCol_TitleBar, cNodeColors.at(node.type));
 	}
 
 	ImNodes::BeginNode(node.id);
 	{
-		// ƒ^ƒCƒgƒ‹
+		// ã‚¿ã‚¤ãƒˆãƒ«
 		draw_title(node);
 
-		// “ü—Íƒsƒ“
+		// å…¥åŠ›ãƒ”ãƒ³
 		draw_input_pin(node);
 
-		// o—Íƒsƒ“
+		// å‡ºåŠ›ãƒ”ãƒ³
 		draw_output_pin(node, is_selected);
 
-		// ƒpƒ‰ƒ[ƒ^•\¦
+		// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¡¨ç¤º
 		draw_parameter(node, node_id, is_selected);
 	}
 	ImNodes::EndNode();
@@ -811,42 +742,39 @@ void BehaviorTreeGraph::draw_title(const BTNode& node)
 	ImNodes::EndNodeTitleBar();
 }
 
-void BehaviorTreeGraph::draw_input_pin(const BTNode& node)
-{
+void BehaviorTreeGraph::draw_input_pin(const BTNode& node) {
 	ImNodes::BeginInputAttribute(node.id << cInputBit);
 	ImGui::Text("");
 	ImNodes::EndInputAttribute();
 }
 
-void BehaviorTreeGraph::draw_output_pin(const BTNode& node, bool is_selected)
-{
-	if (node.type == NodeType::Branch)
-	{
+void BehaviorTreeGraph::draw_output_pin(const BTNode& node, bool is_selected) {
+	// ãƒãƒ¼ãƒ‰ã®ç¨®é¡ãŒbranchã®å ´åˆ
+	if (node.type == NodeType::Branch) {
+		// trueãƒ”ãƒ³ã®ä½œæˆ
 		ImNodes::BeginOutputAttribute(node.id << cInputBit | cTruePinBit);
-
-		if (is_selected)
-		{
+		// ãƒãƒ¼ãƒ‰ãŒé¸æŠã•ã‚Œã¦ã„ã‚‹ã¨ãã¯æ–‡å­—ã‚’è¡¨ç¤º
+		if (is_selected) {
 			ImGui::Text("True");
 		}
-		else
-		{
+		else {
 			ImGui::Text("o");
 		}
 		ImNodes::EndOutputAttribute();
 
+		// falseãƒ”ãƒ³ã®ä½œæˆ
 		ImNodes::BeginOutputAttribute(node.id << cInputBit | cFalsePinBit);
-		if (is_selected)
-		{
+		// ãƒãƒ¼ãƒ‰ãŒé¸æŠã•ã‚Œã¦ã„ã‚‹ã¨ãã¯æ–‡å­—ã‚’è¡¨ç¤º
+		if (is_selected) {
 			ImGui::Text("False");
 		}
-		else
-		{
+		else {
 			ImGui::Text("x");
 		}
 		ImNodes::EndOutputAttribute();
 	}
-	else if (node.type != NodeType::Leaf)
-	{
+	// è‘‰ãƒãƒ¼ãƒ‰ä»¥å¤–ã®å ´åˆ
+	else if (node.type != NodeType::Leaf) {
 		ImGui::SameLine();
 		ImNodes::BeginOutputAttribute(node.id << cInputBit | cTruePinBit);
 		ImGui::Text("");
@@ -854,67 +782,68 @@ void BehaviorTreeGraph::draw_output_pin(const BTNode& node, bool is_selected)
 	}
 }
 
-void BehaviorTreeGraph::draw_parameter(const BTNode& node, int node_id, bool is_selected)
-{
-	if (node.name == NodeName::WaitLeaf)
-	{
-		if (is_selected && mIsEditMode)
-		{
-			ImGui::Text(u8"WaitTime(ƒtƒŒ[ƒ€”)");
+void BehaviorTreeGraph::draw_parameter(const BTNode& node, int node_id, bool is_selected) {
+	// å¾…æ©Ÿãƒãƒ¼ãƒ‰ã®å ´åˆ
+	if (node.name == NodeName::WaitLeaf) {
+		// é¸æŠã•ã‚Œã¦ã„ã‚‹ã¨ã
+		if (is_selected && mIsEditMode) {
+			// å¾…æ©Ÿæ™‚é–“è¡¨ç¤º
+			ImGui::Text(("WaitTime[frame]"));
 			ImGui::SetNextItemWidth(200);
 
 			float wait_time = node.wait_time;
 			ImGui::InputFloat("", &wait_time);
 			set_wait_time(node_id, wait_time);
 		}
-		else
-		{
+		else {
 			ImGui::Text("WaitTime: %.1f", node.wait_time);
 		}
 	}
+	// è¿‘ã„ã‹é ã„ã‹ã‚’åˆ¤åˆ¥ã™ã‚‹ãƒãƒ¼ãƒ‰ã®å ´åˆ
 	else if (node.name == NodeName::CheckFarPlayer ||
-		node.name == NodeName::CheckNearPlayer)
-	{
-		if (is_selected && mIsEditMode)
-		{
-			ImGui::Text(u8"Å‘å/Å¬”ÍˆÍ");
+			 node.name == NodeName::CheckNearPlayer) {
+		// é¸æŠã•ã‚Œã¦ã„ã‚‹ã¨ã
+		if (is_selected && mIsEditMode) {
+			// æœ€å¤§æœ€å°ç¯„å›²ã®è¡¨ç¤º
+			ImGui::Text(("Max/Min Range"));
 			ImGui::SetNextItemWidth(200);
 
 			float limit_distance = node.limit_distance;
 			ImGui::InputFloat("", &limit_distance);
 			set_limit_distance(node_id, limit_distance);
 		}
-		else
-		{
-			ImGui::Text(u8"”ÍˆÍ: %.1f", node.limit_distance);
+		else {
+			ImGui::Text(("Range: %.1f"), node.limit_distance);
 		}
 	}
 }
 
-void BehaviorTreeGraph::draw_links()
-{
-	for (auto& pair : mNodeLinks)
-	{
+void BehaviorTreeGraph::draw_links() {
+	for (auto& pair : mNodeLinks) {
+		// ãƒªãƒ³ã‚¯ã®è¦ç´ ç•ªå·ä»£å…¥
 		int link_id = pair.first;
-		if (std::find(mRunningLinks.begin(), mRunningLinks.end(), link_id) != mRunningLinks.end())
-		{
+
+		if (std::find(mRunningLinks.begin(), mRunningLinks.end(), link_id) != mRunningLinks.end()) {
 			ImNodes::PushColorStyle(ImNodesCol_Link, cRunningColor);
 		}
-		else
-		{
+		else {
 			ImNodes::PushColorStyle(ImNodesCol_Link, cLinkColor);
 		}
 
+		// æ¥ç¶šå…ƒã®ãƒãƒ¼ãƒ‰ID
 		int parent_id = std::get<static_cast<int>(NodeTuple::Node_Id)>(pair.second);
+		// æ¥ç¶šå…ˆã®ãƒãƒ¼ãƒ‰ID
 		int child_id = std::get<static_cast<int>(NodeTuple::Child_Id)>(pair.second);
+		// branchãƒãƒ¼ãƒ‰ã®true,falseãƒ”ãƒ³ã®ã©ã¡ã‚‰ã«æ¥ç¶šã—ã¦ã„ã‚‹ã‹ã‚’è­˜åˆ¥ã™ã‚‹ãƒ“ãƒƒãƒˆ(branchãƒãƒ¼ãƒ‰ã§ãªã„ãªã‚‰å…¨ã¦falseã«ãªã‚‹è¨­è¨ˆã«ãªã£ã¦ã‚‹)
 		int pin_type = std::get<static_cast<int>(NodeTuple::PinType)>(pair.second);
-		if (pin_type == cTruePinBit)
-		{
+
+		// trueãƒ”ãƒ³ã«ã¤ãªãŒã£ã¦ã„ã‚‹å ´åˆ
+		if (pin_type == cTruePinBit) {
 			ImNodes::Link(link_id, (parent_id << cInputBit | cTruePinBit), (child_id << cInputBit));
 
 		}
-		else if (pin_type == cFalsePinBit)
-		{
+		// falseãƒ”ãƒ³ã«ã¤ãªãŒã£ã¦ã„ã‚‹å ´åˆ
+		else if (pin_type == cFalsePinBit) {
 			ImNodes::Link(link_id, (parent_id << cInputBit | cFalsePinBit), (child_id << cInputBit));
 		}
 

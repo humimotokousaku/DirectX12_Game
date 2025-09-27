@@ -10,45 +10,45 @@ Selector::~Selector()
 {
 }
 
-void Selector::tick()
+void Selector::Tick()
 {
-	mChildNodes[mRunningNodeIndex]->tick();
-	auto result = mChildNodes[mRunningNodeIndex]->get_node_result();
+	mChildNodes[mRunningNodeIndex]->Tick();
+	auto result = mChildNodes[mRunningNodeIndex]->GetNodeResult();
 
 	if (result == NodeResult::Fail) {
-		// ŽŸ‰ñSequence‚ÉŒü‚¯‚Äƒm[ƒh”Ô†‚ði‚ß‚é
-		node_increment();
+		// æ¬¡å›žSequenceã«å‘ã‘ã¦ãƒŽãƒ¼ãƒ‰ç•ªå·ã‚’é€²ã‚ã‚‹
+		NodeIncrement();
 		return;
 	}
 
-	// ‚à‚µ¬Œ÷‚ª•Ô‚³‚ê‚½‚çƒm[ƒhI—¹
+	// ã‚‚ã—æˆåŠŸãŒè¿”ã•ã‚ŒãŸã‚‰ãƒŽãƒ¼ãƒ‰çµ‚äº†
 	if (result == NodeResult::Success) {
-		finalize();
+		Finalize();
 	}
 
 	mNodeResult = result;
 }
 
-const int Selector::get_next_index() const
+const int Selector::GetNextIndex() const
 {
 	return mRunningNodeIndex + 1;
 }
 
-void Selector::node_increment()
+void Selector::NodeIncrement()
 {
-	// Œ»Ý‚Ìƒm[ƒh‚ÌŒãŽn––
-	mChildNodes[mRunningNodeIndex]->finalize();
+	// ç¾åœ¨ã®ãƒŽãƒ¼ãƒ‰ã®å¾Œå§‹æœ«
+	mChildNodes[mRunningNodeIndex]->Finalize();
 
-	// ƒCƒ“ƒfƒbƒNƒX‚ði‚ß‚é
-	mRunningNodeIndex = get_next_index();
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’é€²ã‚ã‚‹
+	mRunningNodeIndex = GetNextIndex();
 
-	// ‚à‚µ‚·‚×‚Ä‚ÌŽqƒm[ƒh‚ð‰ñ‚µ‚Ä‚¢‚½‚ç
+	// ã‚‚ã—ã™ã¹ã¦ã®å­ãƒŽãƒ¼ãƒ‰ã‚’å›žã—ã¦ã„ãŸã‚‰
 	if (mRunningNodeIndex > mChildNodes.size() - 1) {
 		mNodeResult = NodeResult::Fail;
-		finalize();
+		Finalize();
 		return;
 	}
 
-	// ŽŸ‚É‰ñ‚·ƒm[ƒh‚Ì‰Šú‰»
-	mChildNodes[mRunningNodeIndex]->init();
+	// æ¬¡ã«å›žã™ãƒŽãƒ¼ãƒ‰ã®åˆæœŸåŒ–
+	mChildNodes[mRunningNodeIndex]->Init();
 }

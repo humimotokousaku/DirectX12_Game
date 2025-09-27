@@ -7,20 +7,41 @@
 /// </summary>
 class BranchNodeBase : public NodeBase {
 public:
+	// コンストラクタ
 	explicit BranchNodeBase(BlackBoard* black_board, INode* true_node, INode* false_node);
+	// デストラクタ
 	virtual ~BranchNodeBase();
 
-	virtual void init() override;
-	virtual void tick() override;
-	virtual void finalize() override;
-
-	int get_running_node_id() const override;
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	virtual void Init() override;
+	/// <summary>
+	/// 更新
+	/// </summary>
+	virtual void Tick() override;
+	/// <summary>
+	/// 解放
+	/// </summary>
+	virtual void Finalize() override;
 
 protected:
-	// 条件を満たしているか   
-	virtual const bool is_condition() = 0;
-	
+	/// <summary>
+	/// 条件を満たしているか
+	/// </summary>
+	/// <returns></returns>
+	virtual const bool IsCondition() = 0;
+
+public:// アクセサ
+	/// <summary>
+	/// 現在動いているノードID取得
+	/// </summary>
+	/// <returns></returns>
+	int GetRunningNodeID() const override;
+
 protected:
+	// [0]->trueノード
+	// [1]->falseノード
 	INode* mpBranchNodes[2] = { nullptr, nullptr }; // ブランチノードの配列
 	int mSatisfyIndex = -1; // 条件を満たしているノードのインデックス
 };

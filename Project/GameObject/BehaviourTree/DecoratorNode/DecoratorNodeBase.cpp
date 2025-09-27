@@ -8,24 +8,24 @@ DecoratorNodeBase::~DecoratorNodeBase()
 	}
 }
 
-void DecoratorNodeBase::init()
+void DecoratorNodeBase::Init()
 {
-	NodeBase::init();
-	mChildNode->init();
+	NodeBase::Init();
+	mChildNode->Init();
 }
 
-void DecoratorNodeBase::finalize()
+void DecoratorNodeBase::Finalize()
 {
-	NodeBase::finalize();
-	mChildNode->finalize();
+	NodeBase::Finalize();
+	mChildNode->Finalize();
 }
 
-void DecoratorNodeBase::set_node(INode* node)
+void DecoratorNodeBase::SetNode(INode* node)
 {
 	mChildNode = node;
 }
 
-int DecoratorNodeBase::get_running_node_id() const
+int DecoratorNodeBase::GetRunningNodeID() const
 {
-	return mChildNode->get_running_node_id();
+	return mChildNode->GetRunningNodeID();
 }

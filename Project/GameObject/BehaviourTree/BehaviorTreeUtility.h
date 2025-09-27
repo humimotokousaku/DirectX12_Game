@@ -2,17 +2,16 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include <json.hpp>
-#include <fstream>
 #include <map>
-#include <nameof.hpp>
-
-#include "imgui.h"
+#include <unordered_map>
+#include <fstream>
+#include <../externals/nlohmann/json.hpp>
+#include "../externals/nameof/nameof.hpp"
+#include "../externals/ImGui/imgui.h"
 
 
 /// <summary>
-/// ƒm[ƒh‚Ìí—Ş
+/// ãƒãƒ¼ãƒ‰ã®ç¨®é¡
 /// </summary>
 enum class NodeType {
 	Composite,
@@ -22,7 +21,7 @@ enum class NodeType {
 };
 
 /// <summary>
-/// ƒm[ƒh‚Ì–¼‘O
+/// ãƒãƒ¼ãƒ‰ã®åå‰
 /// </summary>
 enum class NodeName {
 	Sequence,
@@ -37,11 +36,11 @@ enum class NodeName {
 	AlwaysSuccessLeaf,
 	EscapeFromPlayerLeaf,
 	WaitLeaf,
-	NameEnd, // —v‘f”æ“¾—p
+	NameEnd, // è¦ç´ æ•°å–å¾—ç”¨
 };
 
 /// <summary>
-/// Šeƒm[ƒh‚Ì–¼‘O‚Æƒ^ƒCƒv‚Ìƒ}ƒbƒsƒ“ƒO
+/// å„ãƒãƒ¼ãƒ‰ã®åå‰ã¨ã‚¿ã‚¤ãƒ—ã®ãƒãƒƒãƒ”ãƒ³ã‚°
 /// </summary>
 static std::map<NodeName, NodeType> NODE_MAP = {
 	{NodeName::Sequence, NodeType::Composite},
@@ -59,30 +58,30 @@ static std::map<NodeName, NodeType> NODE_MAP = {
 };
 
 /// <summary>
-/// ƒm[ƒh‚Ì\‘¢‘Ì
+/// ãƒãƒ¼ãƒ‰ã®æ§‹é€ ä½“
 /// </summary>
 struct BTNode {
-	int id = 0;                             // ŒÅ—LID
-	NodeType type = NodeType::Leaf;         // ƒm[ƒh‚Ìƒ^ƒCƒv
-	NodeName name = NodeName::WaitLeaf;     // ƒm[ƒh‚Ì–¼‘O
-	std::vector<int> children;              // qƒm[ƒhID
-	int parent = -1;                        // eƒm[ƒhID
+	int id = 0;                             // å›ºæœ‰ID
+	NodeType type = NodeType::Leaf;         // ãƒãƒ¼ãƒ‰ã®ã‚¿ã‚¤ãƒ—
+	NodeName name = NodeName::WaitLeaf;     // ãƒãƒ¼ãƒ‰ã®åå‰
+	std::vector<int> children;              // å­ãƒãƒ¼ãƒ‰ID
+	int parent = -1;                        // è¦ªãƒãƒ¼ãƒ‰ID
 
-	// Branch—p‚Ì•Ï”
+	// Branchç”¨ã®å¤‰æ•°
 	int true_child = -1;
 	int false_child = -1;
 
-	// Wait—p‚Ì•Ï”
+	// Waitç”¨ã®å¤‰æ•°
 	float wait_time = -1.f;
 
-	// CheckFarPlayer, CheckNearPlayer—p‚Ì•Ï”
+	// CheckFarPlayer, CheckNearPlayerç”¨ã®å¤‰æ•°
 	float limit_distance = -1.f;
 
-	// ƒGƒfƒBƒ^[ã‚Å‚ÌˆÊ’u
+	// ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ä¸Šã§ã®ä½ç½®
 	float pos_x = 0.f;
 	float pos_y = 0.f;
 
-	// –¼‘O‚ğstringŒ^‚Åæ“¾
+	// åå‰ã‚’stringå‹ã§å–å¾—
 	std::string GetString() const {
 		return std::string(NAMEOF_ENUM(name));
 	}
@@ -90,14 +89,14 @@ struct BTNode {
 
 
 /// <summary>
-/// ƒm[ƒh‚Å\¬‚³‚ê‚½–Ø‚Ì\‘¢‘Ì
+/// ãƒãƒ¼ãƒ‰ã§æ§‹æˆã•ã‚ŒãŸæœ¨ã®æ§‹é€ ä½“
 /// </summary>
 class BehaviorTreeGraph
 {
 	using json = nlohmann::json;
 
 private:
-	// Šeíƒm[ƒhƒ^ƒCƒv‚Ìƒ^ƒCƒgƒ‹ƒo[‚ÌF
+	// å„ç¨®ãƒãƒ¼ãƒ‰ã‚¿ã‚¤ãƒ—ã®ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã®è‰²
 	const std::map<NodeType, ImU32> cNodeColors = {
 		{ NodeType::Composite, IM_COL32(128, 32, 32, 255)},
 		{ NodeType::Decorator, IM_COL32(32, 32, 128, 255) },
@@ -123,189 +122,225 @@ public:
 
 	~BehaviorTreeGraph();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	void initialize();
 
-	// XV
+	// æ›´æ–°
 	void update();
 
-	// •`‰æ
+	// æç”»
 	void draw();
 
-	// ƒ‚[ƒhØ‘Ö
+	// ãƒ¢ãƒ¼ãƒ‰åˆ‡æ›¿
 	void change_mode(bool is_edit_mode);
 
-	// ƒ[ƒh‚·‚éJsonƒtƒ@ƒCƒ‹‚ğ‘I‘ğ
+	// ãƒ­ãƒ¼ãƒ‰ã™ã‚‹Jsonãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠ
 	void select_load_file();
 
-	// Œ»İƒ[ƒh‚µ‚Ä‚¢‚éJsonƒtƒ@ƒCƒ‹ƒpƒX‚ğæ“¾
+	// ç¾åœ¨ãƒ­ãƒ¼ãƒ‰ã—ã¦ã„ã‚‹Jsonãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å–å¾—
 	std::string get_loading_file() const { return mLoadFileName; }
 
-	// Œ»İ“®‚©‚µ‚Ä‚¢‚éƒm[ƒh”Ô†‚ğİ’è
+	// ç¾åœ¨å‹•ã‹ã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ç•ªå·ã‚’è¨­å®š
 	void set_runnning_node_id(const int running_node_id);
 
 private:
-	// ƒm[ƒh‚Ì’Ç‰Á
+	// ãƒãƒ¼ãƒ‰ã®è¿½åŠ 
 	int add_node(NodeName name);
 
-	// ƒŠƒ“ƒN‚Ì’Ç‰Á
+	/// <summary>
+	/// ãƒªãƒ³ã‚¯ã®è¿½åŠ (ãƒãƒ¼ãƒ‰ã”ã¨ã«è¨­å®šäº‹é …ãŒé•ã†å¯èƒ½æ€§ã‚ã‚Š)
+	/// </summary>
+	/// <param name="start_attr"></param>
+	/// <param name="end_attr"></param>
 	void add_link(int start_attr, int end_attr);
 
-	// Json‘‚«o‚µˆ—
+	// Jsonæ›¸ãå‡ºã—å‡¦ç†
 	void export_json(const std::string& file_name);
 
-	// Json“Ç‚İ‚İˆ—
+	// Jsonèª­ã¿è¾¼ã¿å‡¦ç†
 	void import_json(const std::string& file_name);
 
-	// ƒm[ƒh‚ÌˆÊ’u‚ğXV
+	// ãƒãƒ¼ãƒ‰ã®ä½ç½®ã‚’æ›´æ–°
 	void set_node_pos(int id, float x, float y);
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚é—v‘f‚ğíœ
+	// é¸æŠã—ã¦ã„ã‚‹è¦ç´ ã‚’å‰Šé™¤
 	void delete_selected_items();
 
 private:
-	// ƒm[ƒh‚ÌƒŠƒ“ƒN‚ğæ“¾
+	// ãƒãƒ¼ãƒ‰ã®ãƒªãƒ³ã‚¯ã‚’å–å¾—
 	const std::unordered_map<int, std::tuple<int, int, int>>& get_node_links() const { return mNodeLinks; }
 
-	// ƒm[ƒhŒQ‚ğæ“¾
+	// ãƒãƒ¼ãƒ‰ç¾¤ã‚’å–å¾—
 	const std::unordered_map<int, BTNode>& get_nodes() const { return mNodes; }
 
-	// •¶š—ñ‚©‚çNodeName‚ğ•Ô‚·
+	// æ–‡å­—åˆ—ã‹ã‚‰NodeNameã‚’è¿”ã™
 	NodeName get_matching_node_name(std::string name);
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒm[ƒh‚Ì”‚ğæ“¾
+	// é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã®æ•°ã‚’å–å¾—
 	const int get_selected_node_num() const { return static_cast<int>(mSelectedNodes.size()); }
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒm[ƒh‚ğæ“¾
+	// é¸æŠã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’å–å¾—
 	const int get_selected_node(int index);
 
-	// ‘I‘ğ‚µ‚Ä‚¢‚éƒŠƒ“ƒN‚Ì”‚ğæ“¾
+	// é¸æŠã—ã¦ã„ã‚‹ãƒªãƒ³ã‚¯ã®æ•°ã‚’å–å¾—
 	const int get_selected_link_num() const { return static_cast<int>(mSelectedLinks.size()); }
 
 private:
-	// ‘I‘ğ‚µ‚Ä‚¢‚é—v‘f‚ÌXV
+	// é¸æŠã—ã¦ã„ã‚‹è¦ç´ ã®æ›´æ–°
 	void update_selected();
 
-	// ƒm[ƒh‚ÌƒŠƒ“ƒN‚ğs‚¤
+	// ãƒãƒ¼ãƒ‰ã®ãƒªãƒ³ã‚¯ã‚’è¡Œã†
 	void update_links();
 
-	// ƒm[ƒh‚ÌˆÚ“®ˆ—
+	// ãƒãƒ¼ãƒ‰ã®ç§»å‹•å‡¦ç†
 	void update_node_pos();
 
-	// ƒL[‚ÌXVˆ—
+	// ã‚­ãƒ¼ã®æ›´æ–°å‡¦ç†
 	void update_input_key();
 
-	// ƒc[ƒ‹ƒo[‚Ì•`‰æ
+	// ãƒ„ãƒ¼ãƒ«ãƒãƒ¼ã®æç”»
 	void draw_toolbar();
 
-	// ƒGƒfƒBƒ^[‚Ì•`‰æ
+	// ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ã®æç”»
 	void draw_editor();
 
 private:
-	// ƒm[ƒh’Ç‰Áƒ{ƒ^ƒ“‚Ì•`‰æ
+	// ãƒãƒ¼ãƒ‰è¿½åŠ ãƒœã‚¿ãƒ³ã®æç”»
 	void draw_add_button();
 
-	// ‘‚«o‚µƒ{ƒ^ƒ“‚Ì•`‰æ
+	// æ›¸ãå‡ºã—ãƒœã‚¿ãƒ³ã®æç”»
 	void draw_export_button();
 
-	// “Ç‚İ‚İƒ{ƒ^ƒ“‚Ì•`‰æ
+	// èª­ã¿è¾¼ã¿ãƒœã‚¿ãƒ³ã®æç”»
 	void draw_import_button();
 
-	// íœƒ{ƒ^ƒ“‚Ì•`‰æ
+	// å‰Šé™¤ãƒœã‚¿ãƒ³ã®æç”»
 	void draw_delete_button();
 
-	// ƒm[ƒh‚ğ•`‰æ
+	// ãƒãƒ¼ãƒ‰ã‚’æç”»
 	void draw_nodes();
 	void draw_node(const BTNode& node, int node_id, bool is_selected);
 
-	// ƒ^ƒCƒgƒ‹‚ğ•`‰æ
+	// ã‚¿ã‚¤ãƒˆãƒ«ã‚’æç”»
 	void draw_title(const BTNode& node);
 
-	// “ü—Íƒsƒ“‚ğ•`‰æ
+	// å…¥åŠ›ãƒ”ãƒ³ã‚’æç”»
 	void draw_input_pin(const BTNode& node);
 
-	// o—Íƒsƒ“‚ğ•`‰æ
+	// å‡ºåŠ›ãƒ”ãƒ³ã‚’æç”»
 	void draw_output_pin(const BTNode& node, bool is_selected);
 
-	// ƒpƒ‰ƒ[ƒ^‚ğ•`‰æ
+	/// <summary>
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æç”»(ãƒãƒ¼ãƒ‰ã”ã¨ã«è¨­å®šäº‹é …ãŒé•ã†å¯èƒ½æ€§ã‚ã‚Š)
+	/// </summary>
+	/// <param name="node"></param>
+	/// <param name="node_id"></param>
+	/// <param name="is_selected"></param>
 	void draw_parameter(const BTNode& node, int node_id, bool is_selected);
 
-	// ƒŠƒ“ƒN‚ğ•`‰æ
+	// ãƒªãƒ³ã‚¯ã‚’æç”»
 	void draw_links();
 
 private:
-	// ƒm[ƒh‚Ìíœ
+	// ãƒãƒ¼ãƒ‰ã®å‰Šé™¤
 	void remove_node(int id);
 
-	// ƒm[ƒh‚Ìíœ
+	// ãƒãƒ¼ãƒ‰ã®å‰Šé™¤
 	void remove_node(const std::vector<int>& delete_list);
 
-	// ƒm[ƒh‚ªƒŠƒ“ƒN‚Å‚«‚é‚©‚Ç‚¤‚©
+	/// <summary>
+	/// ãƒãƒ¼ãƒ‰ãŒãƒªãƒ³ã‚¯ã§ãã‚‹ã‹ã©ã†ã‹(ãƒãƒ¼ãƒ‰ã”ã¨ã«è¨­å®šäº‹é …ãŒé•ã†å¯èƒ½æ€§ã‚ã‚Š)
+	/// </summary>
+	/// <param name="parent_node"></param>
+	/// <param name="child_node"></param>
+	/// <param name="is_true_branch"></param>
+	/// <returns></returns>
 	bool is_link_addable(BTNode& parent_node, BTNode& child_node, bool is_true_branch);
 
-	// ƒm[ƒh“¯m‚ÌƒŠƒ“ƒN‚ğ‰ğœ
+	/// <summary>
+	/// ãƒãƒ¼ãƒ‰åŒå£«ã®ãƒªãƒ³ã‚¯ã‚’è§£é™¤(ãƒãƒ¼ãƒ‰ã”ã¨ã«è¨­å®šäº‹é …ãŒé•ã†å¯èƒ½æ€§ã‚ã‚Š)
+	/// </summary>
+	/// <param name="parent_id"></param>
+	/// <param name="child_id"></param>
 	void remove_nodes_link(int parent_id, int child_id);
 
-	// ƒm[ƒh‚ÌƒŠƒ“ƒN‚ğíœ
+	// ãƒãƒ¼ãƒ‰ã®ãƒªãƒ³ã‚¯ã‚’å‰Šé™¤
 	void delete_link(int id);
 
-	// ƒm[ƒh‚ÌƒŠƒ“ƒN‚ğíœ
+	// ãƒãƒ¼ãƒ‰ã®ãƒªãƒ³ã‚¯ã‚’å‰Šé™¤
 	void delete_link(const std::vector<int>& delete_list);
 
-	// ID‚©‚çƒm[ƒh‚ğŒŸõ
+	// IDã‹ã‚‰ãƒãƒ¼ãƒ‰ã‚’æ¤œç´¢
 	BTNode& get_node(int id);
 
-	// ƒm[ƒh‚Ìlimit_distance‚ğİ’è
+	// ãƒãƒ¼ãƒ‰ã®limit_distanceã‚’è¨­å®š
 	void set_limit_distance(int id, float limit_distance);
 
-	// ƒm[ƒh‚Ìwait_time‚ğİ’è
+	// ãƒãƒ¼ãƒ‰ã®wait_timeã‚’è¨­å®š
 	void set_wait_time(int id, float wait_time);
 
-	// ƒm[ƒh‚ÌƒŠƒ“ƒN‚ğ’Ç‰Á(NodeLink‚¾‚¯)
+	// ãƒãƒ¼ãƒ‰ã®ãƒªãƒ³ã‚¯ã‚’è¿½åŠ (NodeLinkã ã‘)
 	void add_link_tuple(int parent_id, int child_id, bool is_true_branch);
 
-	// ‘Sƒm[ƒh–¼‚ğEnum‚©‚çString‚Ì”z—ñ‚É•ÏŠ·
+	// å…¨ãƒãƒ¼ãƒ‰åã‚’Enumã‹ã‚‰Stringã®é…åˆ—ã«å¤‰æ›
 	std::vector<std::string> get_all_node_names() const;
 
-	// ‘S‘I‘ğ‚ğ‰ğœ
+	// å…¨é¸æŠã‚’è§£é™¤
 	void reset_selected();
 
-	// ‘I‘ğ’†‚Ìƒm[ƒh‚ÉŠÖ‚·‚éƒŠƒ“ƒN‚ğô‚¢o‚·
+	// é¸æŠä¸­ã®ãƒãƒ¼ãƒ‰ã«é–¢ã™ã‚‹ãƒªãƒ³ã‚¯ã‚’æ´—ã„å‡ºã™
 	bool get_selected_nodes_related_links(std::vector<int>* links);
 
-	// “n‚³‚ê‚½ƒm[ƒh‚ÉŠÖ‚·‚éƒŠƒ“ƒN‚ğô‚¢o‚·
+	// æ¸¡ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã«é–¢ã™ã‚‹ãƒªãƒ³ã‚¯ã‚’æ´—ã„å‡ºã™
 	bool get_nodes_related_links(const int node_id, std::vector<int>* links, bool contain_child = true);
 
-	// “n‚³‚ê‚½ƒm[ƒh‚ÉŠÖ‚·‚éƒŠƒ“ƒN‚ğô‚¢o‚·(e‚Ü‚ÅŠÜ‚Ş)
+	// æ¸¡ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã«é–¢ã™ã‚‹ãƒªãƒ³ã‚¯ã‚’æ´—ã„å‡ºã™(è¦ªã¾ã§å«ã‚€)
 	bool get_nodes_related_all_links(const int node_id, std::vector<int>* links);
 
-	// “n‚³‚ê‚½ƒm[ƒh‚ÉŠÖ‚·‚éƒm[ƒh‚ğô‚¢o‚·(e‚Ü‚ÅŠÜ‚Ş)
+	// æ¸¡ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã«é–¢ã™ã‚‹ãƒãƒ¼ãƒ‰ã‚’æ´—ã„å‡ºã™(è¦ªã¾ã§å«ã‚€)
 	bool get_nodes_related_all_nodes(const int node_id, std::vector<int>* nodes);
 
-	// ŠÖ˜A‚·‚éƒŠƒ“ƒN‚©‚Ç‚¤‚©
+	// é–¢é€£ã™ã‚‹ãƒªãƒ³ã‚¯ã‹ã©ã†ã‹
 	bool is_related_links(const int node_id, const std::pair<int, std::tuple<int, int, int>>& node_link, bool contain_child);
 
-	// ŠÖ˜A‚·‚éƒm[ƒh‚©‚Ç‚¤‚©
+	/// <summary>
+	/// é–¢é€£ã™ã‚‹ãƒãƒ¼ãƒ‰ã‹ã©ã†ã‹(ãƒãƒ¼ãƒ‰ã”ã¨ã«è¨­å®šäº‹é …ãŒé•ã†éƒ¨åˆ†ã‚ã‚Š)
+	/// </summary>
+	/// <param name="node_id"></param>
+	/// <param name="node"></param>
+	/// <returns></returns>
 	bool is_related_nodes(const int node_id, const std::pair<const int, const BTNode>& node);
 
 private:
 	std::string mLoadFileName = "";
 
+	// ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ãƒ¢ãƒ¼ãƒ‰ã«ã™ã‚‹ã‹
 	bool mIsEditMode = true;
 
+	// ãƒãƒ¼ãƒ‰æƒ…å ±ãƒªã‚¹ãƒˆ
 	std::unordered_map<int, BTNode>          mNodes;
+	// ãƒªãƒ³ã‚¯ã‚’æç”»ã™ã‚‹ãŸã‚ã®ãƒãƒ¼ãƒ‰IDãƒªã‚¹ãƒˆ
+	// [0]->æ¥ç¶šå…ƒãƒãƒ¼ãƒ‰ID
+	// [1]->æ¥ç¶šå…ˆå­ãƒãƒ¼ãƒ‰ID
+	// [2]->branchãƒãƒ¼ãƒ‰ã®true,falseãƒ”ãƒ³ã®ã©ã¡ã‚‰ã«æ¥ç¶šã—ã¦ã„ã‚‹ã‹ã‚’è­˜åˆ¥ã™ã‚‹pin_type
+	// â†’(branchãƒãƒ¼ãƒ‰ã§ãªã„ãªã‚‰å…¨ã¦falseã«ãªã‚‹è¨­è¨ˆã«ãªã£ã¦ã‚‹)
 	std::unordered_map<int, std::tuple<int, int, int>> mNodeLinks;
 
+	// ç”Ÿæˆã•ã‚Œã‚‹ãƒªãƒ³ã‚¯ã®ID
 	int mCreatedLinkId = 0;
+	// æ¬¡ã®ãƒãƒ¼ãƒ‰ç•ªå·(ãƒãƒ¼ãƒ‰ä½œæˆæ™‚ã®é‡è¤‡å›é¿ç”¨)
 	int mNextId = 1;
 
+	// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ID
 	std::vector<int> mSelectedNodes;
+	// é¸æŠã•ã‚Œã¦ã„ã‚‹ãƒªãƒ³ã‚¯
 	std::vector<int> mSelectedLinks;
 
 	std::vector<std::string> mNodeNames;
+	// è¿½åŠ äºˆå®šã®ãƒãƒ¼ãƒ‰ID
 	int mSelectedAddNode = 0;
 
-	// ƒŠƒAƒ‹ƒ^ƒCƒ€•\¦—p
+	// ãƒªã‚¢ãƒ«ã‚¿ã‚¤ãƒ è¡¨ç¤ºç”¨
 	std::vector<int> mRunningLinks;
 	std::vector<int> mRunningNodes;
 };

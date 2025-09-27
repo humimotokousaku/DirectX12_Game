@@ -11,7 +11,7 @@ WaitLeaf::~WaitLeaf()
 {
 }
 
-void WaitLeaf::tick()
+void WaitLeaf::Tick()
 {
 	if (mWaitCount <= 0.f) {
 		mNodeResult = NodeResult::Success;
@@ -21,8 +21,8 @@ void WaitLeaf::tick()
 	mWaitCount -= 1.f;
 }
 
-void WaitLeaf::finalize()
+void WaitLeaf::Finalize()
 {
-	LeafNodeBase::finalize();
+	LeafNodeBase::Finalize();
 	mWaitCount = mWaitTime;
 }

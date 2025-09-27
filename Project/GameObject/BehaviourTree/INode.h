@@ -2,22 +2,22 @@
 #include "NodeResult.h"
 
 /// <summary>
-/// ƒm[ƒh‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+/// ãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 /// </summary>
 class INode {
 public:
-	// ‰¼‘zƒfƒXƒgƒ‰ƒNƒ^
+	// ä»®æƒ³ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~INode() = default;
-	// ‰Šú‰»
-	virtual void init() = 0;
-	// “®ì
-	virtual void tick() = 0;
-	// Œãˆ—
-	virtual void finalize() = 0;
-	// ƒm[ƒh‚Ìó‘Ô‚ğæ“¾
-	virtual NodeResult get_node_result() const = 0;
-	// ƒm[ƒh‚ÌID‚ğ•Û‘¶
-	virtual void set_node_id(const int id) = 0;
-	// Œ»İ“®ì’†‚Ìƒm[ƒh‚ÌID‚ğæ“¾
-	virtual int get_running_node_id() const = 0;
+	// åˆæœŸåŒ–
+	virtual void Init() = 0;
+	// å‹•ä½œ
+	virtual void Tick() = 0;
+	// å¾Œå‡¦ç†
+	virtual void Finalize() = 0;
+	// ãƒãƒ¼ãƒ‰ã®çŠ¶æ…‹ã‚’å–å¾—
+	virtual NodeResult GetNodeResult() const = 0;
+	// ãƒãƒ¼ãƒ‰ã®IDã‚’ä¿å­˜
+	virtual void SetNodeID(const int id) = 0;
+	// ç¾åœ¨å‹•ä½œä¸­ã®ãƒãƒ¼ãƒ‰ã®IDã‚’å–å¾—
+	virtual int GetRunningNodeID() const = 0;
 };

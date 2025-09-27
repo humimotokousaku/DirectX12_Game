@@ -4,9 +4,13 @@
 
 class Inverter : public DecoratorNodeBase {
 public:
+	// コンストラクタ
 	explicit Inverter(BlackBoard* black_board, INode* child_node);
-
+	// デストラクタ
 	~Inverter();
 
-	void tick() override;
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Tick() override;
 };

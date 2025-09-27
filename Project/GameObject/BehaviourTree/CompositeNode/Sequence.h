@@ -5,13 +5,24 @@
 
 class Sequence : public CompositeNodeBase {
 public:
+	// コンストラクタ
 	explicit Sequence(BlackBoard* black_board);
-
+	// デストラクタ
 	~Sequence();
 
-	void tick() override;
+	/// <summary>
+	/// 更新
+	/// </summary>
+	void Tick() override;
 
 private:
-	const int get_next_index() const override;
-	void node_increment() override;
+	/// <summary>
+	/// 次のID取得
+	/// </summary>
+	/// <returns></returns>
+	const int GetNextIndex() const override;
+	/// <summary>
+	/// 次のノードに進む
+	/// </summary>
+	void NodeIncrement() override;
 };

@@ -3,6 +3,13 @@
 #include "../BlackBoard.h"
 #include "../../../World/IWorld.h"
 #include "../../BehaviourTreeBulider.h"
+#include "../../CompositeNode/Sequence.h"
+#include "../../DecoratorNode/Inverter.h"
+#include "../../LeafNode/AlwaysSuccessLeaf.h"
+#include "../../LeafNode/ChasePlayerLeaf.h"
+#include "../../LeafNode/WaitLeaf.h"
+#include "../../LeafNode/CircleAttackLeaf.h"
+#include "../../BranchNode/CheckNearPlayer.h"
 
 Attacker::Attacker(IWorld* world, Camera* camera, std::string behavior_tree_file_path)
 {
@@ -11,10 +18,11 @@ Attacker::Attacker(IWorld* world, Camera* camera, std::string behavior_tree_file
 	mName = "Attacker";
 	mAttackPower = 1;
 
+	ModelManager::GetInstance()->LoadModel("Models","block.obj");
 	// 3Dオブジェクトの生成
 	object_ = std::make_unique<Object3D>();
 	object_->Initialize();
-	object_->SetModel(ModelManager::GetInstance()->FindModel("Models/block.obj"));
+	object_->SetModel(ModelManager::GetInstance()->FindModel("Models", "block.obj"));
 	object_->SetCamera(camera);
 
 	mpBlackBoard = new BlackBoard();
@@ -27,8 +35,15 @@ Attacker::Attacker(IWorld* world, Camera* camera, std::string behavior_tree_file
 	Vector2 pos = p_player->position();
 	mpBlackBoard->set_value<Vector2>("PlayerPos", pos);
 
-	mpBehaviourTree = BehaviourTreeBuilder::BuildAttackerTree(behavior_tree_file_path, mpBlackBoard);
-	mpBehaviourTree->init();
+	//mpBehaviourTree = BehaviourTreeBuilder::BuildAttackerTree(behavior_tree_file_path, mpBlackBoard);
+	auto chase_inverter = new Inverter(mpBlackBoard, new ChasePlayerLeaf(mpBlackBoard));
+
+	auto root_sequence = new Sequence(mpBlackBoard);
+	root_sequence->AddNode(new CheckNearPlayer(mpBlackBoard, new AlwaysSuccessLeaf(mpBlackBoard), chase_inverter, 100.f));
+	root_sequence->AddNode(new CircleAttackLeaf(mpBlackBoard));
+	root_sequence->AddNode(new WaitLeaf(mpBlackBoard, 60.f));
+	mpBehaviourTree = root_sequence;
+	mpBehaviourTree->Init();
 
 	Vector2 min = mPosition - Vector2{ 30.f, 30.f };
 	Vector2 max = mPosition + Vector2{ 30.f, 30.f };
@@ -61,7 +76,7 @@ void Attacker::update(float delta_time)
 	Vector2 pos = p_player->position();
 	mpBlackBoard->set_value<Vector2>("PlayerPos", pos);
 
-	mpBehaviourTree->tick();
+	mpBehaviourTree->Tick();
 
 	move(delta_time);
 
@@ -91,9 +106,9 @@ void Attacker::draw_gui() const
 //	}
 //}
 
-const int Attacker::get_behaviortree_running_node_id() const
+const int Attacker::GetBTRunningNodeID() const
 {
-	return mpBehaviourTree->get_running_node_id();
+	return mpBehaviourTree->GetRunningNodeID();
 }
 
 const Vector2& Attacker::get_position() const

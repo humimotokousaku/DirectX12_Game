@@ -11,7 +11,7 @@ public:
 
 	~ChasePlayerLeaf();
 
-	void tick() override;
+	void Tick() override;
 
-	NodeResult get_node_result() const override;
+	NodeResult GetNodeResult() const override;
 };

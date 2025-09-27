@@ -1,9 +1,8 @@
 #include "CircleAttackLeaf.h"
 
-#include "Actor/BlackBoard.h"
-#include "Actor/IAgent.h"
+#include "../Actor/BlackBoard.h"
+#include "../Actor/IAgent.h"
 
-#include "DxLib.h"
 CircleAttackLeaf::CircleAttackLeaf(BlackBoard* black_board)
 	: LeafNodeBase(black_board)
 {
@@ -13,15 +12,15 @@ CircleAttackLeaf::~CircleAttackLeaf()
 {
 }
 
-void CircleAttackLeaf::tick()
+void CircleAttackLeaf::Tick()
 {
-	// UŒ‚
+	// æ”»æ’ƒ
 	auto* agent = mpBlackBoard->get_value<IAgent*>("Agent");
 	agent->attack();
 }
 
-NodeResult CircleAttackLeaf::get_node_result() const
+NodeResult CircleAttackLeaf::GetNodeResult() const
 {
-	// •K‚¸¬Œ÷‚ğ•Ô‚·
+	// å¿…ãšæˆåŠŸã‚’è¿”ã™
 	return NodeResult::Success;
 }

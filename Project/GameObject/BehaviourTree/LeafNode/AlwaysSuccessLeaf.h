@@ -11,7 +11,7 @@ public:
 
 	~AlwaysSuccessLeaf() override = default;
 
-	NodeResult get_node_result() const override {
+	NodeResult GetNodeResult() const override {
 		return NodeResult::Success;
 	}
 };

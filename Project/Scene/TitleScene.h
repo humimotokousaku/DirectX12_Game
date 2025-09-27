@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "World/World.h"
+#include "../GameObject/BehaviourTree/BehaviorTreeUtility.h"
 
 class GameManager;
 /// <summary>
@@ -27,6 +28,7 @@ private:// エンジン機能
 	Input* input_;
 	std::unique_ptr<Camera> camera_;
 private:
+	BehaviorTreeGraph* mpBehaviorTree;
 	World mWorld;
 
 	bool mIsEnd = false;
