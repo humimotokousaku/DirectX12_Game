@@ -19,50 +19,32 @@ void TitleScene::Initialize() {
 	camera_->Initialize();
 
 	mpBehaviorTree = new BehaviorTreeGraph(true);
+	mpBehaviorTree->SelectLoadFile("behavior_tree.json");
+	//auto behavior_tree_file_path = mpBehaviorTree->GetLoadingFile();
 
 	mWorld.add_actor(new Player());
-	mWorld.add_actor(new Attacker(&mWorld, camera_.get(),"Engine/resources/behavior_tree.json"));
+	mWorld.add_actor(new Attacker(&mWorld, camera_.get(), ""));
+	//mWorld.add_actor(new Attacker(&mWorld, camera_.get(), behavior_tree_file_path));
 }
 
 void TitleScene::Update() {
 	float delta_time = 1.f;
 	mWorld.update(delta_time);
 
-	// ツリーエディターの更新
-	mpBehaviorTree->update();
+	//// 現在動かしているノードのIDを取得
+	//const auto& attacker_actor = mWorld.find_actor("Attacker");
+	//const Attacker* attacker = dynamic_cast<const Attacker*>(attacker_actor);
+	//mRunnningNodeId = attacker->GetBTRunningNodeID();
 
-	//ImGui::Begin("Node Editor");
-	//ImNodes::BeginNodeEditor();
+	//mpBehaviorTree->SetRunnningNodeID(mRunnningNodeId);
 
-	//for (int i = 0; i < 3; i++) {
-	//	ImNodes::BeginNode(i);
-
-	//	int j = 0;
-	//	if (i > 0) { j = 3; }
-
-	//	ImNodes::BeginInputAttribute(i + j);
-	//	ImGui::Text("input");
-	//	ImNodes::EndInputAttribute();
-
-	//	ImNodes::BeginOutputAttribute(i + 1 + j);
-	//	ImGui::Text("1 output");
-	//	ImNodes::EndOutputAttribute();
-
-	//	ImNodes::BeginOutputAttribute(i + 2 + j);
-	//	ImGui::Text("2 output");
-	//	ImNodes::EndOutputAttribute();
-	//	ImNodes::EndNode();
-	//}
-
-	//ImNodes::MiniMap();
-
-	//ImNodes::EndNodeEditor();
-	//ImGui::End();
+	//// ツリーエディターの更新
+	mpBehaviorTree->Update();
 }
 
 void TitleScene::Draw() {
 	mWorld.draw();
-	mpBehaviorTree->draw();
+	mpBehaviorTree->Draw();
 }
 
 void TitleScene::Finalize() {

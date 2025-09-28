@@ -123,112 +123,113 @@ public:
 	~BehaviorTreeGraph();
 
 	// 初期化
-	void initialize();
+	void Init();
 
 	// 更新
-	void update();
+	void Update();
 
 	// 描画
-	void draw();
+	void Draw();
 
 	// モード切替
-	void change_mode(bool is_edit_mode);
+	void ChangeMode(bool is_edit_mode);
 
 	// ロードするJsonファイルを選択
-	void select_load_file();
+	//※使ったらモデルの読み込み部分でバグ起きるので使用禁止
+	void SelectLoadFile(const std::string& fileName);
 
 	// 現在ロードしているJsonファイルパスを取得
-	std::string get_loading_file() const { return mLoadFileName; }
+	std::string GetLoadingFile() const { return mLoadFileName; }
 
 	// 現在動かしているノード番号を設定
-	void set_runnning_node_id(const int running_node_id);
+	void SetRunnningNodeID(const int running_node_id);
 
 private:
 	// ノードの追加
-	int add_node(NodeName name);
+	int AddNode(NodeName name);
 
 	/// <summary>
 	/// リンクの追加(ノードごとに設定事項が違う可能性あり)
 	/// </summary>
 	/// <param name="start_attr"></param>
 	/// <param name="end_attr"></param>
-	void add_link(int start_attr, int end_attr);
+	void AddLink(int start_attr, int end_attr);
 
 	// Json書き出し処理
-	void export_json(const std::string& file_name);
+	void ExportJson(const std::string& file_name);
 
 	// Json読み込み処理
-	void import_json(const std::string& file_name);
+	void ImportJson(const std::string& file_name);
 
 	// ノードの位置を更新
-	void set_node_pos(int id, float x, float y);
+	void SetNodePos(int id, float x, float y);
 
 	// 選択している要素を削除
-	void delete_selected_items();
+	void DeleteSelectedItems();
 
 private:
 	// ノードのリンクを取得
-	const std::unordered_map<int, std::tuple<int, int, int>>& get_node_links() const { return mNodeLinks; }
+	const std::unordered_map<int, std::tuple<int, int, int>>& GetNodeLinks() const { return mNodeLinks; }
 
 	// ノード群を取得
-	const std::unordered_map<int, BTNode>& get_nodes() const { return mNodes; }
+	const std::unordered_map<int, BTNode>& GetNodes() const { return mNodes; }
 
 	// 文字列からNodeNameを返す
-	NodeName get_matching_node_name(std::string name);
+	NodeName GetMatchingNodeName(std::string name);
 
 	// 選択しているノードの数を取得
-	const int get_selected_node_num() const { return static_cast<int>(mSelectedNodes.size()); }
+	const int GetSelectedNodeNum() const { return static_cast<int>(mSelectedNodes.size()); }
 
 	// 選択しているノードを取得
-	const int get_selected_node(int index);
+	const int GetSelectedNode(int index);
 
 	// 選択しているリンクの数を取得
-	const int get_selected_link_num() const { return static_cast<int>(mSelectedLinks.size()); }
+	const int GetSelectedLinkNum() const { return static_cast<int>(mSelectedLinks.size()); }
 
 private:
 	// 選択している要素の更新
-	void update_selected();
+	void UpdateSelected();
 
 	// ノードのリンクを行う
-	void update_links();
+	void UpdateLinks();
 
 	// ノードの移動処理
-	void update_node_pos();
+	void UpdateNodePos();
 
 	// キーの更新処理
-	void update_input_key();
+	void UpdateInputKey();
 
 	// ツールバーの描画
-	void draw_toolbar();
+	void DrawToolbar();
 
 	// エディターの描画
-	void draw_editor();
+	void DrawEditor();
 
 private:
 	// ノード追加ボタンの描画
-	void draw_add_button();
+	void DrawAddButton();
 
 	// 書き出しボタンの描画
-	void draw_export_button();
+	void DrawExportButton();
 
 	// 読み込みボタンの描画
-	void draw_import_button();
+	void DrawImportButton();
 
 	// 削除ボタンの描画
-	void draw_delete_button();
+	void DrawDeleteButton();
 
 	// ノードを描画
-	void draw_nodes();
-	void draw_node(const BTNode& node, int node_id, bool is_selected);
+	void DrawNodes();
+	void DrawNode(const BTNode& node, int node_id, bool is_selected);
 
 	// タイトルを描画
-	void draw_title(const BTNode& node);
+	void DrawTitle(const BTNode& node);
 
 	// 入力ピンを描画
-	void draw_input_pin(const BTNode& node);
+	void DrawInputPin(const BTNode& node);
 
 	// 出力ピンを描画
-	void draw_output_pin(const BTNode& node, bool is_selected);
+	void DrawOutputPin(const BTNode& node, bool is_selected);
 
 	/// <summary>
 	/// パラメータを描画(ノードごとに設定事項が違う可能性あり)
@@ -236,17 +237,17 @@ private:
 	/// <param name="node"></param>
 	/// <param name="node_id"></param>
 	/// <param name="is_selected"></param>
-	void draw_parameter(const BTNode& node, int node_id, bool is_selected);
+	void DrawParameter(const BTNode& node, int node_id, bool is_selected);
 
 	// リンクを描画
-	void draw_links();
+	void DrawLinks();
 
 private:
 	// ノードの削除
-	void remove_node(int id);
+	void RemoveNode(int id);
 
 	// ノードの削除
-	void remove_node(const std::vector<int>& delete_list);
+	void RemoveNode(const std::vector<int>& delete_list);
 
 	/// <summary>
 	/// ノードがリンクできるかどうか(ノードごとに設定事項が違う可能性あり)
@@ -255,53 +256,53 @@ private:
 	/// <param name="child_node"></param>
 	/// <param name="is_true_branch"></param>
 	/// <returns></returns>
-	bool is_link_addable(BTNode& parent_node, BTNode& child_node, bool is_true_branch);
+	bool IsLinkAddable(BTNode& parent_node, BTNode& child_node, bool is_true_branch);
 
 	/// <summary>
 	/// ノード同士のリンクを解除(ノードごとに設定事項が違う可能性あり)
 	/// </summary>
 	/// <param name="parent_id"></param>
 	/// <param name="child_id"></param>
-	void remove_nodes_link(int parent_id, int child_id);
+	void RemoveNodesLink(int parent_id, int child_id);
 
 	// ノードのリンクを削除
-	void delete_link(int id);
+	void DeleteLink(int id);
 
 	// ノードのリンクを削除
-	void delete_link(const std::vector<int>& delete_list);
+	void DeleteLink(const std::vector<int>& delete_list);
 
 	// IDからノードを検索
-	BTNode& get_node(int id);
+	BTNode& GetNode(int id);
 
 	// ノードのlimit_distanceを設定
-	void set_limit_distance(int id, float limit_distance);
+	void SetLimitDistance(int id, float limit_distance);
 
 	// ノードのwait_timeを設定
-	void set_wait_time(int id, float wait_time);
+	void SetWaitTime(int id, float wait_time);
 
 	// ノードのリンクを追加(NodeLinkだけ)
-	void add_link_tuple(int parent_id, int child_id, bool is_true_branch);
+	void AddLinkTuple(int parent_id, int child_id, bool is_true_branch);
 
 	// 全ノード名をEnumからStringの配列に変換
-	std::vector<std::string> get_all_node_names() const;
+	std::vector<std::string> GetAllNodeNames() const;
 
 	// 全選択を解除
-	void reset_selected();
+	void ResetSelected();
 
 	// 選択中のノードに関するリンクを洗い出す
-	bool get_selected_nodes_related_links(std::vector<int>* links);
+	bool GetSelectedNodesRelatedLinks(std::vector<int>* links);
 
 	// 渡されたノードに関するリンクを洗い出す
-	bool get_nodes_related_links(const int node_id, std::vector<int>* links, bool contain_child = true);
+	bool GetNodesRelatedLinks(const int node_id, std::vector<int>* links, bool contain_child = true);
 
 	// 渡されたノードに関するリンクを洗い出す(親まで含む)
-	bool get_nodes_related_all_links(const int node_id, std::vector<int>* links);
+	bool GetNodesRelatedAllLinks(const int node_id, std::vector<int>* links);
 
 	// 渡されたノードに関するノードを洗い出す(親まで含む)
-	bool get_nodes_related_all_nodes(const int node_id, std::vector<int>* nodes);
+	bool GetNodesRelatedAllNodes(const int node_id, std::vector<int>* nodes);
 
 	// 関連するリンクかどうか
-	bool is_related_links(const int node_id, const std::pair<int, std::tuple<int, int, int>>& node_link, bool contain_child);
+	bool IsRelatedLinks(const int node_id, const std::pair<int, std::tuple<int, int, int>>& node_link, bool contain_child);
 
 	/// <summary>
 	/// 関連するノードかどうか(ノードごとに設定事項が違う部分あり)
@@ -309,7 +310,7 @@ private:
 	/// <param name="node_id"></param>
 	/// <param name="node"></param>
 	/// <returns></returns>
-	bool is_related_nodes(const int node_id, const std::pair<const int, const BTNode>& node);
+	bool IsRelatedNodes(const int node_id, const std::pair<const int, const BTNode>& node);
 
 private:
 	std::string mLoadFileName = "";
@@ -336,6 +337,7 @@ private:
 	// 選択されているリンク
 	std::vector<int> mSelectedLinks;
 
+	// ノード追加のためのプレビューリスト
 	std::vector<std::string> mNodeNames;
 	// 追加予定のノードID
 	int mSelectedAddNode = 0;

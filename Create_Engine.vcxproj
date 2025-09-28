@@ -166,6 +166,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\BlackBoard.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.cpp" />
+    <ClCompile Include="Project\GameObject\BehaviourTree\BehaviourTreeBulider.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.cpp" />
     <ClCompile Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.cpp" />
@@ -277,6 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" </Command>
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\Enemy\Attacker.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\Actor\IAgent.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\BehaviorTreeUtility.h" />
+    <ClInclude Include="Project\GameObject\BehaviourTree\BehaviourTreeBulider.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\BranchNodeBase.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckFarPlayer.h" />
     <ClInclude Include="Project\GameObject\BehaviourTree\BranchNode\CheckNearPlayer.h" />
