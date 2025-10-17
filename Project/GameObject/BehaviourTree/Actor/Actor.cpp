@@ -8,7 +8,7 @@ void Actor::draw() const{}
 
 //void Actor::draw_transparent() const{}
 
-void Actor::draw_gui() const{}
+void Actor::draw_gui() {}
 
 //void Actor::react(Actor& other){}
 

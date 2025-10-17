@@ -28,7 +28,7 @@ void World::draw() const {
 	//半透明アクターの描画
 	//mActorManager.draw_transparent();
 	//GUIの描画
-	//mActorManager.draw_gui();
+	mActorManager.draw_gui();
 }
 
 //消去

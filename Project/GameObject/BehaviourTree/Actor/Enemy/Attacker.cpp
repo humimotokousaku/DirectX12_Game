@@ -94,9 +94,8 @@ void Attacker::draw_transparent() const
 {
 }
 
-void Attacker::draw_gui() const
-{
-	mCollider.draw_debug();
+void Attacker::draw_gui() {
+	//mCollider.draw_debug();
 }
 
 //void Attacker::react(Actor& other)

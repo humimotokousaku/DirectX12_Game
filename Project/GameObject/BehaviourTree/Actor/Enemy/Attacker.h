@@ -25,7 +25,7 @@ public:
 	//半透明の描画
 	void draw_transparent() const;
 	//GUIの描画
-	void draw_gui() const;
+	void draw_gui();
 
 	// 衝突リアクション
 	//void react(Actor& other) override;

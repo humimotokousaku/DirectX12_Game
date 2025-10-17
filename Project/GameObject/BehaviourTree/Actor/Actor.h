@@ -19,26 +19,16 @@ public:
 	virtual ~Actor() = default;
 	//更新
 	virtual void update(float delta_time);
-	//遅延更新
-	//virtual void late_update(float delta_time);
 	//描画
 	virtual void draw() const;
-	//半透明の描画
-	//virtual void draw_transparent() const;
 	//GUIの描画
-	virtual void draw_gui() const;
-	//衝突リアクション
-	//virtual void react(Actor& other);
+	virtual void draw_gui();
 	//メッセージ処理
 	virtual void handle_message(const std::string& message, void* param);
-	//衝突判定
-	//void collide(Actor& other);
 	//死亡する
 	void die();
 	//死亡しているか？
 	bool is_dead() const;
-	//衝突しているか？
-	//bool is_collide(const Actor& other) const;
 	//名前を取得
 	const std::string& name() const;
 	//タグ名を取得
@@ -48,9 +38,6 @@ public:
 
 	//攻撃力を取得
 	float attack_power() const;
-
-	//衝突判定データを取得
-	//MyRectangle collider() const;
 
 	//virtual void damage(const float damage_value);
 	
